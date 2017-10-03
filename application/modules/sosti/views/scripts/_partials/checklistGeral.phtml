@@ -1,0 +1,175 @@
+<style>
+
+    .titulo-checklist{
+        margin-top: 5px;
+        font-weight: bold;
+    }
+
+    .detalhe-checklist table{
+        margin: 10px 0 10px 0;
+    }
+
+    .info-checklist ul{
+        padding: 0;
+    }
+
+    .info-checklist ul li{
+        list-style: none;
+        width: 100%;
+    }
+
+    .servicos-extra{
+        margin-top: 10px;
+    }
+
+    .servicos-extra span{
+        display: inline-block;
+        padding: 3px;
+        background-color: #dfeefb;
+        border: 1px solid #769dc0;
+    }
+
+</style>
+
+<table class="grid tb-checklist">
+    <thead>
+        <tr>
+            <th colspan="3">Serviços Selecionados</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $dadosChecklistGeral = $this->dadosChecklistGeral;
+        foreach ($dadosChecklistGeral['servicos'] as $s) {
+            ?>
+            <tr>
+                <td>
+                    <?php echo $s['TPSE_DS_TP_SERVICO'] ?>
+                </td>
+            </tr>
+            <?php
+        }
+        ?>
+    </tbody>
+</table>
+
+<table class="grid tb-checklist">
+    <thead>
+        <tr>
+            <th>Softwares Selecionados</th>
+            <th width="80px">Disponível</th>
+            <th width="30px">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        foreach ($dadosChecklistGeral['softwares'] as $s) {
+            ?>
+            <tr>
+                <td>
+                    <?php echo $s['LSFW_DS_SOFTWARE'] ?>
+                </td>
+                <td>
+                    <?php echo $s['QTD_DISPONIVEL'] ?>
+                </td>
+                <td>
+                    <?php echo $s['LSSA_IC_APROVACAO'] ?>
+                </td>
+            </tr>
+            <?php
+        }
+        ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3">*A - Aprovado R - Reprovado S - Solicitado</td>
+        </tr>
+    </tfoot>
+</table>
+
+<table class="grid tb-checklist">
+    <thead>
+        <tr>
+            <th>Hardwares Selecionados</th>
+            <th width="50px">Disponível</th>
+            <th width="50px">Solicitado</th>
+            <th width="50px">Aprovado</th>
+            <th width="30px">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        foreach ($dadosChecklistGeral['hardwares'] as $h) {
+            ?>
+            <tr>
+                <td>
+                    <?php echo $h['LHDW_DS_HARDWARE'] ?>
+                </td>
+                <td>
+                    <?php echo $h['QTD_DISPONIVEL'] ?>
+                </td>
+                <td>
+                    <?php echo $h['MTSA_QT_SOLIC_SAIDA_MATERIAL'] ?>
+                </td>
+                <td>
+                    <?php echo $h['MTSA_QT_SAIDA_MATERIAL'] ?>
+                </td>
+                <td>
+                    <?php echo $h['MTSA_IC_APROVACAO'] ?>
+                </td>
+            </tr>
+            <?php
+        }
+        ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5">*A - Aprovado R - Reprovado S - Solicitado</td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="info-checklist">
+    <ul>
+        <li>
+            <b>Serviço Executado:</b>
+            <?php echo $dadosChecklistGeral['checklist']['LFSE_DS_SERVICO_EXECUTADO'] ?>
+        </li>
+        <li>
+            <b>Tipo de Usuário:</b>
+            <?php echo $dadosChecklistGeral['checklist']['LTPU_DS_TP_USUARIO'] ?>
+        </li>
+        <li>
+            <b>Tombo:</b>
+            <?php echo $dadosChecklistGeral['checklist']['LFSE_NR_TOMBO'] ?>
+        </li>
+        <li>
+            <b>Tipo de Tombo:</b>
+            T
+        </li>
+        <li>
+            <b>Tombo do backup:</b>
+            <?php echo $dadosChecklistGeral['checklist']['LSBK_NR_TOMBO'] ?>
+        </li>
+        <li>
+            <b>Nome na Rede:</b>
+            <?php echo $dadosChecklistGeral['checklist']['LFSE_NO_COMPUTADOR'] ?>
+        </li>
+        <li>
+            <b>Motivo da Manutenção:</b>
+            <?php echo $dadosChecklistGeral['checklist']['LFSE_DS_MOTIVO_MANUTENCAO'] ?>
+        </li>
+        <li class="servicos-extra">
+            <?php
+            foreach ( $dadosChecklistGeral['opcoes'] as $opc) {
+                if(!is_null($opc)){
+                ?>
+                <span><?php echo $opc ?></span>
+                <?php
+                }
+            }
+            ?>
+        </li>
+    </ul>
+</div>
+

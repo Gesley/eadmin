@@ -1,0 +1,408 @@
+<?php
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript');
+
+$userNs = new Zend_Session_Namespace('userNs');
+$faturamento = new Trf1_Sosti_Negocio_Faturamento();
+$statusContratada = $faturamento->retornaStatus('CTA');
+$classificacaoFaturamento = $faturamento->retornaClassificacao();
+
+$getDadosSolic["DOCM_NR_DOCUMENTO"] = $this->FaturamentoContratada[0]["DOCM_NR_DOCUMENTO"];
+$dadosSolic = $faturamento->getRelatorioRias($getDadosSolic);
+
+
+if ($dadosSolic[0]['STSA_ID_TIPO_SAT'] != 6)
+{
+    $tSat = "1";
+}
+    else
+    {
+        $tSat = "2";
+    }
+
+$ocsTbPupePerfilUnidPessoa = new Application_Model_DbTable_OcsTbPupePerfilUnidPessoa();
+//$perfis_associados = $ocsTbPupePerfilUnidPessoa->getPerfisPessoaNaUnidade($userNs->siglasecao, $userNs->codlotacao, $userNs->matricula);
+$arrayPerfis = $ocsTbPupePerfilUnidPessoa->getTodosPerfilPessoa($userNs->matricula);
+
+$disabled = 'disabled="disabled"';
+$disabledRiaOriginal = 'disabled="disabled"';
+$disabledRiaEsclarecido = 'disabled="disabled"';
+$disabledSalvar = 'disabled="disabled"';
+$disableObs = 'disabled="disabled"';
+
+if ($this->FaturamentoContratada[0]["PFDS_ID_STATUS"] != 7) {
+    foreach ($arrayPerfis as $perfil) 
+        {
+            $p = $perfil["PERF_ID_PERFIL"];
+            
+            if ($p == 25 || $p == 31 || $p == 53 || $p == 63)
+            {
+                $idPerfil = $p;
+            }
+        }
+        
+        switch ($idPerfil)
+        {
+            case 25: // DESENVOLVIMENTO E SUSTENTAÇÃO
+                $disabledRiaOriginal = '';
+                $disabledSalvar = '';
+                $disableObs = '';
+                break;
+            
+            case 53: // GESTOR DO CONTRATO DO DESEN. E SUSTENTAÇÃO
+                $disabled = '';
+                $disableObs = '';
+                $disabledRiaOriginal = '';
+                $disabledRiaEsclarecido = '';
+                $disabledSalvar = '';
+                break;
+            
+            default:
+                break;
+        }
+    
+}
+?>
+<script type="text/javascript">
+   $(function() {
+       $('input[type=file][name=PFDS_NR_DCMTO_RIA_ORIGINAL]').change(
+        function(){
+            var tsat;
+            var c;
+            tsat = <?php echo $tSat?>;
+            if (tsat == '1')
+            {
+                c = "3";
+                $('#PFDS_ID_STATUS option[value="' + c + '"]').attr({ selected : "selected" });
+            }
+                else
+                {
+                    c = "2";
+                    $('#PFDS_ID_STATUS option[value="' + c + '"]').attr({ selected : "selected" });
+                }
+       });
+       $('input[type=file][name=PFDS_NR_DCMTO_RIA_ESCLARECER]').change(
+        function(){
+        var c;
+            c = "4";
+            $('#PFDS_ID_STATUS option[value="' + c + '"]').attr({ selected : "selected" });
+            
+       });
+       
+       $('input[type=file][name=PFDS_NR_DCMTO_RIA_ESCLARECIDO]').change(
+        function(){
+        var c;
+            c = "5";
+            $('#PFDS_ID_STATUS option[value="' + c + '"]').attr({ selected : "selected" });
+            
+       });
+       
+       $('input[type=file][name=PFDS_NR_DCMTO_CONTAGEM]').change(
+        function(){
+        var c;
+            c = "7";
+            $('#PFDS_ID_STATUS option[value="' + c + '"]').attr({ selected : "selected" });
+            
+       });
+       
+      
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('[type="file"]').change(function(evt) {
+        
+        
+        var reg = /<?php echo $this->FaturamentoContratada[0]["DOCM_NR_DOCUMENTO"]; ?>/i;
+        var teste = $(this).val();
+        var ar = reg.exec(teste);
+
+        if (ar == null)
+        {
+          alert('Número da Solicitação no nome do documento não coincide com a solicitação, selecione o documento correto!');
+            $(this).val('');
+            $(this).text('');
+            
+            var c;
+            if (<?php echo $this->FaturamentoContratada[0]["PFDS_ID_STATUS"]?> != "")
+            {
+                c = <?php echo $this->FaturamentoContratada[0]["PFDS_ID_STATUS"]?>;
+            }
+                else
+                {
+                    c = "";
+                }
+            
+            $('#PFDS_ID_STATUS option[value="' + c + '"]').attr({ selected : "selected" });
+        }
+        });
+    });
+    
+    
+    $(function() {
+        var dates = $("[name='PFTR_DH_FATURAMENTO'],[name='PFTR_DH_PAGAMENTO']").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                'Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            changeMonth: true,
+            numberOfMonths: 1,
+            changeMonth: true,
+            changeYear: true,
+            changeMonth: true,
+            onSelect: function( selectedDate ) {
+                var option = this.id == "DATA_INICIAL" ? "minDate" : "maxDate",
+                instance = $( this ).data( "datepicker" );
+                date = $.datepicker.parseDate(
+                instance.settings.dateFormat ||
+                    $.datepicker._defaults.dateFormat,
+                selectedDate, instance.settings );
+                dates.not( this ).datepicker( "option", option, date );
+            }
+        });
+    });
+</script>
+
+<form method="POST" action="<?php echo $this->baseUrl(); ?>/sosti/faturamento/setdadoscontratada" id="CADASTRO_DADOS_CONTRADADA" enctype="multipart/form-data" >
+    <input type="hidden" name="PFDS_ID_SOLICITACAO" value="<?php echo $this->FaturamentoContratada[0]["PFDS_ID_SOLICITACAO"]; ?>" />
+    <input type="hidden" name="CADASTRO" value="CONTRADADA"/>
+    <input type="hidden" name="MOFA_ID_FASE" value="<?php echo $dadosSolic[0]["MOFA_ID_FASE"]; ?>"/>
+    <input type="hidden" name="STSA_ID_TIPO_SAT" value="<?php echo $dadosSolic[0]['STSA_ID_TIPO_SAT']?>"/>
+    <input type="hidden" name="CONTROLLER" value="<?php echo $this->controller; ?>"/>
+    <input type="hidden" name="ACTION" value="<?php echo $this->action; ?>"/>
+    <input type="hidden" name="FATURAMENTO" value="CONTRATADA" />
+    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+        <legend style='font-size: 12px;'>Análise de PF Desenvolvimento</legend>
+        <table>
+            <tr>
+                <td>
+                    <label>Status: </label>
+                </td>
+                <td><!-- DIV PARA ESCONDER O CLIQUE DO SELECT -->
+                    <?php if($idPerfil != 53){?>
+                    <div style = "position:absolute; width : 240px; height : 18px; z-index : 100000"></div> 
+                    <?php }?>
+                    <select id="PFDS_ID_STATUS" name="PFDS_ID_STATUS" <?php echo $disabled; ?> >
+                        <option value="" >:: Selecione ::</option>
+                        <?php
+                        foreach ($statusContratada as $status) {
+                            echo '<option ';
+                            if ($this->FaturamentoContratada[0]["PFDS_ID_STATUS"] == $status["SCTA_ID_STATUS"]) {
+                                echo 'selected="selected" ';
+                            }
+                            echo 'readonly value="' . $status["SCTA_ID_STATUS"] . '">' . $status["SCTA_DS_STATUS"] . ' - '.$status["SCTA_ID_STATUS"].'</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+                <td>
+                    <label>DH Alteração Status:</label>
+                </td>
+                <td>
+<?php echo $this->FaturamentoContratada[0]["PFDS_DH_STATUS"]; ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Classificação:</label>
+                </td>
+                <td>
+                    <select name="PFDS_ID_CLASSIFICACAO" <?php echo $disabled; ?> >
+                        <option value="" >:: Selecione ::</option>
+                        <?php
+                        foreach ($classificacaoFaturamento as $status) {
+                            echo '<option ';
+                            if ($this->FaturamentoContratada[0]["PFDS_ID_CLASSIFICACAO"] == $status["CLCO_ID_CLASSIFICACAO"]) {
+                                echo 'selected="selected" ';
+                            }
+                            echo 'value="' . $status["CLCO_ID_CLASSIFICACAO"] . '">' . $status["CLCO_DS_OBSERVACAO"] . ' - '.$status["CLCO_ID_CLASSIFICACAO"].' </option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>RIA Original:</label>
+                </td>
+                <td>
+                    <?php 
+                        if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ORIGINAL"]))
+                        {
+                            if ($idPerfil == 25)
+                            {?>
+                                <input type='file' id="ANEXO" name='PFDS_NR_DCMTO_RIA_ORIGINAL' value='' disabled />
+                             <?
+                            }
+                        }
+                        else
+                            {?>
+                                <input type='file' id="ANEXO" name='PFDS_NR_DCMTO_RIA_ORIGINAL' value='' <?php echo $disabledRiaOriginal; ?> />
+                            <?
+                            }
+                            ?>
+                </td> 
+                <td colspan="2">
+                    <?php if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ORIGINAL"])) { ?>
+                        Documento Cadastrado - 
+                        <a class="<?php
+                        if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ORIGINAL"])) {
+                            echo 'abrirAnexo';
+                        }
+                        ?>" 
+                           target="_blank" 
+                           title="<?php
+                        if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ORIGINAL"])) {
+                            echo 'Abrir Documento';
+                        }
+                        ?>" 
+                           href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->FaturamentoContratada[0]["PFDS_ID_SOLICITACAO"]; ?>/dcmto/<?php echo $this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ORIGINAL"]; ?>/fat/1/tipo/3 ">
+                               <?php
+                               if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ORIGINAL"])) {
+                                   echo 'Abrir';
+                               }
+                               ?>
+                        </a>
+<?php } ?>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>RIA a Esclarecer:</label>
+                </td> 
+                <td>
+                    <input type="file" id="ANEXO" name="PFDS_NR_DCMTO_RIA_ESCLARECER" value="" <?php echo $disabled; ?> />
+                </td>
+                <td colspan="2">
+                    <?php if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECER"])) { ?>
+                        Documento Cadastrado - 
+                        <a class="<?php
+                        if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECER"])) {
+                            echo 'abrirAnexo';
+                        }
+                        ?>" 
+                           target="_blank" 
+                           title="<?php
+                        if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECER"])) {
+                            echo 'Abrir Documento';
+                        }
+                        ?>" 
+                           href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->FaturamentoContratada[0]["PFDS_ID_SOLICITACAO"]; ?>/dcmto/<?php echo $this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECER"]; ?>/fat/1/tipo/3 ">
+                               <?php
+                               if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECER"])) {
+                                   echo 'Abrir';
+                               }
+                               ?>
+                        </a>
+<?php } ?>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>RIA Esclarecido:</label>
+                </td> 
+                <td>
+                    <?
+                    if ($this->FaturamentoContratada[0]["PFDS_ID_STATUS"] == 4 && $idPerfil == 25)
+                    {
+                        ?>
+                        <input type="file" id="ANEXO" name="PFDS_NR_DCMTO_RIA_ESCLARECIDO" value="" />
+                        <?
+                    }
+                        else
+                        {
+                            ?>
+                            <input type="file" id="ANEXO" name="PFDS_NR_DCMTO_RIA_ESCLARECIDO" value="" <?php echo $disabledRiaEsclarecido; ?> /> 
+                            <?
+                        }
+                   ?>
+                </td>
+                <td colspan="2">
+                    <?php if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECIDO"])) { ?>
+                        Documento Cadastrado - 
+                        <a class="<?php
+                        if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECIDO"])) {
+                            echo 'abrirAnexo';
+                        }
+                        ?>" 
+                           target="_blank" 
+                           title="<?php
+                        if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECIDO"])) {
+                            echo 'Abrir Documento';
+                        }
+                        ?>" 
+                           href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->FaturamentoContratada[0]["PFDS_ID_SOLICITACAO"]; ?>/dcmto/<?php echo $this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECIDO"]; ?>/fat/1/tipo/3 ">
+                               <?php
+                               if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_RIA_ESCLARECIDO"])) {
+                                   echo 'Abrir';
+                               }
+                               ?>
+                        </a>
+<?php } ?>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>Planilha de contagem PF: </label>
+                </td> 
+                <td>
+                    <input type="file" id="ANEXO" name="PFDS_NR_DCMTO_CONTAGEM" value="" <?php echo $disabled; ?> />
+                </td>
+                <td colspan="2">
+                    <?php if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_CONTAGEM"])) { ?>
+                        Documento Cadastrado - 
+                        <a class="<?php
+                        if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_CONTAGEM"])) {
+                            echo 'abrirAnexo';
+                        }
+                        ?>" 
+                           target="_blank" 
+                           title="<?php
+                        if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_CONTAGEM"])) {
+                            echo 'Abrir Documento';
+                        }
+                        ?>" 
+                           href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->FaturamentoContratada[0]["PFDS_ID_SOLICITACAO"]; ?>/dcmto/<?php echo $this->FaturamentoContratada[0]["PFDS_NR_DCMTO_CONTAGEM"]; ?>/fat/1/tipo/8 ">
+                               <?php
+                               if (!is_null($this->FaturamentoContratada[0]["PFDS_NR_DCMTO_CONTAGEM"])) {
+                                   echo 'Abrir';
+                               }
+                               ?>
+                        </a>
+<?php } ?>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>PF Bruto:</label> 
+                </td>
+                <td>
+                    <input type="text" name="PFDS_QT_PF_BRUTO" value="<?php echo $this->FaturamentoContratada[0]["PFDS_QT_PF_BRUTO"]; ?>" <?php echo $disabled; ?> readonly>
+                </td> 
+                <td>
+                    <label>PF Liquido:</label>
+                </td> 
+                <td>
+                    <input type="text" name="PFDS_QT_PF_LIQUIDO" value="<?php echo $this->FaturamentoContratada[0]["PFDS_QT_PF_LIQUIDO"]; ?>" <?php echo $disabled; ?> readonly>
+                </td> 
+            </tr>
+            <tr>
+                <td colspan="4"><label> Observação Técnica</label></td>
+            </tr>
+            <tr>
+                <td colspan="4"> <textarea type="text" name="PFDS_DS_OBSERVACAO_TEC" style="width: 680px; height: 30px;" <?php echo $disableObs; ?> ><?php echo $this->FaturamentoContratada[0]["PFDS_DS_OBSERVACAO_TEC"]; ?></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="4"><label>Observação Métricas</label></td>
+            </tr>
+            <tr>
+                <td colspan="4"> <textarea type="text" name="PFDS_DS_OBSERVACAO_METRICA" style="width: 680px; height: 30px;" <?php echo $disabled; ?> ><?php echo $this->FaturamentoContratada[0]["PFDS_DS_OBSERVACAO_METRICA"]; ?></textarea></td>
+            </tr>
+        </table>
+        <input type="submit" name="Salvar" value="Salvar" <?php echo $disabledSalvar; ?> >
+    </fieldset>
+</form>

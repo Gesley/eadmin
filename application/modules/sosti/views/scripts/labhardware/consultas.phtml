@@ -1,0 +1,127 @@
+<script type="text/javascript">
+    $(function(){
+        $("tr[name=rowList]").click(
+            function(){
+                var solic = $(this).attr('value');               
+                var ischecked_solic = $('#'+solic).attr('checked');
+                var ischecked_solic_tr = $(this).attr('marcado');
+                if( (ischecked_solic == undefined && ischecked_solic_tr == undefined) || (ischecked_solic != undefined && ischecked_solic_tr == undefined) ){
+                    $('#'+solic).attr('checked','checked');
+                    $(this).attr('marcado','marcado');
+                    $(this).addClass('over');
+                }else{
+                    $('#'+solic).removeAttr('checked');
+                    $(this).removeAttr('marcado');
+                    $(this).removeClass('over');
+                }
+                $('#'+solic).focus();
+            }
+        );
+            
+    $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_unid_ranscunho = $('form[name=cx_unid_entrada]');
+            if(acao == 'Encaminhar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/encaminhar');
+            }else if(acao == 'Parecer'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/parecer');
+            }else if(acao == 'Arquivar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivar');
+            }else if(acao == 'Pesquisa'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/pesquisa');
+            }
+        }
+    );
+    $('form[name=cx_unid_entrada]').submit(
+       function(){
+            var documentoSelecionado = $("input[type=checkbox][name=documento[]]:checked").val();
+            if (documentoSelecionado == undefined){                   
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+                $('#flashMessages').html(mensagem);
+                return false;
+            }
+       }
+    );
+    });
+</script>
+
+<?php if (count($this->data)): ?>
+<form method="POST" action="" name="cx_unid_entrada">
+    <div class="painel">
+    <input type="submit" title="Encaminha Documento/Processo"         name="acao" value="Encaminhar" />
+    <input type="submit" title="Dar um parecer no Documento/Processo" name="acao" value="Parecer"/>
+    <input type="submit" title="Arquivar um Documento/Processo"       name="acao" value="Arquivar"/>
+    <input type="submit" title="Pesquisa Documento/Processo"          name="acao" value="Pesquisa"/>
+    </div>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/DTPD_NO_TIPO/direcao/<?php echo $this->direcao ?> ">Tipo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">Número<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Data<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/LOTA_SIGLA_LOTACAO/direcao/<?php echo $this->direcao ?> ">Origem<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/ENCAMINHADOR/direcao/<?php echo $this->direcao ?> ">Autor<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/DIAS_PENDENTES/direcao/<?php echo $this->direcao ?> ">Tempo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/novos/ordem/DOCM_NR_DOCUMENTO_RED/direcao/<?php echo $this->direcao ?> ">visualizar</a></th>
+            </tr>
+        </thead>
+                <tbody>
+                <?php
+                foreach ($this->data as $data):
+                    if (is_null($data["MODE_DH_RECEBIMENTO"])) {
+                        $msg_leitura = "Documento não lido";
+                        $lido = "naolido";
+                    } else {
+                        $msg_leitura = "Documento lido";
+                        $lido = '';
+                    }
+                    if (is_null($data["DOCM_NR_DOCUMENTO_RED"])){
+                        $msg_anexo = "Adicionar o arquivo";
+                        $anexo = "alertaButton";
+                    }else{
+                        $msg_anexo = "Abrir Documento";
+                        $anexo = 'abrirAnexo';
+                    }
+                    ?>
+                    <tr name="rowList" value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" > 
+                        <td>
+<!--                            <input  id="<?php //echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" value="<?php //echo $this->escape($data["DOCM_ID_DOCUMENTO"] . '|' . $data["DOCM_NR_DOCUMENTO"] . '|' . $data["MODE_SG_SECAO_UNID_DESTINO"] . '|' . $data["MODE_CD_SECAO_UNID_DESTINO"]) ?>"/>-->
+                        <input style="/*margin: 0; padding: 0;*/" id="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" value="<?php print_r($data);?>"/>
+                        </td>
+                        <td> <span  class="naolido" title="<?php echo $msg_leitura; ?>" ></span></td>
+                        <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                        <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+                        <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO"]) ?></td>
+                        <td> <?php echo $this->escape($data["LOTA_SIGLA_LOTACAO"]) ?></td>
+                        <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                        <td> <?php echo $this->escape($data["DIAS_PENDENTES"]) ?></td>
+                        <td><a class="<?php echo $anexo; ?>" target="_blank" title="<?php echo $msg_anexo; ?>" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/<?php echo $this->escape($data["DOCM_NR_DOCUMENTO_RED"]) ?> "></a></td>
+                    </tr>
+    <?php endforeach; ?>
+            </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)
+                //-- pagination
+                //-- style
+                //-- partial
+                //-- data
+                ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>        
+</form>

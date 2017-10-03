@@ -1,0 +1,17 @@
+a,a:link,a:active {
+	text-decoration: underline;
+	font: 12px verdana;
+	color: #15428B;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+img {
+	border: 0;
+}
+
+td a {
+	margin: 1px;
+}

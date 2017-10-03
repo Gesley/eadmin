@@ -1,0 +1,143 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/multiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/sisad/mensagem.js'))
+        ->appendFile(($this->baseUrl() . '/js/addLista.js'))
+        ->appendFile(($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js'))
+        ->appendFile(($this->baseUrl() . '/js/sisad/documento/encaminhar.js'));
+?>
+
+<style>
+    .container_pagination{
+        margin-top: 30px;
+    }
+</style>
+<script>
+    $(document).ready(function(){
+        function validateTimestamp(timestamp) {
+
+            var split = timestamp.split(/[^\d]+/);
+
+            var year = parseFloat(split[2]);
+            var month = parseFloat(split[1]);
+            var day = parseFloat(split[0]);
+
+            var hour = parseFloat(split[3]);
+            var minute = parseFloat(split[4]);
+            var second = parseFloat(split[5]);
+
+            return hour < 25 && minute < 61 && second < 61 && month < 13 && day < 32;
+
+        }
+        
+        $('#LIST_DT_INICIO_DIVULGACAO').blur(function(){
+            if(!validateTimestamp($(this).val())){
+                $(this).val('');
+                $(this).focus();
+            }
+        });
+        $('#LIST_DT_FIM_DIVULGACAO').blur(function(){
+            if(!validateTimestamp($(this).val())){
+                $(this).val('');
+                $(this).focus();
+            }
+        });
+    });
+</script>
+
+
+<form name="<?php echo $this->form_encaminhar->getName() ?>" 
+      action="<?php echo $this->form_encaminhar->getAction() ?>" 
+      method="<?php echo $this->form_encaminhar->getMethod() ?>" 
+      enctype="<?php echo $this->form_encaminhar->getEnctype() ?>"
+      id="<?php echo $this->form_encaminhar->getAttrib('id') ?>">
+
+    <div class="container_pagination">
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th >Tipo</th>
+                    <th >Número</th>
+                    <th >Encaminhador</th>
+                    <th >Data/Hora Encaminhamento</th>
+                </tr>
+            </thead>
+            <tbody id="documentosList" >
+                <?php
+                foreach ($this->data as $data):
+                    ?>
+                    <tr class="documentos">
+                        <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                        <td style="width: 15%" title= "<?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?>" > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                        <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                        <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                    </tr>
+                    <?php ?>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+
+    <?php
+    echo $this->form_encaminhar->ACAO_ENCAMINHAR;
+    echo $this->form_encaminhar->MOFA_DS_COMPLEMENTO;
+    echo $this->form_encaminhar->ANEXOS;
+    echo $this->form_encaminhar->radio_tipo_encaminhamento;
+    echo $this->form_encaminhar->check_apenas_caixa_minha_responsabilidade;
+    echo $this->form_encaminhar->checkbox_minha_caixa_pessoal;
+    echo $this->form_encaminhar->checkbox_apenas_responsaveis;
+    echo $this->form_encaminhar->MODE_SG_SECAO_UNID_DESTINO;
+    echo $this->form_encaminhar->SECAO_SUBSECAO;
+    echo $this->form_encaminhar->MODE_CD_SECAO_UNID_DESTINO;
+    echo $this->form_encaminhar->caixa_minha_responsabilidade;
+    echo $this->form_encaminhar->pessoa_trf1;
+    echo $this->form_encaminhar->caixa_responsabilidade_usuario;
+    echo $this->form_encaminhar->pessoas_da_unidade;
+    echo $this->form_encaminhar->responsaveis_pela_unidade;
+    echo $this->form_encaminhar->acao_sistema;
+    echo $this->form_encaminhar->controle_sistema;
+    echo $this->form_encaminhar->modulo_sistema;
+    ?>
+    <div id="campos-divulgacao">
+        <?php if ($this->PermissaoLista) { ?>
+            <div id="internalista">
+                <?php echo $this->form_listas->getElement('LIST_ID_COMPONENTE'); ?>
+                <?php //echo $this->partial('aviso/addLista.phtml', array('form' => $this->form_listas)); ?>
+                <table id="selecionados_partes"  style="margin-top: 20px; width: 550px; display: none;" class="grid tabela">
+                    <thead> 
+                        <tr>
+                            <th colspan="2"> Divulgar Para: </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2"><a href='#' class='removerTodos' rel='' >Remover todos</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <?php echo $this->form_listas->getElement('LIST_DT_INICIO_DIVULGACAO'); ?>
+                <?php echo $this->form_listas->getElement('LIST_DT_FIM_DIVULGACAO'); ?>
+            </div>
+        <? } ?>
+    </div>
+    <?php
+    echo $this->form_encaminhar->salvar;
+    ?>
+
+</form>
+
+<script>
+    $('document').ready(function() {
+        inicializaVariaveis({
+            "jsonResponsaveisAgrupadosPorUnidade": <?= $this->jsonResponsaveisAgrupadosPorUnidade ?>
+            , "jsonPessoasFisicasTrf1AgrupadasPorLotacao": <?= $this->jsonPessoasFisicasTrf1AgrupadasPorLotacao ?>
+        });
+    });
+</script>

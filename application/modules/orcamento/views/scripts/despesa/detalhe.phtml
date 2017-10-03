@@ -1,0 +1,53 @@
+<?php
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+
+echo '<br />';
+/* echo $this->partial('_partials/despesa_codigo.phtml', array(	'despesa'	=> $this->despesa)); */
+echo $this->partial('_partials/despesa_detalhe.phtml', array('despesa' => $this->despesa, 'contrato' => $this->contrato, 'bloqueioConsolidacao' => $this->bloqueioConsolidacao));
+
+// Links adicionais EXCLUSIVOS para a tela de Detalhe da Despesa 
+$linkRdo = $this->url(array('module' => Trf1_Orcamento_Definicoes::NOME_MODULO,
+    'controller' => 'rdo',
+    'action' => 'index',
+    'REQV_NR_DESPESA' => $this->despesa['DESP_NR_DESPESA']), 0, true);
+$linkSaldo = $this->url(array('module' => Trf1_Orcamento_Definicoes::NOME_MODULO,
+    'controller' => 'saldo',
+    'action' => 'detalhe',
+    'cod' => $this->despesa['DESP_NR_DESPESA']), 0, true);
+$linkExtrato = $this->url(array('module' => Trf1_Orcamento_Definicoes::NOME_MODULO,
+    'controller' => 'extrato',
+    'action' => 'detalhe',
+    'cod' => $this->despesa['DESP_NR_DESPESA'],
+    'order' => 'DT_LANCAMENTO_ASC'), 0, true);
+$linkProjecao = $this->url(array('module' => Trf1_Orcamento_Definicoes::NOME_MODULO,
+    'controller' => 'projecao',
+    'action' => 'editar',
+    'cod' => $this->despesa['DESP_NR_DESPESA']), 0, true);
+
+echo '<br />';
+echo $this->partial('_partials/botao.phtml', array('nomeController' => 'despesa',
+    'nomeAction' => Trf1_Orcamento_Definicoes::ACTION_INDEX,
+    'nomeClasse' => Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+    'textoBotao' => 'Voltar para listagem',
+    'textoAlternativo' => 'Retornar à tela de Listagem de despesas'));
+?>
+<a	class="ceo_detalhar"
+   alt="Veja as requisições desta despesa"
+   title="Veja as requisições desta despesa"
+   href="<?php echo $linkRdo; ?>">Ver Requisições</a>&nbsp;
+
+<a	class="ceo_detalhar"
+   alt="Veja o saldo desta despesa"
+   title="Veja o saldo desta despesa"
+   href="<?php echo $linkSaldo; ?>">Ver saldo</a>&nbsp;
+
+<a	class="ceo_detalhar"
+   alt="Veja o extrato desta despesa"
+   title="Veja o extrato desta despesa"
+   href="<?php echo $linkExtrato; ?>">Ver extrato</a>&nbsp;
+
+<a	class="ceo_detalhar"
+   alt="Veja a projeção desta despesa"
+   title="Veja a projeção desta despesa"
+   href="<?php echo $linkProjecao; ?>">Ver projeção</a>&nbsp;

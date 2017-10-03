@@ -1,0 +1,188 @@
+<?php 
+    $tppoTipoPostagem = new Application_Model_DbTable_SadTbTppoTipoPostagem();
+    $getTipoPostagem = $tppoTipoPostagem->getTipoPostagem();
+    $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.maskedinput-1.3.js'));
+?>
+ <script type="text/javascript">
+    $(function() {
+//        $("#POST_VR_POSTAGEM").mask("999.999,99");
+        
+        $( "#tabs" ).tabs();
+        $( "#tabs" ).tabs("select",GLOBAL_indice_abas);
+        $( "#tabs" ).tabs({
+           select: function(event, ui) {
+                GLOBAL_indice_abas = ui.index;
+           }
+        });
+        $( "#buttonsetmanifestacao" ).buttonset();
+        $( ".abrirAnexo" ).button({
+                icons: {
+                    primary: "ui-icon-folder-open"
+                }
+        }).attr('style','width: 40px; height: 16px;');
+        $( ".alertaButton" ).button({
+            icons: {
+                primary: "ui-icon-alert"
+            }
+        }).attr('style','width: 40px; height: 16px;');
+                
+        $('input[name=acao]').click(
+            function(){
+                var acao = this.value;
+                var cx_unid_ranscunho = $('form[name=postar]');
+                if(acao == 'Gravar'){
+                    cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/protocolo/postagem');
+                }else if(acao == 'Devolver'){
+                    cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/protocolo/postagem');
+                }
+            }
+        );
+    });
+    function formatar_moeda(campo, separador_milhar, separador_decimal, tecla) {
+    var sep = 0;
+    var key = '';
+    var i = j = 0;
+    var len = len2 = 0;
+    var strCheck = '0123456789';
+    var aux = aux2 = '';
+    var whichCode = (window.Event) ? tecla.which : tecla.keyCode;
+
+    if (whichCode == 13) return true; // Tecla Enter
+    if (whichCode == 8) return true; // Tecla Delete
+    key = String.fromCharCode(whichCode); // Pegando o valor digitado
+    if (strCheck.indexOf(key) == -1) return false; // Valor inválido (não inteiro)
+    len = campo.value.length;
+    for(i = 0; i < len; i++)
+    if ((campo.value.charAt(i) != '0') && (campo.value.charAt(i) != separador_decimal)) break;
+    aux = '';
+    for(; i < len; i++)
+    if (strCheck.indexOf(campo.value.charAt(i))!=-1) aux += campo.value.charAt(i);
+    aux += key;
+    len = aux.length;
+    if (len == 0) campo.value = '';
+    if (len == 1) campo.value = '0'+ separador_decimal + '0' + aux;
+    if (len == 2) campo.value = '0'+ separador_decimal + aux;
+
+    if (len > 2) {
+    aux2 = '';
+
+    for (j = 0, i = len - 3; i >= 0; i--) {
+    if (j == 3) {
+    aux2 += separador_milhar;
+    j = 0;
+    }
+    aux2 += aux.charAt(i);
+    j++;
+    }
+
+    campo.value = '';
+    len2 = aux2.length;
+    for (i = len2 - 1; i >= 0; i--)
+    campo.value += aux2.charAt(i);
+    campo.value += separador_decimal + aux.substr(len - 2, len);
+}
+
+return false;
+}
+ </script>
+ <form method="POST" action="" name="postar">
+    <div id="tabs">
+       <ul>
+		<li><a href="#tabs-1">Dados Postagem</a></li>
+	</ul>
+        <div id="tabs-1">
+            <table class="" style=" cursor: default;/*border: 1px solid red; border-collapse: separate; border-bottom: 1px solid red;*/" >
+                <tr style="font-size: 12px; font-weight: bold;">
+                    <td title="Número do Protocolo" colspan="2">
+                        N° Protocolo:&emsp;<?php echo $this->data["PRDC_ID_PROTOCOLO"]?>
+                        <input type="hidden" name="protocolo" value="<?php echo $this->data["PRDC_ID_PROTOCOLO"]?>"/>
+                        <input type="hidden" name="PRDC_ID_POSTAGEM_PROC_DOC" value="<?php echo $this->data["PRDC_ID_POSTAGEM_PROC_DOC"]?>"/>
+                    </td>
+                    <td colspan="2" title="Número do documento">
+                        Documentos no Pacote :&emsp;<?php echo $this->data["QTD"]?>
+                    </td>
+                </tr>
+                <tr>
+                    <th >DADOS DA POSTAGEM:</th>
+                </tr>
+                <tr>
+                    <th >&emsp;A/C:</th>
+                    <td colspan="4" title="Nome do Destinatário">
+                        <?php echo $this->data["POST_NM_DESTINATARIO_EXTERNO"];?>
+                    </td>
+                </tr>
+                <tr>
+                    <th >&emsp;Destinatário:</th>
+                    <td colspan="4" title="Destino">
+                        <?php echo $this->data["REMETENTE"];?>
+                    </td>
+                </tr>
+                <tr>
+                    <th >&emsp;Endereço:</th>
+                    <td title="Endereço" ><?php echo $this->data["POST_DS_ENDERECO_DESTINO"];?></td>
+                    <th>Bairro:</th>
+                    <td title="Bairro"><?php echo $this->data["POST_DS_BAIRRO_DESTINO"]; ?></td>
+                </tr>
+                <tr>
+                    <th>&emsp;Cidade:</th>
+                    <td ><?php echo $this->data["POST_DS_CIDADE_DESTINO"]; ?></td>
+                    <th>UF:</th>
+                    <td><?php echo $this->data["POST_CD_UF_DESTINO"]; ?></td>
+                </tr>
+                <tr>
+                    <th >&emsp;CEP:</th>
+                    <td><?php echo $this->data["POST_CD_CEP_DESTINO"]; ?></td>
+                    <th>País:</th>
+                    <td><?php echo $this->data["POST_DS_PAIS_DESTINO"];?></td>
+                </tr>
+                </tr>
+                <tr>
+                    <th >DADOS DOS CORREIOS:</th>
+                </tr>
+                <tr>
+                    <th>&emsp;Peso(em gr.):</th>
+                    <td ><input type="select" name="POST_NR_PESO_POSTAGEM_PROC_DOC" value="<?php echo $this->data["POST_NR_PESO_POSTAGEM_PROC_DOC"];?>"></input></td>
+                    <th>Valor(em R$):</th>
+                    <td><input type="text" name="POST_VR_POSTAGEM" length="15" onkeypress="return formatar_moeda(this,'','.',event);" value="<?php echo $this->data["POST_VR_POSTAGEM"];?>"></td>
+                </tr>
+                <tr>
+                    <th>&emsp;Registro Correios:</th>
+                    <td ><input type="text" name="POST_CD_CORREIO_ENVIO" value="<?php echo $this->data["POST_CD_CORREIO_ENVIO"];?>"></input></td>
+                </tr>
+                <tr>
+                    <th>&emsp;Tipo Postagem:</th>
+                    <td >
+                        <select name="POST_ID_TIPO_POSTAGEM">
+                            <?php foreach ($getTipoPostagem as $tiposPostagem) { 
+                                if ($tiposPostagem["TPPO_ID_TIPO_POSTAGEM"] == $this->data["POST_ID_TIPO_POSTAGEM"]){;
+                            ?>
+                                <option selected="selected" value="<?php echo $tiposPostagem["TPPO_ID_TIPO_POSTAGEM"]; ?>"><?php echo $tiposPostagem["TPPO_DS_TIPO_POSTAGEM"]; ?></option>
+                            <?php }else{ ?>
+                                <option value="<?php echo $tiposPostagem["TPPO_ID_TIPO_POSTAGEM"]; ?>"><?php echo $tiposPostagem["TPPO_DS_TIPO_POSTAGEM"]; ?></option>
+                            <?php } } ?>
+                        </select>
+                    </td>
+                    <th>Tipo de Tarifa:</th>
+                    <td >
+                        <select name="POST_ID_TIPO_TARIFA">
+                            <option value="1">INTERNACIONAL</option>
+                            <option value="2">NACIONAL (ESTADUAL)</option>
+                            <option value="3">NACIONAL (CAPITAL-CAPITAL)</option>
+                            <option value="4">NACIONAL (CAPITAL-INTERIOR)</option>
+                            <option value="5">NACIONAL (INTERIOR-CAPITAL)</option>
+                            <option value="6">NACIONAL (INTERIOR-INTERIOR)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>&emsp;Data de Saída:</th>
+                    <td ><?php echo date("d/m/Y");?></td>
+                </tr>
+            </table>
+        </div>
+            <div class="painel">
+                &emsp;<input type="submit" title="Postagem de Documentos/Processos"          name="acao" value="Gravar" /></input>
+                &emsp;<input type="submit" title="Devolver Documento/Processo ao Remetente"  name="acao" value="Devolver" /></input>
+            </div>
+    </div>
+ </form>

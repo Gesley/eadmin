@@ -1,0 +1,102 @@
+
+
+
+<?php if ($this->pageCount): ?>
+<div style="margin-top: 6px; margin-bottom: 6px;">
+    <?php $params = array('page' => null)?>
+    <div class="paginationControl" style="text-align:center">
+        <?php if (isset($this->previous)): ?>
+            <?php $params['page'] = $this->first?>
+            <a href="<?php echo $this->url($params); ?>">
+                <?php echo 'Primeira' ?>
+            </a>
+             <?php $params['page'] = $this->previous?>
+            <a href="<?php echo $this->url($params); ?>">
+                &lt; <?php echo 'Anterior' ?>
+            </a> 
+        <?php else: ?>
+            <span class="disabled"><?php echo 'Primeira' ?></span> 
+            <span class="disabled">&lt; <?php echo 'Anterior' ?></span> 
+        <?php endif; ?>
+
+        <?php foreach ($this->pagesInRange as $page): ?>
+            <?php if ($page != $this->current): ?>
+                <?php $params['page'] = $page?>
+                <a href="<?php echo $this->url($params); ?>"><?php echo $page; ?></a> 
+            <?php else: ?>
+                <span class="disabled"><?php echo $page; ?></span>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+        <?php if (isset($this->next)): ?>
+            <?php $params['page'] = $this->next?>
+            <a href="<?php echo $this->url($params); ?>">
+                <?php echo 'Próxima' ?>  &gt;
+            </a>
+            <?php $params['page'] = $this->last?>
+            <a href="<?php echo $this->url($params); ?>">
+                <?php echo 'Última' ?> 
+            </a>
+        <?php else: ?>
+            <span class="disabled"><?php echo 'Próxima' ?> &gt;</span>
+            <span class="disabled"><?php echo 'Última' ?> </span>
+        <?php endif; ?>
+            <?php $current_itemsperpage = $this->itemCountPerPage; ?>
+            
+            
+            <script type="text/javascript">
+                $(function(){
+                    $(".PerPage").change(
+                        function(){
+							
+                            var this_per_page = $(this);
+                            var options = this_per_page.find("option:selected");
+                            window.location.href = options.attr('url');
+                            return;
+                        }
+                    );
+                });
+            </script>
+            
+            <label> 
+                <select class="PerPage" title="Número de registros por página" id="paginaContador" >
+                    <?php $params['itemsperpage'] = '15'?>
+                    <option 
+                            <?php if($current_itemsperpage == '15' ) echo 'selected="selected"' ?>  
+                            url="<?php echo $this->url($params); ?>"
+                    >
+                            <?php echo '15' ?>
+                    </option>
+                    <?php $params['itemsperpage'] = '30'?>
+                    <option 
+                            <?php if($current_itemsperpage == '30') echo 'selected="selected"' ?>  
+                            url="<?php echo $this->url($params); ?> "
+                    >
+                            <?php echo '30' ?>
+                    </option>
+                    <?php $params['itemsperpage'] = '60'?>
+                    <option 
+                            <?php if($current_itemsperpage == '60') echo 'selected="selected"' ?>  
+                            url="<?php echo $this->url($params); ?> "
+                    >
+                            <?php echo '60' ?>
+                    </option>
+                    <?php $params['itemsperpage'] = '120'?>
+                    <option 
+                            <?php if($current_itemsperpage == '120') echo 'selected="selected"' ?>  
+                            url="<?php echo $this->url($params); ?> "
+                    >
+                            <?php echo '120' ?>
+                    </option>
+                    <?php $params['itemsperpage'] = '240'?>
+                    <option 
+                            <?php if($current_itemsperpage == '240') echo 'selected="selected"' ?>  
+                            url="<?php echo $this->url($params); ?> "
+                    >
+                            <?php echo '240' ?>
+                    </option>
+                </select>
+            </label>
+    </div>
+</div>
+<?php endif; ?>

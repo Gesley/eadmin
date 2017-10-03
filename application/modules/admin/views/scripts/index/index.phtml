@@ -1,0 +1,154 @@
+<?php $this->inlineScript()->appendFile($this->baseUrl() . '/js/admin/index.js ', 'text/javascript'); ?>
+<?php
+
+    $userNs = new Zend_Session_Namespace('userNs');
+
+    $ocsTbPupePerfilUnidPessoa = new Application_Model_DbTable_OcsTbPupePerfilUnidPessoa();
+    $perfilDSV = $ocsTbPupePerfilUnidPessoa->getPerfilDSV($userNs->matricula);
+    
+    if (!$perfilDSV)
+    {
+        $DSV = false;
+        $display = "style='display:none;'";
+    }
+    
+    $displaynone = "style='display:none;'";
+    
+?>
+<h3>Selecione uma opção no menu acima.</h3>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+    $(function(){
+        $('#extensaoPrazo').hide();
+        $('#minhasSolicitacoes').hide();
+        botao_ajuda_by_id.delay(200).show('scale');
+        $('#botao_ajuda').click(function(){
+            $('#minhasSolicitacoes').show();
+            $('#extensaoPrazo').show();
+        });
+        $('.ui-button-text').click(function(){
+            $('#minhasSolicitacoes').show();
+            $('#extensaoPrazo').show();
+        });
+    });
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>Em quase todas as telas existe um botão de ajuda [?] o qual descreve as principais funcionalidades referentes à tela em uso.</li>
+        <li>Escolha um dos <i>sitemas</i> acima e bom trabalho!</li>   
+    </ul>
+    <br />
+    <p><i>Atenção</i>: Cada sessão aberta pelo usuário dura aproximadamente <b>59 minutos</b>, findo este tempo, sem a execução de nenhuma ação,  o sistema encerra a sessão.</p>
+    <p><center>(necessário um novo login)</center></p>
+
+<h3>Notificação&ensp;</h3>
+<p>Quando um novo documento ou processo for enviado para caixa pessoal ou caixa da unidade na qual seja responsável será mostrado um botão indicando que há um novo documento/processo.</p>
+
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+<span id="botao_ajuda_recolhe" ></span>
+</div>
+<div id="msg"></div>
+
+<?php
+
+if ($this->solicitacoesparaavaliar > 0) {
+    ?>
+    <div id="alertAvaliacoes" class="info">Existem solicitações para avaliar (<i>conforme portaria PRESI-SECIN 445 DE 3 DE NOVEMBRO DE 2011, artigo 3º e parágrafo único</i>). <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/avaliacao">Clique aqui para avaliar.</a></div>
+<?php } ?>
+<?php if ($this->solicitacoescompedidodeinformacao > 0) { ?>
+    <div id="alertAvaliacoes" class="info">Existem solicitações com Pedido de Informação para responder. <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/pedidoinformacao">Clique aqui para incluir informação.</a></div>
+<?php } ?>
+<?php if ($this->solicitacoesematendimento > 0) { ?>
+    <div id="alertAvaliacoes" class="info">Existem solicitações em Atendimento. <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/atendimento">Clique aqui para saber quais.</a></div>
+<?php } ?>
+<?php if ($this->solicitacoescompedidodeinformacaorespondido > 0) { ?>
+    <div id="alertAvaliacoes" class="info">Existem solicitações com Pedido de Informação Respondido. <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/pedidoinformacaorespondido">Clique aqui para saber quais.</a></div>
+<?php } ?>
+<?php if (count($this->caixaextintacomdocumentos) > 0) { ?>
+    <div id="alertAvaliacoes" class="info">
+        Existem documentos em unidades que foram extintas. <a href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/442544/dcmto/85461660100267" title="Procedimento para migrar os documentos" target="new">Clique aqui para saber como fazer a migração.</a><br />
+    <?php foreach ($this->caixaextintacomdocumentos as $d): ?>
+        <?php foreach ($d as $y=> $c): ?>
+            A caixa de atendimento <?php echo $y; ?> foi extinta. <a href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/trocarcaixa">Clique aqui para migrar os <?php echo $c; ?> documentos para uma caixa que está ativa.</a> 
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+        </div>
+<?php } ?>
+<!-- Avisos de Solicitações com Pedido de Extensão de Prazo -->
+    <?php // if($this->caixasQuantidade > 0){ ?>
+<fieldset id="extensaoPrazo">
+    <legend class="minhaSolicit" id="fieldCaixaExtensao">Caixas com Solicitações de Extensão de Prazos</legend>
+    <div id="conteudoExtensao"></div>
+</fieldset>
+<?php // } ?>
+<!-- Fim dos avisos de Pedido de Extensão de Prazo -->
+
+<fieldset id="minhasSolicitacoes">
+    <legend class="minhaSolicit" id="fieldSolicitacoes">Minhas Solicitações</legend>
+    <div id="conteudoSolicit"></div>
+</fieldset>
+
+<fieldset>
+    <legend class="minhaSolicit" id="fieldNotificacoes">Minhas Notificações</legend>
+    <div id="conteudoNotificacoes"></div>
+</fieldset>
+
+<fieldset>
+    <legend class="minhaSolicit" id="fieldMeusAvisos">Meus Avisos</legend>
+    <div id="conteudoMeusAvisos"></div>
+</fieldset>
+
+<?php if ($this->dashboardSosti == 'ATIVO' || $this->dashboardSisad == 'ATIVO'): ?>
+    <fieldset>
+        <legend class="minhaSolicit" id="fieldGrafico">Gráficoss</legend>
+        <div id="conteudoGrafico">
+            <table>
+                <tr>
+                    <td bgcolor="#dedede" colspan="2"> Dashboard </td>
+                </tr>
+                <tr>
+                <?php if ($this->dashboardSosti == 'ATIVO'): ?>
+                    <td><a href="<?php echo $this->baseUrl(); ?>/sosti/index">Sosti</a></td>
+                <?php endif; ?>
+                <?php if ($this->dashboardSisad == 'ATIVO'): ?>
+                        <td><a href="<?php echo $this->baseUrl(); ?>/sisad/index">Sisad</a></td>
+                <?php endif; ?>
+                </tr>
+            </table>
+        </div>
+    </fieldset>    
+<?php endif; ?>
+<br>
+<div class="notice" >
+    <ul>
+        <li>
+            <a href="http://sistemas.trf1.jus.br/Servicos/RelatorioIndisponibilidade/view.php"  target="_blank">
+                Relatório de Indisponibilidades da Rede / Sistemas.
+            </a>
+        </li>
+        <?php if ($this->responsavelCaixa == 'ATIVO'): ?> 
+        <li>
+            Senhor Supervisor/Diretor, <a href="<?php echo $this->baseUrl(); ?>/guardiao/perfilpessoa/form">verifique se o seu Substituto já possui permissão </a>para acesso à Caixa de Entrada da Unidade no e-Sisad, antes de cumprir afastamento (férias ou licença).
+        </li>
+        <?php endif; ?>
+    </ul>
+</div>
+<?php if ($this->dadospessoaisdesatualizados != ''): ?>
+    <h3 style="color: red; text-indent: 30px;"> <?php echo $this->dadospessoaisdesatualizados; ?> </h3>
+    <ul>
+    <?php foreach ($this->msgsAlertaDadosPessoais as $value): ?>
+            <li style=" margin-left: 60px;" > <?php echo $value; ?></li>
+        </ul>
+
+            <?php endforeach; ?>
+    <?php endif; ?>
+
+    <!--    <p style="color: red; text-indent: 30px;">
+        Manter os dados de cadastro de cadastro institucional atualizados é uma condição obrigatória para o uso do sistema.<br/>
+        Por favor, entre em contato com o Setor de Segurança para verificar a situação de seu cadastro.
+        
+    </p>-->
+    <?php
+//}
+?>
+

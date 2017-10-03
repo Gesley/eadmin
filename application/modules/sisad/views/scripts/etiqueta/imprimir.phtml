@@ -1,0 +1,62 @@
+<br/>
+<?php 
+    $userNamespace = new Zend_Session_Namespace('userNs');
+    $cont = 1; 
+    foreach ($this->dados as $value) { 
+?>
+<br />
+<div style="width: 600px; margin: 10 auto; display: block; ">
+    <table style="font-size: 10px">
+        <tr>
+            <td style="font-size: 10px">
+                Remetente
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &emsp;Tribunal Regional Federal 1° Região
+            </td>
+            <td colspan="2">
+                &emsp;&emsp;&emsp;<?php echo strtoupper($userNamespace->siglalotacao); ?> - <?php echo $userNamespace->descicaolotacao; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Destinatário
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                &emsp;A/C <?php echo $value["POST_NM_DESTINATARIO_EXTERNO"]; ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                &emsp;<?php echo $value["PJUR_NO_FANTASIA"];?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                &emsp;<?php echo $value["POST_DS_ENDERECO_DESTINO"]; ?>
+            </td>
+            <td>
+                <?php echo $value["POST_DS_BAIRRO_DESTINO"]; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &emsp;<?php echo $value["POST_DS_CIDADE_DESTINO"]; ?> - <?php echo $value["POST_CD_UF_DESTINO"]; ?>
+            </td>
+            <td>
+                <?php echo $value["POST_CD_CEP_DESTINO"]; ?>
+            </td>
+            <td>
+                <img src='..\\temp\\<?php echo $value["NOMECODBARRAS"]; ?>'>
+            </td>
+        </tr>
+    </table>
+    </div> 
+    <?php if(($cont % 5) == 0){  echo ($cont % 5);  ?>
+<?php  }
+    $cont++; 
+} ?>

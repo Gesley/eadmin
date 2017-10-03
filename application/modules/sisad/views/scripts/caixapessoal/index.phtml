@@ -1,0 +1,46 @@
+<?php if (count($this->data)): ?>
+<div id="container_pagination">
+<div><a  class="novo" href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/form">Novo</a> </div>
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Ações</th>
+            <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixa/index/ordem/DTPD_NO_TIPO/direcao/<?php echo $this->direcao ?> ">Tipo</a></th>
+            <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixa/index/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">Número</a></th>
+            <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixa/index/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Data</a></th>
+            <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixa/index/ordem/LOTA_SIGLA_LOTACAO/direcao/<?php echo $this->direcao ?> ">Origem</a></th>
+            <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixa/index/ordem/ENCAMINHADOR/direcao/<?php echo $this->direcao ?> ">Autor</a></th>
+            <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixa/index/ordem/DIAS_PENDENTES/direcao/<?php echo $this->direcao ?> ">Tempo</a></th>
+        </tr>
+    </thead>
+     
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+    <tr>
+<!--            <td class="painel"><a title="Editar" class="editar" href="sisad/faseadm/form/id/<?php //echo $data->FADM_ID_FASE ?>">editar</a>-->
+            <!--<a style="height: 20px; width: 28px;" title="Excluir" class="excluir" href="sisad/faseadm/form/id/<?php //echo $data->FADM_ID_FASE ?>" ></a></td>-->
+
+            <td><input  name="<?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?>" type="checkbox" value="<?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?>"/></td>
+   <td><?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+            <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+            <td><?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO"]) ?></td>
+            <td><?php echo $this->escape($data["LOTA_SIGLA_LOTACAO"]) ?></td>
+            <td><?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+   <td><?php echo $this->escape($data["DIAS_PENDENTES"]) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="7">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+</table>
+<?php Zend_Debug::dump($data["FADM_DS_FASE"]);  ?>
+<?php echo $this->paginationControl($this->data, null, null, null)
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+</div>
+

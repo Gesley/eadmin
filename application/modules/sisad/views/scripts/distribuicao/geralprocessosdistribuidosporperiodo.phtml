@@ -1,0 +1,101 @@
+<style>
+    #container{
+        margin: 0 auto;
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+        /*background-size: 190mm 170mm;
+        background-image: url(marca_d_agua.gif);
+        background-position: center;
+        background-repeat: no-repeat;*/
+    }
+    table#header{
+        width: 100%;
+    }
+    table#header td.brasao{
+        
+        background-image: url(<?= $this->baseUrl(); ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    div#texto{
+        font-weight: bold;
+        text-align: justify;
+    }
+    .alinha-centro{
+        font-weight: bold;
+        text-align: center;
+    }
+    div.titulo-tabela{
+        padding-top: 10px;
+        padding-bottom: 7px;
+    }
+    table.conteudo{
+        width: 207mm;;
+        margin-left: 3mm;
+        
+    }
+    table.conteudo tr.titulo{
+        text-align: center;
+        font-weight: bold;
+        background-color: silver;
+        font-size: 13px;
+    }
+    table.conteudo tr.dados{
+        font-size: 13px;
+    }
+    .rodape{
+        font-weight: bold;
+        font-size: 13px;
+    }
+    .rodape-total{
+        font-weight: bold;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+
+
+    <watermarkimage src="<?= $this->baseUrl(); ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+
+    <table class="conteudo" border="0" cellspacing="0" cellpadding="3">
+        <thead>
+            <tr class="titulo">
+                <th nowrap="nowrap">PROCESSO</th>
+                <th nowrap="nowrap">MODALIDADE DE DISTRIBUIÇÃO</th>
+                <th nowrap="nowrap">DATA DISTRIBUIÇÃO</th>
+                <th nowrap="nowrap" width="35%">RELATOR</th>
+            </tr>
+        </thead>
+        <!-- ############################# INICIO DO CONTEUDO-->
+        
+        <?php 
+       
+        foreach ($this->arrayDistribuicoes as $arrayDistribuicao):
+            if (strstr($rowDistribuicao['PMAT_CD_MATRICULA'], 'DS')) {
+                $arrayDistribuicao['PNAT_NO_PESSOA'] = 'DESEMBARGADOR FEDERAL ' . $arrayDistribuicao['PNAT_NO_PESSOA'];
+            }
+         ?>
+            <tr class="dados">
+                <td align="right"><?= $arrayDistribuicao['DOCM_NR_DOCUMENTO'];?></td>
+                <td align="center"><?= $arrayDistribuicao['HDPA_IC_FORMA_DISTRIBUICAO'];?></td>
+                <td align="center"><?= $arrayDistribuicao['HDPA_TS_DISTRIBUICAO'];?></td>
+                <td><?= $arrayDistribuicao['PNAT_NO_PESSOA'];?></td>
+            </tr>
+        <?php endforeach;
+
+        ?>
+        <!-- ############################# FIM DO CONTEUDO-->
+        <tr >
+            <td colspan="4" class="rodape">TOTAL DE PROCESSOS NO ÓRGAO JULGADOR: <?= count($this->arrayDistribuicoes);?></td>
+        </tr>
+    </table>
+    <hr/>
+

@@ -1,0 +1,111 @@
+<?php $tipo = $this->post["TIPO"];?>
+<table>
+        <tr>
+            <th colspan="3"><h2 align="center">Dados de Postagem</h2></th>
+        </tr>
+        <tr>
+                 <?php if(isset($this->post["PRDC_ID_PROTOCOLO"])){?>
+                <td><b>Nr Protocolo :</b> <?php echo $this->post["PRDC_ID_PROTOCOLO"]?></td>
+                   <?php }else{ ?>
+                <td><b>Nr Protocolo : <span style="color: red">Não protocolado</span> </b></td>
+                   <?php } ?>
+                
+                <?php if(isset($this->post["PRDC_DH_PROTOCOLO_DOC_PROC"])){?>
+                <td><b>Data Protocolo :</b> <?php echo $this->post["PRDC_DH_PROTOCOLO_DOC_PROC"]?></td>
+                <?php }?>
+                
+        </tr>
+    </table>
+
+
+<?php foreach ($this->data as $data): $documento = $data["DOCM_ID_DOCUMENTO"];?>
+<table class="grid">
+  <thead>
+       <tr>
+            <th>Tipo</th>
+            <th>Número / Máscara</th>
+            <th>Data</th>
+            <th>Origem</th>
+            <th>Assunto</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr> 
+                <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                <td> <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>
+                <td> <?php echo $this->escape($data["DOCM_DH_CADASTRO"]) ?></td>
+                <td> <?php echo $this->escape($data["LOTA_SIGLA_LOTACAO_EMISSORA"]) ?></td>
+                <td> <?php echo $this->escape($data["AQAT_DS_ATIVIDADE"]) ?></td>
+            </tr>
+    </tbody>
+ <?php
+  $PostPostagem = new Application_Model_DbTable_SadTbPostPostagemProcDoc();
+  $documentos = $PostPostagem->getDadosDocumentosPostagem(null,null,$documento);
+  $endereco = $documentos[0];
+  
+  
+  if($tipo == "devolvidas"){
+  $cancelado =  $PostPostagem->consultarDevolucao($documento); ?>
+       
+    <thead>
+       <tr>
+           <th colspan="5" style="text-align: center">Motivo da Devolução</th>
+          
+      </tr>
+    </thead>
+       <tbody>
+           <tr> 
+                <td colspan="5">
+                    <textarea style="width: 750px; height: auto; disabled"><?php echo $cancelado[0]["PRDC_DS_DEVOLUCAO_PROC_DOC"]; ?></textarea>
+                </td>
+               
+           </tr>
+           <tr> 
+                <td colspan="5">Data da Devolução : <?php echo $cancelado[0]["PRDC_DH_DEVOLUCAO_PROC_DOC"]; ?></td>
+               
+           </tr>
+           
+           
+           
+  </tbody> 
+ <p>      
+       
+       
+   <?php }else{
+  
+  
+  
+  
+  
+  if(isset($endereco["POST_ID_POSTAGEM_PROC_DOC"])){
+  ?>
+   <thead>
+       <tr>
+           <th colspan="5" style="text-align: center">Dados da Entrega</th>
+          
+      </tr>
+    </thead>
+  <tbody>
+            <tr> 
+                <td colspan="2">Tipo de Postagem :<?php echo $endereco["TPPO_DS_TIPO_POSTAGEM"]; ?></td>
+                <td colspan="3">Destinatário :  <?php echo $endereco["POST_NM_DESTINATARIO_EXTERNO"]; ?></td> 
+           </tr>
+           <tr>
+               <td colspan="2">Endereço : <?php echo $endereco["POST_DS_ENDERECO_DESTINO"]; ?></td>
+               <td colspan="3">Destino :  <?php echo $endereco["PJUR_NO_RAZAO_SOCIAL"]; ?> </td>
+           </tr>
+            <tr>
+                <td colspan="2">Cidade : <?php echo $endereco["POST_DS_CIDADE_DESTINO"]." - ".$endereco["POST_CD_UF_DESTINO"]; ?></td>
+                <td colspan="2">Bairro : <?php echo $endereco["POST_DS_BAIRRO_DESTINO"]; ?></td>
+                <td>CEP : <?php echo $endereco["POST_CD_CEP_DESTINO"]; ?></td>
+           </tr>
+
+  </tbody>
+  
+ <?php } } ?>  
+  
+      
+</table>
+<p>
+ <?php endforeach; ?>
+

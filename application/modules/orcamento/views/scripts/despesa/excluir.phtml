@@ -1,0 +1,119 @@
+<?php
+/**
+ * @category	TRF1
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Anderson Sathler M. Ribeiro [asathler@gmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que gera a tela de exclusão de registros
+ * 
+ * @deprecated	string		campos				Nessa versão, tanto a variável $campos quanto $dados são aceitas;
+ * Sendo que $campos tem preferência.
+ * @deprecated	array		campos				...
+ * @deprecated	string		campoDescricao		...
+ * @deprecated	array		campoValor			...
+ * 
+ * @param		array		codigo				Código da chave primária a ser excluída
+ * @param		array		dados				Contém o array com registros.
+ * Nesse caso, a query deve conter aliás para os nomes dos campos utilizados.
+ * 
+ * @example		echo	$this->partial('_partials/tela_exclusao.phtml', array(	'msgAjuda'	=> $this->msgAjuda,
+ * 																				'msgInfo'	=> $this->msgInfo,
+ * 																				'codigo'	=> $this->codigo,
+ * 																				'dados'		=> $this->dados,
+ * 																				[@deprecated 
+ * 																				'campos'	=> array(	array(	'campoDescricao'	=> 'UG para travamento de projeção',
+ * 																												'campoValor'		=> $this->travaprojecao['TRVP_CD_UG']),
+ * 																										array(	'campoDescricao'	=> 'Data Início',
+ * 																												'campoValor'		=> $this->travaprojecao['TRVP_DT_INICIO']),
+ * 																										array(	'campoDescricao'	=> 'Data Fim',
+ * 																												'campoValor'		=> $this->travaprojecao['TRVP_DT_FIM'])
+ * 																									)
+ * 																				]
+ * 										);
+ */
+
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+$saldos = $this->saldos;
+
+// Define chave primária ou composta, conforme a quantidade de campos passados em $this->codigo
+$qtdeCamposChave = count ( $this->codigo );
+?>
+
+<br />
+<h3>Desejar excluir o(s) seguinte(s) registro(s)?</h3>
+
+<div id="exclusaoTabs" class="tabs">
+	<ul>
+		<li><a href="#resumoGeral">Resumo</a></li>
+		<?php
+		foreach ( $this->dados as $registro ) {
+			$campos = '';
+			for($i = 0; $i < $qtdeCamposChave; $i ++) {
+				$campos .= $registro [$this->codigo [$i]] . '-';
+				$campos = str_replace('/', '-', $campos);
+			}
+			$campos = substr ( $campos, 0, - 1 );
+			
+			echo '<li><a href="#' . $campos . '">' . $campos . '</a></li>' . PHP_EOL;
+		}
+		?>
+	</ul>
+
+	<div id="resumoGeral">
+		<h3>Despesas a serem excluídas</h3>
+		
+		<?php
+		foreach ( $this->dados as $registro ) {
+			$campos = '';
+			for($i = 0; $i < $qtdeCamposChave; $i ++) {
+				$campos .= $registro [$this->codigo [$i]] . '-';
+				$campos = str_replace('/', '-', $campos);
+			}
+			$campos = substr ( $campos, 0, - 1 );
+			
+			echo 'Código: ' . $campos . '<br />' . PHP_EOL;
+		}
+		?>
+	</div>
+	
+	<?php
+	foreach ( $this->dados as $registro ) {
+		// Define a despesa do exercício anterior
+	    $despAnterior = $registro [ 'DESP_NR_COPIA_DESPESA' ];
+		
+	    $campos = '';
+		for($i = 0; $i < $qtdeCamposChave; $i ++) {
+			$campos .= $registro [$this->codigo [$i]] . '-';
+			$campos = str_replace('/', '-', $campos);
+			
+			//unset ( $registro [$this->codigo [$i]] );
+		}
+		$campos = substr ( $campos, 0, - 1 );
+		
+		echo '<div id="' . $campos . '">' . PHP_EOL;
+		
+		// Define saldo da despesa do exercício anterior desta despesa
+		$saldo = $saldos [ $despAnterior ];
+		
+		echo $this->partial('_partials/despesa_detalhe_mostrar.phtml', array(	'despesa'	=> $registro, 'saldo' => $saldo ));
+		
+		echo "</div>" . PHP_EOL . PHP_EOL;
+	}
+	?>
+</div>
+<br />
+<script type="text/javascript"> 
+$(function() {    
+   $('a .ceo_janela').hide();
+   $('#despesaBasico').hide();
+   $('.completo').show();
+});
+</script>
+<?php
+echo $this->partial ( '_partials/botoes_exclusao.phtml', array ('codigo' => $this->codigo ) );

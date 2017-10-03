@@ -1,0 +1,10 @@
+<script src="<?php echo $this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js' ?>"></script>
+<script src="<?php echo $this->baseUrl() . '/js/multiUpload/multiFile.js' ?>"></script>
+<script src="<?php echo $this->baseUrl() . '/js/tarefa/save.js' ?>"></script>
+<fieldset name="save" id="fieldsetSave">
+    <legend id="fieldSave">legend</legend>
+    <?php if ($this->date): ?>
+        <p><strong>Data: </strong><?php echo $this->date; ?></p>
+    <?php endif; ?>
+    <?php echo $this->form; ?>
+</fieldset>

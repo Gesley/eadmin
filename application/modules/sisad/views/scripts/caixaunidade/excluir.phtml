@@ -1,0 +1,76 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<!--<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>Todos os documentos criados ou digitalizados pelo servidor, são direcionados inicialmente para a <b>Caixa de Rascunhos</b>, onde o responsável pela criação do documento irá ver o documento e tomar duas ações:</p>
+    <ul>
+        <li><b>Encaminhar</b> - o documento será encaminhado automaticamente para a Caixa de Entrada de documentos do servidor.</li>
+        <li><b>Excluir</b> - poderá excluir o documento e os metadados ou somente o documento, mantendo os metadados para nova inclusão do documento excluído.</li>
+    </ul>
+    
+    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>-->
+
+<?php if (count($this->data)):?>
+<form method="POST" action="excluir" name="cx_pess_ranscunho">
+<!--    <div class="painel">-->
+<!--    <input type="submit" title="Encaminha Documento/Processo"      disabled="disabled"   name="acao" value="Encaminhar" />-->
+<!--    <input type="submit" title="Assina por senha Documento/Processo"     disabled="disabled"    name="acao" value="Assinar por senha" />-->
+<!--    <input type="submit" title="Dar um parecer no Documento/Processo" name="acao" value="Parecer"/>-->
+<!--    <input type="submit" title="Arquivar um Documento/Processo"  disabled="disabled"      name="acao" value="Arquivar"/>-->
+<!--    <input type="submit" title="Pesquisa Documento/Processo"     disabled="disabled"      name="acao" value="Pesquisa"/>-->
+<!--    <input type="submit" title="Cancelar Documento/Processo"     disabled="disabled"      name="acao" value="Cancelar"/>-->
+<!--    </div>-->
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Número</th>
+                <th >Autor</th>
+                <th >Tipo</th>
+                <th >Data</th>
+            </tr>
+        </thead>
+       <tbody>
+            <?php foreach ($this->data as $data): ?>
+                <?php //foreach ($dado as $data): ?>
+                    <tr>
+                        <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+                        <td><?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                        <td><?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                        <td><?php echo $this->escape($data["DOCM_DH_CADASTRO"]) ?></td>
+                    </tr>
+                <?php //endforeach; ?>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)
+                //-- pagination
+                //-- style
+                //-- partial
+                //-- data
+                ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>   
+<?php echo $this->form; ?>
+</form>
+<div id="dialog-manifestacoes_detalhe">
+    <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+ <div id="dialog-manifestacoes_conteudo"></div>
+</div>

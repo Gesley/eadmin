@@ -1,0 +1,53 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+
+<form method="POST" action="" name="cx_notf">
+<?php if (count($this->data)): ?>
+<?php
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/caixaNotificacao.js'));
+?>
+    <br/>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+<!--                <th>Matricula</th>-->
+                <th>Data e Hora da Notificação </a></th>
+                <th>Sistema</th>
+                <th>Título</th>
+                <th>Descrição da Notificação</th>
+                <th>Data e Hora da Leitura</th>
+                <th>Excluir Notificação</th>
+            </tr>
+        </thead>
+       <tbody>
+            <?php $i=0; foreach ($this->data as $data): ?>
+                <tr class="tr_notf" linha="rowNotif_<?php echo $i; $i++;?>"> 
+<!--                    <td> <?php //echo $this->escape($data["NOTF_CD_MATRICULA"]) ?></td>-->
+                    <td> <?php echo $this->escape($data["DATA_FORMATADA"]) ?></td>
+                    <td> <?php echo $this->escape($data["NOTF_NM_SISTEMA_INTRODUTOR"]) ?></td>
+                    <td> <?php echo $this->escape($data["NOTF_DS_TITULO"]) ?></td>
+                    <td> <?php echo $data["NOTF_DS_NOTIFICACAO"] ?></td>
+                    <td> <?php echo $this->escape($data["NOTF_DH_LEITURA"]) ?></td>
+                    <td> <?php if (($data["NOTF_DH_LEITURA"])!=NULL){ ?><span class="excluirNotif" type="button" dados="<?php echo ($data["NOTF_CD_MATRICULA"]." - ".str_replace('/', '.', $data["MILI"])); ?>"></span> <?php } ?></td>
+                </tr>
+                <?php  ?>
+            <?php endforeach; ?>
+       </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo count($this->data) ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>        
+</form>
+
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

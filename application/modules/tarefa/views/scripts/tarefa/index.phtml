@@ -1,0 +1,58 @@
+<div id="container_pagination">
+    <?php if ($this->perfil == 'gestao'): ?>
+    <div style="margin-bottom: 5px;">
+        <button class="save_<?php echo $this->idDocumento; ?>" name="Incluir" value="Incluir" >Incluir</button>
+    </div>
+    <?php endif; ?>
+    <?php if (count($this->data)): ?>
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th></th>
+                    <!--<th></th>-->
+                    <th>Tipo da Tarefa</th>
+                    <th>Descrição da Tarefa</th>
+                    <th>Responsável pela Tarefa</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->data as $k=>$data): ?>
+                <?php  $statusSolicitacao = Tarefa_Model_DataMapper_TarefaStatusSolicitacao::getStatus(); ?>
+                    <tr>
+                        <td id="painel_<?php echo $this->escape($data->getId()); ?>" class="painel" >
+                            <button class="visualizar" name="Visualizar" value="<?php echo $this->escape($data->getId()); ?>" >Visualizar</button>
+                            <button class="save_<?php echo $this->idDocumento; ?>" name="Editar" value="<?php echo $this->escape($data->getId()); ?>" >Editar</button>
+                            <button class="excluir" id="excluir<?php echo $this->idDocumento; ?>" name="Excluir" value="<?php echo $this->escape($data->getId()); ?>" >Excluir</button>
+                        </td>
+                        <!--<td><?php // echo $this->escape($k+1); ?></td>-->
+                        <td><?php echo $this->escape($data->getTipo()); ?></td>
+                        <td><?php echo $this->escape($data->getDescricao()); ?></td>
+                        <td><?php echo $this->escape($data->getNomeAtendente()); ?></td>
+                        <td><?php echo $statusSolicitacao[$data->getStatus()]; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                        Total: 
+                        <?php echo $this->data->getTotalItemCount(); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    <?php else: ?>
+        <p>Não existem registros.</p>
+    <?php endif; ?>
+</div>
+<!-- Confirma a exclusão do registro -->
+<div id="dialog-tarefa" class="dialog-tarefa" title="Confirmação" style="display: none;">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+        Deseja realmente excluir a tarefa?
+    </p>
+</div>

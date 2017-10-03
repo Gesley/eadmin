@@ -1,0 +1,50 @@
+<form method="POST" action="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/forms" name="laboratorio">
+    <div class="painel">
+        <input type="submit" title="Nova Marca" name="botao" value="Novo" />
+        <input type="hidden" title="Acao" name="acao" value="cadastroMarca" />
+    </div>
+<?php if (count($this->data)): ?>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/hardware/ordem/MARC_ID_MARCA/direcao/<?php echo $this->direcao ?> ">Id<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/hardware/ordem/MARC_DS_MARCA/direcao/<?php echo $this->direcao ?> ">Descrição<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/hardware/ordem/MARC_ID_MARCA/direcao/<?php echo $this->direcao ?> ">Editar</a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/hardware/ordem/MARC_ID_MARCA/direcao/<?php echo $this->direcao ?> ">Excluir</a></th>
+            </tr>
+        </thead>
+                <tbody>
+                <?php
+                foreach ($this->data as $data):
+                    ?>
+                    <tr name="rowList" value="<?php echo $this->escape($data["MARC_ID_MARCA"]); ?>" > 
+                        <td> <?php echo $this->escape($data["MARC_ID_MARCA"]) ?></td>
+                        <td> <?php echo $this->escape($data["MARC_DS_MARCA"]) ?></td>
+                         <td><a class="<?php echo editar; ?>" title="<?php echo $msg_anexo; ?>" href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/forms/tipo/editarMarca/id/<?php echo $this->escape($data["MARC_ID_MARCA"]) ?> "></a></td>
+                        <td><a class="<?php echo excluir; ?>" title="<?php echo $msg_anexo; ?>" href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/forms/tipo/excluirMarca/id/<?php echo $this->escape($data["MARC_ID_MARCA"]) ?> "></a></td>
+                    </tr>
+    <?php endforeach; ?>
+            </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)
+                //-- pagination
+                //-- style
+                //-- partial
+                //-- data
+                ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>        
+</form>

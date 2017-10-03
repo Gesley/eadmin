@@ -1,0 +1,82 @@
+div#topo {
+	background: url(../img/fundo.png) repeat-x;
+	height: 50px;
+}
+
+h1 {
+	margin: 0;
+	padding: 12px 0;
+	background: url(../img/logo.png) no-repeat;
+	height: 26px;
+	text-indent: 180px;
+	color: #f6f9fd;
+	font: bold 14px Helvetica;
+	float: left;
+}
+.required {
+	width: 100px;
+}
+div#box_externo{
+    text-align: center;
+    margin-top: 150px;
+}
+
+div#box_interno{
+    font-weight: bold;
+    background-image: url('../img/brasaoPequeno.jpg');
+    text-align: left;
+    margin-top: 5%;
+    margin-left:40%;
+    margin-right: 25%;
+    position: relative;
+    width: 227px;
+    height: 245px;
+    padding: 50px 50px 10px;
+}
+
+div#tools a:link {
+	color: #f6f9fd;
+	color: #ccc;
+	text-decoration: none;
+}
+
+div#tools a:hover {
+	text-decoration: underline;
+}
+
+div.box_login {
+	text-align: left;
+	width: 280px; 
+	height: 280px; 	
+	margin-left: 40%;
+	margin-right: 25%;
+	margin-top: 5%;
+	padding: 50px 50px 10px 50px;
+	position: relative;	
+}
+div.box_login_background{
+	background-image: url("../img/brasaoPequeno.jpg");
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+div#user {
+	float: left;
+}
+
+div#username {
+	float: none;
+	padding-top: 4px;
+}
+
+div#userperfil,div#sair,div#ajuda {
+	float: left;
+	padding: 0 8px 0 0;
+	margin-top: 4px;
+	/*margin-top: 12px;*/ /*border:1px solid green;*/
+}
+
+div#sair,div#ajuda {
+	border-left: 1px solid #506371;
+	padding: 0 8px 0 8px;
+}

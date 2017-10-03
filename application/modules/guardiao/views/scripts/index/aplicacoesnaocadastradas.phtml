@@ -1,0 +1,25 @@
+<?php if (count($this->data)): ?>
+<table class="grid">
+    <thead>
+        <tr>
+            <th>Nome da model</th>
+            <th>Nome da controller</th>
+            <th>Nome da action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+        <tr>
+            <?php $d = explode('_', $data); ?>
+            <td><?php echo $this->escape($d[0]) ?></td>
+            <td><?php echo $this->escape($d[1]) ?></td>
+            <td><?php echo $this->escape($d[2]) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="12">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<br />
+<?php else: ?>
+    <p>Não existem registros</p>
+<?php endif; ?>

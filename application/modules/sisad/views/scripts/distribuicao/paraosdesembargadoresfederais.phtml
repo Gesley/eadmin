@@ -1,0 +1,110 @@
+<head>
+    
+    <base href="<?php echo $this->baseUrl() ?>/" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <?php
+// Framework CSS
+    $this->headLink()
+    ?>
+    <?php echo $this->headLink(); ?>
+    <?php echo $this->headScript(); ?>
+</head>
+<style>
+    #container{
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+        
+    }
+    div.titulo-rel{
+        width: 100%;
+        text-align: center;
+        float: left;
+        
+    }
+    table#header{
+        width: 100%;
+    }
+    table#header td.brasao{
+        
+        background-image: url(<?= $this->baseUrl(); ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    div#texto{
+        font-weight: bold;
+        text-align: justify;
+        font-size: 13px;
+    }
+    div.titulo-tabela{
+        padding-top: 10px;
+        padding-bottom: 7px;
+    }
+    table.conteudo{
+        width: 207mm;;
+        margin-left: 3mm;
+        
+    }
+    table.conteudo th.titulo{
+        text-align: center;
+        background-color: silver;
+        font-size: 13px;
+    }
+    table.conteudo td.dados{
+        font-size: 13px;
+    }
+    table.conteudo td.rodape{
+        font-weight: bold;
+        font-size: 13px;
+    }
+</style>
+<div id="container">
+    <watermarkimage src="<?= $this->baseUrl(); ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+    <?php
+        $somaTotal = 0;
+        foreach ($this->arrayOrgao as $nomeOrgao => $arrayHitorico):
+            $somaTotal += count($arrayHitorico);
+    ?>
+        <div class="titulo-tabela">
+            <b><?= $this->dia; ?>ÓRGÃO JULGADOR: <?= $nomeOrgao ?></b>
+        </div>
+        <table class="conteudo" border="0" cellspacing="0" cellpadding="3">
+            <thead>
+                <tr >
+                    <th nowrap="nowrap" class="titulo"><b>PROCESSO</b></th>
+                    <th nowrap="nowrap" class="titulo"><b>MODALIDADE DE DISTRIBUIÇÃO</b></th>
+                    <th nowrap="nowrap" class="titulo"><b>DATA DISTRIBUIÇÃO</b></th>
+                    <th nowrap="nowrap" width="35%" class="titulo"><b>RELATOR</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    foreach ($arrayHitorico as $historico):
+                ?>
+                <tr >
+                    <td align="right" class="dados" valign="top"><?= $historico['DOCM_NR_DOCUMENTO'];?></td>
+                    <td align="center" class="dados" valign="top"><?= $historico['HDPA_IC_FORMA_DISTRIBUICAO'];?></td>
+                    <td align="center" class="dados" valign="top"><?= $historico['HDPA_TS_DISTRIBUICAO'];?></td>
+                    <td class="dados" valign="top"><?= $historico['PNAT_NO_PESSOA'];?></td>
+                </tr>
+                <?php
+                    endforeach;
+                ?>
+                <!-- ############################# FIM DO CONTEUDO-->
+                <tr >
+                    <td colspan="4" class="rodape">TOTAL DE PROCESSOS NO ÓRGAO JULGADOR: <?= count($arrayHitorico)?></td>
+                </tr>
+            </tbody>
+        </table>
+        <hr/>
+    <?php
+        endforeach;
+    ?>
+    <div class="titulo-rel"><b>TOTAL DE PROCESSOS DISTRIBUÍDOS ELETRONICAMENTE NESTA DATA: <?= $somaTotal?></b></div>
+</div><!-- Fim da div Container-->

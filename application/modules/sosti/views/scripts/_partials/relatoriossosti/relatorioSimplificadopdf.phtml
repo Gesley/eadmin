@@ -1,0 +1,26 @@
+<table style="border: 1px solid #C3C3C3;" >
+    <thead> 
+        <tr style="font-weight: bold; background-color: #CCCCCC">
+            <th style="border: 1px solid #C3C3C3;" > N. Solicita&ccedil;&atilde;o </td>
+            <th style="border: 1px solid #C3C3C3;" > Data Abertura </td>
+            <th style="border: 1px solid #C3C3C3;" > Tempo Total </td>
+            <th style="border: 1px solid #C3C3C3;"> &Uacute;ltima Fase </td>
+            <th style="border: 1px solid #C3C3C3;"> Data &Uacute;lt. Fase </td>
+        </tr>
+    </thead>
+    <tbody> 
+<?php foreach($this->data as $data): ?>
+                <tr>
+                    <td style="border: 1px solid #C3C3C3; padding: 0px 2px;"> <?php echo $data['DOCM_NR_DOCUMENTO']."."; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 0px 2px;"> <?php echo $data['DH_CADASTRO']; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 0px 2px;"> <?php echo $data['TEMPO_TOTAL_FORMATADO']; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 0px 2px;"> <?php echo $data['DESCRICAO_FASE']; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 0px 2px;"> <?php echo $data['MOFA_DH_FASE'];  ?></td>
+                </tr>
+<?php endforeach; ?>
+     </tbody>           
+    </table>
+
+<br />
+        
+       

@@ -1,0 +1,83 @@
+<script>
+    $(function(){
+        $('.detalhes').click(function(){
+            currentID = $(this).attr('id');
+            $('#loc'+currentID).toggle();
+    
+        });
+
+        /**
+         * Configurando entrada de dados no campo
+         */
+        $('#NR_TOMBO').keyup(function(){
+            if(isNaN($(this).val())){
+                $(this).val('');
+            }else{
+                var x = $(this).val().replace(".","");
+                $(this).val(x);
+            }
+        });
+    });
+</script>
+
+<div id="container_pagination">
+    <?php echo $this->form; ?>
+    <?php if (count($this->data)): ?>
+        Histórico de empréstimo para o equipamento com tombo Nr: <strong><?php echo $this->tombo ?></strong>.
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/historicoequipamentos/ordem/LSBK_NR_TOMBO/direcao/<?php echo $this->direcao ?>/NR_TOMBO/<?php echo $this->tombo; ?> ">Detalhe<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/historicoequipamentos/ordem/LSBK_DT_EMPRESTIMO/direcao/<?php echo $this->direcao ?>/NR_TOMBO/<?php echo $this->tombo; ?> ">Data do Empréstimo<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/historicoequipamentos/ordem/LSBK_NR_TOMBO/direcao/<?php echo $this->direcao ?>/NR_TOMBO/<?php echo $this->tombo; ?> ">Número do Tombo<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/historicoequipamentos/ordem/LSBK_TP_TOMBO/direcao/<?php echo $this->direcao ?>/NR_TOMBO/<?php echo $this->tombo; ?> "> Tombo Tipo<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/historicoequipamentos/ordem/LSBK_CD_MAT_EMPRESTIMO/direcao/<?php echo $this->direcao ?>/NR_TOMBO/<?php echo $this->tombo; ?> ">Matrícula do Empréstimo<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->data as $data): ?>
+                    <tr>
+                        <td class="painel"><a style="margin: 4px" title="Detalhes de Localização" class="detalhes" id="<?php echo $this->escape($data["LSBK_ID_DOCUMENTO"]); ?>">Detalhes</a></td>
+                        <td><?php echo $this->escape($data["LSBK_DT_EMPRESTIMO"]); ?></td>
+                        <td><?php echo $this->escape($data["LSBK_NR_TOMBO"]); ?></td>
+                        <td><?php echo $this->escape($data["LSBK_TP_TOMBO"]); ?></td>
+                        <td><?php echo $this->escape($data["LSBK_CD_MAT_EMPRESTIMO"]); ?></td>
+                    </tr>
+                    <tr id="loc<?php echo $this->escape($data["LSBK_ID_DOCUMENTO"]); ?>" style="display:none;">
+                        <td colspan="6">
+                            <fieldset>
+                                <legend>Detalhes sobre o empréstimo
+                                </legend>
+                                <div><strong>Localização:</strong> <?php echo $this->escape($data["LOCALIZACAO"]); ?></div>
+                                <div><strong>Data Cadastro:</strong> <?php echo $this->escape($data["DOCM_DH_CADASTRO"]); ?></div>
+                                <div><strong>Documento Número:</strong> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?></div>
+                                <div><strong>Matrícula Cadastro:</strong> <?php echo $this->escape($data["DOCM_CD_MATRICULA_CADASTRO"]); ?></div>
+                                <div><strong>Email Externo:</strong> <?php echo $this->escape($data["SSOL_DS_EMAIL_EXTERNO"]); ?></div>
+                                <div><strong>Telefone Externo:</strong> <?php echo $this->escape($data["SSOL_NR_TELEFONE_EXTERNO"]); ?></div>
+                            </fieldset>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">Total: <?php
+            echo $this->data->getTotalItemCount()
+            ////-- pagination
+            //-- style
+            //-- partial
+            //-- data
+                ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    <?php else: ?>
+        <p>Não existem registros.</p>
+    <?php endif; ?>
+</div>

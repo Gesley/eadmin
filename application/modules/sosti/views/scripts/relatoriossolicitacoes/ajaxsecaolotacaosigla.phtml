@@ -1,0 +1,8 @@
+<?php if($this->Lotacao_array): ?>
+<option value="">Selecione</option>   
+<?php foreach ($this->Lotacao_array as $value): ?>
+    <option value="<?php echo $value["SGRS_SG_SECAO_LOTACAO"].'|'.$value['SGRS_CD_LOTACAO'].'|'.$value["CXEN_ID_CAIXA_ENTRADA"]; ?>"><?php echo $value["CXEN_DS_CAIXA_ENTRADA"]; ?></option>   
+<?php endforeach; ?>
+<?php else: ?>
+    <option value="">Não exite caixa de atendimento para TRF1/Seções</option>  
+<?php endif; ?>

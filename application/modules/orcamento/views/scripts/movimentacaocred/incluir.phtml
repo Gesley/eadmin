@@ -1,0 +1,24 @@
+<?php
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+
+echo $this->partial('_partials/ajax_movimentacao.phtml');
+
+echo $this->formulario;
+?>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var baseUrl = "<?php echo $this->baseUrl(); ?>";
+
+
+        $('#Salvar-element').append('<button type="button" id="voltar" style="height: 35px" class="ceo_salvar ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary"><span class="ui-button-text">Retornar para Listagem</span></button>');
+
+        $('#voltar').click(function () {
+
+            window.location.href = baseUrl + "/orcamento/movimentacaocred/index";
+        });
+    });
+</script>

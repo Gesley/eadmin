@@ -1,0 +1,123 @@
+<?php
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/tooltipster-1.2/js/jquery.tooltipster.min.js', 'text/javascript');
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/sosti/respostaPadrao.js', 'text/javascript');
+?>
+
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+            
+            
+            //  FUNÇÃO TOOLTIPO PARA A PÁGINA DE LISTAGEM
+            $('.tooltip').tooltipster({
+                fixedWidth: 650,
+                position: 'bottom-left'
+            });
+            $(function(){
+                $(".tooltip").each(function() {
+                    $(this).attr("data-oldhref", $(this).attr("href"));
+                    $(this).removeAttr("href");
+                });
+            });
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+
+    <p><b>Respostas Padrões<span style="text-decoration: underline;"></span></b></p>
+    <p>&nbsp;</p>
+    <p><b><i>A funcionalidade Resposta Padrão afeta as seguintes ações das Caixas: </i></b></p>
+    <ul>
+        <li><b>Encaminhar.</b></li>
+        <li> <b>Baixar.</b></li>
+        <li> <b>Vincular.</b></li>
+        <li> <b>Parecer.</b></li>
+        <li> <b>Solicitar Informação.</b></li>
+        <li> <b>Espera.</b></li>
+        <li> <b>Devolver.</b></li>
+        <li> <b>Trocar Serviço.</b></li>
+        <li> <b>Extensão de prazo.</b></li>
+    </ul>
+
+    <p>
+        - Esta funcionalidade permite o cadastro de respostas padrões do sistema. O usuário poderá cadastrar respostas utilizadas com frequência
+        nas ações das caixas, assim tornando-as padrões, podendo usá-las facilmente em alguma ação.
+    </p>
+    <p>
+        - O usuário poderá cadastrar uma nova resposta padrão entrando em uma das caixas e clicando na ação <b>Resposta Padrão </b>. Logo em
+        seguida, na tela de listagem de respostas padrões, clicar na opção <b>Novo</b>, onde irá abrir a tela de cadastro. Na tela de cadastro
+        o usuário vai informar os campos obrigatórios, informar se quer uma resposta pessoal( Caso queira que a resposta seja utilizada somente
+        por ele) e finalizar o cadastro. 
+        Em algumas caixas, como por exemplo a caixa pessoal, se existirem solicitações de várias grupos diferente a ação <b>Resposta Padrão </b> 
+        não irá aparecer na caixa, pois as respostas são cadastradas e listadas de acordo com o grupo de serviço.
+    </p>
+    <p>
+        - Nesta mesma tela de listagem, existem também as opções de <b>alteração</b> e <b>exclusão</b> de uma resposta padrão.
+    </p>
+    <p>
+        - Para alterar uma resposta padrão, basta clicar na ação <b>Alterar</b> para a respectiva resposta. Abrirá em seguida a tela de alteração,
+        onde será possível alterar somente as respostas que o usuário tiver permissão.
+    </p>
+    <p>
+        - Para excluir uma resposta padrão, basta clicar na ação <b>Excluir</b> para a respectiva resposta. Abrirá sem seguida a tela confirmando os
+        dados da resposta, para que o usuário tenha certeza da exclusão.
+    </p>
+    <p>
+        - Para fazer a utilização da resposta padrão cadastrada, basta entrar em alguma ação da caixa e, abaixo do campo descrição, existe o botão 
+        <b>Resposta Padrão</b>. Clicando nele, abrirá uma 'caixa  de Dialog' com um filtro para a busca da resposta padrão. O filtro fará a busca
+        dos parâmetros dentro do grupo ou pela matrícula do usuário. Após fazer a busca, basta selecionar a resposta e clicar em <b>Escolher</b> para que
+        a resposta seja preenchida no campo descrição.
+    </p>    
+
+
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<a class="submitComum" id="button_filtro" href="#"> Filtro </a>
+<a class="submitComum" id="button_limpar_filtro" href="<?php echo $this->baseUrl(); ?>/sosti/respostapadrao/list/idGrupo/<?= $this->idGrupo ?>"> Limpar Filtro </a>
+<a class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/respostapadrao/add/idGrupo/<?= $this->idGrupo ?>"> Novo </a>
+
+<fieldset id="filtro_repd">
+    <legend>Filtro</legend>
+    <?=$this->form_filtro ?>
+</fieldset>
+
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th><a href="#"><span> Nome </span></a></th>
+                <th><a href="#"><span> Ação </span></a></th>
+                <th><a href="#"><span> Descricao </span></a></th>
+                <th><a href="#"><span> Matrícula </span></a></th>
+                <th><a href="#"><span> Tipo de Serviço </span></a></th>
+                <th><a href="#"><span> Data </span></a></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <?php foreach ($this->data as $dados) { ?>
+                <tr name="rowList" value="" >
+                    <td><a href="#" class="tooltip" title="<?= $this->escape(nl2br($dados['REPD_DS_RESPOSTA_PADRAO'])) ?>"><?= $this->escape($this->LimitadorString($dados['REPD_NM_RESPOSTA_PADRAO'], 16)) ?></a></td>
+                    <td> 
+                        <a class="editar" href="<?php echo $this->baseUrl(); ?>/sosti/respostapadrao/edit/idGrupo/<?= $this->idGrupo ?>/resposta/<?= $dados['REPD_ID_RESPOSTA_PADRAO'] ?>">Editar</a>  
+                        <a class="excluir" href="<?php echo $this->baseUrl(); ?>/sosti/respostapadrao/delete/idGrupo/<?= $this->idGrupo ?>/resposta/<?= $dados['REPD_ID_RESPOSTA_PADRAO'] ?>">Excluir</a> 
+                    </td>
+                    <td><?= $this->escape($this->LimitadorString($dados['REPD_DS_RESPOSTA_PADRAO'], 60)) ?></td>
+                    <td><?= $dados['REPD_CD_MATRICULA_CADASTRO'] ?></td>
+                    <td><?= $dados['SETP_DS_SERVICO'] ?></td>
+                    <td><?= $dados['REPD_DH_CADASTRO'] ?></td>
+                </tr>
+            <?php } ?>
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="8">Total: <?php echo $this->data->getTotalItemCount(); ?></td>
+            </tr>
+            <tr>
+                <td colspan="8"><?php echo $this->paginationControl($this->data, null, null, null); ?></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

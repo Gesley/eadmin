@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    $(function() {
+        $( ".novo" ).button({
+                    icons: {
+                        primary: ""
+                    }
+        });
+        
+        $("#CTRL_ID_MODULO").focusout(
+            function(){
+            var unidade = $("#CTRL_ID_MODULO");
+            $.ajax({
+              url: "ajaxcontrole/id/"+this.value,
+              beforeSend:function() {
+                  $("#ACAO_ID_CONTROLE_SISTEMA").removeClass('erroInputSelect');
+                  $("#ACAO_ID_CONTROLE_SISTEMA").val("");
+                  $("#ACAO_ID_CONTROLE_SISTEMA").addClass('carregandoInputSelect');
+              },
+              success: function(data) {
+                  $("#ACAO_ID_CONTROLE_SISTEMA").html(data);
+                  $("#ACAO_ID_CONTROLE_SISTEMA").removeClass('carregandoInputSelect');
+              },
+              error: function(){
+                  $("#ACAO_ID_CONTROLE_SISTEMA").removeClass('x-form-field');
+                  $("#ACAO_ID_CONTROLE_SISTEMA").val('Erro ao carregar.');
+                  $("#ACAO_ID_CONTROLE_SISTEMA").addClass('erroInputSelect');
+                  $("#ACAO_ID_CONTROLE_SISTEMA").html('<option>Erro ao carregar</option>');
+              }
+            });      
+        }
+        );
+     });
+</script> 
+<?php echo $this->form;?>
+<div class="painel" style="margin-left: 100px; margin-top: -43px;"><a title="Novo" class="novo" href="<?php echo $this->baseUrl(); ?>/guardiao/acao/index">Voltar</a></div>

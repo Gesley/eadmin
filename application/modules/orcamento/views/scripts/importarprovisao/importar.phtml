@@ -1,0 +1,32 @@
+<?php
+
+echo $this->partial('_partials/ajuda_informacao.phtml',
+        array('msgAjuda' => $this->msgAjuda, 'msgInfo' => $this->msgInfo));
+
+// efetua validação de já importado
+echo $this->partial('_partials/ajax_verificar_existe_importacao.phtml',
+        array('tipoImportacao' => Orcamento_Business_Importacao_Base::ARQUIVO_FINANCEIRO));
+?>
+<div id="flashMessages"></div>
+
+<h2><?php echo $this->titulo ?></h2>
+
+<form id="frmImportar" enctype="multipart/form-data" method="post" action=""><dl class="zend_form">
+<dt id="IMPA_DS_ARQUIVO-label"><label for="IMPA_DS_ARQUIVO" class="required">Importar Arquivo:</label></dt>
+<dd>
+<input type="hidden" name="MAX_FILE_SIZE" value="2097152" id="MAX_FILE_SIZE">
+<input type="file" name="IMPA_DS_ARQUIVO" id="IMPA_DS_ARQUIVO"></dd>
+<dt id="IMPA_AA_IMPORTACAO-label"><label for="IMPA_AA_IMPORTACAO" class="required">Ano:</label></dt>
+<dd id="IMPA_AA_IMPORTACAO-element">
+<input type="text" name="IMPA_AA_IMPORTACAO" id="IMPA_AA_IMPORTACAO" value="<?= date('Y');?>" size="5" maxlength="5" class="x-form-text"></dd>
+
+<dt id="Importar-label">&nbsp;</dt><dd id="Importar-element">
+<input type="submit" name="Importar" id="Importar" value="Importar" class="ceo_importar ui-button ui-widget ui-state-default ui-corner-all" role="button"></dd></dl></form>
+
+<br />
+<?
+// Exibe o grid
+echo $this->grid;
+
+?>
+

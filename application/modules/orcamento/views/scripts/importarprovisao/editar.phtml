@@ -1,0 +1,117 @@
+<?php
+
+$ptres [ 'campo' ] = 'IMPO_CD_PTRES';
+$natureza ['campo'] = 'IMPO_CD_NATUREZA_DESPESA';
+
+echo $this->partial ( '_partials/ajax_ptres.phtml', $ptres );
+echo $this->partial ( '_partials/ajax_natureza.phtml', $natureza );
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+
+?>
+
+
+<form id="frmImportarfinanceiro" enctype="application/x-www-form-urlencoded" method="post" action="">
+
+<div id="projecaoTabs" class="tabs">
+    <ul>
+        <li><a href="#"><?php echo $this->telaTitle; ?>:</a></li>
+    </ul>
+
+    <div id="projecao">
+        <table>
+            <tbody>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_ID_IMPORTACAO; ?> </td>                    
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPA_AA_IMPORTACAO; ?> </td>                    
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_CD_UG; ?> </td>                    
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_CD_CONTA_CONTABIL; ?> </td>                    
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_IC_CATEGORIA; ?> </td>                    
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_CD_RESULTADO_PRIMARIO; ?> </td>                    
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_CD_FONTE; ?> </td>                    
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_CD_ESFERA; ?> </td>                    
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_CD_PTRES; ?> </td>                    
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_CD_NATUREZA_DESPESA; ?> </td>                    
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="projecaoTabs" class="tabs">
+    <ul>
+        <li><a href="#projecao">Meses</a></li>
+    </ul>
+
+    <div id="projecao">
+        <table>
+            <tbody>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_JAN; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_FEV; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_MAR; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_ABR; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_MAI; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_JUN; ?> </td>
+                </tr>
+                <tr>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_JUL; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_AGO; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_SET; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_OUT; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_NOV; ?> </td>
+                    <td> <?php echo $this->formulario->IMPO_VL_TOTAL_DEZ; ?> </td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->formulario->IMPO_VL_TOTAL; ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<br />
+<div id="projecaoTabs" class="tabs">
+    <ul>
+        <li><a href="#projecao">Associação Manual Inciso</a></li>
+    </ul>
+
+    <div id="projecao">
+        <table>
+            <tbody>
+                <tr>
+                    <td><?php echo $this->formulario->IMPO_ID_INCISO; ?></td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->formulario->IMPO_ID_ALINEA; ?></td>
+                </tr>
+                <tr>
+                    <td colspan="5"> <?php echo $this->formulario->Enviar; ?> </td>
+                </tr>                
+            </tbody>
+        </table>
+    </div>
+</div>
+</form>
+<script type="text/javascript">
+    
+$('#IMPA_AA_IMPORTACAO').attr('readonly', true);
+
+</script>

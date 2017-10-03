@@ -1,0 +1,72 @@
+div#topo {
+	background: url(../img/fundo.png) repeat-x;
+	height: 50px;
+	/* border: 1px solid red;*/
+}
+
+h1 {
+	margin: 0;
+	padding: 12px 0;
+	background: url(../img/logo.png) no-repeat;
+	height: 26px;
+	text-indent: 180px;
+	color: #f6f9fd;
+	font: bold 14px Helvetica;
+	float: left;
+	/* border: 1px solid green; */
+}
+
+div#tools {
+	float: right;
+	overflow: hidden;
+	width: 380px;
+	padding: 0 10px;
+	color: #f6f9fd;
+	color: #ccc;
+	/*border:1px solid red;*/
+}
+
+div#tools a:link {
+	color: #f6f9fd;
+	color: #ccc;
+	text-decoration: none;
+	/*
+				border-left: 2px solid #7393a6;
+				margin-left: 4px;
+				*/
+}
+
+div#tools a:hover {
+	text-decoration: underline;
+}
+
+div#user {
+	float: left;
+}
+
+div#username {
+	float: none;
+	padding-top: 4px;
+}
+
+div#userperfil,div#sair,div#ajuda {
+	float: left;
+	padding: 0 8px 0 0;
+	margin-top: 4px;
+	/*margin-top: 12px;*/ /*border:1px solid green;*/
+}
+
+div#sair,div#ajuda {
+	border-left: 1px solid #506371;
+	padding: 0 8px 0 8px;
+}
+
+.staypuff {
+	padding: 20px;
+	display: block;
+	/*padding:5px 10px 0 25px;*/ /*width:20px;*/
+	margin: 6px 0 0 0;
+	background: url(../img/log.png?4) no-repeat;
+	/*border:1px solid #31485A;*/
+	float: left;
+}

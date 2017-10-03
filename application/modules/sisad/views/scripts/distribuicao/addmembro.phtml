@@ -1,0 +1,27 @@
+<script>
+    $(function() {
+        $("#PNAT_NO_PESSOA").autocomplete({
+            //source: "sosti/solicitacao/ajaxnomesolicitante",
+            source: base_url+"/guardiao/perfilpessoaadm/ajaxpessoastribunal",
+            minLength: 3,
+            delay: 300,
+            close: function(event, ui){
+                $("#formulario").submit();
+            }
+        }).focusout(
+        function(){
+            $("#PUPE_CD_MATRICULA").val('');
+            //$("#form").submit();
+        }
+    ).click(
+        function(){
+            $("#PUPE_CD_MATRICULA").val('');
+        }
+    );
+    });
+</script>
+
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="painel"><a  class="retornar" href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/membrosservidores/orgao/<?=$this->orgao;?>">Retornar</a></div>
+<?php echo $this->form; ?>

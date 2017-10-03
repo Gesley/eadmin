@@ -1,0 +1,13 @@
+<script>
+    $(function(){
+        $("#TPSE_DS_TP_SERVICO").css('text-transform','uppercase');
+    })
+</script>
+<?php if (isset($this->msg_error)) { ?>
+    <div id="flashMessages">
+        <div class="notice">
+            <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+        </div>
+    </div>
+<?php } ?>
+<?php echo $this->form; ?>

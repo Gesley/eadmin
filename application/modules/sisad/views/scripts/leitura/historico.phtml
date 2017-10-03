@@ -1,0 +1,13 @@
+<?php
+
+if (!isset($this->mensagem)) {
+    echo $this->partial('_partials/leitura/tabs_historico.phtml', array(
+        'documento' => $this->documento
+        , 'historico' => $this->historico
+        , 'anexosSemMetadados' => $this->anexosSemMetadados
+        , 'minuta' => $this->minuta
+    ));
+} else {
+    echo $this->mensagem;
+}
+?>

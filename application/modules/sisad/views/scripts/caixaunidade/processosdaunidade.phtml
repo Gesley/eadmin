@@ -1,0 +1,653 @@
+<?php
+$this->inlineScript()
+        ->appendFile($this->baseUrl() . '/js/tooltipster-1.2/js/jquery.tooltipster.min.js', 'text/javascript');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+        
+        grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                    div_dialog_by_id.html('');
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                    var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                    span_id_leitura.removeClass('naolido');
+                    span_id_leitura.addClass('lido');
+                    span_id_leitura.attr('title','Documento lido');
+                    $(this_tr).removeClass('naolidoTr');
+                    $(this_tr).addClass('lidoTr');
+                    
+                    //console.log(value_input_check_box);
+                    
+                    datainput = jQuery.parseJSON(value_input_check_box);
+                    
+                    datainput.CLASS_LIDO = 'lido';
+                    datainput.CLASS_LIDO_TR = 'lidoTr';
+                    datainput.MSG_LIDO = 'Documento lido';
+                    
+                    datainput_atualizado = JSON.stringify(datainput, null, null);
+                    input_check_box.val(datainput_atualizado)
+                    
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        );
+            
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        
+                             
+    $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_unid_ranscunho = $('form[name=cx_unid_entrada]');
+            if(acao == 'Encaminhar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/encaminhar');
+            }else if(acao == 'Cadastrar Partes'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/partes/cadastrapartes/tipo/1');
+            }else if(acao == 'Cadastrar Vistas'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/partes/cadastrapartes/tipo/3');
+            }
+//            else if(acao == 'Despacho'){
+//                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/despacho');
+//            }
+            else if(acao == 'Parecer'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/parecer');
+            }else if(acao == 'Endereçar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/enderecar');
+            }else if(acao == 'Protocolar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/protocolar');
+            }else if(acao == 'Arquivar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivar');
+            }else if(acao == 'Pesquisa'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/pesquisa');
+            }else if(acao == 'Adicionar'){
+                
+                formulario_valido = false;
+                formulario_valido = validaAddCarrinho()
+                if(formulario_valido === true){
+                    addCarrinho();
+                }
+                
+            }else if(acao == 'Visualizar'){
+                
+                viewCarrinho();
+                
+            }
+        }
+    );
+    $('form[name=cx_unid_entrada]').submit(
+       function(){
+            var formulario_valido = true;
+            var documentoSelecionado = $(".nav_check_boxes:checked").val();
+            if (documentoSelecionado == undefined){                   
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('drop');
+                flashMessages_by_id.delay(2000).hide('drop');
+                return false;
+            }
+            grid_tbody_tr.each(
+                function(){
+                    var this_tr = $(this);
+                    var input_check_box = this_tr.find('input');
+                    var is_checked_input = input_check_box.attr('checked');
+                    if(is_checked_input != undefined){
+                        var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                        if(span_id_leitura.hasClass('naolido')){
+                            var mensagem = "<div class='notice'><strong>Alerta:</strong> Não é possível realizar ações sobre documentos <strong>não</strong> recebidos.</div>";
+                            flashMessages_by_id.hide();
+                            flashMessages_by_id.html(mensagem);
+                            flashMessages_by_id.show('drop');
+                            //flashMessages_by_id.delay(6000).hide('drop');
+                            formulario_valido = false;
+                        }
+                    }
+                }
+            );
+            if(!formulario_valido){
+                return false;
+            }
+       }
+    );
+     $("#dialog-documentos_detalhe").dialog({
+                    title    : 'Detalhe',
+                            autoOpen : false,
+                            modal    : false,
+                            show: 'fold',
+                            hide: 'fold',
+                            resizable: true,
+                            width: 800,
+                            height: 600,
+                            position: [580,140,0,0],
+                            buttons : {
+                                    Ok: function() {
+                                            $(this).dialog("close");
+                                    }
+                            }
+     });
+     
+     $("#dialog-carrinho_detalhe").dialog({
+                    title    : 'Carrinho de Documentos e Processos',
+                              autoOpen : false,
+                              modal    : false,
+                              show: 'fold',
+                              hide: 'fold',
+                              //resizable: true,
+                              width: 800,
+                              height: 600,
+//                            //maxHeight: 200,
+                            maxWidth: 600,
+                            position: [580,140,0,0],
+                            buttons : {
+                                    Ok: function() {
+                                            $(this).dialog("close");
+                                    }
+                            }
+     });
+     
+
+     $('.tooltip').tooltipster({
+         fixedWidth: 650,
+         position: 'bottom-left'
+     });
+     $(".tooltip").each(function() {
+         $(this).attr("data-oldhref", $(this).attr("href"));
+         $(this).removeAttr("href");
+     });
+
+    
+    });
+    
+    
+    function addCarrinho(){
+
+        var adicionar = "<input id='adicionar' name='adicionar' type='hidden' value='adicionar'/>";
+        $('form[name=cx_unid_entrada]').append($(adicionar));
+
+        var div_dialog_by_id =  $("#dialog-carrinho_detalhe");
+        url = '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/meucarrinho';
+        xhr_carrinho = $.ajax({
+            url: url,
+            dataType: 'html',
+            type: 'POST',
+            data: $('form[name=cx_unid_entrada]').serialize(),
+            /*contentType: 'application/json',*/
+            /*processData: false,*/ 
+            beforeSend:function() {
+                div_dialog_by_id.dialog("open");
+                div_dialog_by_id.html('');
+            },
+            success: function(data) {
+                div_dialog_by_id.html(data);
+
+            },
+            complete: function(){
+
+            },
+            error : function(){
+
+            }
+        });
+
+        $("#adicionar").remove();
+
+    }
+    function validaAddCarrinho(){
+            grid_tbody_tr = $("table.grid > tbody > tr");
+            var formulario_valido = true;
+                
+            var documentoSelecionado = $(".nav_check_boxes:checked").val();
+            if (documentoSelecionado == undefined){                   
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('drop');
+                flashMessages_by_id.delay(2000).hide('drop');
+                return false;
+            }
+            var exite_nao_lido = false;
+            grid_tbody_tr.each(
+                function(){
+                    var this_tr = $(this);
+                    var input_check_box = this_tr.find('input');
+                    var is_checked_input = input_check_box.attr('checked');
+                    if(is_checked_input != undefined){
+                        var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                        if(span_id_leitura.hasClass('naolido')){
+                            exite_nao_lido = true;
+                        }
+                    }
+                }
+            );
+            if(exite_nao_lido){
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Não é possível realizar ações sobre documentos <strong>não</strong> recebidos.</div>";
+                dado1 = flashMessages_by_id.html();
+                dado2 = mensagem;
+                if(dado1.length != dado2.length ){
+                    flashMessages_by_id.html(mensagem);
+                    flashMessages_by_id.show('');
+                    //flashMessages_by_id.delay(6000).hide('drop');
+                }else{
+                    flashMessages_by_id.html('');
+                    flashMessages_by_id.html(mensagem);
+                    flashMessages_by_id.show('drop');
+                }
+                formulario_valido = false;
+            }
+            return formulario_valido;
+
+    }
+        
+        
+    function viewCarrinho(){
+
+        var visualizar = "<input id='visualizar' name='visualizar' type='hidden' value='visualizar'/>";
+        $('form[name=cx_unid_entrada]').append($(visualizar));
+
+        var div_dialog_by_id =  $("#dialog-carrinho_detalhe");
+        url = '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/meucarrinho';
+        xhr_carrinho = $.ajax({
+            url: url,
+            dataType: 'html',
+            type: 'POST',
+            data: $('form[name=cx_unid_entrada]').serialize(),
+            /*contentType: 'application/json',*/
+            /*processData: false,*/ 
+            beforeSend:function() {
+                div_dialog_by_id.dialog("open");
+                div_dialog_by_id.html('');
+            },
+            success: function(data) {
+                div_dialog_by_id.html(data);
+
+            },
+            complete: function(){
+
+            },
+            error : function(){
+
+            }
+        });
+
+        $("#visualizar").remove();
+
+    }
+    
+    
+    function cleanCarrinho(){
+
+        var visualizar = "<input id='limpar' name='limpar' type='hidden' value='limpar'/>";
+        $('form[name=carrinho]').append($(visualizar));
+
+        var div_dialog_by_id =  $("#dialog-carrinho_detalhe");
+        url = '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/meucarrinho';
+        xhr_carrinho = $.ajax({
+            url: url,
+            dataType: 'html',
+            type: 'POST',
+            data: $('form[name=carrinho]').serialize(),
+            beforeSend:function() {
+                div_dialog_by_id.dialog("open");
+                div_dialog_by_id.html('');
+            },
+            success: function(data) {
+                div_dialog_by_id.html(data);
+
+            },
+            complete: function(){
+
+            },
+            error : function(){
+
+            }
+        });
+
+        $("#limpar").remove();
+
+    }
+    
+    
+   function removeCarrinho(){
+
+        var visualizar = "<input id='remover' name='remover' type='hidden' value='remover'/>";
+        $('form[name=carrinho]').append($(visualizar));
+
+        var div_dialog_by_id =  $("#dialog-carrinho_detalhe");
+        url = '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/meucarrinho';
+        xhr_carrinho = $.ajax({
+            url: url,
+            dataType: 'html',
+            type: 'POST',
+            data: $('form[name=carrinho]').serialize(),
+            beforeSend:function() {
+                div_dialog_by_id.dialog("open");
+                div_dialog_by_id.html('');
+            },
+            success: function(data) {
+                div_dialog_by_id.html(data);
+
+            },
+            complete: function(){
+
+            },
+            error : function(){
+
+            }
+        });
+
+        $("#remover").remove();
+
+    }
+    
+   function cleanForActionCarrinho(){
+
+        var visualizar = "<input id='limpar_para_acao' name='limpar_para_acao' type='hidden' value='limpar_para_acao'/>";
+        $('form[name=carrinho]').append($(visualizar));
+
+        var div_dialog_by_id =  $("#dialog-carrinho_detalhe");
+        url = '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/meucarrinho';
+        xhr_carrinho = $.ajax({
+            url: url,
+            dataType: 'html',
+            type: 'POST',
+            data: $('form[name=carrinho]').serialize(),
+            beforeSend:function() {
+                //div_dialog_by_id.dialog("open");
+                //div_dialog_by_id.html('');
+            },
+            success: function(data) {
+                //div_dialog_by_id.html(data);
+
+            },
+            complete: function(){
+
+            },
+            error : function(){
+
+            }
+        });
+
+        $("#limpar_para_acao").remove();
+
+    }
+    
+</script>
+<script type="text/javascript">
+ $(function(){
+        function h2d(h) {return parseInt(h,16);}
+        var labels = $("#CATE_ID_CATEGORIA-element").find('label');
+        var cores = $("input[type=checkbox][name=CATE_ID_CATEGORIA[]] ").attr('cores');
+        cores = jQuery.parseJSON(cores);
+        if(cores){
+        $.each(cores, function(chave, cor) {
+           $(labels[chave]).css('background-color', cor);
+           var cor_numeros = cor.substr(1,cor.length);
+           var aux_numeros = h2d(cor_numeros);
+           if(aux_numeros >= (h2d('FFFFFF')/2) ){
+               $(labels[chave]).css('color', '#000');
+           }else{
+               $(labels[chave]).css('color', '#FFFFFF');
+           }
+        });
+        }
+    });    
+$(function() {
+	
+ $("#Filtrar").click( 
+            function(){
+                form_valido = true;
+            }
+        );
+ 
+ //Unidade Administrativa
+$("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+        source: base_url+"/sosti/solicitacao/ajaxunidade",
+        minLength: 3,
+        delay: 500,
+        select: function( event, ui ) {
+                                if( ui.item.value != null ){ 
+                                    $("#MOVI_CD_SECAO_UNID_ORIGEM").val(ui.item.cod_lota);
+                                }
+                },
+        change: function( event, ui ) {
+                                if( ui.item.value != null ){  
+                                     $("#MOVI_CD_SECAO_UNID_ORIGEM").val(ui.item.cod_lota);
+                                }
+        }
+    }).keyup(
+            function(){
+                if(this.value == ""){
+                    $("#MOVI_CD_SECAO_UNID_ORIGEM").val('');
+                }
+    });
+    
+//Assunto
+  $("#DOCM_ID_PCTT").autocomplete({
+        source: base_url+"/sisad/cadastrodcmto/ajaxassuntodocm",
+        minLength: 3,
+        delay: 500,
+        select: function( event, ui ) {
+                                if( ui.item.value != null ){ 
+                                    $("#DOCM_ID_PCTT").val(ui.item.label);
+                                }
+                },
+        change: function( event, ui ) {
+                                if( ui.item.value != null ){  
+                                     $("#DOCM_ID_PCTT").val(ui.item.label);
+                                }
+        }
+    }).keyup(
+            function(){
+                if(this.value == ""){
+                    $("#DOCM_ID_PCTT").val('');
+                }
+    });
+// Fim do assunto
+
+    $('#pesquisar')
+        .click(function() {
+                var pesq_div = $("#pesq_div")
+
+                if(pesq_div.css('display') == "none"){
+                    pesq_div.show('');
+                }else{
+                    pesq_div.hide('');
+                }
+        });
+
+    $('#Filtrar').button();
+
+    $("#botao_ajuda_recolhe").click(
+       function(){
+            $("#pesq_div").hide();
+            $("#pesquisar").show();
+    });
+});
+</script>
+
+<fieldset style="display:inline;">
+    <legend>Filtro da Caixa</legend>
+    <div class="painel">
+        <div class="painel" >
+            <input type="button" title="Último Filtro" name="acao" value="Filtro" id="pesquisar">
+            <a title="Novo Filtro" name="acao" value="Filtrar" id="ultimo_filtro" href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/processosdaunidade/nova/1" >Limpar Filtro/Retirar Filtro</a>
+            &emsp;&emsp;<span style="color: #2E4557;"><strong><?php if( $this->ultima_pesq == true) echo "Filtro Ativo"; else echo "Filtro Inativo"; ?></strong></span>
+        </div> 
+    </div>
+     <div id="pesq_div"  style="display: none;" >
+        <?php echo $this->form; ?>
+        <span id="botao_ajuda_recolhe" ></span>
+    </div>
+</fieldset>
+
+<form method="POST" action="" name="cx_unid_entrada">
+    <div class="containerpainel">
+        <div class="painel">
+<!--            <input type="submit" title="Encaminha Documento/Processo"                       name="acao" value="Encaminhar" />
+            <input type="submit" title="Dar um parecer no Documento/Processo"               name="acao" value="Parecer"/>
+            <input type="submit" title="Endereçar Documento/Processo Para Postagem"         name="acao" value="Endereçar" />
+            <input type="submit" title="Enviar Documento/Processo Fisico Para o Protocolo"  name="acao" value="Protocolar"/>
+            <input type="submit" title="Atribui Permissões a Pessoas na Unidade"            name="acao" value="Permissões"/>
+            <input type="submit" title="Arquivar um Documento/Processo" disabled="disabled" name="acao" value="Arquivar"/>
+            <input type="submit" title="Pesquisa Documento/Processo"    disabled="disabled" name="acao" value="Pesquisa"/>-->
+           
+                <div class="painel">
+                <input type="submit" title="Cadastrar Partes" name="acao" value="Cadastrar Partes"/>
+                <input type="submit" title="Cadastrar Vistas" name="acao" value="Cadastrar Vistas"/>    
+<!--                <input type="submit" title="Dar um parecer no Documento/Processo" name="acao" value="Despacho"/>-->
+                <input type="submit" title="Dar um parecer no Documento/Processo" name="acao" value="Parecer"/>
+                    <!-- <input type="button" title="solicitação do documento para análise e novos pareceres"  name="acao" value="Solicitar"/>--->
+                    
+                </div>
+           
+        </div>
+    </div>
+<?php if (count($this->data)): ?>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" name="input_check_all_grid" id="check_all" /> 
+                </th>
+                <th></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/processosdaunidade/ordem/DTPD_NO_TIPO/direcao/<?php echo $this->direcao ?> ">Tipo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/processosdaunidade/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">Número<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/processosdaunidade/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Data<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/processosdaunidade/ordem/LOTA_SIGLA_LOTACAO/direcao/<?php echo $this->direcao ?> ">Localização<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/processosdaunidade/ordem/AQAT_DS_ATIVIDADE/direcao/<?php echo $this->direcao ?> ">Assunto<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/processosdaunidade/ordem/MOFA_DH_FASE/direcao/<?php echo $this->direcao ?> ">Tempo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+<!--                <th ><a  href="<?php //echo $this->baseUrl(); ?>/sisad/caixaunidade/novos/ordem/DOCM_NR_DOCUMENTO_RED/direcao/<?php //echo $this->direcao ?> ">visualizar</a></th>-->
+            </tr>
+        </thead>
+                <tbody>
+                <?php
+                $TimeInterval = new App_TimeInterval();
+                $tempoInicial = new App_Sosti_TempoSla();
+                foreach ($this->data as $data):
+                $data['TEMPO_TRANSCORRIDO'] = $TimeInterval->interval($data['MOFA_DH_FASE']);
+                    ?>
+                    <tr class="grid_rows <?php echo $this->escape($data["CLASS_LIDO_TR"]); ?>" name="rowList" value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" > 
+                        <td>
+                            <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                        </td>
+                        <td>
+                            <span id="leitura" class="<?php echo $this->escape($data["CLASS_LIDO"]); ?>" title="<?php echo $this->escape($data["MSG_LIDO"]); ?>"></span>
+                            <?php 
+                                if($data["ENDERECADO"]){
+                            ?>
+                            <span id="leitura" class="<?php echo $this->escape($data["ENDERECADO"]); ?>" title="<?php echo $this->escape($data["MSG_ENDERECADO"]); ?>"></span>
+                            <?php } ?>
+                            <?php 
+                                if($data["PARA_POSTAGEM"]){
+                            ?>
+                            <span id="leitura" class="<?php echo $this->escape($data["PARA_POSTAGEM"]); ?>" title="<?php echo $this->escape($data["MSG_POSTAGEM"]); ?>"></span>
+                            <?php } ?>
+                        </td>
+                        <td><a href="#" class="tooltip" title="<?php echo $this->escape($data["hint"]); ?>"><?php echo $this->escape($data["DTPD_NO_TIPO"]); ?></a></td>
+<!--                        <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                        <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                        <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                        <td> <?php echo $this->escape($data["LOTA_SIGLA_LOTACAO"]) ?></td>
+                        <td> <?php echo $this->escape($data["AQAT_DS_ATIVIDADE"]) ?></td>
+                        <td> <?php echo $this->escape($data["TEMPO_TRANSCORRIDO"]) ?></td>
+<!--                        <td><a class="<?php //echo $this->escape($data["CLASS_ARQUIVO"]); ?>" target="_blank" title="<?php //echo $this->escape($data["MSG_ARQUIVO"]); ?>" href="<?php //echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/<?php //echo $this->escape($data["DOCM_NR_DOCUMENTO_RED"]) ?> "></a></td>-->
+                    </tr>
+    <?php endforeach; ?>
+            </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)?></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <?php  echo $this->partial('_partials/caixahiddeninputs.phtml',array('view'=> $this));?>  
+</form>
+
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>
+<div id="dialog-carrinho_detalhe" style="overflow: scroll;">
+</div>

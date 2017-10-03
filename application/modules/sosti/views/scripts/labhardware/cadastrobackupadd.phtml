@@ -1,0 +1,33 @@
+<script type="text/javascript">
+    $(function() {
+       
+	/**
+         * Configurando entrada de dados no campo
+         */
+        $('#LBKP_NR_TOMBO').keyup(function(){
+            if(isNaN($(this).val())){
+                $(this).val('');
+            }else{
+                var x = $(this).val().replace(".","");
+                $(this).val(x);
+            }
+        });
+        
+        $("#LBKP_NR_TOMBO").autocomplete({
+            source: base_url + '/sosti/labhardware/ajaxtombobackup/',
+            minLength: 2,
+            delay:100,
+            dataType: 'json',       
+           change: function( event, ui ) {
+               	console.log(ui);
+                        $("#LBKP_NR_TOMBO").val(ui.item.label);   
+                    }
+           
+        });
+            
+     });
+</script>
+<?php 
+echo $this->form;
+
+?>

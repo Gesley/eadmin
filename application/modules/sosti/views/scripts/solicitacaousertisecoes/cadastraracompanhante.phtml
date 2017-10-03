@@ -1,0 +1,47 @@
+
+ <div id="dialog_cadastra_parte">
+         <?php  echo $this->form->TIPO_PESSOA; ?>
+        <ul style="list-style: none; padding: 0px 0px 0px 0px;" >
+            <li class="li_parte pessTRF"> 
+               <span class=" inputParte"> <?php  echo $this->form->COMP_CD_MATRICULA_TRF; ?> </span>
+            </li>
+            <li class="li_parte pessExterna">
+               <span class=" inputParte"> <?php  echo $this->form->COMP_ID_PESSOA_FISICA; ?> </span>
+            </li> 
+            <li class="li_parte pessJuridica">
+               <span class="inputParte"> <?php  echo $this->form->COMP_ID_PESSOA_JURIDICA; ?> </span>
+            </li>
+            <li class="li_parte unidade">
+               <span class="inputParte"> <?php  echo $this->form->TRF1_SECAO; ?> </span>
+            </li> 
+            <li class="li_parte unidade">
+               <span class="inputParte"> <?php  echo $this->form->UNIDADE_PESSOA; ?> </span>
+            </li> 
+        </ul>
+      <table id="selecionados_partes"  style="margin-top: 20px; width: 80%; display: none;" class="grid tabela">
+            <thead> 
+                <tr>
+                    <th colspan="2"> Acompanhantes Adicionados </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="acompanhantes">
+                    <td colspan="2"><a href='#' class='removerTodos' rel='' >Remover todos</a></td>
+                </tr>
+                <?php $aNamespaceCadastrados = new Zend_Session_Namespace('aNamespaceCadastrados'); ?>
+                <?php if (count($aNamespaceCadastrados->cadastrados) > 0): ?>
+                    <?php  foreach ($aNamespaceCadastrados->cadastrados as $c): ?>
+                      <tr class='linha_interessado'>
+                          <td style='width: 5%'>
+                              <a class='remover-parte' rel="<?php echo $c["LABEL"]; ?>" href='#'>Remover</a>
+                          </td>
+                          <td>
+                              <?php echo $c["VALUE"]; ?>
+                          </td>
+                          <input type='hidden' name='acompanhante_sosti[]' value="<?php echo $c["VALUE"]; ?>" >
+                      </tr>
+                  <?php endforeach; ?>
+              <?php endif; ?>
+           </tbody>
+      </table>
+ </div> 

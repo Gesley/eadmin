@@ -1,0 +1,13 @@
+<?php
+if ($this->dados) {
+    foreach ($this->dados as $value) {
+        ?>
+        <option value="<?php echo $value['LHDW_ID_HARDWARE']; ?>"><?php echo $value['LHDW_CD_MATERIAL'] . ' - ' . $value['LHDW_DS_HARDWARE']; ?></option>   
+        <?php
+    }
+} else {
+    ?>
+    <option value="0" selected="selected" >Nenhum registro encontrado</option>
+    <?php
+}
+?>

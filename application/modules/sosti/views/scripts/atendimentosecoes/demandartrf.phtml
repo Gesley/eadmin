@@ -1,0 +1,123 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>Após encaminhar para <b>Outro nível de atendimento</b>, as solicitações são gravadas na caixa de atendimento do 1º, 3º ou 4º nível e os dados do encaminhamento são gravados no histórico.</li>
+        <li>No <b>Grupo de Atendimento</b> contém os grupos: Atendimento ao Usuário, Desenvolvimento / Sustentação, Banco de Dados / Administração de Dados / Rede, Escritório de Projetos / NOC.</li>
+        <li>A <b>Caixa Pessoal</b> permite o encaminhamento para um servidor lotado na Diatu, quer seja prestador ou servidor. Para os demais grupos, o encaminhamento é sempre pelo grupo.</li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+ <script type="text/javascript">
+	$(function() {
+            $('#SGRS_ID_GRUPO').change(
+                function(){
+                    $("#SSER_ID_SERVICO").removeAttr('disabled');
+                    $.ajax({
+                        url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos',
+                        dataType: 'html',
+                        type: 'POST',
+                        data: this.value,
+                        contentType: 'application/json',
+                        processData: false,
+                      beforeSend:function() {
+                          $("#SSER_ID_SERVICO").removeClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('');
+                          $("#SSER_ID_SERVICO").addClass('carregandoInputSelect');
+                      },
+                      success: function(data) {
+                          $("#SSER_ID_SERVICO").html(data);
+                          $("#SSER_ID_SERVICO").removeClass('carregandoInputSelect');
+                          $("#SSER_ID_SERVICO").focus();
+                      },
+                      error: function(){
+                          $("#SSER_ID_SERVICO").removeClass('x-form-field');
+                          $("#SSER_ID_SERVICO").val('Erro ao carregar.');
+                          $("#SSER_ID_SERVICO").addClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('<option>Erro ao carregar</option>');
+                      }
+                    });  
+                }
+            );
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            
+            
+            $('#SSER_ID_SERVICO').change(
+                function(){
+                    var unidade = $(this).val().split('|')[1];
+                    if(unidade == 'S'){
+                        $("#SSOL_NR_TOMBO-label").show();
+                        $("#SSOL_NR_TOMBO-element").show();
+                        $("#DE_MAT-label").show();
+                        $("#DE_MAT-element").show();
+                    }else{
+                        $("#SSOL_NR_TOMBO-label").hide();
+                        $("#SSOL_NR_TOMBO-element").hide();
+                        $("#DE_MAT-label").hide();
+                        $("#DE_MAT-element").hide();
+                    }
+                }
+            );
+            $('#SSOL_NR_TOMBO').focusout(
+                function(){
+                    $.ajax({
+                      url: "<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxdesctombo/id/"+this.value,
+                      //url: "ajaxdesctombo/id/"+this.value,
+                      beforeSend:function() {
+                          $("#DE_MAT").removeClass('erroInputTextArea');
+                          $("#DE_MAT").val('');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").addClass('carregandoTextArea');
+                      },
+                      success: function(data) {
+                          $("#DE_MAT").val(data);
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").addClass('x-form-field');
+                          $("#DE_MAT").focus();
+                      },
+                      error: function(){
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").val('Erro ao carregar.');
+                          $("#DE_MAT").addClass('erroInputTextArea');
+                      }
+                    });  
+                }
+            );
+	});
+ </script>
+
+
+ <table class="grid">
+    <thead>
+        <tr>
+            <th >Número</th>
+            <th >Autor</th>
+            <th >Tempo total</th>
+            <th >Serviço atual</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php foreach ($this->data as $data): ?>
+            <tr>
+                <?php $d = Zend_Json::decode($data);?>      
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td> <?php echo $this->escape($d["NOME_USARIO_CADASTRO"]) ?></td>
+                <td> <?php echo $this->escape($d["TEMPO_TRANSCORRIDO"]); ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"] ) ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="7">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<?php echo $this->form; ?>

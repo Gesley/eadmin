@@ -1,0 +1,76 @@
+<script type="text/javascript">
+    $(function() {
+        /**
+         * Formulário Índice de Chamados Reabertos
+         */
+        var formhelpdeskicr = $('form[name=helpdeskicr]');
+        formhelpdeskicr.submit(
+           function(){
+               var solictacaoSelecionada =  formhelpdeskicr.find("input[type=checkbox][name=solicitacao[]]:checked").val();
+               if (solictacaoSelecionada == undefined) {
+                   var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                   $('#flashMessages').html(mensagem);
+                   return false;
+               }
+               formhelpdeskicr.attr('action','<?php echo $this->baseUrl(); ?>/sosti/sla/desconsiderarsla');
+           }
+        );
+    });
+</script>
+
+    <!--Início de Índice de Chamados Reabertos-->
+    <h3><a href="#">Índice de Chamados Reabertos</a></h3>
+    <div>
+    <form name="helpdeskicr" method="post" action="" >
+    <h6>Total de Chamados Avaliados: <?php echo $this->totalIcrSolicitacoes; ?></h6>
+    <h6>Chamados Avaliados Positivamente: <?php echo $this->AvaliadasPositivamenteIcrSolicitacoes; ?></h6>
+    <h6>Chamados Reabertos: <?php echo $this->RecusadasIcrSolicitacoes; ?></h6>
+    <div class="painel">
+        <input type="submit" name="acao" value="Desconsiderar SLA" />
+        <input type="hidden" name="title" value="ÍNDICE DE CHAMADOS REABERTOS (RECUSADOS)" />
+        <input type="hidden" name="controller" value="<?php echo $this->controller; ?>" />
+        <input type="hidden" name="action" value="<?php echo $this->action; ?>" />
+        <input type="hidden" name="module" value="<?php echo $this->module; ?>" />
+        <input type="hidden" name="indicador" value="<?php echo $this->idIndicadorICR; ?>" />
+    </div>
+    <table class="grid legenda ui-widget-content" >
+        <thead>
+<!--            <tr><th colspan="5">Índice de Chamados Reabertos</th></tr>-->
+            <tr><th colspan="6"><center>Lista de Chamados Reabertos (Recusados em 24 horas úteis)</center></th></tr>
+            <tr>
+                <th></th>
+                <th>Nº do Documento</th>
+                <th>Data Chamado</th>
+                <th>Data da Baixa</th>
+                <th>Data da recusa</th>
+                <th>Data da avaliação final</th>
+            </tr>
+        </thead>
+        <tbody>
+           <?php if ($this->totalIcrSolicitacoes > 0): ?>
+           <?php foreach ($this->IcrRecusadasSolicitacoes as $icr): ?>
+           <tr name="rowList" value="<?php echo $this->escape($icr["SSOL_ID_DOCUMENTO"]); ?>" >
+            <tr>
+                <td> 
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($icr["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape(Zend_Json::encode($icr)); ?>"/>
+                </td>
+                <td><?php echo $icr["DOCM_NR_DOCUMENTO"]; ?></td>
+                <td><?php echo $icr["DATA_CHAMADO"]; ?></td>
+                <td><?php echo $icr["DATA_BAIXA"]; ?></td>
+                <td><?php echo $icr["DATA_RECUSA"]; ?></td>
+                <td><?php echo $icr["DATA_AVALIACAO_FINAL"]; ?></td>
+            </tr>
+            <?php endforeach; ?>
+            <?php else: ?>
+            <tr><td colspan="6">Não existem registros.</td></tr>
+            <?php endif; ?>
+        </tbody>
+        <tfoot>
+            <tr></tr>
+        </tfoot>
+    </table>
+    </form>
+    </div>
+    <!--Fim de Índice de Chamados Reabertos-->
+
+

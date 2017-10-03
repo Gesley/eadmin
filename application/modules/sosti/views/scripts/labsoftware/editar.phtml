@@ -1,0 +1,149 @@
+
+
+<script type="text/javascript">
+    $(document).ready
+    $(function() {  
+        var dates = $( "#LSFW_DT_AQUISICAO, #LSFW_DT_VALIDADE_LICENCA" ).datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                'Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            changeMonth: true,
+            numberOfMonths: 1,
+            changeMonth: true,
+            changeYear: true,
+            changeMonth: true
+        });
+
+
+        $("#LSFW_ID_MARCA").change(
+        function(){
+            var marca = $("#LSFW_ID_MARCA");
+            $.ajax({
+                dataType: 'html',
+                url:"<?php echo $this->baseUrl(); ?>/sosti/labsoftware/ajaxnometipomodelo/id/"+this.value,
+                beforeSend:function() {
+                    $("#LSFW_ID_MODELO").removeClass('erroInputSelect');
+                    $("#LSFW_ID_MODELO").val("");
+                    $("#LSFW_ID_MODELO").addClass('carregandoInputSelect');
+                },
+                success: function(data) {
+                    $("#LSFW_ID_MODELO").html(data);
+                    $("#LSFW_ID_MODELO").removeClass('carregandoInputSelect');
+                },
+                error: function(){
+                    $("#LSFW_ID_MODELO").removeClass('x-form-field');
+                    $("#LSFW_ID_MODELO").val('Erro ao carregar.');
+                    $("#LSFW_ID_MODELO").addClass('erroInputSelect');
+                    $("#LSFW_ID_MODELO").html('<option>Erro ao carregar</option>');
+                }
+            });      
+        }
+    );
+     
+     
+//        $(".novo").click(function(){
+//            $( "#SoftwareDiv" ).dialog({
+//                resizable: false,
+//                width: 500,
+//                height: 400,
+//                modal: true,
+//                autoOpen: open,
+//                title : 'Equipamentos com a licença',
+//                buttons: {
+//                    "Sair": function() {
+//                        $( this ).dialog( "close" );
+//                    }
+//                }
+//            }); 
+//      
+//            $('#removerSoftware').removeClass('ui-state-focus');
+//        });
+
+        //REMOVE ITEM  DA LISTA DE SOFTWARE
+        $(".remover_item_software").click(function(){
+            var id = $(this).attr('id');
+            var software = $('#LSFW_ID_SOFTWARE').val();
+            $.ajax({
+                dataType: 'html',
+                url:"<?php echo $this->baseUrl(); ?>/sosti/labsoftware/ajaxdevincular/id/"+id+"/software/"+software
+            });
+            $(this).closest('tr').remove();
+            return false;
+        })
+        
+        /**
+         * Configurando entrada de dados no campo
+         */
+        $('#LSFW_QT_ADQUIRIDA').keyup(function(){
+            if(isNaN($(this).val())){
+                $(this).val('');
+            }else{
+                var x = $(this).val().replace(".","");
+                $(this).val(x);
+            }
+        });
+        
+        $("#LSFW_DS_SOFTWARE").css('text-transform','uppercase');
+     
+    }); 
+</script>
+<!--a  class="novo" href="#">Gerenciar Licenças</a><br/-->
+
+<style>
+    .campo-leitura{
+        color: gray !important;
+    }
+</style>
+<?php if(isset($this->msg_error)){ ?>
+<div id="flashMessages">
+    <div class="notice">
+        <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+    </div>
+</div>
+<?php } ?>
+<?php echo $this->form; ?>
+
+<div id="SoftwareDiv" style="display: none" >
+    <table id="Softwares" style="margin-top: 5px; width: 100%; height: auto;"	class="grid tabela">
+        <thead>
+            <tr>
+                <th  width="5px"  colspan="4">Tombo</th>
+                <th  width="5px"  colspan="4">Incluso na Solicitação</th>
+                <th  width="5px"  colspan="4">&nbsp;</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            <?php
+            $cont = count($this->tombos);
+            if ($cont != 0) {
+                foreach ($this->tombos as $tombo) {
+                    ?>
+                    <tr class="softwarelista" id="<?php echo $this->escape($tombo['SSOL_NR_TOMBO']); ?>_Software[]">
+                        <td colspan="3"><?php echo $this->escape($tombo['SSOL_NR_TOMBO']); ?></td>
+                        <td colspan="3" style="text-align: center"><?php echo $this->escape($tombo['DOCM_NR_DOCUMENTO']); ?></td>
+
+                        <td width="3px">
+                            <a href="#" class="remover_item_software" title="Remover este item" id="<?php echo $this->escape($tombo['LFSW_ID_DOCUMENTO']); ?>" >Remover </a>
+                        </td>
+
+                    </tr>
+                <?php }
+            } else { ?>
+                <tr>
+                    <td colspan="12" style="text-align: center; color:red">Não existe equipamento vinculado a esta licença</td>
+                </tr>
+<?php } ?>
+        </tbody>
+    </table>
+</div>
+
+
+

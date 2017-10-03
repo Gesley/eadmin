@@ -1,0 +1,455 @@
+<?php
+$valor = new Trf1_Orcamento_Valor();
+
+$ano = $this->despesa ['DESP_AA_DESPESA'];
+$fase = $this->despesa ['FASE_NM_FASE_EXERCICIO'];
+$reflete = $this->despesa ['DESP_NR_COPIA_DESPESA'] ? "Sim" : "Não";
+
+$anoFase = $ano;
+$anoFase .= ( trim($fase) == '' ? '' : ", $fase" );
+
+?>
+
+<div id="tabs" class="completo">
+    <ul>
+        <li><a href="#despesa">Despesa</a></li>
+        <li><a href="#resumo">Resumo</a></li>
+        <li><a href="#gestor">Gestor</a></li>
+        <li><a href="#orcamento">Célula Orçamentária</a></li>
+        <li><a href="#financeiro">Identificação Financeira</a></li>
+        <li><a href="#planejamento">Planejamento Estratégico</a></li>
+        <li><a href="#contrato">Contrato</a></li>
+        <li class="<?php echo ($this->perfil == "secretaria" or $this->bloqueioConsolidacao ) ? 'ui-state-disabled' : '' ?>"><a href="#valor">Valores</a></li>
+    </ul>
+
+    <div id="despesa">
+        <p>
+            <strong>Despesa:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_NR_DESPESA']); ?>
+        </p>
+
+        <p>
+            <strong>Descrição da despesa:</strong><br />
+            <?php echo $this->escape($this->despesa ['DS_DESPESA']); ?>
+        </p>
+
+        <p>
+            <strong>Ano:</strong><br />
+            <?php echo $this->escape($anoFase); ?>
+        </p>
+        <p>
+            <strong>Reflete no ano seguinte:</strong><br />
+            <?php echo $this->escape($reflete); ?>
+        </p>
+    </div>
+
+    <div id="resumo">
+        <p>
+            <strong>Despesa:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_NR_DESPESA']); ?>
+        </p>
+
+        <p>
+            <strong>Descrição da despesa:</strong><br />
+            <?php echo $this->escape($this->despesa ['DS_DESPESA']); ?>
+        </p>
+
+        <p>
+            <strong>Ano:</strong><br />
+            <?php echo $this->escape($anoFase); ?>
+        </p>
+
+        <p>
+            <strong>Unidade gestora:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_UG']) . ' - ' . $this->escape($this->despesa ['UNGE_DS_UG']); ?>
+        </p>
+
+        <p>
+            <strong>Responsável:</strong><br />
+            <?php echo $this->escape($this->despesa ['SG_DS_FAMILIA_RESPONSAVEL']); ?>
+        </p>
+
+        <p>
+            <strong>PTRES:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_PT_RESUMIDO']) . ' - ' . $this->escape($this->despesa ['PTRS_DS_PT_RESUMIDO']); ?>
+        </p>
+
+        <p>
+            <strong>Natureza da despesa:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_ELEMENTO_DESPESA_SUB']) . ' - ' . $this->escape($this->despesa ['EDSB_DS_ELEMENTO_DESPESA_SUB']); ?>
+        </p>
+
+        <p>
+            <strong>Caráter da despesa:</strong><br />
+            <?php echo $this->escape($this->despesa ['TIDE_DS_TIPO_DESPESA']); ?>
+        </p>
+
+        <p>
+            <strong>Orçamento aprovado:</strong><br />
+            <?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_SECOR'])); ?>
+        </p>
+    </div>
+
+    <div id="gestor">
+        <p>
+            <strong>Unidade gestora:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_UG']) . ' - ' . $this->escape($this->despesa ['UNGE_DS_UG']); ?>
+        </p>
+
+        <p>
+            <strong>Responsável:</strong><br />
+            <?php echo $this->escape($this->despesa ['SG_DS_FAMILIA_RESPONSAVEL']); ?>
+        </p>
+    </div>
+
+    <div id="orcamento">
+        <p>
+            <strong>Esfera:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_ESFERA']) . ' - ' . $this->escape($this->despesa ['ESFE_DS_ESFERA']); ?>
+        </p>
+
+        <p>
+            <strong>PTRES:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_PT_RESUMIDO']) . ' - ' . $this->escape($this->despesa ['PTRS_DS_PT_RESUMIDO']); ?>
+        </p>
+
+        <p>
+            <strong>Natureza da despesa:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_ELEMENTO_DESPESA_SUB']) . ' - ' . $this->escape($this->despesa ['EDSB_DS_ELEMENTO_DESPESA_SUB']); ?>
+        </p>
+
+        <p>
+            <strong>Caráter da despesa:</strong><br />
+            <?php echo $this->escape($this->despesa ['TIDE_DS_TIPO_DESPESA']); ?>
+        </p>
+        <p>
+            <strong>Unidade Orçamentária:</strong><br />
+            <?php echo $this->escape($this->despesa ['PTRS_CD_UNID_ORCAMENTARIA']); ?>
+        </p>        
+    </div>
+
+    <div id="financeiro">
+        <p>
+            <strong>Fonte de recursos:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_FONTE']) . ' - ' . $this->escape($this->despesa ['FONT_DS_FONTE']); ?>
+        </p>
+
+        <p>
+            <strong>Categoria de gasto:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_CATEGORIA']) . ' - ' . $this->escape($this->despesa ['CATE_DS_CATEGORIA']); ?>
+        </p>
+
+        <p>
+            <strong>Vinculação:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_VINCULACAO']) . ' - ' . $this->escape($this->despesa ['VINC_DS_VINCULACAO']); ?>
+        </p>
+
+        <p>
+            <strong>Tipo de recurso:</strong><br />
+            <?php echo $this->escape($this->despesa ['DESP_CD_TIPO_RECURSO']) . ' - ' . $this->escape($this->despesa ['TREC_DS_TIPO_RECURSO']); ?>
+        </p>
+    </div>
+
+    <div id="planejamento">
+        <p>
+            <strong>Tipo de orçamento:</strong><br />
+            <?php echo $this->escape($this->despesa ['PORC_DS_TIPO_ORCAMENTO']); ?>
+        </p>
+        <p>
+            <strong>Perspectiva:</strong><br />
+            <?php echo $this->escape($this->despesa ['PERS_TX_PERSPECTIVA']); ?>
+        </p>
+        <p>
+            <strong>Macrodesafio:</strong><br />
+            <?php echo $this->escape($this->despesa ['MACRO_TX_MACRODESAFIO']); ?>
+        </p>        
+        <p>
+            <strong>Objetivo:</strong><br />
+            <?php echo $this->escape($this->despesa ['POBJ_DS_OBJETIVO']); ?>
+        </p>
+
+        <p>
+            <strong>Programa:</strong><br />
+            <?php echo $this->escape($this->despesa ['PPRG_DS_PROGRAMA']); ?>
+        </p>
+
+        <p>
+            <strong>Tipo operacional:</strong><br />
+            <?php echo $this->escape($this->despesa ['CD_DS_TIPO_OPERACIONAL']); ?>
+        </p>
+    </div>
+
+    <div id="contrato">
+
+        <!--datatable Contrato-->
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Número do Contrato</th>
+                    <th>Nome empresa contratada</th>
+                    <th>CPF / CNPJ contratada</th>
+                    <th>Inicio vigência</th>
+                    <th>Término vigência</th>
+                    <th>Valor contrato</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <?php foreach ($this->contrato as $contrato): ?>
+
+                    <tr>
+
+                        <td><?php echo $contrato['CTRD_ID_CONTRATO_DESPESA']; ?></td>
+                        <td><?php echo $contrato['CTRD_NM_EMPRESA_CONTRATADA']; ?></td>
+                        <td><?php echo $contrato['CTRD_CPFCNPJ_DESPESA']; ?></td>
+                        <td><?php echo $contrato['CTRD_DT_INICIO_VIGENCIA']; ?></td>
+                        <td><?php echo $contrato['CTRD_DT_TERMINO_VIGENCIA']; ?></td>
+                        <td class="valordespesa"><?php echo $contrato['CTRD_VL_DESPESA']; ?></td>
+
+                    </tr>
+
+                <?php endforeach; ?>
+            </tbody>
+
+        </table>
+
+        <br />
+
+        <a href="<?php echo $this->baseUrl("orcamento/contrato/index/CTRD_NR_DESPESA/" . $this->despesa['DESP_NR_DESPESA']); ?>" class="ceo_salvar ui-button ui-widget ui-state-default ui-corner-all" role="button" name="Contrato">
+            Criar / Modificar Contrato
+        </a>
+
+    </div>
+
+    <div id="valor">
+        <h2> Visualização da nova disposição de campos de valores </h2>
+
+        <p>
+            <strong> Dotação autorizada do exercício anterior</strong><br />
+            <span class="valordespesa">
+
+                <?php
+                $valorAnterior = $this->despesa ['VL_SALDO_ANTERIOR'];
+                $sValor = $this->escape($valorAnterior);
+                $sfValor = $valor->retornaNumeroFormatadoValor($sValor);
+
+                $valorBase = $this->despesa ['VL_SALDO_BASE_ANTERIOR'];
+
+                // Verifica se valores vem de $this->despesa ou $this->saldo
+                if ($valorAnterior == null) {
+                    $valorAnterior = $this->saldo ['VL_SALDO_ANTERIOR'];
+                }
+
+                if ($valorBase == null) {
+                    $valorBase = $this->saldo ['VL_SALDO_BASE_ANTERIOR'];
+                }
+
+                // Mais ajustes e/ou formatação
+                $sValor = $this->escape($valorAnterior);
+                $sfValor = $valor->retornaNumeroFormatadoValor($sValor);
+
+                $sDespesaAnterior = $this->despesa ['DESP_NR_COPIA_DESPESA'];
+
+                // DAEA = Dotação autorizada do exercício anterior
+                $sLinhaDAEA = '';
+                if ($sDespesaAnterior != null) {
+                    $sLink ['module'] = Trf1_Orcamento_Definicoes::NOME_MODULO;
+                    $sLink ['controller'] = 'projecao';
+                    $sLink ['action'] = 'detalhe';
+                    $sLink ['cod'] = $sDespesaAnterior;
+
+                    $linkSaldo = $this->url($sLink, 0, true);
+
+                    $sLinhaDAEA .= '&nbsp;<a ';
+                    $sLinhaDAEA .= 'class="ceo_detalhar" ';
+                    $sLinhaDAEA .= 'alt="Veja a projeção desta despesa" ';
+                    $sLinhaDAEA .= 'title="Veja a projeção desta despesa" ';
+                    $sLinhaDAEA .= 'href="';
+                    $sLinhaDAEA .= $linkSaldo;
+                    $sLinhaDAEA .= '" ';
+                    $sLinhaDAEA .= 'target="_blank" >';
+                    $sLinhaDAEA .= 'Projeção da despesa ';
+                    $sLinhaDAEA .= $sDespesaAnterior;
+                    $sLinhaDAEA .= '</a>';
+                }
+
+                echo "$sfValor $sLinhaDAEA";
+                ?>
+            </span>
+        </p>
+
+        <!--Base do exercício anterior estático-->
+        <p>
+            <strong> Base do exercício anterior estático</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_BASE_EXERC_ANTERIOR'])); ?></span>
+        </p>
+
+        <!--Base do exercício anterior dinâmico-->
+        <p>
+            <strong> <abbr title="Campo calculado: Proposta aprovada + Crédito adicional da despesa do exercício anterior" >Base do exercício anterior dinâmica</abbr></strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_SALDO_BASE_ANTERIOR'])); ?></span>
+        </p>
+
+        <!--composição da base (Ano da despesa) (%)-->
+        <p>
+            <strong> Composição da Base <?php echo $this->despesa['DESP_AA_DESPESA']; ?> (%)</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->despesa ['VL_DESPESA_BASE_PERCENTUAL'])); ?></span>
+        </p>
+
+        <!--composição da base (Ano atual)-->
+        <p>
+            <strong> Composição da Base <?php echo $this->despesa['DESP_AA_DESPESA']; ?> (R$)</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_BASE_DIFERENCA'])); ?></span>
+        </p>
+
+        <!--base da proposta (Ano da despesa)-->
+        <p>
+            <strong> Base da pré-proposta <?php echo $this->despesa['DESP_AA_DESPESA']; ?></strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_BASE_EXERC_ATUAL'])); ?></span>
+            <input type="hidden" value="<?php echo $this->escape($this->despesa ['VL_DESPESA_BASE_EXERC_ATUAL']); ?>" id="vlde6" />
+
+            <?php if ($this->despesa["FANE_ID_FASE_EXERCICIO"] == '2'): ?>
+
+                <!--            <a role="button" class="ceo_detalhar ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" 
+                               alt="Solicitar ajuste" title="Solicitar ajuste" 
+                               href="<?php
+                echo $this->baseUrl(
+                    'orcamento/solicitacaoajuste/incluir/despesa/' . $this->despesa ['DESP_NR_DESPESA'] . '/base' . '/' . $this->despesa ['VL_DESPESA_BASE_EXERC_ATUAL']
+                );
+                ?>">
+                                <span class="ui-button-icon-primary ui-icon ui-icon-contact"></span>
+                                <span class="ui-button-text">Solicitar ajuste</span>
+                            </a>-->
+
+            <?php endif; ?>
+
+
+        </p>
+
+        <!--reajuste proposta (%)-->
+        <p>
+            <strong> Reajuste pré-proposta <?php echo $this->despesa['DESP_AA_DESPESA']; ?> (%)</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->despesa ['VL_PERCENT_REAJUSTE_PROPOSTA'])); ?></span>
+        </p>
+
+        <!--reajuste proposta (R$)-->
+        <p>
+            <strong> Reajuste pré-proposta <?php echo $this->despesa['DESP_AA_DESPESA']; ?> (R$)</strong><br  />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->despesa['VL_REAJUSTE_PROPOSTA']); ?></span>
+        </p>
+
+
+        <!--Proposta inicial-->
+        <p>
+            <strong>Proposta inicial (R$)</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->despesa['VL_DESPESA_RESPONSAVEL']); ?></span>
+        </p>
+
+        <!--solicitação de acréscimo pelo responsável-->
+        <p>
+            <strong> Solicitação de acréscimo pelo responsável (R$)</strong> 
+
+            <?php if ($this->despesa["FANE_ID_FASE_EXERCICIO"] == '2'): ?>
+
+                <!--            <a role="button" class="ceo_detalhar ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" 
+                               alt="Solicitar acréscimo" title="Solicitar acréscimo" 
+                               href="<?php
+                echo $this->baseUrl(
+                    'orcamento/solicitacaoajuste/incluir/despesa/' . $this->despesa ['DESP_NR_DESPESA'] . '/base' . '/' . $this->despesa ['VL_DESPESA_BASE_EXERC_ATUAL']
+                );
+                ?>">
+                                <span class="ui-button-icon-primary ui-icon ui-icon-contact"></span>
+                                <span class="ui-button-text">Solicitar Acréscimo</span>
+                            </a>-->
+
+            <?php endif; ?>
+            <br />
+        </p>
+
+        <!--ajustes setoriais da préproposta-->
+        <p>
+            <strong>Ajuste setorial da Pré-proposta (R$)</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->despesa['VL_DESPESA_DIPLA']); ?></span>
+        </p>
+
+        <!--reajuste aplicado ao limite-->
+        <p>
+            <strong> Reajuste Aplicado ao Limite (%)</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->despesa['VL_PERCENT_APLICADO_LIMITE']); ?></span>
+        </p>
+
+        <!--reajuste aplicado ao limite-->
+        <p>
+            <strong> Reajuste Aplicado ao Limite (R$)</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->despesa['VL_REAJUSTE_APLICADO_LIMITE']); ?></span>
+
+        </p>
+
+
+
+
+
+
+
+
+
+
+        <!--        reajuste aplicado ao limite
+                <p>
+                    <strong> Reajuste Aplicado ao Limite (%)</strong><br />
+                    <span class="valordespesa"><?php // echo $valor->retornaNumeroFormatadoPercentual($this->despesa['VL_PERCENT_APLICADO_LIMITE']);                 ?></span>
+                </p>
+        
+                reajuste aplicado ao limite
+                <p>
+                    <strong> Reajuste Aplicado ao Limite (R$)</strong><br />
+                    <span class="valordespesa"><?php // echo $valor->retornaNumeroFormatadoValor($this->despesa['VL_REAJUSTE_APLICADO_LIMITE']);                 ?></span>
+        
+                </p>
+        
+                reajuste do limite
+                <p>
+                    <strong> Reajuste do limite (R$)</strong><br />
+                    <span class="valordespesa"><?php // echo $valor->retornaNumeroFormatadoValor($this->despesa['VL_AJUSTE_DO_LIMITE']);                 ?></span>
+                </p>
+        
+                reajuste ano atual
+                <p>
+                    <strong> Reajuste ano atual</strong><br />
+                    <span class="valordespesa"><?php // echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_AJUSTE_DIPLA']));                 ?></span>
+                </p>
+        
+                Solicitado pelo responsável
+                <p>
+                    <strong>Solicitado pelo responsável</strong><br />
+                    <span class="valordespesa"><?php // echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_SOLIC_RESPONSAVEL']));                 ?></span>
+                </p>-->
+
+        <!--Ajuste ao limite-->
+        <p>
+            <strong>Proposta ajustada ao limite</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_CONGRESSO'])); ?></span>
+        </p>
+
+        <!--Orçamento aprovado-->
+        <p>
+            <strong>Orçamento aprovado</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_BASE_EXERC_ANTERIOR'])); ?></span>
+
+            <!-- DEPRECATED 
+
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_SECOR'])); ?></span> -->
+
+            
+        </p>
+
+        <!--Valor mensal máximo autorizado-->
+        <p>
+            <strong>Valor mensal máximo autorizado</strong><br />
+            <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['DESP_VL_MAX_MENSAL_AUTORIZADO'])); ?></span>
+        </p>
+
+    </div>
+</div>

@@ -1,0 +1,269 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+    
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                grid_tbody_tr.removeClass('marcado');
+                grid_tbody_tr.removeClass('hover');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( 
+                    (is_checked_input == undefined && is_checked_tr == undefined) || 
+                    (is_checked_input != undefined && is_checked_tr == undefined) ||
+                    (is_checked_input == undefined && is_checked_tr != undefined)
+        
+                  ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+            
+
+        
+        grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                    div_dialog_by_id.html('');
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                    var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                    span_id_leitura.removeClass('naolido');
+                    span_id_leitura.addClass('lido');
+                    span_id_leitura.attr('title','Documento lido');
+                    $(this_tr).removeClass('naolidoTr');
+                    $(this_tr).addClass('lidoTr');
+                    
+                    //console.log(value_input_check_box);
+                    
+                    datainput = jQuery.parseJSON(value_input_check_box);
+                    
+                    datainput.CLASS_LIDO = 'lido';
+                    datainput.CLASS_LIDO_TR = 'lidoTr';
+                    datainput.MSG_LIDO = 'Documento lido';
+                    
+                    datainput_atualizado = JSON.stringify(datainput, null, null);
+                    input_check_box.val(datainput_atualizado)
+                    
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        );
+            
+                             
+
+
+     $("#dialog-documentos_detalhe").dialog({
+                    title    : 'Detalhe',
+                            autoOpen : false,
+                            modal    : false,
+                            show: 'fold',
+                            hide: 'fold',
+                            resizable: true,
+                            width: 800,
+                            height: 600,
+                            position: [580,140,0,0],
+                            buttons : {
+                                    Ok: function() {
+                                            $(this).dialog("close");
+                                    }
+                            }
+     });
+     
+     $("#dialog-carrinho_detalhe").dialog({
+                    title    : 'Carrinho de Documentos e Processos',
+                              autoOpen : false,
+                              modal    : false,
+                              show: 'fold',
+                              hide: 'fold',
+                              //resizable: true,
+                              width: 800,
+                              height: 600,
+//                            //maxHeight: 200,
+                            maxWidth: 600,
+                            position: [580,140,0,0],
+                            buttons : {
+                                    Ok: function() {
+                                            $(this).dialog("close");
+                                    }
+                            }
+     });
+});
+    
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="info"><strong>Informação:</strong>
+    Ao adicionar um documento a um processo o mesmo passará a fazer parte do processo 
+    <strong>e não mais</strong> poderá ser tramitado individualmente.
+</div>
+<form method="POST" action="adicionardocspro">
+    
+<div id="container_processos">   
+    <h3>Processos:</h3>
+    <p style="margin:0; margin-left: 15px; font-size: 8pt; font-weight: bold;">Escolha um Processo:</p>
+    <?php if (count($this->dataProcessos)): ?>
+    <div id="container_pagination">
+        <table class="grid"> 
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+                <th >Tipo</th>
+                <th >Número</th>
+                <th >Encaminhador</th>
+                <th >Data/Hora Encaminhamento</th>
+                </tr>
+            </thead>
+                    <tbody>
+                    <?php
+                    foreach ($this->dataProcessos as $dataProcessos):
+                        ?>
+                        <tr title="Duplo click para Abrir" class="grid_rows <?php echo $this->escape($dataProcessos["CLASS_LIDO_TR"]); ?>" name="rowList" value="<?php echo $this->escape($dataProcessos["DADOS_INPUT"]); ?>" > 
+                            <td>
+                                <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($dataProcessos["DOCM_ID_DOCUMENTO"]); ?>" name="processo[]" type="checkbox" value="<?php echo $this->escape($dataProcessos["DADOS_INPUT"]); ?>"/>
+                            </td>
+
+                            <td> <?php echo $this->escape($dataProcessos["DTPD_NO_TIPO"]) ?></td>
+<!--								<td> <?php echo $this->escape($dataProcessos["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                                                                <td style="width: 15%" title= <?php echo $this->escape($dataProcessos["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($dataProcessos["MASC_NR_DOCUMENTO"]) ?></td>                  
+                            <td> <?php echo $this->escape($dataProcessos["ENCAMINHADOR"]) ?></td>
+                            <td> <?php echo $this->escape($dataProcessos["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+        <!--                <td> <?php //echo $this->escape($dataDocumentos["LOTA_SIGLA_LOTACAO"]) ?></td>-->
+    <!--                        <td><a class="<?php //echo $this->escape($dataProcessos["CLASS_ARQUIVO"]); ?>" target="_blank" title="<?php //echo $this->escape($dataProcessos["MSG_ARQUIVO"]); ?>" href="<?php //echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/<?php //echo $this->escape($dataProcessos["DOCM_NR_DOCUMENTO_RED"]) ?> "></a></td>-->
+                        </tr>
+        <?php endforeach; ?>
+                </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9">Total: <?php echo $this->dataProcessos->getTotalItemCount() ?></td>
+                </tr>
+<!--                <tr>
+                    <td colspan="9"><?php echo $this->paginationControl($this->dataProcessos, null, null, null)?></td>
+                </tr>-->
+            </tfoot>
+        </table>
+
+        <?php else:?>
+            <br/>
+            <p>Não existem registros
+            <div class="notice">
+                <strong>Alerta: </strong>
+                <strong>Não exite nenhum processo na caixa da unidade da <?php echo $this->siglalotacao; ?> </strong>
+            </div></p>
+        <?php endif; ?>
+    </div>
+        <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+        <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>        
+
+    <div id="dialog-documentos_detalhe">
+        <div id="dialog-documentos_conteudo"></div>
+    </div>
+    <div id="dialog-carrinho_detalhe" style="overflow: scroll;">
+    </div>
+    
+</div>
+    
+<div id="container_documentos">
+    <h3>Documentos:</h3>
+    <?php if (count($this->dataDocumentos)): ?>
+    <table class="grid">
+        <thead>
+            <tr>
+                <th></th>
+                <th >Tipo</th>
+                <th >Número</th>
+                <th >Encaminhador</th>
+                <th >Data/Hora Encaminhamento</th>
+            </tr>
+        </thead>
+        <tbody id="documentosList">
+            <?php
+                //Zend_Debug::dump($this->data);
+            foreach($this->dataDocumentos as $dataDocumentos):
+                ?> 
+            <tr title="Duplo click para Abrir" class="grid_rows" name="rowList" value="<?php echo $this->escape(Zend_Json::encode($dataDocumentos)); ?>" > 
+                            <td>
+                                <input style="display: none;" checked="checked" class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($dataDocumentos["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" value="<?php echo $this->escape(Zend_Json::encode($dataDocumentos)); ?>"/>
+                            </td>
+                        <td> <?php echo $this->escape($dataDocumentos["DTPD_NO_TIPO"]) ?></td>
+<!--							<td> <?php echo $this->escape($dataDocumentos["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                                                        <td style="width: 15%" title= <?php echo $this->escape($dataDocumentos["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($dataDocumentos["MASC_NR_DOCUMENTO"]) ?></td>                  
+                        <td> <?php echo $this->escape($dataDocumentos["ENCAMINHADOR"]) ?></td>
+                        <td> <?php echo $this->escape($dataDocumentos["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+        <!--                <td> <?php //echo $this->escape($dataDocumentos["LOTA_SIGLA_LOTACAO"]) ?></td>-->
+                </tr>
+    <!--            <input type="hidden" name="<?php //echo $documentos[$cont] ?>" value="<?php //echo $this->escape($dataDocumentos["DOCM_NR_DOCUMENTO"]) ?>">-->
+                <?php ?>
+            <?php endforeach; ?> 
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">Total: <?php echo $this->dataDocumentos->getTotalItemCount() ?></td>
+            </tr>
+    <!--        <tr>
+                <td colspan="4"><?php //echo $this->paginationControl($this->data, null, null, null)?></td>
+            </tr>-->
+        </tfoot>
+    </table>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+    <?php 
+    
+        echo $this->formParecer->acao; 
+        echo $this->formParecer->MOFA_DS_COMPLEMENTO; 
+        echo $this->formParecer->Adicionar; 
+    ?>
+</div>
+</form>

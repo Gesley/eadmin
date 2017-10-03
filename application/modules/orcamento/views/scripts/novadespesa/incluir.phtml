@@ -1,0 +1,109 @@
+<?php
+echo $this->partial('_partials/ajax_novadespesa.phtml');
+echo $this->partial('_partials/ajax_responsaveis.phtml');
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+?>
+
+<script>
+
+    $(document).ready(function () {
+
+        /*
+         * @type String Variável para perfil logado
+         */
+        var $perfil = "<?php echo $this->perfil; ?>";
+
+        if($perfil === 'planejamento')
+        {
+           // $('#SOLD_NR_DESPESA').hide();
+            ///$('#SOLD_NR_DESPESA-label').hide();
+            
+        }else{
+            //$('#SOLD_DS_DESPESA').hide();
+           // $('#SOLD_DS_DESPESA-label').hide();
+        }
+
+        /*
+         * Observa a mudança de ano selecionado no campo.
+         * @param $campoAno Campo que está sendo observado.
+         */
+        $(document).change($('#SOLD_AA_SOLICITACAO'), function () {
+
+            if($perfil !== 'planejamento'){
+              //  desbloqueiaCampos();
+            }
+            /* desbloqueia os campos, caso estejam bloqueados */
+            
+
+            /* recupera o valor selecionado no campo */
+            $anoSelecionado = $('#SOLD_AA_SOLICITACAO :selected').text();
+
+            /* regra para o status Em definição */
+            if ($anoSelecionado.search('Em definição') === 7) {
+
+                if (($perfil === "seccional") || ($perfil === "dipor")) {
+                  //  bloqueiaCampos();
+                }
+            }
+
+            /* regra para o status Liberado para responsáveis */
+            if ($anoSelecionado.search('Liberado para responsáveis') === 7) {
+
+                if ($perfil === "dipor") {
+                 //   bloqueiaCampos();
+                }
+            }
+
+            /* regra para o status Bloqueado para consolidação */
+            if ($anoSelecionado.search('Bloqueado para consolidação') === 7) {
+
+                if (($perfil === "seccional") || ($perfil === "dipor")) {
+                   // bloqueiaCampos();
+                }
+
+                /* Força o campo Recurso a descentralizar para o valor Não */
+                //$('#SOLD_IC_REC_DESCENTRALIZADO').val('1').attr('readOnly', 'true');
+            }
+
+            /* regra para o status Proposta Liberada para Programação Orçamentária */
+            if ($anoSelecionado.search('Proposta Liberada para Programação Orçamentária') === 7) {
+
+                if (($perfil === 'seccional') || ($perfil === 'planejamento')) {
+                   // bloqueiaCampos();
+                }
+            }
+
+            /* regra para o status Em execução */
+            if ($anoSelecionado.search('Em execução') === 7) {
+                //desbloqueiaCampos();
+            }
+
+            /* regra para o status Encerrado  */
+            if ($anoSelecionado.search('Encerrado ') === 7) {
+
+                //bloqueiaCampos();
+            }
+        });
+
+        /*
+         * Função que bloqueia todos os campos exceto o campo Ano.
+         */
+        function bloqueiaCampos() {
+            //$(":input").attr('disabled', 'true').css('background', '#DCDCDC');
+            //$('#SOLD_AA_SOLICITACAO').removeAttr('disabled').removeAttr('style');
+        }
+
+        /*
+         * Função que desbloqueia todos os campos.
+         */
+        function desbloqueiaCampos() {
+           // $(":input").removeAttr('disabled', 'true').removeAttr('style');
+        }
+
+    });
+
+</script>
+
+<?php
+echo $this->formulario;

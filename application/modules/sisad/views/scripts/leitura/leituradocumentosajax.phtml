@@ -1,0 +1,21 @@
+<?php
+
+if (!isset($this->mensagem)) {
+    echo $this->partial('_partials/leitura/tabs_principal.phtml', array(
+        'documento_post' => $this->documento_post
+        , 'documento' => $this->documento
+        , 'formPesquisaAnexos' => $this->formPesquisaAnexos
+        , 'formPesquisaApensos' => $this->formPesquisaApensos
+        , 'formPesquisaVinculos' => $this->formPesquisaVinculos
+        , 'minuta' => $this->minuta
+        , 'anexos' => $this->anexos
+        , 'anexos_sem_metadados' => $this->anexos_sem_metadados
+        , 'apensos' => $this->apensos
+        , 'vinculos' => $this->vinculos
+        , 'historico' => $this->historico
+        , 'isDocumentoPrincipal' => false
+    ));
+} else {
+    echo $this->mensagem;
+}
+?>

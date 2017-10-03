@@ -1,0 +1,64 @@
+<script>
+    
+    var grid_tbody_tr;
+    $(function(){
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(function(){
+            // grid_tbody_tr.removeClass('hover');
+            //pega a tr selecionada
+            var this_tr = $(this);
+            //retorna o valor do atributo marcado
+            var is_checked_tr = $(this).attr('marcado');
+            //pega o radio da tr clicada
+            var input_radio = $(this).find('input[type=radio]');
+            //pega o valor do a tributo checked
+            var is_checked_input = input_radio.attr('checked');
+
+            if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                input_radio.attr('checked','checked');
+                //remove os atributos de todas as trs
+                grid_tbody_tr.removeClass('hover');
+                grid_tbody_tr.removeAttr('marcado');
+                //diz que a tr esta marcada
+                this_tr.attr('marcado','marcado');
+                //coloca a tr como selecionada
+                this_tr.addClass('hover');
+            }else{
+                input_radio.removeAttr('checked');
+                this_tr.removeAttr('marcado');
+                this_tr.removeClass('hover');
+            }
+            input_radio.focus();
+        });
+    }); 
+    
+</script>
+<table class="grid">
+    <tr>
+        <th width="10px">
+        </th>
+        <th>
+            Nome
+        </th>
+        <th>
+            Descrição
+        </th>
+    </tr>
+    <?php
+    foreach ($this->arrayDados as $resposta):
+        ?>
+        <tr>
+            <td>
+                <input name="resposta" type="radio" value="<?= $this->escape($resposta['REPD_DS_RESPOSTA_PADRAO']) ?>">
+            </td>
+            <td style="font-size: 12px;">
+                <?= $this->decodehtmlentities($resposta['REPD_NM_RESPOSTA_PADRAO']) ?>
+            </td>
+            <td style="font-size: 12px;">
+                <?= $this->decodehtmlentities($resposta['REPD_DS_RESPOSTA_PADRAO']) ?>
+            </td>
+        </tr>
+        <?php
+    endforeach;
+    ?>
+</table>

@@ -1,0 +1,85 @@
+<script type="text/javascript">
+$(function() {
+	$("#LOTACAO").keypress( function () {
+		$("#UNGE_CD_LOTACAO").val('');
+		$("#UNGE_SG_SECAO").val('');
+		
+	$("#LOTACAO").autocomplete( {
+			source: base_url + '/orcamento/ug/ajaxlotacoes/',
+			minLength: 3,
+			delay: 100,
+			select: function(event, ui) {
+				$("#UNGE_CD_LOTACAO").val(ui.item.cod);
+				$("#UNGE_SG_SECAO").val(ui.item.sigla);
+			},
+            change: function(event, ui) {
+				$("#UNGE_CD_LOTACAO").val(ui.item.cod);
+				$("#UNGE_SG_SECAO").val(ui.item.sigla);
+			}
+        });
+	});
+
+
+     var ug = $("#UG").val();
+      if(ug == ''){
+
+        $("#UG").change( function () {
+               $("#RESPONSAVEL").val('');
+               $("#RESP_CD_LOTACAO").val('');
+               $("#RESP_DS_SECAO").val('');
+               ug = $("#UG").val();
+               ug = ug.split('-');
+               
+               if(ug != ''){
+               $("#RESPONSAVEL").removeAttr('disabled');
+               }else{
+                   $("#RESPONSAVEL").attr('disabled', true);   
+               }
+               
+      $("#RESPONSAVEL").autocomplete( {
+			source: base_url + '/orcamento/ug/ajaxlotacoesresp/cod/'+ug[0]+'/sigla/'+ug[1],
+			minLength: 3,
+			delay: 100,
+			select: function(event, ui) {
+				$("#RESP_CD_LOTACAO").val(ui.item.cod);
+				$("#RESP_DS_SECAO").val(ui.item.sigla);
+			},
+            change: function(event, ui) {
+				$("#RESP_CD_LOTACAO").val(ui.item.cod);
+				$("#RESP_DS_SECAO").val(ui.item.sigla);
+			}
+		});
+	});
+        
+      }else{
+        ug = ug.split('-');
+        
+          if(ug != ''){
+               $("#RESPONSAVEL").removeAttr('disabled');
+               }else{
+                   $("#RESPONSAVEL").attr('disabled', true);   
+               }
+             
+             $("#UG").change( function () {
+               $("#RESPONSAVEL").val('');
+               $("#RESP_CD_LOTACAO").val('');
+               $("#RESP_DS_SECAO").val('');
+                });
+             
+        $("#RESPONSAVEL").autocomplete( {
+			source: base_url + '/orcamento/ug/ajaxlotacoesresp/cod/'+ug[0]+'/sigla/'+ug[1],
+			minLength: 3,
+			delay: 100,
+			select: function(event, ui) {
+				$("#RESP_CD_LOTACAO").val(ui.item.cod);
+				$("#RESP_DS_SECAO").val(ui.item.sigla);
+			},
+            change: function(event, ui) {
+				$("#RESP_CD_LOTACAO").val(ui.item.cod);
+				$("#RESP_DS_SECAO").val(ui.item.sigla);
+			}
+		});
+      }     
+        
+});
+</script>

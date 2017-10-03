@@ -1,0 +1,675 @@
+<?php 
+    $this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript'); 
+    $userNs = new Zend_Session_Namespace('userNs');
+    $mat = $userNs->matricula;
+   
+?>
+<script type="text/javascript">
+$(function() {
+        
+    $('#DATA_INICIAL').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: 'hh:mm:ss',
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK',
+        onClose: function(dateText, inst) {
+            var endDateTextBox = $('#DATA_FINAL');
+            if (endDateTextBox.val() != '') {
+                var testStartDate = new Date(dateText);
+                var testEndDate = new Date(endDateTextBox.val());
+                if (testStartDate > testEndDate)
+                    endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+                }
+                else {
+                    endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+                }
+        },
+        onSelect: function (selectedDateTime){
+            var start = $(this).datetimepicker('getDate');
+            $('#DATA_FINAL').datetimepicker('option', 'minDate', new Date(start.getTime()));
+        }
+    });
+    $('#DATA_FINAL').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+         timeFormat: 'hh:mm:ss',
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK'
+    });
+});
+    
+</script>
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input[type=checkbox]');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+        grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                  grid_tbody_tr.each(
+                    function(){
+                        var this_tr = $(this);
+                        var input_check_box = $(this).find('input');
+                        
+                        input_check_box.removeAttr('checked');
+                        this_tr.removeAttr('marcado');
+                        this_tr.removeClass('hover');
+                    }
+                  );
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    if(! div_dialog_by_id.dialog( "isOpen" )){
+                        div_dialog_by_id.dialog("open");
+                    }
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        
+        
+        
+        /**
+         * Formulário Índice de Início de Atendimento no Prazo
+         */
+        var formdsvepa = $('form[name=dsvepa]');
+        formdsvepa.submit(
+           function(){
+               var solictacaoSelecionada = formdsvepa.find("input[type=checkbox][name=solicitacao[]]:checked").val();
+               if (solictacaoSelecionada == undefined) {
+                   var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                   $('#flashMessages').html(mensagem);
+                   return false;
+               }
+               formdsvepa.attr('action','<?php echo $this->baseUrl(); ?>/sosti/sla/desconsiderarsla');
+           }
+        );
+        /**
+         * Formulário Índice de Soluções das Solicitações no Prazo
+         */
+        var formdsvmta = $('form[name=dsvmta]');
+        formdsvmta.submit(
+           function(){
+               var solictacaoSelecionada = formdsvmta.find("input[type=checkbox][name=solicitacao[]]:checked").val();
+               if (solictacaoSelecionada == undefined) {
+                   var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                   $('#flashMessages').html(mensagem);
+                   return false;
+               }
+               formdsvmta.attr('action','<?php echo $this->baseUrl(); ?>/sosti/sla/desconsiderarsla');
+           }
+        );
+        /**
+         * Formulário Índice de Chamados Solucionados no Mesmo Dia
+         */
+         var formdsvidq = $('form[name=dsvidq]');
+         formdsvidq.submit(
+           function(){
+               var solictacaoSelecionada = formdsvidq.find("input[type=checkbox][name=solicitacao[]]:checked").val();
+               if (solictacaoSelecionada == undefined) {
+                   var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                   $('#flashMessages').html(mensagem);
+                   return false;
+               }
+               formdsvidq.attr('action','<?php echo $this->baseUrl(); ?>/sosti/sla/desconsiderarsla');
+           }
+        );
+
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+       });
+       $('#Gerar').button();
+       $('#PLANILHA_ARQUIVO').button();
+    });
+</script>
+<script>
+$(function() {
+        $( "#accordion" ).accordion({
+                autoHeight: false,
+                navigation: true,
+                collapsible: true,
+                active: false
+});
+});
+</script>
+<script type="text/javascript">
+$(function() {
+    $("#DOCM_CD_MATRICULA_CADASTRO").autocomplete({
+        source: base_url+"/sosti/solicitacao/ajaxnomesolicitante",
+        minLength: 3,
+        delay: 300,
+        select: function( event, ui ) {
+                            if( ui.item.value != null ){ 
+                                $("#DOCM_CD_MATRICULA_CADASTRO_VALUE").val(ui.item.value);
+                            }
+                },
+        change: function( event, ui ) {
+                            if( ui.item.value != null ){ 
+                                $("#DOCM_CD_MATRICULA_CADASTRO_VALUE").val(ui.item.value);
+                            }
+        }
+
+    }).keyup(
+            function(){
+                if(this.value == ""){
+                    $("#DOCM_CD_MATRICULA_CADASTRO_VALUE").val('');
+                }
+    });
+
+    $("#SSOL_CD_MATRICULA_ATENDENTE").autocomplete({
+        source: base_url+"/sosti/solicitacao/ajaxnomesolicitante",
+        minLength: 3,
+        delay: 300,
+        select: function( event, ui ) {
+                            if( ui.item.value != null ){ 
+                                $("#SSOL_CD_MATRICULA_ATENDENTE_VALUE").val(ui.item.value);
+                            }
+                },
+        change: function( event, ui ) {
+                            if( ui.item.value != null ){ 
+                                $("#SSOL_CD_MATRICULA_ATENDENTE_VALUE").val(ui.item.value);
+                            }
+        }
+
+    }).keyup(
+            function(){
+                if(this.value == ""){
+                    $("#SSOL_CD_MATRICULA_ATENDENTE_VALUE").val('');
+                }
+    });
+
+    $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+        source: base_url+"/sosti/solicitacao/ajaxunidade",
+        minLength: 3,
+        delay: 500,
+        select: function( event, ui ) {
+                                if( ui.item.value != null ){ 
+                                    $("#DOCM_CD_LOTACAO_GERADORA_VALUE").val(ui.item.value);
+                                }
+                },
+        change: function( event, ui ) {
+                                if( ui.item.value != null ){  
+                                     $("#DOCM_CD_LOTACAO_GERADORA_VALUE").val(ui.item.value);
+                                }
+        }
+    }).keyup(
+            function(){
+                if(this.value == ""){
+                    $("#DOCM_CD_LOTACAO_GERADORA_VALUE").val('');
+                }
+    });
+
+    $('#fechar').click(function(){
+        url = '<?php echo $this->baseUrl(); ?>/sosti/sladesenvolvimento/fechamento/ajax/1';
+			xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'GET',
+                beforeSend:function() {
+                    if(! $("#dialog-fechar").dialog( "isOpen" )){
+                        $("#dialog-fechar").dialog("open");
+                    }
+                },
+                success: function(data) {
+                    $("#dialog-fechar").html(data);
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+			});
+    });
+    
+    $("#dialog-fechar").dialog({
+            title    : 'Fechamento',
+			autoOpen : false,
+			modal    : true,
+			show: 'fold',
+			hide: 'fold',
+			resizable: true,
+			width: 800,
+			position: 'center',
+			buttons : {
+				Ok: function() {
+					$(this).dialog("close");
+				}
+			}
+		});
+
+    $('#pesquisar')
+        .click(function() {
+                var pesq_div = $("#pesq_div")
+
+                if(pesq_div.css('display') == "none"){
+                    pesq_div.show('');
+                }else{
+                    pesq_div.hide('');
+                }
+        });
+
+    $('#Filtrar').button();
+
+    $("#botao_ajuda_recolhe").click(
+       function(){
+            $("#pesq_div").hide();
+            $("#pesquisar").show();
+    });
+});
+</script>
+<script type="text/javascript">
+$(function() {
+    var options = <?php echo (Zend_Json::encode($this->form->_tipos_entrada)); ?>;
+    var inputSelecao = "<?php echo Sosti_Form_ImportaPlanilha::TIPO_ENTRADA; ?>";
+    var form_name = "<?php echo $this->form->getName(); ?>"; 
+    function esconde_campos(input_option) {
+        $.each( options, function(key) {
+            if(input_option == key){
+                ElementstoShow = options[key]["elements"];
+            }else{
+                ElementstoHide = options[key]["elements"];
+            }
+        });
+        $.each(ElementstoHide, function(keyElements){
+            $("#"+keyElements+"-label").hide();
+            $("#"+keyElements+"-element").hide();
+            $("#"+keyElements).parent("dd").hide();
+        });
+        $.each(ElementstoShow, function(keyElements){
+            $("#"+keyElements+"-label").show();
+            $("#"+keyElements+"-element").show();
+            $("#"+keyElements).parent("dd").show();
+        });
+    } 
+    esconde_campos($("input[name='"+inputSelecao+"']:checked").val());
+    $("input[name='"+inputSelecao+"']").click(
+        function(){
+            esconde_campos(this.value);
+            $('#'+form_name)[0].reset();
+            $(this).attr('checked','checked');
+        }
+    );
+});
+</script>
+<?php echo $this->flashMessagesView;?>
+<fieldset>
+    <legend>Filtro do Sla</legend>
+    <div class="painel">
+        <div class="painel" >
+            <input type="button" title="Último Filtro" name="acao" value="Filtro" id="pesquisar">
+        </div> 
+    </div>
+    <div id="pesq_div"  <?php echo ($this->data == '')?(''):('style="display: none;"'); ?> >
+        <?php echo $this->form; ?>
+        <span id="botao_ajuda_recolhe" ></span>
+    </div>
+</fieldset>
+<?php if ($this->data != ''): ?>
+<?php if ($this->possui_permissao_fechamento == true): ?>
+<div class="painel gerado">
+    
+    <?php if($this->data[Sosti_Form_ImportaPlanilha::TIPO_ENTRADA] == Sosti_Form_ImportaPlanilha::TIPO_ENTRADA_IMPORTACAO){?>
+    <input type="button" title="Fechar" name="acao" value="Fechar" id="fechar"  />
+    <?php }?>
+    <?php if($this->data[Sosti_Form_ImportaPlanilha::TIPO_ENTRADA] == Sosti_Form_ImportaPlanilha::TIPO_ENTRADA_FATURAMENTO){?>
+    <input type="button" title="Fechar" name="acao" value="Fechar" id="fechar"  />
+    <?php }?>
+    <input type="button" title="Gerar o relatório completo das solicitações de TI em formato pdf" name="acao" value="Relatório Completo PDF" onclick="javascript: location.href='<?php echo $this->baseUrl(); ?>/sosti/sladesenvolvimento/relatoriofaturamentoexportacao/param/pdf';" />
+    <input type="button" title="Gerar o relatório completo das solicitações de TI em formato Excel" name="acao" value="Relatório Completo Excel" onclick="javascript: location.href='<?php echo $this->baseUrl(); ?>/sosti/sladesenvolvimento/relatoriofaturamentoexportacao/param/xls';" />
+</div>
+<?php endif; ?>
+
+<br>
+
+<!--Volume de Ordens de Serviço Executadas nos Prazos Acordados-->
+<fieldset>
+    <legend>Volume de ordens de serviço executadas nos prazos acordados</legend>
+<div>
+    <?php $qtdeSolicitacoesEpa = count($this->solicitacoesEpa); ?>
+    <h6>Total de Chamados Baixados/Encaminhados <?php echo $this->totalEpaSolicitacoes; ?></h6>
+    <h6>Chamados no Prazo: <?php echo $this->countSolicitacoesNoPrazo; ?></h6>
+    <h6>Chamados com o Prazo Ultrapassado: <?php echo $this->countSolicitacoesUtrapassadas; ?></h6>
+    <h6>Chamados Agrupados Secundários (Mesmo Ria sem o principal): <?php echo count($this->secundarias); ?></h6>
+</fieldset>
+    <form name="dsvepa" method="post" action="" >
+        <div class="painel">
+            <?php echo ($this->possui_permissao_fechamento == true)?('<input type="submit" name="acao" value="Desconsiderar SLA" />'):('') ?>
+            <input type="hidden" name="title" value="ÍNDICE DE INICIO DE ATENDIMENTO NO PRAZO" />
+            <input type="hidden" name="controller" value="<?php echo $this->controller; ?>" />
+            <input type="hidden" name="action" value="<?php echo $this->action; ?>" />
+            <input type="hidden" name="module" value="<?php echo $this->module; ?>" />
+            <input type="hidden" name="indicador" value="<?php echo $this->idIndicadorEPA; ?>" />
+        </div>
+<table class="grid legenda ui-widget-content" >
+    <thead>
+        <tr><th colspan="12"><center>Lista de Chamados</center></th></tr>
+        <tr>
+            <th></th>
+            <th>Sistema</th>
+            <th>Nº do Documento</th>
+            
+            <th>Data do Encaminhamento</th>
+            <th>Data da Baixa/Encaminhamento</th>
+            
+            <th>PF BRUTO</th>
+            <th>PF LIQUIDO</th>
+            
+        </tr>
+    </thead>
+   <tbody>
+       <?php if ($qtdeSolicitacoesEpa > 0): ?>
+       <?php 
+       $impressos = array();
+       foreach ($this->solicitacoesEpa as $epa): 
+           
+            if(is_null($epa["REFERENCIA"])){
+            $id = $epa["SSOL_ID_DOCUMENTO"];
+           ?>
+       <tr name="rowList" value="<?php echo $this->escape($epa["SSOL_ID_DOCUMENTO"]); ?>" >
+            <td> 
+                <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($epa["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape(Zend_Json::encode($epa)); ?>"/>
+            </td>
+            <td><?php echo $epa["SSER_DS_SERVICO"]; ?></td>
+            <td><?php echo $epa["DOCM_NR_DOCUMENTO"]; ?></td>
+            
+            <td><?php echo $epa["DATA_CHAMADO"]; ?></td>
+            <td><?php echo $epa["DATA_FIM_CHAMADO"]; ?></td>
+            
+            <td><?php echo $epa["PFBRUTO"]; ?></td>
+            <td><?php echo $epa["PFLIQUIDO"]; ?></td>
+            
+            
+            
+        </tr>
+        <?php
+            }else{
+                if( array_search((string)$epa["DOCM_NR_DOCUMENTO"], $impressos,true) === false ){
+                
+                ?>
+        <tr> <td></td><td>&lceil;---Mesmo Ria</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--&rceil;</td></tr>
+                <?php
+                $arrSaidaConjunto = array();
+                foreach ($this->solicitacoesEpa as $cEap => $vEap) {
+                    if(strcmp($this->solicitacoesEpa[$cEap]["REFERENCIA"] , $epa["REFERENCIA"]) == 0){
+                        $arrSaidaConjunto[] = $this->solicitacoesEpa[$cEap];
+                    }
+                }
+                
+                foreach ($arrSaidaConjunto as $saida) {
+                ?>
+        
+         <tr name="rowList" value="<?php echo $this->escape($saida["SSOL_ID_DOCUMENTO"]); ?>" >
+             <td> 
+                 <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($saida["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape(Zend_Json::encode($saida)); ?>"/>
+             </td>
+             <td><?php echo $saida["DOCM_NR_DOCUMENTO"]; ?></td>
+             <td><?php echo $saida["DOCM_DH_CADASTRO"]; ?></td>
+             <td><?php echo $saida["DATA_CHAMADO"]; ?></td>
+             <td><?php echo $saida["DATA_FIM_CHAMADO"]; ?></td>
+             <td><?php echo $saida["SSPA_DT_PRAZO"].$saida["PRAZO_DATA"]."<br/> ";if($saida["PRAZO_SEGUNDOS_UTEIS_STR"]!= '0D 0h 0m 0s'){echo $saida["PRAZO_SEGUNDOS_UTEIS_STR"];} ?></td>
+             <td><?php echo $saida["TEMPO_UTIL_TOTAL_STR"]; ?></td>
+             <td><?php echo $saida["EMERGENCIA"]; ?></td>
+             <td><?php if(!is_null($saida["SERVICO_SISTEMA"])){echo $saida["CORRETIVA"];} ?></td>
+             <td>
+                 <?php 
+                 if(is_null($saida["SSPA_DT_PRAZO"]) && is_null($saida["PRAZO_DATA"]) && $saida["PRAZO_SEGUNDOS_UTEIS_STR"]== '0D 0h 0m 0s' ){
+                     echo 'N/D';
+                 }else{
+                     echo $saida["NO_PRAZO"];
+                 } 
+                 ?></td>
+             <td><?php echo $saida["CONSIDERADO_EPA"]; ?></td>
+
+         </tr>
+                <?php
+                    $impressos[] = $saida["DOCM_NR_DOCUMENTO"];
+                }
+                    
+                
+         ?>
+        <tr> <td></td><td>&lfloor;--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--&rfloor;</td></tr>
+         <?php
+         
+                }
+            }
+        endforeach; 
+        
+        
+        ?>
+        <?php else: ?>
+        <tr><td colspan="12">Não existem registros.</td></tr>
+        <?php endif; ?>
+            </tbody>
+            <tfoot>
+                <tr></tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<!--Fim Volume de Ordens de Serviço Executadas nos Prazos Acordados-->
+<!--	Índice de defeito (qualidade)-->
+<!--    <h3><a href="#">Índice de defeito (qualidade)</a></h3>
+    <div>
+    <form name="dsvidq" method="post" action="" >
+    <h6>Total de Chamados: <?php/* echo $this->totalIdqSolicitacoes; ?> </h6>
+    <h6>Total de defeitos: <?php echo $this->totalErros; ?> </h6>
+    <h6>Total de pontos de função: <?php echo $this->mediaPontosFuncao; ?> </h6>
+    <h6>Total Erros por PF Média: <?php echo $this->mediaErroPf; ?> </h6>
+    <h6>Chamados Agrupados Secundários (Mesmo Ria sem o principal): <?php echo count($this->secundarias); ?></h6>
+    <div class="painel">
+        <?php echo ($this->possui_permissao_fechamento == true)?('<input type="submit" name="acao" value="Desconsiderar SLA" />'):('') ?>
+        <input type="hidden" name="title" value="ÍNDICE DE DEFEITO" />
+        <input type="hidden" name="controller" value="<?php echo $this->controller; ?>" />
+        <input type="hidden" name="action" value="<?php echo $this->action; ?>" />
+        <input type="hidden" name="module" value="<?php echo $this->module; ?>" />
+        <input type="hidden" name="indicador" value="<?php echo $this->idIndicadorIDQ; ?>" />
+    </div>
+    <table class="grid legenda ui-widget-content">
+        <thead>
+            <tr><th colspan="7"><center>Índice de defeito (qualidade)</center></th></tr>
+            <tr>
+                <th></th> 
+                <th>Nº do Documento</th>
+                <th>Data Cadastro</th>
+                <th>Data Encaminhamento</th>
+                <th>Data da avaliação</th>
+                <th>Quantidade Erros</th>
+                <th>Considerado</th>
+                
+            </tr>
+        </thead>
+       <tbody>
+           <?php if ($this->totalIdqSolicitacoes > 0): ?>
+           <?php 
+           $impressos = array();
+           foreach ($this->solicitacoesIdq as $idq): 
+               if(is_null($idq["REFERENCIA"])){
+               
+           ?>
+           <tr name="rowList" value="<?php echo $this->escape($idq["SSOL_ID_DOCUMENTO"]); ?>" >
+                <td> 
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($idq["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape(Zend_Json::encode($idq)); ?>"/>
+                </td>
+                <td><?php echo $idq["DOCM_NR_DOCUMENTO"]; ?></td>
+                <td><?php echo $idq["DOCM_DH_CADASTRO"]; ?></td>
+                <td><?php echo $idq["MOVI_DH_ENCAMINHAMENTO"]; ?></td>
+                <td><?php echo $idq["DATA_AVALIACAO"]; ?></td>
+                <td><?php echo $idq["ERROS_SISTEMA"]; ?></td>
+                <td><?php echo $idq["CONSIDERADO_IDQ"]; ?></td>
+            </tr>
+                   <?php
+                    }else{
+                if( array_search((string)$idq["DOCM_NR_DOCUMENTO"], $impressos,true) === false ){
+                
+                ?>
+        <tr> <td></td><td>&lceil;---Mesmo Ria</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--&rceil;</td></tr>
+                <?php
+                $arrSaidaConjunto = array();
+                foreach ($this->solicitacoesIdq as $cIdq => $vIdq) {
+                    if(strcmp($this->solicitacoesIdq[$cIdq]["REFERENCIA"] , $idq["REFERENCIA"]) == 0){
+                        $arrSaidaConjunto[] = $this->solicitacoesIdq[$cIdq];
+                    }
+                }
+                
+                foreach ($arrSaidaConjunto as $saida) {
+                ?>
+                    <tr name="rowList" value="<?php echo $this->escape($saida["SSOL_ID_DOCUMENTO"]); ?>" >
+                         <td> 
+                             <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($saida["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape(Zend_Json::encode($saida)); ?>"/>
+                         </td>
+                         <td><?php echo $saida["DOCM_NR_DOCUMENTO"]; ?></td>
+                         <td><?php echo $saida["DOCM_DH_CADASTRO"]; ?></td>
+                         <td><?php echo $saida["MOVI_DH_ENCAMINHAMENTO"]; ?></td>
+                         <td><?php echo $saida["DATA_AVALIACAO"]; ?></td>
+                         <td><?php echo $saida["ERROS_SISTEMA"]; ?></td>
+                         <td><?php echo $saida["CONSIDERADO_IDQ"]; ?></td>
+                     </tr>
+                <?php
+                    $impressos[] = $saida["DOCM_NR_DOCUMENTO"];
+                }
+                    
+                
+         ?>
+       <tr> <td></td><td>&lfloor;--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--&rfloor;</td></tr>
+         <?php
+         
+                }
+            }
+        endforeach; 
+        ?>
+            <?php else: ?>
+            <tr><td>Não existem registros.</td></tr>
+            <?php endif; */?>
+        </tbody>
+        <tfoot>
+            <tr></tr>
+        </tfoot>
+    </table>
+    </form>
+    </div>-->
+    <!--Fim de 	Índice de defeito (qualidade)-->
+
+
+<?php endif; ?>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>
+<div id="dialog-fechar">
+</div>

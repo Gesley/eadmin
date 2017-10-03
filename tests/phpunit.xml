@@ -1,0 +1,26 @@
+<phpunit
+
+    bootstrap="./application/bootstrap.php"
+    colors="true"
+    convertNoticesToExceptions="false">
+
+    <testsuite name="SuiteEadmin">
+        <directory>./</directory>
+    </testsuite>
+
+    <filter>
+
+        <whitelist>
+
+            <directory suffix=".php">../application/</directory>
+
+            <exclude>
+                <file>../application/Bootstrap.php</file>
+                <directory suffix=".phtml">../application/</directory>
+            </exclude>
+
+        </whitelist>
+
+    </filter>
+
+</phpunit>

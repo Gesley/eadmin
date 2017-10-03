@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title><?php echo $this->escape($this->titleBrowser) .' - '. $this->escape($this->title); ?></title>
+        <?php
+		// Adiciona favicon
+		$this->headLink(array(	'rel'	=> 'shortcut icon',
+								'href'	=> $this->baseUrl() . '/img/trf1.ico',
+								'type'	=> 'image/x-icon'
+								), 'PREPEND');
+		
+        // Framework CSS
+	    $this->headLink()
+                ->prependStylesheet($this->baseUrl().'/css/blueprint/print.css','print')
+                //->prependStylesheet($this->baseUrl().'/css/blueprint/ie.css','screen, projection','IE lt 8')
+                ->prependStylesheet($this->baseUrl().'/css/blueprint/screen.css','screen, projection')
+                ->appendStylesheet($this->baseUrl().'/js/jquery-ui-1.8.14/css/custom-theme/jquery-ui-1.8.14.custom.css','screen, projection')
+                ->appendStylesheet($this->baseUrl().'/css/layout.css','screen, projection')
+                ->appendStylesheet($this->baseUrl().'/css/form.css','screen, projection')
+                ->appendStylesheet($this->baseUrl().'/js/wijmo-open/development-bundle/themes/wijmo/jquery.wijmo.wijsuperpanel.css','screen, projection')
+                ->appendStylesheet($this->baseUrl().'/js/wijmo-open/development-bundle/themes/wijmo/jquery.wijmo.wijmenu.css','screen, projection')
+                //->appendStylesheet($this->baseUrl().'/js/wijmo-open/development-bundle/themes/wijmo/jquery.wijmo.wijradio.css','screen, projection')
+                //->appendStylesheet($this->baseUrl().'/js/wijmo-open/development-bundle/themes/wijmo/jquery.wijmo.wijcheckbox.css','screen, projection')
+                ;
+        // Library JS
+	    $this->HeadScript()
+                ->appendFile($this->baseUrl().'/js/jquery-ui-1.8.14/js/jquery-1.6.2.min.js')
+                ->appendFile($this->baseUrl().'/js/jquery-ui-1.8.14/js/jquery-ui-1.8.14.custom.min.js')
+                ->appendFile($this->baseUrl().'/js/wijmo-open/development-bundle/external/jquery.bgiframe-2.1.3-pre.js')
+                ->appendFile($this->baseUrl().'/js/wijmo-open/development-bundle/wijmo/jquery.wijmo.wijutil.js')
+                ->appendFile($this->baseUrl().'/js/wijmo-open/development-bundle/wijmo/jquery.wijmo.wijmenu.js')
+                ->appendFile($this->baseUrl().'/js/wmenu/jquery.wmenu.js')
+                //->appendFile($this->baseUrl().'/js/layout.js')
+                        ;
+	    ?>
+        <?php echo $this->headLink(); ?>
+	<?php echo $this->headScript(); ?>
+        <?php echo $this->inlineScript(); ?>
+       <style type="text/css" media="screen">
+
+            .ui-state-default a:hover {
+                color: #ffffff;
+
+            }
+
+        </style>
+        <script type="text/javascript">
+            $(function() {
+                $( "#accordion" ).accordion();
+                $( "#tabs" ).tabs();
+                $( "#datepicker" ).datepicker();
+                $( "#dialog" ).dialog({
+                  resizable: true,
+                    // height:140,
+                    //modal: true,
+                    buttons: {
+                        "Delete all items": function() {
+                            $( this ).dialog( "close" );
+                        },
+                        Cancel: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+                $( ".sair" ).button({
+                    icons: {
+                        primary: "ui-icon-power"
+                    }
+                });
+                $( ".novo" ).button({
+                    icons: {
+                        primary: "ui-icon-document"
+                    }
+                });
+                $( ".editar" ).button({
+                    icons: {
+                        primary: "ui-icon-pencil"
+                    }
+                });
+                $( ".excluir" ).button({
+                    icons: {
+                        primary: "ui-icon-trash"
+                    }
+                });
+                $( ".ordemDESC" ).button({
+                    icons: {
+                        primary: "ui-icon-triangle-1-s"
+                    }
+                });
+                $( ".ordemASC" ).button({
+                    icons: {
+                        primary: "ui-icon-triangle-1-n"
+                    }
+                });
+
+                $( ".painel" ).buttonset();
+
+                $( "button, input:submit, a", ".dema" ).button();
+                $( "a", ".paginationControl" ).button();
+                $( "span.disabled", ".paginationControl" ).button({disabled:true});
+                $( "a", ".dema" ).click(function() {
+                    location.href = this.href;
+                    return false;
+                });
+
+                $(".navigation").wijmenu();
+                $("input:text").addClass("x-form-text");
+//                $("input:text").addClass("x-form-text");
+
+                $("select").addClass("x-form-text");
+                $("input.datepicker").datepicker($.datepicker.regional["pt_BR"]);
+                $("textarea").addClass("x-form-field");
+
+                $(".grid").addClass("ui-widget ui-widget-content");
+                $("thead tr",".grid").addClass("ui-widget-header");
+                $('a.icoAdminlink').wmenu({
+                    itemShowid :'#mudarUsuario',
+                    selectedClass :'icoAdminlink_click'
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="geral">
+            <div id="topo">
+                <a href="<?php echo $this->baseUrl().'/admin'?>"><h1><abbr title="Gestão de Contratos">e-Contrato</abbr></h1></a>
+                <div id="tools">
+                    <div id="user">
+                        <div class="span-10 last first" id="tools-usuario" style="float:right;">
+                            <div id="user-name" class="span-10 last">
+                                <?php $userNamespace = new Zend_Session_Namespace('userNs'); ?>
+                                <div id="icoAdmin"><a href="#" class="icoAdminlink" rel="mudarUsuario"></a></div>
+                                <div id="nome">
+                                    <?php echo strtoupper($userNamespace->matricula); ?> - <?php echo $userNamespace->nome; ?>
+                                </div>
+                                <div id="mudarUsuario">
+                                    <ul>
+                                        <li><a href="#">administrar</a></li>
+                                        <li><a href="#">outro</a></li>
+                                        <!--<li><a href="#" class="sair">sair</a></li>-->
+                                        <a href="<?php echo $this->baseUrl(); ?>/login/logout" class="sair">sair</a>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!--user-->
+                </div><!--administrativa-->
+            </div><!--topo-->
+            <div id="menu">
+                <?php
+                     $userNamespace = new Zend_Session_Namespace('userNs');
+                     $acl = Zend_Registry::get('Zend_Acl');
+                     echo $this->navigation()->menu()->setAcl($acl)->setRole($userNamespace->perfil);
+                     $this->borderContainer()->captureStart('masterLayout',
+                         array('design' => 'headline','gutters'=>true,'livesplitters'=>true,)
+                     );
+                ?>
+            </div><!--menu-->
+            <div id="container">
+                <!--	<div id="menuEsquerdo"></div>--><!--menuEsquerdo-->
+                <div id="conteudo" >
+                    <div><?php echo $this->flashMessages(); ?></div>
+                    <h2><?php echo $this->escape($this->title); ?></h2>
+                    <?php echo $this->layout()->content; ?>
+                </div><!--conteudo-->
+                <!--<div id="filtro"></div>filtro-->
+            </div><!--container-->
+        </div><!-- geral -->
+        <div id="rodape">
+            <div id="rodapeDados">
+                <h3>Informa&ccedil;&otilde;es:</h3>
+                <?php $dados = new Application_Model_DbTable_SosTbSaviAviso(); ?>
+                <?php $rows = $dados->getAvisosAtivos('SAVI_DH_CADASTRO DESC'); ?>
+                <ul>
+                    <?php foreach ($rows as $d): ?>
+                        <li style="color: #E17009"><?php echo $d['SAVI_DS_AVISO']; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+           </div><!--rodapeDados-->
+           <div id="rodapeinfo">
+               <p>&copy;2010 Tribunal Regional Federal de 1&ordf; Regi&atilde;o - SECIN/DISAD</p>
+           </div>
+       </div><!--rodape-->
+    </body>
+</html>

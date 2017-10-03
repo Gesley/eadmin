@@ -1,0 +1,23 @@
+<div style="width: 700px; margin: 0 auto; display: block; /*background:url(<? //echo $this->baseUrl(); ?>/img/brasaoPequeno.jpg) no-repeat center;*/">
+<div style="width: 80px;margin: 0 auto;">
+<!--    <img src="<? //echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" width="80px">-->
+</div>
+<p style="text-align:center">PODER JUDICIÁRIO<br /><strong><? echo $this->descrisaosecsubsec; ?></strong> - PCTT: <? echo $this->codpctt['AQVP_CD_PCTT']; ?></p><br />
+<br />
+<p style="text-align:center"><strong><? echo  $this->data["DOCM_NR_DCMTO_USUARIO"] . ', DE ' . date("d/m/Y"); ?></strong></p>
+<br />
+<br />
+<p><strong><? echo $this->codpctt['AQAT_DS_ATIVIDADE'];?></strong></p>
+<br />
+<div style="width: 500px;display: block;overflow: hidden; margin: 0 auto 0 auto;">
+        <p style="text-align:justify"><? echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.nl2br($this->data["DOCM_DS_ASSUNTO_DOC"]); ?></p>
+</div>
+<br />
+<br />
+<p style="text-align:center">Atenciosamente</p>
+<br />
+<br />
+<p style="text-align:center"><strong><? echo $this->nome.'</strong>' ?><br />
+<strong><?  
+            echo substr($this->data["DOCM_CD_LOTACAO_GERADORA"], 0,strlen($this->data["DOCM_CD_LOTACAO_GERADORA"])-4);  ?></strong></p>
+</div>

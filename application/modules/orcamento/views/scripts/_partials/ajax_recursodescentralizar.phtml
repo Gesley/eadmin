@@ -1,0 +1,63 @@
+<script type="text/javascript">
+    $(function() {
+        var despesa = $("#RECD_NR_DESPESA").val();
+        
+        if (despesa != '') {
+            url = '<?php echo $this->baseUrl(); ?>/orcamento/movimentacaocred/ajaxretornadespesa/cod/' + despesa;
+            $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'GET',
+                contentType: 'html',
+                processData: false,
+                success: function(data) {
+                    $('#RECD_NR_DESPESA').after('<p class="description" id="RECD_NR_DESPESA_DESCRICAO"></p>');
+                    $('#RECD_NR_DESPESA_DESCRICAO').html(data);
+                    var erro = $('#RECD_NR_DESPESA_DESCRICAO > fieldset').hasClass('invalida');
+                    if (erro == true) {
+                        $('#RECD_NR_DESPESA').css('border-color', 'red');
+                        $('#RECD_NR_DESPESA').after('<p class="description" id="RECD_NR_DESPESA_DESCRICAO"  style="color: red">Despesa não encontrada</p>');
+                    }
+                }
+            });
+        }
+
+        $("#RECD_NR_DESPESA").blur(function() {
+            $('#RECD_NR_DESPESA').css('border-color', '#ccc');
+            $('#RECD_NR_DESPESA_DESCRICAO').remove();
+            $('p[id=RECD_NR_DESPESA_DESCRICAO]').remove();
+            var despesa = $("#RECD_NR_DESPESA").val();
+            if (!isNaN(despesa)) {
+                if (despesa != '') {
+                    var description = $('.description').length;
+                    if(description == 2){
+                     $('.description:first').remove();   
+                    }
+                    url = '<?php echo $this->baseUrl(); ?>/orcamento/movimentacaocred/ajaxretornadespesa/cod/' + despesa;
+                    $.ajax({
+                        url: url,
+                        dataType: 'html',
+                        type: 'GET',
+                        contentType: 'html',
+                        processData: false,
+                        success: function(data) {
+                            $('#RECD_NR_DESPESA').after('<p class="description" id="RECD_NR_DESPESA_DESCRICAO"></p>');
+                            $('#RECD_NR_DESPESA_DESCRICAO').html(data);
+                            var erro = $('#RECD_NR_DESPESA_DESCRICAO > fieldset').hasClass('invalida');
+                            if (erro == true) {
+                                $('#RECD_NR_DESPESA').css('border-color', 'red');
+                                $('#RECD_NR_DESPESA').after('<p class="description" id="RECD_NR_DESPESA_DESCRICAO" style="color: red">Despesa não encontrada</p>');
+                            }
+                        }
+                    });
+                } else {
+                    $('#RECD_NR_DESPESA').css('border-color', 'red');
+                }
+            } else {
+                $('#RECD_NR_DESPESA').css('border-color', 'red');
+                $('#RECD_NR_DESPESA').after('<p class="description" id="RECD_NR_DESPESA_DESCRICAO" style="color: red">Informe um número de despesa válido.</p>');
+            }
+
+        });
+    });
+</script>

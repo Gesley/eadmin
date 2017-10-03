@@ -1,0 +1,8 @@
+<?php if(count($this->arrayCaixa) > 0): ?>
+<option value="">Selecione o Grupo de Serviço</option>   
+<?php foreach ($this->arrayCaixa as $value): ?>
+    <option value="<?php echo $value["CXEN_ID_CAIXA_ENTRADA"]; ?>"><?php echo $value["CXEN_DS_CAIXA_ENTRADA"]; ?></option>   
+<?php endforeach; ?>
+<?php else: ?>
+    <option value="">Não exite caixa de atendimento para TRF1/Seções</option>
+<?php endif; ?>

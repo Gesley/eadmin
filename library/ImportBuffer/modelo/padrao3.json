@@ -1,0 +1,95 @@
+{
+    "padrao3":
+            [
+                {
+                    "inicial": 1,
+                    "final": 6,
+                    "nome": "UG",
+                    "nome_base": "IMPO_CD_UG",
+                    "tipo": "INT",
+                    "importar": true
+                },
+                {
+                    "inicial": 7,
+                    "final": 15,
+                    "nome": "Conta Contábil",
+                    "nome_base": "IMPO_CD_CONTA_CONTABIL",
+                    "tipo": "INT",
+                    "importar": true
+                },
+                {
+                    "inicial": 16,
+                    "final": 16,
+                    "nome": "Resultado Primário",
+                    "nome_base": "IMPO_CD_RESULTADO_PRIMARIO",
+                    "tipo": "STRING",
+                    "importar": true
+                },
+                {
+                    "inicial": 17,
+                    "final": 22,
+                    "nome": "UG Responsável",
+                    "nome_base": "IMPO_CD_UG_RESPONSAVEL",
+                    "tipo": "INT",
+                    "importar": true
+                },
+                {
+                    "inicial": 23,
+                    "final": 32,
+                    "nome": "Fonte",
+                    "nome_base": "IMPO_CD_FONTE",
+                    "tipo": "INT",
+                    "importar": true
+                },
+                {
+                    "inicial": 33,
+                    "final": 33,
+                    "nome": "Categoria",
+                    "nome_base": "IMPO_IC_CATEGORIA",
+                    "tipo": "STRING",
+                    "importar": true
+                },
+                {
+                    "inicial": 34,
+                    "final": 39,
+                    "nome": "Vinculação",
+                    "nome_base": "IMPO_CD_VINCULACAO",
+                    "tipo": "INT",
+                    "importar": true
+                },
+                {
+                    "inicial": 40,
+                    "final": 93,
+                    "tipo": "INT",
+                    "importar": false
+                },
+                {
+                    "inicial": 94,
+                    "nome_base": "IMPO_VL_TOTAL",
+                    "tipo": "LOOP",
+                    "repeticao": "SEQUENCIAL",
+                    "importar": true,
+                    "loop":
+                            [
+                                {
+                                    "nome": "debito",
+                                    "nome_base": "debito",
+                                    "inicial": 1,
+                                    "final": 18,
+                                    "sinal": "NEGATIVO",
+                                    "tipo": "DECIMAL",
+                                    "quantidade": 12
+                                },
+                                {
+                                    "nome": "credito",
+                                    "nome_base": "credito",
+                                    "inicial": 1,
+                                    "final": 18,
+                                    "sinal": "POSITIVO",
+                                    "tipo": "DECIMAL",
+                                    "quantidade": 12
+                                }
+                            ]
+                }
+            ]
+}

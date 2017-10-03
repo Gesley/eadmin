@@ -1,0 +1,17 @@
+<?php
+echo	'<br />';
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo	$this->partial ( '_partials/botoes_importacao.phtml', array ( 'formulario' => $this->formulario ) );
+
+echo '<br />';
+echo '<h2>Erros de importação</h2>';
+
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'importacao',
+				'nomeAction'		=> 'erros',
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_RELATORIO,
+				'textoBotao'		=> 'Listagem de erros de importação a acertar',
+				'textoAlternativo'	=> 'Exibe a listagem de erros ainda presentes após a última importação'));

@@ -1,0 +1,11 @@
+<?php
+$ptres [ 'campo' ] = 'IMPO_CD_PTRES';
+$natureza ['campo'] = 'IMPO_CD_NATUREZA_DESPESA';
+
+echo $this->partial ( '_partials/ajax_ptres.phtml', $ptres );
+echo $this->partial ( '_partials/ajax_natureza.phtml', $natureza );
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo	$this->formulario;

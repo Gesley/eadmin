@@ -1,0 +1,13 @@
+<?php
+if($this->niveis):  
+    foreach ($this->niveis as $value) : 
+?>
+<option value="<?php echo $value['SINS_ID_INDICADOR']; ?>"><?php echo $value['SINS_DS_INDICADOR']; ?></option>   
+<?php 
+    endforeach;
+    else: 
+?>
+        <option value="">Não exitem níveis para este grupo.</option>  
+<?php
+endif;
+?>

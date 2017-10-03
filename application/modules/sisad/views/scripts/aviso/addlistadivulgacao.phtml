@@ -1,0 +1,59 @@
+<!--<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>-->
+
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.MetaData.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.MultiFile.js')); 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/cadastroDocumentoGrupo.js')); 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/addLista.js'));
+     $this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript');
+?>
+
+<form name="addListaDivulgacao" action="" method="POST" enctype="multipart/form-data">
+    <div id="container_pagination">
+        <br/>
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th colspan="9">Documentos Selecionados para Divulgação</th>
+                </tr>
+                <tr>
+                    <th ></th>
+                    <th ><a  href="<?php //echo $this->baseUrl();  ?>/sisad/caixa/index/ordem/GRDV_ID_GRUPO_DIVULGACAO/direcao/<?php //echo $this->direcao  ?> ">Tipo</a></th>
+                    <th ><a  href="<?php //echo $this->baseUrl();  ?>/sisad/caixa/index/ordem/GRDV_DS_GRUPO_DIVULGACAO/direcao/<?php //echo $this->direcao  ?> ">Nr. Documento</a></th>
+                    <th ><a  href="<?php //echo $this->baseUrl();  ?>/sisad/caixa/index/ordem/GRDV_IC_ATIVO/direcao/<?php //echo $this->direcao  ?> ">Origem</a></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php foreach ($this->data as $data): /*Zend_Debug::dump($data);exit;*/?>
+                    <tr>
+                        <td>
+                            <input name="documento[]" type="hidden" value="<?php  echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                        </td>
+<!--                        <input type="hidden" value="<?php echo $this->escape($data["DADOS_INPUT"]) ?>"/>-->
+                        <td><?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                        <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+                        <td><?php echo $this->escape($data["LOTA_SIGLA_LOTACAO_ORIGEM"]) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot><tr><td colspan="10">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+        </table>
+        <?php
+        echo $this->paginationControl($this->data, null, null, null)
+//-- pagination
+//-- style
+//-- partial
+//-- data
+        ?>
+    </div>
+
+<?php echo $this->partial('aviso/addLista.phtml', array('form' => $this->form)); ?>
+<div id="partes_adicionadas"> </div>
+
+<?php echo $this->form->LIST_DT_INICIO_DIVULGACAO; ?>
+<?php echo $this->form->LIST_DT_FIM_DIVULGACAO; ?>
+<?php echo $this->form->Salvar; ?>
+
+</form>

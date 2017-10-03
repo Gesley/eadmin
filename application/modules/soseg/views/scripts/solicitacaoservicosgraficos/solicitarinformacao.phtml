@@ -1,0 +1,64 @@
+<?php
+     $this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MultiFile.js'));
+     //$this->inlineScript()->appendFile($this->baseUrl() . '/js/sosti/solicitacoesServicosGraficos.js', 'text/javascript');
+?>
+
+<script type="text/javascript">
+    $(function() {
+        $("form[name=solicitarinformacao]").submit( function(){
+           var $descricao = $.trim( $("#MOFA_DS_COMPLEMENTO").val() );
+           if( $descricao == ""){
+               alert('É necessário preencher uma Descrição.');
+               return false;
+           }
+           return true;
+        });
+        
+        $('#ANEXOS').MultiFile({
+                STRING: {
+                    file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+                    remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+                }
+        });  
+    });
+ </script>
+ 
+ <table class="grid">
+    <thead>
+        <tr>
+            <th>N. da solicita&ccedil;&atilde;o</th>
+            <th>Solicitante</th>
+            <th>Tempo total</th>
+            <th>Servi&ccedil;o atual</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php $timeInterval = new App_TimeInterval();
+              foreach ($this->data as $data): 
+              $tempoTotal = $timeInterval->tempoTotal($data["DOCM_DH_CADASTRO"], date("d/m/Y H:i:s") );
+              ?>
+             <tr name="rowList" value="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" >
+                <input name="solicitacao[]" type="hidden" value="<?php echo $this->escape($data); ?>"/>
+                <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td><?php if(isset($data["NOME"])){echo $this->escape($data["DOCM_CD_MATRICULA_CADASTRO"].' - '.$data['NOME']);}else{echo $this->escape($data["DOCM_CD_MATRICULA_CADASTRO"].' - '.$data['NOME_USARIO_CADASTRO']);}?></td>
+                <td><?php echo $tempoTotal; ?></td>
+                <td><?php echo $this->escape($data["SSER_DS_SERVICO"] ) ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody> 
+    <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+ 
+<form name="solicitarinformacao" action="savesolicitarinformacao" method="post" enctype="multipart/form-data" >
+    <?php  echo $this->form->MOFA_DS_COMPLEMENTO;  
+           echo $this->partial('_partials/anexosQualquerExtensao.phtml');
+           echo $this->form->Salvar; 
+   ?>
+</form>
+ 
+<div id="dialog-documentos_detalhe">
+    <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+ <div id="dialog-documentos_conteudo"></div>
+</div>

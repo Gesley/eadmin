@@ -1,0 +1,81 @@
+<div id="container_pagination">
+<?php if (count($this->data)): ?>
+<script type="text/javascript">
+$(function(){
+    $( "a", ".paginationControl" ).addClass("ajax_pagination");
+    $( ".novo" ).button({
+        icons: {
+            primary: "ui-icon-document"
+        }
+    });
+    $( ".editar" ).button({
+        icons: {
+            primary: "ui-icon-pencil"
+        }
+    });
+    $( ".excluir" ).button({
+        icons: {
+            primary: "ui-icon-trash"
+        }
+    });
+    $( "a", ".paginationControl" ).button();
+    $( "span.disabled", ".paginationControl" ).button({disabled:true});
+    var xhr_pagination;
+    $(".ajax_pagination").click(
+    function(){
+        url = this.href;
+        url = url.replace('index',"listajax");
+        if (xhr_pagination) {
+            xhr_pagination.abort();
+        }
+        xhr_pagination = $.ajax({
+            url: url,
+            beforeSend:function() {
+            },
+            success: function(data) {
+                $("#container_pagination").html(data);
+                return false;
+            },
+            complete: function(){
+            },
+            error : function(){
+            }
+        });
+        return false;
+    });
+});
+</script>
+<div><a  class="novo" href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/form">Novo</a> </div>
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Ações</th>
+            <th ><a class="ajax_pagination" href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/index/ordem/FADM_DS_FASE/direcao/<?php echo $this->direcao ?> ">Descrição</a></th>
+            <th ><a class="ajax_pagination" href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/index/ordem/FADM_IC_FASE_ATIVA/direcao/<?php echo $this->direcao ?> ">Fase Ativa</a></th>
+            <th ><a class="ajax_pagination" href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/index/ordem/FADM_IC_DCTO_FASE/direcao/<?php echo $this->direcao ?> ">Documento da Fase</a></th>
+        </tr>
+    </thead>
+     
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+        <tr>
+            <td class="painel"><a title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/form/id/<?php echo $data->FADM_ID_FASE ?>">editar</a>
+            <!--<a style="height: 20px; width: 28px;" title="Excluir" class="excluir" href="sisad/faseadm/form/id/<?php //echo $data->FADM_ID_FASE ?>" ></a>--></td>
+            <td><?php echo $this->escape($data->FADM_DS_FASE) ?></td>
+            <td><?php echo $this->escape($data->FADM_IC_FASE_ATIVA) ?></td>
+            <td><?php echo $this->escape($data->FADM_IC_DCTO_FASE) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+</table>
+<?php echo $this->paginationControl($this->data, null, null, null)
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+</div>

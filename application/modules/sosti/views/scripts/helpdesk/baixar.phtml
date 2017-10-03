@@ -1,0 +1,18 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>A opção <b>Baixar</b> permite buscar uma solicitação que acabou de ser gravada.</p>
+    <ul>
+    <li>Ao <b>Salvar</b> a baixa, o sistema emite a mensagem de sucesso.</li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<?php echo $this->form; ?>

@@ -1,0 +1,23 @@
+<div style="width: 700px; margin: 0 auto; display: block; /*background:url(<? //echo $this->baseUrl(); ?>/img/brasaoPequeno.jpg) no-repeat center;*/">
+<p style="text-align:left">PODER JUDICIÁRIO<br /><strong><? echo $this->descrisaosecsubsec; ?></strong> - PCTT: <? echo $this->codpctt['AQVP_CD_PCTT']; ?></p><br />
+<br />
+<p style="text-align:left"><strong>MEMORANDO N. <? echo $this->data["DOCM_NR_DCMTO_USUARIO"];  ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DE <? echo date("d/m/Y"); ?></strong></p> <br />
+<br />
+<p>DA: <? echo substr($this->data["DOCM_CD_LOTACAO_REDATORA"], 0,strlen($this->data["DOCM_CD_LOTACAO_REDATORA"])-4); ?></p>
+<p>À: <? echo substr($this->data["DOCM_CD_DESTINO"], 0,strlen($this->data["DOCM_CD_DESTINO"])-4); ?></p>
+<br />
+<div style="width: 500px;display: block;overflow: hidden; margin: 0 auto 0 auto;">
+        <p style="text-align:justify"><? echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->data["DOCM_DS_ASSUNTO_DOC"]; ?></p>
+</div>
+<br />
+<br />
+<p style="text-align:center"><? echo $this->data["DOCM_CD_SAUDACAO"];?>,</p>
+<br />
+<p style="text-align:center"><strong><? echo $this->nome; ?></strong> <br />
+<strong><?  
+            echo substr($this->data["DOCM_CD_LOTACAO_GERADORA"], 0,strlen($this->data["DOCM_CD_LOTACAO_GERADORA"])-4);  ?>
+</strong>
+<br />
+     <span style="text-align:center"><strong><? echo $this->telefone; ?></strong> </span>
+</p>
+</div>

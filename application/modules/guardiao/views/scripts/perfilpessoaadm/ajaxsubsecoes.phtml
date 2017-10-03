@@ -1,0 +1,17 @@
+<?php
+if($this->Lotacao_array):  ?>
+    <option value="">Escolha a secão ou subseção</option> 
+    <?php
+    foreach ($this->Lotacao_array as $value) : 
+        $valor = $value["LOTA_SIGLA_SECAO"].'|'.$value['LOTA_COD_LOTACAO'].'|'.$value["LOTA_TIPO_LOTACAO"];
+?>
+    <option value="<?=$valor?>" ><?php echo $value["LOTA_SIGLA_LOTACAO"].' - '.$value["LOTA_DSC_LOTACAO"].' - '.$value["LOTA_COD_LOTACAO"].' - '.$value["LOTA_SIGLA_SECAO"].' - '.$value["LOTA_LOTA_COD_LOTACAO_PAI"]; ?>
+    </option>   
+<?php 
+    endforeach; ?>
+    <?php else: 
+?>
+        <option value="">Não exite Unidades para essa Seção</option>  
+<?php
+endif;
+?>

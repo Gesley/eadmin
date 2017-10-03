@@ -1,0 +1,126 @@
+<?php
+
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+
+/*
+ * var $fase Fase do exercícico selecionado.
+ * var $perfil Perfil logado.
+ */
+$fase = $this->fase->FANE_ID_FASE_EXERCICIO;
+$perfil = $_SESSION["sessaoOrcamento"]["perfil"];
+
+switch ($perfil) {
+
+    # DIPLA.
+    case "planejamento":
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[4]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[5]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[6]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[8]);
+        break;
+
+    case "dipor":
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[1]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[2]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[3]);
+        break;
+
+    default :
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[1]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[2]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[3]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[4]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[5]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[6]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[7]);
+        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[8]);
+        break;
+}
+
+/*
+ * validações da fase
+ */
+//switch ($fase) {
+//
+//    // em definicao
+//    case 1:
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[3]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[4]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[5]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[6]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[7]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[8]);
+//        break;
+//
+//    // liberado para responsaveis
+//    case 2:
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[1]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[4]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[5]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[6]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[3]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[8]);
+//        break;
+//
+//    // bloqueado para consolidacao
+//    case 3:
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[1]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[5]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[6]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[7]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[8]);
+//        break;
+//
+//    // proposta liberada
+//    case 4:
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[1]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[2]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[3]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[6]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[7]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[8]);
+//        break;
+//
+//    // em execução
+//    case 5:
+//        break;
+//
+//    // Em aprovação
+//    case 7:
+//        # regra de apresentação das opções.
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[1]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[4]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[5]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[6]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[7]);
+//
+//        # se o perfil não for dipor ou dipla, não pode ver os valoes.
+//        if (($perfil != "dipor") && ($perfil != "planejamento")) {
+//            unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[2]);
+//            unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[3]);
+//            unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[8]);
+//        }
+//        break;
+//
+//    // Retornada ao planejamento
+//    case 8:
+//
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[1]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[4]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[5]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[6]);
+//        unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[8]);
+//
+//        # se o perfil não for dipor, dipla ou secor, não pode ver os valoes.
+//        if (($perfil != "dipor") && ($perfil != "planejamento") && ($perfil != "consulta")) {
+//            unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[2]);
+//            unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[3]);
+//            unset($this->formulario->FANE_ID_FASE_EXERCICIO->options[7]);
+//        }
+//
+//        break;
+//}
+
+echo $this->formulario;
+?>

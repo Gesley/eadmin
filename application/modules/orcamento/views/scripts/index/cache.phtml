@@ -1,0 +1,47 @@
+<?php
+$link = $this->url(array(	'module'		=> Trf1_Orcamento_Definicoes::NOME_MODULO,
+							'controller'	=> 'index',
+							'action'		=> 'cache'
+						), 0, true);
+
+?>
+
+<h3>Exibição de caches</h3>
+
+<table>
+	<tbody>
+		<tr>
+			<td width="30%">Caminho da pasta</td>
+			<td width="70%"> <?php echo $this->nomePasta; ?> </td>
+		</tr>
+		<tr>
+			<td width="30%">Quantidade de arquivos</td>
+			<td width="70%"> <?php echo $this->quantidade; ?> </td>
+		</tr>
+		<tr>
+			<td width="30%">Arquivo específico</td>
+			<td width="70%"> <?php echo $this->arquivo; ?> </td>
+		</tr>
+		<tr>
+			<td width="30%">Arquivo existe?</td>
+			<td width="70%"> <?php echo $this->arquivoExiste; ?> </td>
+		</tr>
+		<tr>
+			<td width="30%">Conteúdo (file_get_contents)</td>
+			<td width="70%"> <?php echo $this->conteudo; ?> </td>
+		</tr>
+		<tr>
+			<td width="30%">Conteúdo (cache)</td>
+			<td width="70%"> <?php echo $this->cache; ?> </td>
+		</tr>
+	</tbody>
+</table>
+<br />
+
+<h3>Ações para o cache</h3>
+<a href="<?php echo $link; ?>/opcao/lista" class="ceo_detalhar">Lista arquivos</a>
+<a href="<?php echo $link; ?>/opcao/usuario" class="ceo_excluir">Exclui usuários</a>
+<a href="<?php echo $link; ?>/opcao/listagem" class="ceo_excluir">Exclui listagens</a>
+<a href="<?php echo $link; ?>/opcao/combo" class="ceo_excluir">Exclui combos</a>
+
+<br />&nbsp;

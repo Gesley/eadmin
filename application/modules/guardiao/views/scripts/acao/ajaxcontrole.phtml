@@ -1,0 +1,14 @@
+<?php
+if($this->controle_array):  
+    foreach ($this->controle_array as $value) : 
+?>
+    <option value="<?php echo $value['CTRL_ID_CONTROLE_SISTEMA']; ?>"><?php echo $value['CTRL_NM_CONTROLE_SISTEMA'] ?></option>   
+    <?php 
+    endforeach; ?>
+<!--    <option value=""></option>  -->
+    <?php else: 
+?>
+        <option value="">NÃO HÁ CONTROLE PARA O MODULO ESCOLHIDO</option>  
+<?php
+endif;
+?>

@@ -1,0 +1,135 @@
+<?php
+$faturamento = new Trf1_Sosti_Negocio_Faturamento();
+$statusContratante = $faturamento->retornaStatus('CTE');
+$classificacao = $faturamento->retornaClassificacao();
+
+$getDadosSolic["DOCM_NR_DOCUMENTO"] = $this->FaturamentoContratante[0]["DOCM_NR_DOCUMENTO"];
+$dadosSolic = $faturamento->getRelatorioRias($getDadosSolic);
+
+$userNs = new Zend_Session_Namespace('userNs');
+$ocsTbPupePerfilUnidPessoa = new Application_Model_DbTable_OcsTbPupePerfilUnidPessoa();
+$arrayPerfis = $ocsTbPupePerfilUnidPessoa->getTodosPerfilPessoa($userNs->matricula);
+
+$disabled = 'disabled="disabled"';
+if ($this->FaturamentoContratada[0]["PFDS_ID_STATUS"] != 21) {
+    foreach ($arrayPerfis as $perfil) {
+        switch ($perfil["PERF_ID_PERFIL"]) {
+            case 31: // GESTÃO DE DEMANDAS DE TI
+                $disabled = '';
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+?>
+<?
+    if ($dadosSolic[0]['SCTA_ID_STATUS_DSV'] == 7) { ?>
+<form method="POST" action="<?php echo $this->baseUrl(); ?>/sosti/faturamento/setdadoscontratante" id="CADASTRO_DADOS_CONTRATANTE" enctype="multipart/form-data" >
+    <input type="hidden" name="PFTR_ID_SOLICITACAO" value="<?php echo $this->FaturamentoContratante[0]["PFTR_ID_SOLICITACAO"]; ?>" />
+    <input type="hidden" name="CADASTRO" value="CONTRATANTE"/>
+    <input type="hidden" name="MOFA_ID_FASE" value="<?php echo $dadosSolic[0]["MOFA_ID_FASE"]; ?>"/>
+    <input type="hidden" name="CONTROLLER" value="<?php echo $this->controller; ?>"/>
+    <input type="hidden" name="ACTION" value="<?php echo $this->action; ?>"/>
+    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+        <legend style='font-size: 12px;'>Análise de PF TRF1</legend>
+        <table>
+            <tr>
+                <td>
+                    <label>Staatus:</label> 
+                </td>
+                <td>
+                    <select name="PFTR_ID_STATUS" <?php echo $disabled; ?> >
+                        <option value="" >:: Selecione ::</option>
+                        <?php
+                        foreach ($statusContratante as $status) {
+                            echo '<option ';
+                            if ($this->FaturamentoContratante[0]["PFTR_ID_STATUS"] == $status["SCTA_ID_STATUS"]) {
+                                echo 'selected="selected" ';
+                            }
+                            echo 'value="' . $status["SCTA_ID_STATUS"] . '">' . $status["SCTA_DS_STATUS"] . ' - '. $status["SCTA_ID_STATUS"] .'</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+                <td>
+                    <label>DH Alteração Status:</label>
+                </td>
+                <td>
+                    <?php echo $this->FaturamentoContratante[0]["PFTR_DH_STATUS"]; ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Classificação:</label> 
+                </td>
+                <td>
+                    <select name="PFTR_ID_CLASSIFICACAO"  <?php echo $disabled; ?> >
+                        <option value="" >:: Selecione ::</option>
+                        <?php
+                        foreach ($classificacao as $status) {
+                            echo '<option ';
+                            if ($this->FaturamentoContratante[0]["PFTR_ID_CLASSIFICACAO"] == $status["CLCO_ID_CLASSIFICACAO"]) {
+                                echo 'selected="selected" ';
+                            }
+                            echo 'value="' . $status["CLCO_ID_CLASSIFICACAO"] . '">' . $status["CLCO_DS_OBSERVACAO"] . '</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PF Bruto:</label> <?php echo $this->FaturamentoContratante[0]["PFTR_QT_PF_BRUTO"]; ?> 
+                </td> 
+                <td>
+                    <?php echo $this->FaturamentoContratante[0]["PFTR_QT_PF_BRUTO"]; ?> 
+                </td> 
+                <td>
+                    <label>PF Liquido:</label>  <?php echo $this->FaturamentoContratante[0]["PFTR_QT_PF_LIQUIDO"]; ?>
+                </td> 
+                <td>
+                    <?php echo $this->FaturamentoContratante[0]["PFTR_QT_PF_LIQUIDO"]; ?>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>N° do Relatório Faturamento:</label> 
+                </td> 
+                <td>
+                    <input type="text" name="PFTR_NR_ID_RELAT_FATURAMENTO" value="<?php echo $this->FaturamentoContratante[0]["PFTR_NR_ID_RELAT_FATURAMENTO"]; ?>"  <?php echo $disabled; ?> >
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>Data do Faturamento:</label> 
+                </td> 
+                <td>
+                    <input type="text" name="PFTR_DH_FATURAMENTO" value="<?php echo $this->FaturamentoContratante[0]["PFTR_DH_FATURAMENTO"]; ?>"  <?php echo $disabled; ?> >
+                </td> 
+                <td>
+                    <label>Data do Pagamento:</label> 
+                </td> 
+                <td>
+                    <input type="text" name="PFTR_DH_PAGAMENTO" value="<?php echo $this->FaturamentoContratante[0]["PFTR_DH_PAGAMENTO"]; ?>"  <?php echo $disabled; ?> >
+                </td> 
+            </tr>
+             <tr>
+                <td colspan="4"><label>Observação</label></td>
+            </tr>
+            <tr>
+                <td colspan="4"> <textarea type="text" name="PFTR_DS_OBSERVACAO" <?php echo $disabled; ?>  style="width: 680px; height: 30px;"><?php echo $this->FaturamentoContratante[0]["PFTR_DS_OBSERVACAO"]; ?></textarea></td>
+            </tr>
+        </table>
+        <input type="submit" name="Salvar" value="Salvar" <?php echo $disabled; ?>>
+    </fieldset>
+</form>
+<?
+    }else{
+    ?>
+    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+        <legend style='font-size: 12px;'>Análise de PF TRF1</legend>
+        <table><tr><td>Aguardando Publicação.</td></tr></table>
+    </fieldset>
+    <?}?>

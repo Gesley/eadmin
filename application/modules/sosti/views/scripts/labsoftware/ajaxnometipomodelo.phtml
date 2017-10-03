@@ -1,0 +1,14 @@
+<?php
+if($this->modelos):  
+    echo '<option value="">::Selecione modelo::</option>';  
+    foreach ($this->modelos as $value) : 
+?>
+<option value="<?php echo $value['MODE_ID_MODELO']; ?>"><?php echo $value['MODE_DS_MODELO']; ?></option>   
+<?php 
+    endforeach;
+    else: 
+?>
+        <option value="">Não exitem modelos para esta marca.</option>  
+<?php
+endif;
+?>

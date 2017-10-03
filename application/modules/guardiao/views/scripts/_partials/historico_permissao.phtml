@@ -1,0 +1,44 @@
+<?php
+/**
+ * @category	GUARDIAO
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Leidison Siqueira Barbosa [leidison_14@hotmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * Reponsável por exibir o historico das permissões
+ * 
+ * 
+ * VARIÁVEIS
+ * 
+ * $this->historico_permissao array
+ */
+
+if (count($this->historico_permissao) > 0) {
+
+    foreach ($this->historico_permissao as $historico):
+        $zend_date = new Zend_Date($historico['PUPE_TS_OPERACAO'], Zend_Date::DATETIME);
+        $historico['PUPE_TS_OPERACAO'] = $zend_date->get(Zend_Date::DATETIME);
+        ?>
+        <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+            <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                <b>Perfil: </b><?= $historico['PUPE_CD_OPERACAO'] == 'I' ? $historico['PERF_DS_PERFIL_NEW'] : $historico['PERF_DS_PERFIL_OLD'] ?>
+                <br/>
+                <b><?= $historico['PUPE_CD_OPERACAO'] == 'I' ? 'Concedida em: ' : '<font color="red">Removida em: </font>' ?></b><?php echo $historico['PUPE_TS_OPERACAO']; ?>
+                <br/>
+                <b>Por:</b> <?= $historico['PMAT_CD_MATRICULA_OPERACAO'] . ' - ' . $historico['PNAT_NO_PESSOA_OPERACAO'] ?>
+                <br/>
+            </div>
+        </fieldset>
+        <?
+    endforeach;
+}else {
+    ?>
+    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+        <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+            <b>Não há histórico.</b>
+    </fieldset>
+    <?
+}
+?>

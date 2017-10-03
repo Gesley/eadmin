@@ -1,0 +1,241 @@
+<?php
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/sosti/respostaPadrao.js'));
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>A <b>avaliação</b> será obrigatória e deve ser realizada assim que receberem o aviso de baixa da solicitação na sua Caixa Pessoal. 
+       Por meio dessa avaliação, serão gerados os relatórios para pagamento a empresa.
+    </p>
+    <ul>
+        <li>Todas as solicitações devem ser avaliadas dentro do mês de execução ou no primeiro dia útil após o fechamento do mês.</li>
+        <li>Basta marcar a solicitação que deseja avaliar e clique no botão <b>Avaliar</b>.</li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input[type=radio]');
+                var is_checked_input = input_check_box.attr('checked');
+              
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+//                    this_tr.attr('marcado','marcado');
+//                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+                grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                /*input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');*/
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        );   
+        $("input[type=radio][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        $('input[name=acao]').click(
+            function(){
+                var acao = this.value;
+                var formhelpdesk = $('form[name=helpdesk]');
+                if(acao == 'Encaminhar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/encaminharcaixa');
+                }else if(acao == 'Baixar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/baixarcaixa');
+                }else if(acao == 'Espera'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/esperacaixa');
+                }else if(acao == 'Vincular'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/solicitacao/vincular');
+                }
+            }
+        );
+        $('#VINCULAR_ENTRE_CAIXAS').click(function(){
+            var formhelpdesk = $('#vincularEntreCaixas');
+            formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/pesquisarsolicitacoes/vincularpesquisar');
+        });
+        $('form[name=vincular]').submit(
+           function(){          
+                var radioDesvincular = $("input[type=radio][name=vincular]:checked").val();
+                var solictacaoArray = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                if (solictacaoArray == undefined && radioDesvincular == 'D'){ 
+                    var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                    $('#flashMessages').html(mensagem);
+                    return false;
+                }
+           }
+        );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+       });
+       $(".marcacao").hide();
+       $("input[name=vincular]:radio").click(function() { // attack a click event on all radio buttons with name 'radiogroup'
+                if($(this).val() == 'V') {//check which radio button is clicked 
+                        $(".marcacao").hide();
+                } else if($(this).val() == 'D') {
+                        $(".marcacao").show();
+                } else  {
+                       return false;
+                }
+        });
+    });
+</script>
+<?php if ($this->permissaoEntreCaixas): ?>
+    <div><?php echo $this->formVincularEntreCaixas; ?></div>
+<?php endif; ?>
+<?php if (count($this->data)): ?>
+<form name="vincular" action="" method="post" >
+    <div class="painel">
+<!--        <input type="submit" title="Vincular Solicitações" name="acao" value="Vincular"/>-->
+    </div>
+    
+    <div id="container_pagination">
+        <table class="grid">
+            <thead>
+                <tr>
+<!--                    <th class="marcacao">Selecionar</th>-->
+                    <th>Principal</th>
+                    <th><?php echo $this->tituloSolicit; ?></th>
+                    <th>Tempo total</th>
+                    <th>Nome do solicitante</th>
+                    <th>Serviço atual</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($this->data as $data): ?>
+                    <tr>
+<!--                        <td class="marcacao">-->
+<!--                        </td>-->
+                        <td>
+                            <input style="display: none" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="hidden" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                            <input type="radio" name="principal" value="<?php echo $data["SSOL_ID_DOCUMENTO"] ?>" <?php echo ($data["VIDC_ID_DOC_PRINCIPAL"] == $data["SSOL_ID_DOCUMENTO"]) ? 'checked' : '' ?> />
+                        </td>
+                        <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]).$this->escape($data["VIDC_ID_DOC_VINCULADO"]) ?></td>
+                        <td><?php echo $this->escape($data["TEMPO_TRANSCORRIDO"]); ?></td>
+                        <td><?php echo $this->escape($data["DOCM_CD_MATRICULA_CADASTRO"].' - '.$data['NOME_USARIO_CADASTRO']); ?></td>
+                        <td><?php echo $this->escape($data["SSER_DS_SERVICO"]); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">Total: <?php echo $this->data->getTotalItemCount(); ?></td>
+                </tr>
+                <tr>
+                    <td colspan="7"><?php echo $this->paginationControl($this->data, null, null, null); ?></td>
+                </tr>
+            </tfoot>
+        </table>
+<!--        <input type="radio" name="vincular" value="V" checked="checked">Vincular</input>-->
+<!--        <input type="radio" name="vincular" value="D">Desvincular</input>-->
+        </br></br>
+       <?php echo $this->form->MOFA_DS_COMPLEMENTO;
+             echo $this->form->Salvar;?>
+    </div>
+    <input type="hidden" name="vincular" value="V"/>
+</form>
+<?php //else:?>
+<!--        <p>Não existem registros</p>-->
+    <?php endif; ?>
+<div id="dialog_escolha_resposta">
+    <fieldset>
+        <?= $this->formResposta; ?>
+    </fieldset>
+    <fieldset>
+        <legend> Resultados </legend>
+        <div id="resultados_resposta">
+           
+        </div>
+    </fieldset>
+</div>
+<div id="dialog-documentos_detalhe">
+ <div id="dialog-documentos_conteudo"></div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        $("#BilletClientname").autocomplete("<?php echo $this->webroot ?>clients/find.json", {
+            minChars: 3,
+        });
+
+    });
+</script>

@@ -1,0 +1,53 @@
+<?php
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery.maskedinput-1.3.js')
+    ->appendFile($this->baseUrl() . '/js/jquery.MetaData.js')
+    ->appendFile($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js')
+    ->appendFile($this->baseUrl() . '/js/multiUpload/multiFile.js')
+    ->appendFile($this->baseUrl() . '/js/combobox_app_jquery.js')
+    ->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js')
+    ->appendFile($this->baseUrl() . '/js/os/solicitacaoForm.js');
+?>
+<div class="help" id="msg_ajuda" style="display: none; ">
+    <h3>Ajuda&ensp;</h3>
+    <p>Essa tela se inicia mostrando os dados pessoais do solicitante, conforme registrados no sistema RH e permissões concedidas através do sistema e-Guardião.</p>
+    <p>Devem ser preenchidos os campos:</p>
+    <ul>
+        <li><b>Ramal/telefone</b> (Registrar o telefone ou o ramal de contato para atendimento);</li>
+        <li><b>Local de atendimento</b> (é preenchido com as informações da unidade de lotação do solicitante);</li>
+        <li><b>Grupo de Serviço</b> (caso o solicitante não pertença ao quadro da TI, preencha sempre com <i>Atendimento aos Usuários</i>)</li>
+        <li><b>Serviço</b> (basta o solicitante  clicar na barra de rolagem ou digitar uma letra e selecionar o serviço desejado)*;</li>
+        <ul>
+            <i>*Quando o serviço solicitado exigir o número de tombamento patrimonial do equipamento, este campo irá surgir na tela para que seja digitado.</i><br />
+            <i>*Ao ser digitado o número do tombo, o sistema mostra a descrição do tombo, permitindo que o usuário confirme os dados do equipamento.</i>
+        </ul>
+        <li><b>Descrição do Serviço</b> (descrever a ocorrência que motivou a abertura do chamado);</li>
+        <li><b>Observação</b> (poderá ser digitada qualquer informação complementar, que auxilie o atendente na execução do serviço);</li>
+        <li><b>Inserir Anexos</b> (o sistema abre a possibilidade de buscar um documento no computador ou na rede)*;</li>
+        <ul>
+            <i>*Neste caso a sugestão é que os documentos digitalizados ou incluídos no sistema estejam na pasta do computador pessoal.</i><br />
+            <i>*Poderá ser enviado um arquivo com a imagem da ocorrência.</i>
+        </ul>
+        <li><b>Salvar</b> ao final da solicitação.</li>
+    </ul>
+    <p><i><b>Nota</b>: Todas as requisições criadas pelo usuário estarão no menu: Sisad / Minhas Solicitações de TI.</i></p>
+    <a id="botao_ajuda_recolhe" href="#" ></a>
+</div>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+
+<?php
+if ($this->exitesolicitacoesparaAvaliar > 0) {
+    ?><br>
+    <div id="solicitacoesavaliar" class="info">Existem solicitações para avaliar (conforme portaria PRESI-SECIN 445 DE 3 DE NOVEMBRO DE 2011, artigo 3º e parágrafo único) <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/avaliacao">Clique aqui para avaliar.</a></div>
+<?php } else { ?>
+    <?php
+    if ($this->exitesolicitacoesparaAvaliar > 0) {
+        ?><br>
+        <div id="solicitacoesavaliar" class="info">Existem solicitações para avaliar (conforme portaria PRESI-SECIN 445 DE 3 DE NOVEMBRO DE 2011, artigo 3º e parágrafo único) <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/avaliacao">Clique aqui para avaliar.</a></div>
+    <?php } else { ?>
+
+        <?php
+        echo $this->form;
+    }
+    ?>
+    <span class="msg_alerta"> </span>
+<?php } ?>

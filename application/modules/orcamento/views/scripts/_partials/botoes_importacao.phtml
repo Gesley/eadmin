@@ -1,0 +1,25 @@
+<?php
+/**
+ * @category	TRF1
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Anderson Sathler M. Ribeiro [asathler@gmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string	Código HTML que gera botões para Importação ou Reimportação de dados externos
+ * 
+ * @example		echo $this->partial ( '_partials/botoes_importacao.phtml', array ( 'formulario' => $this->formulario ) );
+ */
+?>
+<form name="frmImportacaoAlternativa" action="<?php echo $this->url(array('action' => 'index')) ?>" method="post" enctype="multipart/form-data">
+	<?php echo $this->formulario->TIPO_IMPORTACAO; ?>
+	<br />
+	
+	<?php echo $this->formulario->TEXTO; ?>
+	
+	<div>
+		<button type="submit" name="cmdImportar" class="ceo_importar" title="Importar com arquivos" value="importar">Importar com arquivos</button>
+		<button type="submit" name="cmdImportar" class="ceo_importar" title="Reimportar dados corrigidos" value="reimportar">Reimportar dados corrigidos</button>
+	</div>
+</form>

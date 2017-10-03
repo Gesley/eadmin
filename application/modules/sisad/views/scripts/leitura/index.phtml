@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Leitor de Documentos</title>
+
+        <?php
+        echo $this->headLink(array('rel' => 'shortcut icon',
+            'href' => $this->baseUrl() . '/img/trf1.ico',
+            'type' => 'image/x-icon'
+                ), 'PREPEND');
+        echo $this->headLink()
+                ->prependStylesheet($this->baseUrl() . '/css/blueprint/screen.css', 'screen, projection')
+                ->prependStylesheet($this->baseUrl() . '/css/blueprint/print.css', 'print')
+                ->appendStylesheet($this->baseUrl() . '/css/layout.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl() . '/css/form.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl() . '/js/jquery-ui-1.8.14/css/custom-theme/jquery-ui-1.8.14.custom.css', 'screen, projection')
+                //->appendStylesheet('http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl() . '/css/sisad/leitura/estilo_index.css', 'screen, projection')
+        ;
+        echo $this->HeadScript()
+                ->appendFile($this->baseUrl() . '/js/jquery-1.9.1.js')
+                ->appendFile($this->baseUrl() . '/js/jquery-ui-1.10.2/ui/jquery-ui.js')
+                ->appendFile($this->baseUrl() . '/js/contadorsessao.js')
+                ->appendFile($this->baseUrl() . '/js/pdfobject/pdfobject_source.js')
+                ->appendFile($this->baseUrl() . '/js/sisad/designForm.js')
+                ->appendFile($this->baseUrl() . '/js/sisad/botoes.js')
+                ->appendFile($this->baseUrl() . '/js/sisad/leitura/tabs.js')
+                ->appendFile($this->baseUrl() . '/js/sisad/leitura/ordenacao.js')
+                ->appendFile($this->baseUrl() . '/js/sisad/leitura/visualizador.js')
+                ->appendFile($this->baseUrl() . '/js/sisad/leitura/filtro.js')
+                ->appendFile($this->baseUrl() . '/js/sisad/leitura/carrega_documentos.js')
+                ->appendFile($this->baseUrl() . '/js/sisad/leitura/acoes_em_documentos.js')
+                ->appendFile($this->baseUrl() . '/js/jquery.MultiFile.js')
+        ;
+        ?>
+
+        <script>
+            var xhr_abrir_documento;
+            var GLOBAL_indice_abas;
+            $(function() {
+                $("#dialog-documentos_detalhe").dialog({
+                    title: 'Detalhe',
+                    autoOpen: false,
+                    modal: false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    height: 600,
+                    position: [580, 140, 0, 0],
+                    buttons: {
+                        Ok: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+
+                $("#tabs").delegate(".div_tabela_documentos > .grid > tbody > tr", "dblclick", function() {
+                    var this_tr = $(this);
+
+                    var div_dialog_by_id = $("#dialog-documentos_detalhe");
+                    valorTr = $(this_tr).attr("value");
+                    if (xhr_abrir_documento) {
+                        xhr_abrir_documento.abort();
+                    }
+                    jsonDocumentoLinha = jQuery.parseJSON(valorTr);
+                    url = base_url + '/sisad/detalhedcmto/detalhedcmto';
+                    xhr_abrir_documento = $.ajax({
+                        url: url,
+                        dataType: 'html',
+                        type: 'POST',
+                        data: valorTr,
+                        contentType: 'application/json',
+                        processData: false,
+                        beforeSend: function() {
+                            div_dialog_by_id.dialog("open");
+                            div_dialog_by_id.html('');
+                        },
+                        success: function(data) {
+                            div_dialog_by_id.html(data);
+                            console.log($("#dialog-documentos_detalhe > #tabs"));
+                            $("#dialog-documentos_detalhe > #tabs").tabs();
+                        },
+                        complete: function() {
+                        },
+                        error: function() {
+
+                        }
+                    });
+                });
+            });
+
+        </script> 
+
+
+    </head>
+    <body>
+        <div id="tools_aux">
+            <span title="Tempo até que a sessão expire" id="contador" style="right: 0; margin-right: 200px;top: 0px; float: right; position: absolute; z-index: 100; color: #fff;"></span>
+            <a href="#" title="Informações sobre está página" id='botao_informacao' class="botao_informacao_icon"></a>
+            <a href="#" title="Ajuda desta página" id='botao_ajuda' class="ajuda_icon"></a>
+            <div id="dialog_time_out"></div>
+        </div>
+        <div id="menu">
+            <div id="logo" style="float: left; height: 30px;"><img src="<?= $this->baseUrl() . '/img/logo.png' ?>" height="36" ></img></div>
+            <font style=" margin-left: -70px;float: left; display: inline-block;margin-top: 5px ;color:#fff;font-size: 13px;font-weight: bold;">e-Sisad - Leitura de Documentos e Processos Administrativos</font>
+            <a style="display: inline-block; float: right;margin:2px 2px 0px 0px;" href="<?= $this->baseUrl() . '/sisad/caixaunidade/entrada' ?>" class="submitComum"> Voltar para caixa da unidade</a>
+        </div>
+        <div id="container">
+
+            <div id="tabs" class="tabs-bottom">
+                <ul>
+                    <li><a href="#tabs-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>"><?= $this->documento['DTPD_NO_TIPO'] . ': ' . $this->documento['MASC_NR_DOCUMENTO'] ?></a></li>
+                </ul>
+                <?php
+                echo $this->partial('_partials/leitura/tabs_principal.phtml', array(
+                    'documento' => $this->documento
+                    , 'formPesquisaAnexos' => $this->formPesquisaAnexos
+                    , 'formPesquisaApensos' => $this->formPesquisaApensos
+                    , 'formPesquisaVinculos' => $this->formPesquisaVinculos
+                    , 'minuta' => $this->minuta
+                    , 'anexos' => $this->anexos
+                    , 'anexos_sem_metadados' => $this->anexos_sem_metadados
+                    , 'apensos' => $this->apensos
+                    , 'vinculos' => $this->vinculos
+                    , 'historico' => $this->historico
+                    , 'isDocumentoPrincipal' => true
+                ));
+                ?>
+            </div>
+        </div>
+        <div id="dialog-modal" style="display:none">
+
+        </div>
+        <div id="dialog-documentos_detalhe">
+            <div id="dialog-documentos_conteudo"></div>
+        </div>
+    </body>
+</html>

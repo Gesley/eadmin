@@ -1,0 +1,342 @@
+<div class="help" id="msg_ajuda" style="display: none; " >
+<!--    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>-->
+    <h3>Ajuda&ensp;</h3>
+    <p>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+
+
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input[type=checkbox]');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+                grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        $('input[name=acao]').click(
+            function(){
+                var acao = this.value;
+                var formhelpdesk = $('form[name=helpdesk]');
+                if(acao == 'Encaminhar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/atendimentotecnico/encaminhar');
+                }else if(acao == 'Baixar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/atendimentotecnico/baixarcaixa');
+                }else if(acao == 'Espera'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/atendimentotecnico/esperacaixa');
+                }
+            }
+        );
+        $('form[name=helpdesk]').submit(
+           function(){          
+                var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                if (solictacaoSelecionada == undefined){ 
+                    var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                    $('#flashMessages').html(mensagem);
+                    return false;
+                }
+           }
+        );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+       });
+    });
+</script>
+<script type="text/javascript">
+	$(function() {
+
+            $("#DOCM_CD_MATRICULA_CADASTRO").autocomplete({
+                //source: "sosti/solicitacao/ajaxnomesolicitante",
+                source: base_url+"/sosti/solicitacao/ajaxnomesolicitante",
+                minLength: 3,
+                delay: 300
+            });
+            $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+                //source: "sosti/solicitacao/ajaxunidade",
+                source: base_url+"/sosti/solicitacao/ajaxunidade",
+                minLength: 3,
+                delay: 500 
+            });
+            
+            
+            $('#pesquisar')
+                .click(function() {
+                        $("#pesq_div").show();
+                        //$("#pesq_div").hide();
+                        $("#container_pagination").hide();
+                });
+                
+            $('#Pesquisar').button();
+            
+            $("#botao_ajuda_recolhe")
+                .click(function(){
+                    $("#pesq_div").hide();
+                    $("#pesquisar").show();
+            });
+            $(function() {
+                var dates = $( "#DATA_INICIAL, #DATA_FINAL" ).datepicker({
+			dateFormat: 'dd/mm/yy',
+			dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+			dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+			dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+			monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+					     'Outubro','Novembro','Dezembro'],
+ 			monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+ 			nextText: 'Próximo',
+ 		        prevText: 'Anterior',
+			changeMonth: true,
+			numberOfMonths: 1,
+			changeMonth: true,
+			changeYear: true,
+			changeMonth: true,
+			onSelect: function( selectedDate ) {
+				var option = this.id == "DATA_INICIAL" ? "minDate" : "maxDate",
+					instance = $( this ).data( "datepicker" );
+					date = $.datepicker.parseDate(
+						instance.settings.dateFormat ||
+						$.datepicker._defaults.dateFormat,
+						selectedDate, instance.settings );
+				dates.not( this ).datepicker( "option", option, date );
+			}
+		});
+	    }); 
+	});
+</script>
+<script type="text/javascript">
+$(function() {
+            $('#SGRS_ID_GRUPO').change(
+                function(){
+                    $("#SSER_ID_SERVICO").removeAttr('disabled');
+                    $.ajax({
+                        url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos',
+                        dataType: 'html',
+                        type: 'POST',
+                        data: this.value,
+                        contentType: 'application/json',
+                        processData: false,
+                      beforeSend:function() {
+                          $("#SSER_ID_SERVICO").removeClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('');
+                          $("#SSER_ID_SERVICO").addClass('carregandoInputSelect');
+                      },
+                      success: function(data) {
+                          $("#SSER_ID_SERVICO").html(data);
+                          $("#SSER_ID_SERVICO").removeClass('carregandoInputSelect');
+                          $("#SSER_ID_SERVICO").focus();
+                      },
+                      error: function(){
+                          $("#SSER_ID_SERVICO").removeClass('x-form-field');
+                          $("#SSER_ID_SERVICO").val('Erro ao carregar.');
+                          $("#SSER_ID_SERVICO").addClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('<option>Erro ao carregar</option>');
+                      }
+                    });  
+                }
+            );
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            
+            
+            $('#SSER_ID_SERVICO').change(
+                function(){
+                    var unidade = $(this).val().split('|')[1];
+                    if(unidade == 'S'){
+                        $("#SSOL_NR_TOMBO-label").show();
+                        $("#SSOL_NR_TOMBO-element").show();
+                        $("#DE_MAT-label").show();
+                        $("#DE_MAT-element").show();
+                    }else{
+                        $("#SSOL_NR_TOMBO-label").hide();
+                        $("#SSOL_NR_TOMBO-element").hide();
+                        $("#DE_MAT-label").hide();
+                        $("#DE_MAT-element").hide();
+                    }
+                }
+            );
+            $('#SSOL_NR_TOMBO').focusout(
+                function(){
+                    $.ajax({
+                      //url: "sosti/solicitacao/ajaxdesctombo/id/"+this.value,
+                      url: "ajaxdesctombo/id/"+this.value,
+                      beforeSend:function() {
+                          $("#DE_MAT").removeClass('erroInputTextArea');
+                          $("#DE_MAT").val('');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").addClass('carregandoTextArea');
+                      },
+                      success: function(data) {
+                          $("#DE_MAT").val(data);
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").addClass('x-form-field');
+                          $("#DE_MAT").focus();
+                      },
+                      error: function(){
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").val('Erro ao carregar.');
+                          $("#DE_MAT").addClass('erroInputTextArea');
+                      }
+                    });  
+                }
+            );
+	});
+ </script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+    <div class="painel" style="<?php if(!$this->ultima_pesq) echo "display: none;" ?>">
+        <input type="button" title="Última pesquisa" name="acao" value="Última Pesquisa" id="pesquisar">
+        <a title="Nova Pesquisa" name="acao" value="Pesquisa" id="pesquisar" href="<?php echo $this->baseUrl(); ?>/sosti/pesquisarsolicitacoes/index/nova/1" >Nova Pesquisa</a>
+    </div> 
+
+    <div class="help" id="pesq_div"  style="<?php if($this->ultima_pesq) echo "display: none;" ?>" >
+        <?php echo $this->form; ?>
+        <span id="botao_ajuda_recolhe" ></span>
+    </div>
+        
+<div id="container_pagination">
+<?php if (count($this->data)): ?>
+        <table class="grid">
+            <thead>
+                  <tr>
+                      <th>
+                      <!--                    
+                            <input type="checkbox" name="input_check_all_grid" id="check_all" />
+                        --></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/pesquisarsolicitacoes/index/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">N. da solicitação<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/pesquisarsolicitacoes/index/ordem/DOCM_DH_CADASTRO/direcao/<?php echo $this->direcao ?> ">Data de cadastro<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/pesquisarsolicitacoes/index/ordem/DOCM_CD_MATRICULA_CADASTRO/direcao/<?php echo $this->direcao ?> ">Nome do solicitante<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/pesquisarsolicitacoes/index/ordem/SSER_DS_SERVICO/direcao/<?php echo $this->direcao ?> ">Serviço atual<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/pesquisarsolicitacoes/index/ordem/ATENDENTE/direcao/<?php echo $this->direcao ?> ">Atendente<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($this->data as $data): ?>
+                    <tr name="rowList" value="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" title="Duplo Click para abrir os detalhes">
+                       <td <?php echo ($data["SESP_DH_LIMITE_ESP"])?('style="background-color:#0099FF;" title="Solicitação colocada em espera!"'):('');
+                                  echo ($data["TEMPO_TOTAL"] > 120)?('style="background-color:#EE4115;" title="Solicitação com o tempo de atendimento ultrapassado!"'):('');  
+                                  echo ($data["MOFA_ID_FASE"] == 1019)?('style="background-color:#E88400;" title="Solicitação recusada!"'):(''); ?> >
+                           <input  style="display: none;"class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                        </td>
+                        <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?></td>
+                        <td><?php echo $this->escape($data["DOCM_DH_CADASTRO"]); ?></td>
+                        <td><?php echo $this->escape($data["DOCM_CD_MATRICULA_CADASTRO"].' - '.$data['NOME_USARIO_CADASTRO']); ?></td>
+                        <td><?php echo $this->escape($data["SSER_DS_SERVICO"]); ?></td>
+                        <td><?php echo $this->escape($data["ATENDENTE"]); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">Total: <?php echo $this->data->getTotalItemCount(); ?></td>
+                </tr>
+                <tr>
+                    <td colspan="7"><?php echo $this->paginationControl($this->data, null, null, null); ?></td>
+                </tr>
+            </tfoot>
+        </table>
+
+    <?php else: ?>
+        <?php if($this->ultima_pesq): ?>
+    <p><br/><strong>Não existem registros para os parametros de pesquisa informados</strong></p>
+        <?php endif; ?>
+             
+    <?php endif; ?>
+</div>
+    
+ 
+<div id="dialog-documentos_detalhe">
+ <div id="dialog-documentos_conteudo"></div>
+</div>

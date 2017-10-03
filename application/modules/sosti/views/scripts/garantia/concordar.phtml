@@ -1,0 +1,209 @@
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+   
+<p><b>Garantia Desenvolvimento<span style="text-decoration: underline;"></span></b></p>
+<p>&nbsp;</p>
+<p><b><i>A &nbsp;funcionalidades de Garantia &nbsp;afeta as seguintes funcionalidades: </i></b></p>
+<ul>
+<li>- <b>Encaminhamento da Caixa de Gest&atilde;o de Demandas de TI.</b></li>
+</ul>
+<p>Nesta funcionalidade &eacute; poss&iacute;vel solicitar garantia por meio de uma justificativa. &Eacute; necess&aacute;rio somente selecionar o <i>checkbox</i>: solicitar garantia. E justificar seu pedido.</p>
+<ul>
+<li><b>- Baixa da Caixa de Desenvolvimento e Sustenta&ccedil;&atilde;o.</b></li>
+</ul>
+<p>Caso a justificativa seja aceita pelo atendente &nbsp;que baixar a solicita&ccedil;&atilde;o a negocia&ccedil;&atilde;o de garantia &eacute; terminada e a solicita&ccedil;&atilde;o &eacute; considerada garantia.</p>
+<p>Caso contr&aacute;rio a solicita&ccedil;&atilde;o que &nbsp;o pedido de garantia for &nbsp;negado constar&aacute; na caixa de diverg&ecirc;ncia para negocia&ccedil;&atilde;o posterior, por meio das op&ccedil;&otilde;es de concordo &nbsp;e discordo.</p>
+<p>Cada gerente &eacute; respons&aacute;vel por sanar as diverg&ecirc;ncias de seus respectivos sistemas.<span style="text-decoration: underline;"></span></p>
+<ul>
+<li><b>- Diverg&ecirc;ncia Garantia. </b></li>
+</ul>
+<p>Nesta caixa constam todas as solicita&ccedil;&otilde;es que entraram em diverg&ecirc;ncia.</p>
+<p>Existe a a&ccedil;&atilde;o de avaliar, onde constam as op&ccedil;&otilde;es concordo e discordo.</p>
+<p>Caso a op&ccedil;&atilde;o de concordo for selecionada a solicita&ccedil;&atilde;o <b><i>n&atilde;o</i></b> ser&aacute; considerada garantia, caso contr&aacute;rio <b><i>sim</i></b>.</p>
+<p>At&eacute; o momento do fechamento do SLA &eacute; poss&iacute;vel alterar a decis&atilde;o de concord&acirc;ncia. Ap&oacute;s o fechamento essas solicita&ccedil;&otilde;es n&atilde;o ser&atilde;o mais listadas.<span style="text-decoration: underline;"></span></p>
+    
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input[type=checkbox]');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+                grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        $('input[name=acao]').click(
+            function(){
+                var acao = this.value;
+                var formhelpdesk = $('form[name=helpdesk]');
+                if(acao == 'Encaminhar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/encaminhar');
+                }else if(acao == 'Baixar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/baixarcaixa');
+                }else if(acao == 'Espera'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/esperacaixa');
+                }
+            }
+        );
+        $('form[name=helpdesk]').submit(
+           function(){          
+                var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                if (solictacaoSelecionada == undefined){ 
+                    var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                    $('#flashMessages').html(mensagem);
+                    return false;
+                }
+           }
+        );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+       });
+       $(".historico").hide('');
+       
+        $("#NEGA_IC_ACEITE-element").hide('');
+        $("#NEGA_IC_ACEITE-label").hide('');
+        $("#NEGA_DS_JUST_ACEITE_RECUSA-element").hide('');
+        $("#NEGA_DS_JUST_ACEITE_RECUSA-label").hide('');
+       if( <?php if($this->NsAction->existeGarantiaPorMovimentacoes){echo '1';} else{ echo '2';} ?>   == '1'){
+            $("#NEGA_IC_ACEITE-element").show('');
+            $("#NEGA_IC_ACEITE-label").show('');
+            $("#NEGA_DS_JUST_ACEITE_RECUSA-element").hide('');
+            $("#NEGA_DS_JUST_ACEITE_RECUSA-label").hide('');
+       }
+       if( $('#NEGA_IC_ACEITE-R:checked').attr('value') == "R" ){
+            $("#NEGA_DS_JUST_ACEITE_RECUSA-element").show('');
+            $("#NEGA_DS_JUST_ACEITE_RECUSA-label").show('');
+       }
+       $('input[type=radio][name=NEGA_IC_ACEITE]').click(
+            function(){
+                if(this.value == 'R'){
+                    $("#NEGA_DS_JUST_ACEITE_RECUSA-element").show('');
+                    $("#NEGA_DS_JUST_ACEITE_RECUSA-label").show('');
+                }else if (this.value == 'A'){
+                    $("#NEGA_DS_JUST_ACEITE_RECUSA-element").hide('');
+                    $("#NEGA_DS_JUST_ACEITE_RECUSA-label").hide('');
+                }
+        });
+    });
+</script> 
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Número</th>
+            <th >Autor</th>
+            <th >Serviço atual</th>
+            <th >Vinculada</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php foreach ($this->data as $data): ?>
+            <tr>
+                <?php $d = Zend_Json::decode($data);?>  
+                <td class="historico">
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data); ?>"/>
+                </td>
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td> <?php if(isset($d["NOME"])){echo $this->escape($d["NOME"]);}else{echo $this->escape($d["NOME_USARIO_CADASTRO"]);} ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"] ) ?></td>
+                <td><?php if(isset ($d["VINCULADA"])&&($d["VINCULADA"]==1)){echo "SIM";}else{echo "";}?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<?php echo $this->form; ?>
+<div id="dialog-documentos_detalhe">
+ <div id="dialog-documentos_conteudo"></div>
+</div>

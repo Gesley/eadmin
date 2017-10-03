@@ -1,0 +1,195 @@
+<?php
+/**
+ * @category	SISAD
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Leidison Siqueira Barbosa [leidison_14@hotmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que exibe os dados do documento escolhido.
+ * 
+ * @param		array		dados_documento
+ * @param		array		assinaturas_digitais
+ * @example		echo $this->partial('_partials/detalhedocumento/processos_vinculados.phtml', array());
+ * 
+ */
+$idAleatorio = uniqid();
+?>
+<div >
+    <fieldset>
+        <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+            <div style="margin-left: 10px; font-size: 12px; ">
+                <?php
+                echo '<br/><b>Assinado via certificado digital por: </b>' . $this->assinaturas_digitais['PMAT_CD_MATRICULA'] . ' - ' . $this->assinaturas_digitais['PNAT_NO_PESSOA'];
+                echo '<br/><b>Data e hora: </b>' . $this->assinaturas_digitais['ASDC_DH_ASSINATURA'];
+                echo '<br/><a href="' . $this->baseUrl() . '/sisad/gerenciared/donwload-arquivo-e-assinatura-compactado/id/' . $this->dados_documento['DOCM_ID_DOCUMENTO'] . '">[Donwload]</a> do arquivo com assinatura';
+                echo '<br/><br/><button class="validaAssinatura" value="' . $this->escape(Zend_Json::encode($this->dados_documento)) . '">Validar Assinatura</button>';
+                ?>
+            </div>
+        </div>
+    </fieldset>
+    <applet id="assinadorDigital" width="1px" height="1px"
+            code="br/gov/trf1/assinador/api/web/applet/AssinadorApplet"
+            archive="http://prd.trf1.gov.br/e-assinador/website/applet/assinadorApplet.jar">
+        <param name=servidorCarimboTempo value="SCT.TRF1.GOV.BR, SCT2.TRF1.GOV.BR">
+        <param name=portaCarimboTempo value="318, 318">
+    </applet>
+</div>
+<script>
+    function montaStatus(mensagem, status) {
+        var classe;
+        var tipo;
+        if (status == "" || status == undefined) {
+            status = "error";
+        }
+
+        if (status == 'notice') {
+            classe = status;
+            tipo = 'Aviso';
+        } else if (status == 'error') {
+            classe = status;
+            tipo = 'Erro';
+        } else if (status == 'success') {
+            classe = status;
+            tipo = 'Sucesso';
+        } else if (status == 'info') {
+            classe = status;
+            tipo = 'Informação';
+        }
+        mensagem = '<div class=\'' + classe + '\'><strong>' + tipo + ': </strong>' + mensagem + '</div>';
+        return mensagem;
+    }
+
+    function include(file_path) {
+        var j = document.createElement("script");
+        j.type = "text/javascript";
+        j.src = file_path;
+        document.body.appendChild(j);
+    }
+
+    include(base_url + '/js/eassinador/api-sdk.js');
+    include(base_url + '/js/sisad/documento/assinar.js');
+    $(".validaAssinatura").click(function() {
+        jsonDocumento = $.parseJSON($(this).val());
+        $.ajax({
+            url: base_url + "/sisad/gerenciared/retorna-arquivo-e-assinatura/",
+            type: "GET",
+            modal: true,
+            data: {'id': jsonDocumento.DOCM_ID_DOCUMENTO},
+            beforeSend: function() {
+
+            },
+            success: function(dado, textStatus, jqXHR) {
+                if (textStatus == "success") {
+                    if (jqXHR.getResponseHeader("Content-Type") == "application/json") {
+                        if (dado.ERROR == '') {
+                            if (existeAssinador()) {
+                                if (!isAtualizar()) {
+                                    var validacao = validarAssinatura(dado.HEXADECIMAL_ARQUIVO, dado.HEXADECIMAL_ASSINATURA);
+                                    var mensagem;
+                                    if (validacao == "true") {
+                                        mensagem = montaStatus("A assinatura é válida.", "success");
+                                    } else {
+                                        mensagem = montaStatus(traduzMensagem(validacao), "error");
+                                    }
+                                    $(".validaAssinatura").closest("div").append(mensagem);
+                                } else {
+                                    alert("É necessário a atualização do assinador digital.");
+                                    return;
+                                }
+                            } else {
+                                alert("É necessário a instalação do assinador digital.");
+                                return;
+                            }
+                        } else {
+                            alert("Erro ao validar a assinatura: " + dado.ERROR);
+                            return;
+                        }
+                    } else {
+                        alert("Erro ao validar a assinatura: O ajax retornou um formato inválido");
+                        return;
+                    }
+                } else {
+                    alert("Erro ao validar a assinatura: Ocorreu um erro no ajax");
+                    return;
+                }
+            }
+        });
+    });
+    function traduzMensagem(resultado) {
+        switch (resultado) {
+            case "MSG003":
+                return "Assinatura inválida detectada na verificação!";
+                break;
+            case "MSG009":
+                return "Assinatura não encontrada para validação!";
+                break;
+            case "MSG011":
+                return "Propósito do certificado inválido!";
+                break;
+            case "MSG027":
+                return "Certificado não suportado!";
+                break;
+            case "MSG039":
+                return "Problema na busca da chave privada!";
+                break;
+            case "MSG041":
+                return "Problemas na leitura das extenções de uso da chave do certificado!";
+                break;
+            case "MSG042":
+                return "Conteúdo para assinatura inválido!";
+                break;
+            case "MSG043":
+                return "A chave utilizada está inválida!";
+                break;
+            case "MSG044":
+                return "Ocorreu um problema na assinatura!";
+                break;
+            case "MSG045":
+                return "Falha na leitura dos dados do carimbo de tempo!";
+                break;
+            case "MSG046":
+                return "Endereço de carimbo de tempo não foi reconhecido!";
+                break;
+            case "MSG047":
+                return "Tamanho da assinatura inválido!";
+                break;
+            case "MSG048":
+                return "Nenhum dispositivo com chave privada foi encontrado!";
+                break;
+            case "MSG049":
+                return "Envelope inválido!";
+                break;
+            case "MSG050":
+                return "Certificado inválido para o carimbo!";
+                break;
+            case "MSG051":
+                return "O carimbo está inválido!";
+                break;
+            case "MSG052":
+                return "Protocolo inválido!";
+                break;
+            case "MSG053":
+                return "Tempo esgotado do carimbo!";
+                break;
+            case "MSG054":
+                return "Endereço de carimbo de tempo inválido!";
+                break;
+            case "MSG055":
+                return "Sem permissão para acessar o carimbo!";
+                break;
+            case "MSG056":
+                return "Erro ao tentar obter dado inexistente no certificado!";
+                break;
+            case "MSG057":
+                return "Operação cancelado pelo usuário!";
+                break;
+            case "MSG999":
+                return "Ocorreu um erro inesperado!";
+                break;
+            default:
+                return "";
+        }
+    }
+</script>

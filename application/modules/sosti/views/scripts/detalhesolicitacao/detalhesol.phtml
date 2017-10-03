@@ -1,0 +1,1118 @@
+<?php
+//header("Content-Type: text/html; charset=ISO-8859-1", true); 
+$userNs = new Zend_Session_Namespace('userNs');
+$idDocumentoPrincipal = $this->DocmDocumento["SSOL_ID_DOCUMENTO"];
+$AnexAnexo = new Application_Model_DbTable_SadTbAnexAnexo();
+$SosAssisAtendSistema = new Application_Model_DbTable_SosTbAsisAtendSistema();
+$ocsTbPupePerfilUnidPessoa = new Application_Model_DbTable_OcsTbPupePerfilUnidPessoa();
+$caso_categoria = new Application_Model_DbTable_SosTbCasoCategoriaSolic();
+$anx = $AnexAnexo->fetchAll("ANEX_ID_DOCUMENTO = $idDocumentoPrincipal", 'ANEX_DH_FASE DESC');
+if (!is_null($anx)) {
+    $anxSemMetadado = $anx->toArray();
+}
+$categoriasPessoal = $caso_categoria->getCategoriasDocumentoPessoal($idDocumentoPrincipal);
+if (($this->DocmDocumento["MOFA_ID_FASE"] == 1000) || ($this->DocmDocumento["MOFA_ID_FASE"] == 1014) || ($this->DocmDocumento["MOFA_ID_FASE"] == 1019)) {
+    $mostra = true;
+} else {
+    $mostra = false;
+}
+if ($this->DocmDocumento["SNAS_ID_NIVEL"] != NULL) {
+    $tipo = 'NIVEL';
+    $identificador = $this->DocmDocumento["SNAS_ID_NIVEL"];
+} else {
+    $tipo = 'GRUPO';
+    $identificador = $this->DocmDocumento["SGRS_ID_GRUPO"];
+}
+$categoriasGrupo = $caso_categoria->getCategoriasDocumentoGrupo($idDocumentoPrincipal, $identificador, $tipo);
+$userNs = new Zend_Session_Namespace('userNs');
+$sadDocmDocumento = new Application_Model_DbTable_SadTbDocmDocumento();
+
+$arrayPerfis = $ocsTbPupePerfilUnidPessoa->getTodosPerfilPessoa($userNs->matricula);
+
+foreach ($arrayPerfis as $perfil) {
+    $p = $perfil["PERF_ID_PERFIL"];
+
+    if ($p == 25 || $p == 31 || $p == 53 || $p == 63) {
+        $idPerfil = $p;
+    }
+}
+
+$maior = 0;
+
+foreach (explode(" ", $this->DocmDocumento['DOCM_DS_ASSUNTO_DOC']) as $value) {
+    if ($maior < strlen($value)) {
+        $maior = strlen($value);
+    }
+}
+?>
+
+<script type="text/javascript">
+    $(function () {
+        $("#loading").show();
+//        $(document).bind("ajaxSend", function() {
+//           $("#loading").show();
+//        }).bind("ajaxComplete", function() {
+//           $("#loading").hide();
+//        });
+        $("#tabs").tabs();
+//        $( "#tabs" ).tabs("select",GLOBAL_indice_abas);
+//        $( "#tabs" ).tabs({
+//            select: function(event, ui) {
+//                GLOBAL_indice_abas = ui.index;
+//            }
+//        });
+        $("#buttonsetmanifestacao").buttonset();
+        $(".abrirAnexo").button({
+            icons: {
+                primary: "ui-icon-folder-open"
+            }
+        }).attr('style', 'width: 40px; height: 16px;');
+        $(".alertaButton").button({
+            icons: {
+                primary: "ui-icon-alert"
+            }
+        }).attr('style', 'width: 40px; height: 16px;');
+        $(".botao_icon_bolinha").button({
+            icons: {
+                primary: "ui-icon-radio-on"
+            }
+        });
+
+        /* ABRIR DETALHE DE ALGUMA SOLICITAÇÃO */
+        var xhr_abrir_detalhe_solicitacao;
+        var dialog_detalhe_solicitacao = '';
+
+        $(".detalhe_solicitacao").click(function () {
+            var this_a = this;
+            if (dialog_detalhe_solicitacao != '') {
+                //dialog_detalhe_solicitacao.html(' ');
+                dialog_detalhe_solicitacao.remove();
+            }
+
+            $("#dialog_solicitacao_container").html("<div id='dialog_detalhe_solicitacao'></div>");
+
+            dialog_detalhe_solicitacao = $("#dialog_detalhe_solicitacao");
+            dialog_detalhe_solicitacao.dialog({
+                title: 'Detalhe Solicitação',
+                autoOpen: false,
+                modal: false,
+                show: 'fold',
+                hide: 'fold',
+                resizable: true,
+                width: 800,
+                height: 600,
+                position: [300, 140, 0, 0],
+                buttons: {
+                    Ok: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            abrir = true;
+            if (xhr_abrir_detalhe_solicitacao) {
+                xhr_abrir_detalhe_solicitacao.abort();
+                abrir = false;
+            }
+            if (abrir) {
+                url = base_url + '/sosti/detalhesolicitacao/detalhesol';
+                xhr_abrir_detalhe_solicitacao = $.ajax({
+                    url: url,
+                    dataType: 'html',
+                    type: 'POST',
+                    data: $(this).attr('value'),
+                    contentType: 'application/json',
+                    processData: false,
+                    beforeSend: function () {
+                        dialog_detalhe_solicitacao.html('');
+                    },
+                    success: function (data) {
+                        dialog_detalhe_solicitacao.html(data);
+
+                        obj = dialog_detalhe_solicitacao.find("div#tabs")
+
+                        $(obj).addClass('pro_docs_tabs');
+                        $(".pro_docs_tabs").tabs();
+
+                        dialog_detalhe_solicitacao.dialog("open");
+
+                        $(this_a).addClass("ui-state-highlight");
+                        $(this_a).button({
+                            icons: {
+                                primary: "ui-icon-check"
+                            }
+                        });
+
+                    },
+                    complete: function () {
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        });
+        if (($('#cx').val() == 'solicitinformacaocaixa') || ($('#cx').val() == 'pedidoinformacaodsv')) {
+            $('.info-assoc').show();
+        }
+        $('#sub-sol-usu').click( function () {
+            if ($(".check-assoc").is(":checked")) {
+                return true;
+            } else {
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                $('#flashMessagesDet').html(mensagem);
+                return false;
+            }
+        });
+    });
+</script>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Documento</a></li>
+        <li><a href="#tabs-2">Histórico</a></li>
+        <?php
+        if ($anxSemMetadado) {
+            echo '<li><a href="#tabs-3">Anexos</a></li>';
+        }
+        ?>
+        <?php
+        $count = count($this->DocmListaVinculados);
+        if ($count != 0) {
+            echo '<li><a href="#tabs-4">Vinculados</a></li>';
+        }
+        ?>
+        <?php
+        $count = count($this->DocmNaoConformidades);
+        if ($count != 0) {
+            echo '<li><a href="#tabs-5">Não Conformidades</a></li>';
+        }
+        ?>
+        <?php
+        $count = count($this->DocmDefeitos);
+        if ($count != 0) {
+            echo '<li><a href="#tabs-6">Controlde de Qualidade</a></li>';
+        }
+        ?>
+        <?php
+        $count = count($this->DocmPapdParteProcDoc);
+        if ($count != 0) {
+            echo '<li><a href="#tabs-7">Acompanhamento</a></li>';
+        }
+        ?>
+        <?php
+        if ($this->NegaNegociaGarantia) {
+            echo '<li><a href="#tabs-9">Garantia</a></li>';
+        }
+        ?>
+        <!--CHECKLIST-->
+        <?php
+        if ($this->verificaChecklist) {
+            echo '<li><a href="#tabs-11">Checklist</a></li>';
+        }
+        ?>
+        <!--ASSOCIAÇÃO-->
+        <?php 
+        if (($this->qtdeSostisAssociados > 0) /*&& ($this->validaAba == 2)*/) {
+            echo '<li><a href="#tabs-12" class="associar" id="associar'.$this->DocmDocumento["SSOL_ID_DOCUMENTO"].'" >Sostis Associados</a></li>';
+        } 
+        ?>
+        <?php
+//                   if($this->verificaChecklist){
+//                       echo '<li><a href="#tabs-12">Stefanini</a></li>';
+//                   }
+        ?>
+        <?php
+        if ($this->verificaSeOs) {
+            echo '<li><a href="#tabs-15" id="tarefa">Tarefa</a></li>';
+        }
+        ?>
+        <?php
+        if (/*(count($this->dadosOs) > 0) ||*/ $this->eOs) {
+            echo '<li><a href="#tabs-16" id="tarefa">Ordem de Serviço</a></li>';
+        }
+        ?>
+        <?php
+//                   if($this->verificaChecklist){
+//                       echo '<li><a href="#tabs-16" id="categoriaservico">Categoria de Serviço</a></li>';
+//                   }
+        ?>
+        <?php
+        /** FATURAMENTO */
+//               if ((isset($idPerfil)) && ($mostra == true))
+//               {
+//                    if($this->FaturamentoContratada || $this->FaturamentoAfericao || $this->FaturamentoContratante)
+//                    {
+//                        $analisePF = true;
+//                        echo '<li><a href="#tabs-13">Análise PFs</a></li>';
+//                    }
+//                }
+        ?>
+
+
+
+    </ul>
+    <br />
+    <div id="flashMessagesDet"></div>
+    <div id="tabs-1">
+        <table  style="font-size: 12px;" class="" style=" cursor: default;/*border: 1px solid red; border-collapse: separate; border-bottom: 1px solid red;*/" >
+            <?php
+            if ($this->idCaixa == 2) {
+                if ($this->DocmDocumento["ASSO_IC_ATENDIMENTO_EMERGENCIA"] == 'S') {
+                    ?>
+                    <tr style="font-size: 12px; font-weight: bold;">
+                        <td>
+                            <img src="<?php echo $this->baseUrl(); ?>/img/sosti/emergencial.png" title="Demanda de Carater Emergencial" /> 
+                        </td>   
+                        <td colspan="3">
+                            DEMANDA EMERGÊNCIAL
+                        </td>   
+                    </tr>
+                <?php } ?>
+                <tr style="font-size: 12px; font-weight: bold;">
+                    <td colspan="3">
+    <!--							<img src="<?php echo $this->baseUrl(); ?>/img/sosti/<?php echo $this->DocmDocumento["CTSS_ID_CATEGORIA_SERVICO"] ?>.png" title="<?php echo $this->DocmDocumento["CTSS_NM_CATEGORIA_SERVICO"] ?>" /> -->
+                        <?php echo $this->DocmDocumento["CTSS_NM_CATEGORIA_SERVICO"] . " - "; ?>
+                        <?php echo $this->DocmDocumento["OSIS_NM_OCORRENCIA"] ?>
+                    </td>    
+                    <td >
+                        <?php echo "Nível de Criticidade: " . $this->DocmDocumento["ASIS_IC_NIVEL_CRITICIDADE"]; ?>
+                    </td>    
+                </tr>
+                <?php
+            }
+            if ($categoriasPessoal || $categoriasGrupo) { // Verifica se existe algum grupo de categoria cadastrado
+                ?>
+                <tr style="font-size: 12px; font-weight: bold;">
+                    <td>
+                        Categorias: 
+                    </td>    
+                    <?php if ($categoriasPessoal != null) { ?>
+                        <td>
+                            Pessoal 
+                        </td>    
+                        <?php
+                    }
+                    if ($categoriasGrupo != null) {
+                        ?>
+                        <td>
+                            Grupo 
+                        </td>    
+                        <?php
+                    }
+                    ?>                    
+                </tr>
+                <tr style="font-size: 12px; font-weight: bold;">
+                    <td>
+                    </td>    
+                    <?php
+                    $cont = 0;
+                    if ($categoriasPessoal != null) {
+                        ?>
+                        <td>
+                            <table>
+                                <tr>
+                                    <?php
+                                    foreach ($categoriasPessoal as $categorias_p) {
+                                        if ($cont % 3 == 0) {
+                                            echo '</tr><tr>';
+                                        }
+                                        ?>
+                                        <td bgcolor="<?php echo $categorias_p['CATE_DS_DESCRICAO_COR'] ?>" title="Nome: <?php echo $categorias_p['CATE_NO_CATEGORIA'] ?> - Descrição: <?php echo $categorias_p['CATE_DS_OBSERVACAO'] ?>" > </td>
+                                        <?php
+                                        $cont++;
+                                    }
+                                    ?>
+                                </tr>
+                            </table>
+                        </td>
+                        <?php
+                    }
+                    ?>
+                    <?php
+                    $cont = 0;
+                    if ($categoriasGrupo != null) {
+                        ?>
+                        <td colspan="2">
+                            <table>
+                                <tr>
+                                    <?php
+                                    foreach ($categoriasGrupo as $categorias_p) {
+                                        if ($cont % 3 == 0) {
+                                            echo '</tr><tr>';
+                                        }
+                                        ?>
+                                        <td bgcolor="<?php echo $categorias_p['CATE_DS_DESCRICAO_COR'] ?>" title="Nome: <?php echo $categorias_p['CATE_NO_CATEGORIA'] ?> - Descrição: <?php echo $categorias_p['CATE_DS_OBSERVACAO'] ?>" > </td>
+                                        <?php
+                                        $cont++;
+                                    }
+                                    ?>
+                                </tr>
+                            </table>
+                        </td>
+                    <?php } ?>
+                </tr>
+            <?php } ?>
+            <tr style="font-size: 12px; font-weight: bold;">
+
+                <td title="Número do documento">
+                    Solicitação Nº:<br />
+                    <?php echo $this->DocmDocumento['DOCM_NR_DOCUMENTO'] ?>
+                </td>
+                <td title="Data e hora de cadastro">
+                    Data da Solicitação:<br />
+                    <?php echo $this->DocmDocumento['DOCM_DH_CADASTRO'] ?>
+                </td>
+                <?php if ($this->fuso != 0): ?>
+                    <td title="Data e hora de cadastro na Seção">
+                        Data/hora na Seção:<br />
+                        <?php $dataHora = new Zend_Date($this->DocmDocumento['DOCM_DH_CADASTRO']); ?>
+                        <?php echo $dataHora->add($this->fuso, Zend_Date::HOUR); ?>
+                    </td>
+                <?php endif; ?>
+            </tr>
+            <?php if (!$this->DocmDocumento['SSOL_NM_USUARIO_EXTERNO']) { ?>
+                <tr>
+                    <th >Unidade Solicitante:</th>
+                    <td colspan="3"><?php echo $this->DocmDocumento['LOTA_SIGLA_LOTACAO'] . ' - ' . $this->DocmDocumento['LOTA_DSC_LOTACAO'] . ' - ' . $this->DocmDocumento['LOTA_COD_LOTACAO'] . ' - ' . $this->DocmDocumento['LOTA_SIGLA_SECAO'] . ' - ' . $this->DocmDocumento['FAMILIA']; ?></td>
+                </tr>
+                <tr>
+                    <th>Nome do Solicitante:</th>
+                    <td colspan="1"><?php echo $this->DocmDocumento['NOME'] ?></td>
+                    <th>Matricula:</th>
+                    <td colspan="1"><?php echo $this->DocmDocumento['DOCM_CD_MATRICULA_CADASTRO'] ?></td>
+                </tr>
+                <?php if (!is_null($this->DocmPapdParteProcDocPorOrdemDe['PAPD_CD_MATRICULA_INTERESSADO'])): ?>
+                    <tr>
+                        <th>Por ordem de: </th>
+                        <td colspan="1"><?php echo $this->DocmPapdParteProcDocPorOrdemDe['PAPD_CD_MATRICULA_INTERESSADO'] . " - " . $this->DocmPapdParteProcDocPorOrdemDe['NOME']; ?></td>
+                    </tr>
+                <?php endif; ?>
+                <tr>
+                    <th>E-mail do Solicitante </th>
+                    <td colspan="1"><?php echo $this->DocmDocumento['SSOL_DS_EMAIL_EXTERNO'] ?></td>
+                </tr>
+            <?php }else { ?>
+                <tr>
+                    <th >Unidade Cadastrante:</th>
+                    <td colspan="3"><?php echo $this->DocmDocumento['LOTA_SIGLA_LOTACAO'] . ' - ' . $this->DocmDocumento['LOTA_DSC_LOTACAO'] ?></td>
+                </tr>
+                <tr>
+                    <th>Nome do Solicitante <strong>Externo:</strong></th>
+                    <td colspan="1"><?php echo $this->DocmDocumento['SSOL_NM_USUARIO_EXTERNO'] ?></td>
+                </tr>
+                <?php if (!is_null($this->DocmPapdParteProcDocPorOrdemDe['PAPD_CD_MATRICULA_INTERESSADO'])): ?>
+                    <tr>
+                        <th>Por ordem de: </th>
+                        <td colspan="1"><?php echo $this->DocmPapdParteProcDocPorOrdemDe['PAPD_CD_MATRICULA_INTERESSADO'] . " - " . $this->DocmPapdParteProcDocPorOrdemDe['NOME']; ?></td>
+                    </tr>
+                <?php endif; ?>
+                <tr>
+                    <th>E-mail do Solicitante </th>
+                    <td colspan="1"><?php echo $this->DocmDocumento['SSOL_DS_EMAIL_EXTERNO'] ?></td>
+                </tr>
+
+            <?php } ?>
+            <tr>
+                <th >Telefone:</th>
+                <td colspan="3"><?php echo $this->DocmDocumento['SSOL_NR_TELEFONE_EXTERNO'] ?></td>
+            </tr>
+            <tr>
+                <th >Local de Atendimento:</th>
+                <td colspan="3"><?php echo $this->DocmDocumento['SSOL_ED_LOCALIZACAO'] ?></td>
+            </tr>
+<!--                    <tr>
+                <th >Unidade Solicitante:</th>
+                <td colspan="3"><?php echo $this->DocmDocumento['LOTA_SIGLA_LOTACAO_REDATORA'] . ' - ' . $this->DocmDocumento['LOTA_DSC_LOTACAO_REDATORA'] ?></td>
+            </tr>-->
+            <tr>
+                <th >Serviço Atual:</th>
+                <td colspan="3"><?php echo $this->DocmDocumento['SSER_DS_SERVICO'] ?></td>
+            </tr>
+            <?php if ($this->DocmDocumento['SSES_DT_INICIO_VIDEO']): ?>
+                <tr>
+                    <th >Data e hora do início da videoconferência: </th>
+                    <td colspan="3"><?php echo $this->DocmDocumento['SSES_DT_INICIO_VIDEO'] ?></td>
+                </tr>
+            <?php endif; ?>
+            <?php if ($this->DocmDocumento['SSOL_NR_TOMBO']): ?>
+                <tr>
+                    <th >Tombo:</th>
+                    <td colspan="3">
+                        <?php echo $this->DocmDocumento['SSOL_NR_TOMBO'] ?> 
+                        - <?php echo $this->DescTombo[0]['DE_MAT'] ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <?php if (strcmp($this->DocmDocumentoVinculacao["DOCM_NR_DOCUMENTO"], $this->DocmDocumento['DOCM_NR_DOCUMENTO']) && $this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO'] != NULL) { ?>
+                <tr>
+                    <th >Solicitação Vinculada:</th>
+                    <td colspan="3"> ESTA SOLICITAÇÃO ESTÁ VINCULADA A UMA PRINCIPAL: <?php echo $this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO'] ?></td>
+                </tr>
+            <?php } elseif (!(strcmp($this->DocmDocumentoVinculacao["DOCM_NR_DOCUMENTO"], $this->DocmDocumento['DOCM_NR_DOCUMENTO'])) && $this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO'] != NULL) { ?>
+                <tr>
+                    <th >Solicitação Vinculada:</th>
+                    <td colspan="3"> ESTA SOLICITAÇÃO É A PRINCIPAL DE UMA VINCULAÇÃO</td>
+                </tr>
+
+            <?php } ?>
+            <tr>
+                <th colspan="4">Descrição:</th>
+            </tr>
+            <tr>
+                <td style="font-size: 12px; padding-left: 20px; <?php if ($maior > 120) echo "word-break: break-all;"; ?>" colspan="4">
+                    <?php echo $this->decodehtmlentities($this->DocmDocumento['DOCM_DS_ASSUNTO_DOC']); ?>
+                </td>
+            </tr>
+            <?php if ($this->DocmDocumento['SSOL_DS_OBSERVACAO'] != ""): ?>
+                <tr >
+                    <th colspan="4">Observação:</th>
+                </tr>
+                <tr>
+                    <td style=" padding-left: 20px;" colspan="4">
+                        <?php echo $this->decodehtmlentities($this->DocmDocumento['SSOL_DS_OBSERVACAO']); ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <?php if ($this->DocmDocumento['ATENDENTE'] != ''): ?>
+                <tr>
+                    <th colspan="4">Encaminhado para:</th>
+                </tr>
+                <tr>
+                    <td style="font-size: 12px; padding-left: 20px;" colspan="4">
+                        <?php echo $this->DocmDocumento['ATENDENTE'] ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <tr>
+                <th >
+                    <a title="Gerar um pdf da solicitação" href="<?php echo $this->baseUrl(); ?>/sosti/solicitacao/solicitacaopdf/solic/<?php echo $this->DocmDocumento["SSOL_ID_DOCUMENTO"]; ?>">Guia para Atendimento Presencial</a>&emsp;
+                </th>
+            </tr>
+        </table>
+    </div>
+    <div id="tabs-2">
+
+        <?php
+        foreach ($this->DocmDocumentoHistorico as $historico):
+            $SadTbAnexAnexo = new Application_Model_DbTable_SadTbAnexAnexo();
+            $anexos = $SadTbAnexAnexo->getAnexosFase($historico["DOCM_ID_DOCUMENTO"], $historico["MOFA_DH_FASE"], $historico["MOVI_ID_MOVIMENTACAO"]);
+            $identificador = $historico["DOCM_ID_DOCUMENTO"] . '-' . $historico["MOFA_DH_FASE"] . '-' . $historico["MOVI_ID_MOVIMENTACAO"];
+            $dadosSistema = $SosAssisAtendSistema->getServicoSistema($historico['MOVI_ID_MOVIMENTACAO']);
+            ?>
+            <form method="POST" action="anexoerro" id="<?php echo $identificador; ?>" enctype="multipart/form-data" >
+                <input type="hidden" value="<?php echo $identificador; ?>" name="identificacao"/>
+                <input type="hidden" value="<?php echo $this->controller; ?>" name="controller"/>
+                <input type="hidden" value="<?php echo $this->caixa; ?>" name="caixa"/>
+                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                    <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                        <b>Fase:</b>
+                        <?php echo str_replace(' SISAD', '', $historico['FADM_DS_FASE']); ?>
+                        <?php echo '<br /><b>Data/hora da fase'.(($this->solicitacaoSecao)?(' (horário de Brasília)'):('')).': </b>' .$historico['MOFA_DH_FASE']; ?>
+                        <?php $dataHoraHistorico = new Zend_Date($historico['MOFA_DH_FASE']); ?>
+                        <?php if ($this->solicitacaoSecao): ?>
+                            <?php echo (($this->fuso != 0) ? ('<br /><b>Data/hora da fase na Seção: </b>' . $dataHoraHistorico->add($this->fuso, Zend_Date::HOUR)) : ('')); ?>
+                        <?php endif; ?>
+                        <?php
+                        $timeInterval = new App_TimeInterval();
+                        $tempoDesdeCad = $timeInterval->tempoTotal($this->DocmDocumento['DOCM_DH_CADASTRO'], $historico['MOFA_DH_FASE'], 'dd/MM/yyyyHH:mm:ss');
+                        echo '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $tempoDesdeCad;
+                        ?> 
+                        <?php if ($historico['FADM_ID_FASE'] == 1006 || $historico['FADM_ID_FASE'] == 1001 || $historico['FADM_ID_FASE'] == 1022 || $historico['FADM_ID_FASE'] == 1029 || $historico['FADM_ID_FASE'] == 1050 || $historico['FADM_ID_FASE'] == 1057) { ?> 
+                            <br/>
+                            <b>Caixa destino: </b><?php echo $historico['CXEN_DS_CAIXA_ENTRADA']; ?>
+                            <br/>
+                            <b>Serviço: </b><?php echo $historico['SSER_DS_SERVICO']; ?>
+                            <?php if (!is_null($historico['SSES_DT_INICIO_VIDEO'])) { ?>
+                                <br/>
+                                <b>Data e hora do início da videoconferência: </b>
+                                <?php
+                                echo $historico['SSES_DT_INICIO_VIDEO'];
+                                ?>
+                                <br/>
+                                <b>Videoconferência realizada por este grupo: </b>
+                                <?php
+                                echo $historico['SSES_IC_VIDEO_REALIZADA'];
+                            }
+                        }
+                        ?>
+                        <?php
+                        if (
+                            ( $historico['FADM_ID_FASE'] == 1005 && !(is_null($historico['SNAT_CD_NIVEL'])) ) ||
+                            ( $historico['FADM_ID_FASE'] == 1006 && !(is_null($historico['SNAT_CD_NIVEL'])) ) ||
+                            ( $historico['FADM_ID_FASE'] == 1022 && !(is_null($historico['SNAT_CD_NIVEL'])) ) ||
+                            ( $historico['FADM_ID_FASE'] == 1029 && !(is_null($historico['SNAT_CD_NIVEL'])) ) ||
+                            ( $historico['FADM_ID_FASE'] == 1001 && !(is_null($historico['SNAT_CD_NIVEL'])) ) ||
+                            ( $historico['FADM_ID_FASE'] == 1057 && !(is_null($historico['SNAT_CD_NIVEL'])) )
+                        ) {
+                            ?> 
+                            <br/>
+                            <b>Nível destino: </b><?php echo $historico['SNAT_CD_NIVEL']; ?> - <?php echo $historico['SNAT_DS_NIVEL']; ?>
+                        <?php } ?>
+
+                        <?php if ($historico['FADM_ID_FASE'] == 1014 || $historico['FADM_ID_FASE'] == 1019) { ?> 
+                            <br/>
+                            <b>Avaliação: </b><?php echo $historico['STSA_DS_TIPO_SAT']; ?>
+                        <?php } ?>
+
+                        <?php if ($historico['FADM_ID_FASE'] == 1038) { ?> 
+                            <br/>
+                            <b>Prazo: </b><?php echo $historico['SSPA_DT_PRAZO']; ?>
+                            <br/>
+                            <b>Aprovação: </b><?php
+                            if ($historico['SSPA_IC_CONFIRMACAO'] == 'S') {
+                                echo 'aprovado';
+                            } else if ($historico['SSPA_IC_CONFIRMACAO'] == 'N') {
+                                echo 'reprovado';
+                            }
+                            ?>
+                        <?php } ?>
+
+                        <?php if ($historico['FADM_ID_FASE'] == 1008) { ?> 
+                            <br/>
+                            <b>Trocado para o Serviço: </b><?php echo $historico['SSER_DS_SERVICO']; ?>
+                            <?php if (!is_null($historico['SSES_DT_INICIO_VIDEO'])) { ?>
+                                <br/>
+                                <b>Data e hora do início da videoconferência: </b>
+                                <?php
+                                echo $historico['SSES_DT_INICIO_VIDEO'];
+                                ?>
+                                <br/>
+                                <b>Videoconferência realizada por este grupo: </b>
+                                <?php
+                                echo $historico['SSES_IC_VIDEO_REALIZADA'];
+                            }
+                            ?>
+                        <?php }
+                        ?>
+
+                        <br/><b>Por:</b>
+                        <?php echo $historico['MOFA_CD_MATRICULA'] . " - " . $historico['MOFA_CD_MATRICULA_NOME']; ?>&emsp;
+                        <?php if (!empty($historico['MOFA_DS_COMPLEMENTO'])): ?>
+                            <?php
+                            if (!empty($this->DocmDocumento['SSOL_NR_TOMBO'])) {
+                                ?>
+
+                                <br/><b>Tombo:</b>
+                                <?php
+                                echo $this->DocmDocumento['SSOL_NR_TOMBO']
+                                . ' - ' . $this->DescTombo[0]['DE_MAT'];
+                            }
+                            ?>
+
+                            <!--em caso de encaminhamento apresenta o campo para-->
+                            <?php echo ($historico['FADM_ID_FASE'] == 1013 && $historico['MOFA_CD_MATR_ENCAMINHADO']) ? "<br/><b>Para: </b>" . $historico['MOFA_CD_MATR_ENCAMINHADO'] . " - " . $historico['MOFA_CD_MATR_ENCAMINHADO_NOME'] : ''; ?>
+
+                            <br/><b>Descrição:</b>
+                            <div style="margin-right: 10px;">
+                                +  <?php echo $this->decodehtmlentities($historico['MOFA_DS_COMPLEMENTO']); ?> 
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($historico["NR_RED"]): ?>
+                            <b>Anexos:</b>
+                            <div style="margin-right: 10px;">
+                                <?php //$i = 1;    ?>
+                                <?php //foreach ($this->AnexAnexo as $Anexo):?>
+                                <a target="_blank" title="Abrir Documento" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->DocmDocumento["SSOL_ID_DOCUMENTO"]; ?>/dcmto/<?php echo $historico["NR_RED"]; ?> ">Anexo&emsp; <?php //echo $i;          ?></a>&emsp;
+                                <?php //$i++; endforeach; ?>
+                            </div>
+                            <?php
+                        endif;
+                        if ($dadosSistema && $historico['FADM_ID_FASE'] == '1001') {
+                            ?>
+                            <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                                <legend>Solicitação de Serviço</legend>
+                                <div style="margin-left: 10px; margin-top: -20px; font-size: 12px; ">
+                                    <br/><b>Tipo de Serviço:</b> <?php echo $dadosSistema['CTSS_NM_CATEGORIA_SERVICO']; ?>
+                                    <br/><b>Ocorrência:</b>	<?php echo $dadosSistema['OSIS_NM_OCORRENCIA']; ?>
+                                    <br/><b>Atendimento Emergencial:</b>	<?php echo $dadosSistema['ASSO_IC_ATENDIMENTO_EMERGENCIA']; ?>
+                                </div>
+                            </fieldset>
+                            <?php
+                        }
+                        if ($anexos) {
+                            ?>
+                            <label>Anexos: </label><br>
+                            <?php
+                            $nr = 1;
+                            $userNs = new Zend_Session_Namespace('userNs');
+                            foreach ($anexos as $semMetadados_p) {
+                                if ($semMetadados_p["ANEX_NM_ANEXO"] === 'Sem informação.') {
+                                    $nomeAnexo = 'Anexo' . $nr;
+                                    ;
+                                } else {
+                                    $nomeAnexo = $semMetadados_p["ANEX_NM_ANEXO"];
+                                }
+
+                                /**
+                                 * If para correção do anexo
+                                 */
+                                if ((($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"] == $semMetadados_p["ANEX_ID_TP_EXTENSAO"]) &&
+                                    ($semMetadados_p["ANEX_ID_TP_EXTENSAO"] == $semMetadados_p["ANEX_NM_ANEXO"])) && $this->DocmDocumento['DOCM_CD_MATRICULA_CADASTRO'] == $userNs->matricula) {
+                                    echo 'O anexo que havia sido inserido apresentou error, favor anexar novamente o arquivo.';
+                                    $submit = true;
+                                    echo $this->form->getElement('ANEXOS');
+                                    ?>
+                                    <?php
+                                } else if ((($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"] == $semMetadados_p["ANEX_ID_TP_EXTENSAO"]) &&
+                                    ($semMetadados_p["ANEX_ID_TP_EXTENSAO"] == $semMetadados_p["ANEX_NM_ANEXO"])) && $this->DocmDocumento['DOCM_CD_MATRICULA_CADASTRO'] != $userNs->matricula) {
+                                    echo '<font color="#FF3300">Houve erro na inserção do arquivo nesta fase, favor solicite ao responsável que recadastre-o.</font>';
+                                }
+                                /**
+                                 * Fim do IF
+                                 */ else {
+                                    $aux2 = explode('.', $nomeAnexo);
+                                    $ext2 = $sadDocmDocumento->retornaCodExtensao($aux2[count($aux2) - 1]);
+                                    echo $nomeAnexo
+                                    ?> - 
+                                    <a class="<?php
+                                    if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                        echo 'alertaButton';
+                                    } else {
+                                        echo 'abrirAnexo';
+                                    }
+                                    ?>" 
+                                       target="_blank" 
+                                       title="<?php
+                                       if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                           echo 'Sem Arquivo';
+                                       } else {
+                                           echo 'Abrir Documento';
+                                       }
+                                       ?>" 
+                                       href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $idDocumentoPrincipal; ?>/dcmto/<?php echo $semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"]; ?>/extensao/<?php echo $aux2[count($aux2) - 1]; ?> ">
+                                           <?php
+                                           if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                               echo 'Sem Arquivo';
+                                           } else {
+                                               echo 'Abrir';
+                                           }
+                                           ?>
+                                    </a><br>
+                                    <?php
+                                }
+                                $nr++;
+                            }
+                        }
+                        /**
+                         * IF PARA CORREÇÃO DO ANEXO
+                         */
+                        if ($submit) {
+                            ?>
+                            <button id="envia" type="submit">Enviar</button>
+                            <?php
+                            $submit = false;
+                        }
+                        /**
+                         * FIM DO IF
+                         */
+                        ?>
+                </fieldset>
+            </form>
+        <?php endforeach; ?>
+        <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+            <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                <b>Descrição da Solicitação:</b>
+                <br>
+                + <?php echo $this->decodehtmlentities($this->DocmDocumento['DOCM_DS_ASSUNTO_DOC']); ?>
+            </div>
+        </fieldset>
+    </div>
+    <?php if ($anxSemMetadado) { ?>
+        <div id="tabs-3">
+            <?php
+            if ($anxSemMetadado) {
+                foreach ($anxSemMetadado as $semMetadados_p) {
+                    ?>
+                    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                        <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                            <div style="margin-left: 10px; font-size: 12px; ">
+                                <p>
+                                    <?php
+                                    if ($semMetadados_p["ANEX_NM_ANEXO"] === 'Sem informação.') {
+                                        $nomeAnexo = 'Sem Nome Definido';
+                                    } else {
+                                        $nomeAnexo = $semMetadados_p["ANEX_NM_ANEXO"];
+                                    }
+                                    ?>
+                                    <br/><b>Nome Documento: <?php echo $nomeAnexo; ?></b>
+                                    <br/><b>Data de vinculação:</b>
+                                    <?php echo $semMetadados_p["ANEX_DH_FASE"]; ?>
+                                    <?php if ($this->fuso != 0): ?>
+                                        <br /><b>Data de vinculação na seção:</b>
+                                        <?php $dataHoraSemMetadados = new Zend_Date($semMetadados_p["ANEX_DH_FASE"]); ?>
+                                        <?php echo $dataHoraSemMetadados->add($this->fuso, Zend_Date::HOUR); ?>
+                                    <?php endif; ?>
+                                </p>
+                                <?php $aux3 = explode('.', $nomeAnexo); ?>
+                                <?php $ext3 = $sadDocmDocumento->retornaCodExtensao($aux3[count($aux3) - 1]); ?>
+                                <a class="<?php
+                                if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                    echo 'alertaButton';
+                                } else {
+                                    echo 'abrirAnexo';
+                                }
+                                ?>" 
+                                   target="_blank" 
+                                   title="<?php
+                                   if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                       echo 'Sem Arquivo';
+                                   } else {
+                                       echo 'Abrir Documento';
+                                   }
+                                   ?>" 
+                                   href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $idDocumentoPrincipal; ?>/dcmto/<?php echo $semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"]; ?>/extensao/<?php echo $aux3[count($aux3) - 1]; ?> ">
+                                       <?php
+                                       if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                           echo 'Sem Arquivo';
+                                       } else {
+                                           echo 'Abrir';
+                                       }
+                                       ?>
+                                </a>
+                            </div>
+                    </fieldset>
+                    <?php
+                }
+            }
+            ?>
+        </div>
+    <?php } ?>
+    <!--        SOLICITAÇÕES VINCULADAS             -->
+    <?php
+    $count = count($this->DocmListaVinculados);
+    if ($count != 0) {
+        ?>
+        <div id="tabs-4">
+            <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                    <div style="margin-left: 10px; font-size: 12px; ">
+                        <p>
+                            <br/><b>Solicitação Principal:</b> <?php echo $this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO'] ?>
+                        </p>
+                        <?php
+                        foreach ($this->DocmListaVinculados as $solicVinculadas) {
+                            if (strcmp($this->DocmDocumentoVinculacao["DOCM_NR_DOCUMENTO"], $solicVinculadas["DOCM_NR_DOCUMENTO"])) {
+                                $arrayDetalhe = array(
+                                    'SSOL_ID_DOCUMENTO' => $solicVinculadas['VIDC_ID_DOC_VINCULADO']
+                                    , 'MOFA_ID_MOVIMENTACAO' => $solicVinculadas['MOFA_ID_MOVIMENTACAO']
+                                );
+                                ?>
+                                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                                    <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                                        <div style="margin-left: 10px; font-size: 12px; ">
+                                            <p>
+                                                <br/><b>Número:</b>
+                                                <?= $solicVinculadas['DOCM_NR_DOCUMENTO'] ?>
+                                                <br/><b>Data de vinculação:</b>
+                                                <?= $solicVinculadas['VIDC_DH_VINCULACAO'] ?>
+                                                <?php if ($this->fuso != 0): ?>
+                                                    <br />
+                                                    <b>Data/hora de vinculação na Seção:</b>
+                                                    <?php $dataHora = new Zend_Date($solicVinculadas['VIDC_DH_VINCULACAO']); ?>
+                                                    <?php echo $dataHora->add($this->fuso, Zend_Date::HOUR); ?>
+                                                <?php endif; ?>
+                                                <br/><b>Por:</b>
+                                                <?= $solicVinculadas['PMAT_CD_MATRICULA'] . ' - ' . $solicVinculadas['PNAT_NO_PESSOA'] ?>
+                                                <br/>
+                                            </p>
+                                            <a href="#" class="detalhe_solicitacao botao_icon_bolinha" value=" <?= $this->escape(Zend_Json::encode($arrayDetalhe)) ?> "> Detalhe </a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    <?php } ?>
+    <!--        FIM SOLICITAÇÕES VINCULADAS            -->
+    <!--        NÃO CONFORMIDADE             -->
+    <?php
+    $count = count($this->DocmNaoConformidades);
+    if ($count != 0) {
+        ?>
+        <div id="tabs-5">
+            <?php foreach ($this->DocmNaoConformidades as $DocmNaoConformidades) { ?>
+                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                    <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                        <div style="margin-left: 10px; font-size: 12px; ">
+                            <p>
+                                <br/><b>Tipo de Não Conformidade:</b> <?php echo $DocmNaoConformidades['SOTC_DS_CONFORMIDADE'] ?>
+                                <br/><b>Data:</b> <?php echo $DocmNaoConformidades['MVCO_DH_INCLUSAO'] ?>
+                                <br/><b>Referente à movimentação do dia:</b> <?php echo $DocmNaoConformidades['MOVI_DH_ENCAMINHAMENTO'] ?>
+                                <br/><b>Por:</b> <?php echo $DocmNaoConformidades['MVCO_CD_MATRICULA_INCLUSAO'] ?>
+                                <br/><b>Descrição:</b><br/>
+                                + <?php echo $DocmNaoConformidades['MVCO_DS_JUSTIF_N_CONFORMIDADE']; ?>
+                            </p>
+                        </div>
+                    </div>
+                </fieldset>
+            <?php } ?>
+        </div>
+    <?php } ?>
+    <!--        INÍCIO CONTROLE QUALIDADE            -->
+    <div id="tabs-6">
+        <?php foreach ($this->DocmDefeitos as $defeito) { ?>
+            <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                    <div style="margin-left: 10px; font-size: 12px; ">
+                        <p>
+                            <?php // if($defeito['MDSI_DH_INCLUSAO']!=null){      ?>
+                            <br/><b>Número de Defeitos:</b> <?php echo $defeito['MDSI_NR_DEFEITOS']; ?>
+                            <br/><b>Data:</b> <?php echo $defeito['MDSI_DH_INCLUSAO']; ?>
+                            <br/><b>Por:</b> <?php echo $defeito['MDSI_CD_MATRICULA_INCLUSAO']; ?>
+                            <br/><b>Justificativa:</b> <?php echo $defeito['MDSI_DS_JUSTIF_DEFEITO']; ?>
+                            <?php if ($defeito['MDSI_IC_CANCELAMENTO'] == 'S') { ?>
+                            <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;font-size: 12px;"><legend style="font-size: 12px;">Detalhes do Cancelamento</legend>
+                                <br/><b>Data do cancelamento:</b> <?php echo $defeito['MDSI_DH_CANCELAMENTO']; ?><br/>
+                                <br/><b>Cancelado por :</b> <?php echo $defeito['MDSI_CD_MATRIC_CANCELAMENTO']; ?><br/>
+                                <br/><b>Justificativa:</b> <?php echo $defeito['MDSI_DS_CANCELAMENTO']; ?><br/>
+                            </fieldset>
+                        <? } ?>
+
+
+                        <?php // }      ?>
+                        </p>
+                    </div>
+                </div>
+            </fieldset>
+        <?php } ?>
+    </div>
+    <!--        FIM    CONTROLE QUALIDADE            -->
+    <!--        ACOMPANHANTES DA SOLICITAÇÃO            -->
+    <?php if (count($this->DocmPapdParteProcDoc) != 0): ?>
+        <div id="tabs-7">
+            <?php
+            $count_historico = count($this->DocmPapdParteProcDoc);
+            $acompanhatesArr = $this->DocmPapdParteProcDoc;
+            ?>
+            <table>
+                <thead>
+                    <tr>
+                        <td>
+                            <b>Acompanhante</b>
+                        </td>
+                        <td>
+                            <b>Cadastrante</b>
+                        </td>
+                        <td>
+                            <b>Data e Hora da Inclusão</b>
+                        </td>
+                        <?php echo ($this->fuso != 0) ? ('<td><b>Data/Hora na Seção</b></td>') : (''); ?>
+                    </tr>
+                </thead>
+                <?php
+                for ($n = 0; $n < $count_historico; $n++) {
+                    if ($n == 0) {
+                        $faseParaContagem = $acompanhatesArr[0]["PAPD_CD_MATRICULA_INCLUSAO"];
+                    } else {
+                        $faseParaContagem = $acompanhatesArr[$n]["PAPD_CD_MATRICULA_INCLUSAO"];
+                    }
+                    ?>
+                    <?php
+                    $msgCadast = $acompanhatesArr[$n]["CADASTRANTE"];
+                    $countAux = 0;
+                    ?>
+                    <?php
+                    while ($acompanhatesArr[$n]["PAPD_CD_MATRICULA_INCLUSAO"] == $faseParaContagem) {
+                        ?>
+                        <tr>
+                            <td>
+                                <?php echo $acompanhatesArr[$n]["NOME"]; ?>
+                            </td>
+                            <?php if ($countAux == 0) { ?>
+                                <td>
+                                    <?php
+                                    echo $msgCadast;
+                                    $countAux = 1;
+                                    ?>
+                                </td>
+                            <?php } else { ?>
+                                <td style="font-size: 20px;">
+                                    &crarr;
+                                </td>
+                            <?php } ?>
+                            <td>
+                                <?php echo $acompanhatesArr[$n]["PAPD_DH_INCLUSAO"]; ?>
+                            </td>
+                            <?php if ($this->fuso != 0): ?>
+                                <td>
+                                    <?php $dataHoraAcompanhantes = new Zend_Date($acompanhatesArr[$n]["PAPD_DH_INCLUSAO"]); ?>
+                                    <?php echo $dataHoraAcompanhantes->add($this->fuso, Zend_Date::HOUR); ?>
+                                </td>
+                            <?php endif; ?>
+                        </tr>
+
+
+                        <?php
+                        $n++;
+                        if ($n == $count_historico) {
+                            break;
+                        }
+                    }
+                    ?>
+                    <?php
+                    $n--;
+                }
+                ?>
+            </table>
+
+        </div>
+    <?php endif; ?>
+    <!--       FIM DOS ACOMPANHANTES DA SOLICITAÇÃO    -->
+
+    <!--        GARANTIA DESENVOLVIMENTO            -->
+    <?php
+    if ($this->NegaNegociaGarantia):
+        ?>
+        <div id="tabs-9">
+            <?php echo $this->partial('detalhesolicitacao/detalhegarantia.phtml', array('NegaNegociaGarantia' => $this->NegaNegociaGarantia)); ?>
+        </div>
+    <?php endif; ?>
+    <!--     FIM GARANTIA DESENVOLVIMENTO    -->
+    <!--        ANALISE DE PONTO DE FUNAÇÃO            -->
+    <?php
+    if ($analisePF):
+//            if ($this->FaturamentoContratada || $this->FaturamentoAfericao || $this->FaturamentoContratante): 
+        ?>
+        <div id="tabs-13">
+            <?php
+//                        if($analisePF){
+////                        if($this->FaturamentoContratada){
+//                            echo $this->partial('faturamento/faturamentocontratada.phtml',array('FaturamentoContratada'=> $this->FaturamentoContratada,'controller'=>$this->controller,'action'=>$this->caixa));
+////                        }
+////                        if($analisePF){
+////                        if($this->FaturamentoAfericao){
+//                            echo $this->partial('faturamento/faturamentoafericao.phtml',array('FaturamentoAfericao'=> $this->FaturamentoAfericao,'controller'=>$this->controller,'action'=>$this->caixa));
+////                        }
+////                        if($analisePF){
+////                        if($this->FaturamentoContratante){
+//                            echo $this->partial('faturamento/faturamentocontratante.phtml',array('FaturamentoContratante'=> $this->FaturamentoContratante,'controller'=>$this->controller,'action'=>$this->caixa));
+//                        }
+            ?>                    
+        </div>
+    <?php endif; ?>
+    <!--     FIM ANALISE DE PONTO DE FUNAÇÃO    -->
+
+    <!-- Checklist - Laboratorio -->
+    <?php if ($this->verificaChecklist): ?>
+        <div id="tabs-11" class="detalhe-checklist">
+            <h3 class="titulo-checklist">Ficha de Serviço</h3>
+            <?php
+            if ($this->isCaixaHelpdesk) {
+                echo $this->partial('_partials/checklistGestao.phtml', array('dadosChecklistGeral' => $this->dadosChecklistGeral));
+            } else {
+                echo $this->partial('_partials/checklistGeral.phtml', array('dadosChecklistGeral' => $this->dadosChecklistGeral));
+            }
+            ?> 
+        </div>
+    <?php endif; ?>
+    <!-- FIM do Checklist - Laboratorio -->
+
+    <!-- Cadastro das Tarefas nas solicitações -->
+    <?php if ($this->verificaSeOs): ?>
+        <div id="tabs-15" class="detalhe-checklist">
+            <!--<h3 class="titulo-checklist">Tarefas</h3>-->
+    <?php
+    echo $this->partial('_partials/detalhetarefa.phtml', array('arrayDocumento' => $this->DocmDocumento));
+    ?> 
+        </div>
+<?php endif; ?>
+    <!-- Fim Cadastro de tarefas nas solicitações -->
+
+    <!-- SOLICITAÇÕES ASSOCIADAS -->
+    <?php if ($this->qtdeSostisAssociados > 0): ?>
+    <div id="tabs-12" class="detalhe-checklist">
+        <?php echo $this->partial('_partials/detalheassociacao.phtml', array('arrayDocumento' => $this->DocmDocumento)); ?>
+    </div>
+    <?php endif; ?>
+    <!-- FIM SOLICITAÇÕES VINCULADAS -->
+    <!-- Exibe o detalhe quando a solicitação é de OS -->
+    <?php if (/*(count($this->dadosOs) > 0) ||*/ $this->eOs): ?>
+        <div id="tabs-16" class="detalhe-checklist">
+            <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+            <legend>Ordem de Serviço</legend>
+                <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                    <!--<div style="margin-left: 10px; font-size: 12px; ">-->
+                        <br />
+                        <?php
+                        $arrayDetalheOs = array(
+                            'SSOL_ID_DOCUMENTO' => $this->dadosOs['DOCM_ID_DOCUMENTO'],
+                            'MOFA_ID_MOVIMENTACAO' => $this->dadosOs['MOFA_ID_MOVIMENTACAO']
+                        );
+                        ?>
+                            <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                                <div style="margin-left: 10px; font-size: 12px; ">
+                                    <p>
+                                        <br/><b>Número:</b>
+                                        <?= $this->dadosOs['DOCM_NR_DOCUMENTO'] ?>
+                                        <br />
+                                        <b>Data de criação:</b>
+                                        <?= $this->dadosOs["DOCM_DH_CADASTRO"] ?>
+                                        <br/><b>Por:</b>
+                                        <?= $this->dadosOs['NOME'] ?>
+                                    </p>
+                                    <a href="#" class="detalhe_solicitacao botao_icon_bolinha" value=" <?php echo $this->escape(Zend_Json::encode($arrayDetalheOs)) ?> "> Detalhe </a>
+                                </div>
+                            </div>
+                    <br />
+                </div>
+            </fieldset>
+            <!-- Lista de solicitações associadas a ordem de serviço -->
+            <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+            <legend>Solicitações associadas à Ordem de Serviço</legend>
+                <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                    <form name="" id="" action="<?php echo $this->baseUrl(); ?>/sosti/solicitacao/solicitarinformacao" method="POST">
+                        <input type="hidden" name="detalhe" value="true" />
+                        <table>
+                            <thead></thead>
+                            <tbody>
+                            <?php foreach ($this->arrayAssociadas as $aa): ?>
+                                <tr>
+                                    <?php if ($this->act == 'solicitinformacaocaixa' || $this->act == 'pedidoinformacaodsv'): ?> 
+                                        <td class="info-assoc" style="width: 20px; height: 20px;" >
+                                            <input type="checkbox" class="check-assoc" name="solicitacao[]" value="<?php echo $this->escape(Zend_Json::encode($aa)) ?>" />
+                                        </td>
+                                    <?php endif; ?>
+                                    <td>
+                                        <br/><b>Número Solicitação:</b>
+                                        <?= $aa['DOCM_NR_DOCUMENTO'] ?>
+                                        <br />
+                                        <b>Data de criação:</b>
+                                        <?= $aa["DOCM_DH_CADASTRO"] ?>
+                                        <br/><b>Por:</b>
+                                        <?= $aa['PNAT_NO_PESSOA'] ?>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="detalhe_solicitacao botao_icon_bolinha" value=" <?php echo $this->escape(Zend_Json::encode($aa)) ?> "> Detalhe </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            <?php if ($this->arrayAssociadas != false): ?>
+                                <?php if ($this->act == 'solicitinformacaocaixa' || $this->act == 'pedidoinformacaodsv'): ?>
+                                    <tr>
+                                        <td colspan="3"><input type="submit" class="info-assoc" id="sub-sol-usu" name="acao" value="Solicitar Informação ao Usuário Cadastrante"/></td>
+                                    </tr>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <br />
+                                <p>Não existem registros.</p>
+                            <?php endif; ?>
+                            </tbody>
+                        <tfoot></tfoot>
+                        </table>
+                    </form>
+                </div>
+                <br />
+            </fieldset>
+        </div>
+<?php endif; ?>
+    <!-- Fim exibe o detalhe quando a solicitação é de OS -->
+
+<div id="dialog_solicitacao_container">
+
+</div>

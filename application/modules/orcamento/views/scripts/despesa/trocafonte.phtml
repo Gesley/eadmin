@@ -1,0 +1,400 @@
+<?php
+echo $this->partial ( '_partials/ajax_fonte.phtml', array ( 'campo' => 'DESP_FONTE_ATUAL' ) );
+echo $this->partial ( '_partials/ajax_fonte.phtml', array ( 'campo' => 'DESP_FONTE_NOVO' ) );
+//
+echo $this->partial ( '_partials/ajax_ptres.phtml', array ( 'campo' => 'DESP_PTRES_ATUAL' ) );
+echo $this->partial ( '_partials/ajax_ug.phtml', array ( 'campo' => 'LOTACAO' ) );
+//echo $this->partial('_partials/ajax_bloqueio.phtml');
+echo $this->partial ( '_partials/ajax_despesaptres.phtml' );
+echo $this->partial ( '_partials/ajuda_informacao.phtml', array ( 'msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo ) );
+?>
+
+<form name="frmtrocafonte" id="frmtrocafonte" action="" method="post" enctype="application/x-www-form-urlencoded" >
+
+    <div id="divptres">
+        <fieldset>
+            <legend>Informações sobre Ptres</legend>
+            <?php echo $this->formBase->DESP_ANO; ?> <br />
+            <?php echo $this->formBase->DESP_FONTE_ATUAL; ?>
+            <?php echo $this->formBase->DESP_PTRES_ATUAL; ?>
+            <?php echo $this->formBase->LOTACAO; ?>
+            <hr />
+            <?php echo $this->formBase->DESP_FONTE_NOVO; ?>
+            <table>
+                <tr>
+                    <td width="18%"><?php echo $this->formBase->DESP_INFORMAR_DESPESAS; ?></td>
+                    <td width="82%"><?php echo $this->formBase->DESP_LIMPA_TUDO; ?> </td>
+                </tr>
+            </table>
+
+        </fieldset>
+    </div>
+
+    <br />
+
+    <div id="divdespesa">
+
+        <hr />
+
+        <fieldset>
+
+            <legend>Informações sobre despesas</legend>
+
+            <div id="dialog_cadastra_parte">
+
+                <table id="selecionados_partes" class="grid tabela ui-widget ui-widget-content">
+
+                    <thead>
+                    <tr class="ui-widget-header">
+                        <th colspan="5"> Listagem de despesas </th>
+                    </tr>
+                    <tr>
+                        <td width="5%"><input type="checkbox" name="selectAll" id="selectAll" /></td>
+                        <td width="10%">Despesa</td>                        
+                        <td width="10%">Ug</td>
+                        <td width="10%">Ptres</td>
+                        <td width="65%">Descrição</td>
+                    </tr>
+                    </thead>
+
+                    <tbody id="resultado">
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="3" id="dataregistros"></th>
+                    </tr>
+                    </tfoot>
+                </table><!-- selecionados_partes -->
+            </div><!-- dialog_cadastra_parte -->
+
+            <input type="hidden" name="DESPESA_ANO" id="DESPESA_ANO" value="" />
+            <input type="hidden" name="FONTE_INICIAL" id="FONTE_INICIAL" value="" />
+            <input type="hidden" name="FONTE_NOVO" id="FONTE_NOVO" value="" />
+
+            <dt id="Enviar-label">&nbsp;</dt>
+            <input type="button" name="DESP_DESPESA_SUBMIT" id="DESP_DESPESA_SUBMIT" value="Trocar FONTES" class="ceo_salvar ui-button ui-widget ui-state-default ui-corner-all ui-button-disabled ui-state-disabled" >
+        </fieldset>
+    </div> <!-- fim divdespesa -->
+
+</form>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        // esconde os campos da despesa
+        $("#divdespesa").hide();
+        $("#carregando").hide();
+        $("#DESP_INFORMAR_DESPESAS").hide();
+
+        $('#selectAll').click(function(e) {
+            var table = $(e.target).closest('table');
+            $('td input:checkbox', table).prop('checked', this.checked);
+        });
+
+        $("#DESP_FONTE_ATUAL").change(function() {
+
+            $("a.ui-corner-all").click(function() {
+
+                var fonten = $(this).text().split(" ", 1); // PTRES ATUAL
+
+                $("#DESP_FONTE_ATUAL").load(base_url + '/orcamento/despesa/validafonte/fonte/' + fonten, function(response, status, xhr) {
+
+                    if (response === 'false') {
+                        $('#DESP_FONTE_ATUAL').attr('style', 'border-style: solid; border-width: 1px; border-color: red;');
+                        $('#DESP_FONTE_ATUAL').val('Infome uma fonte valido');
+                        $('#DESP_FONTE_ATUAL').focus();
+                    } else {
+                        $("#DESP_FONTE_ATUAL").attr('disabled', 'disabled');
+                        $('#DESP_FONTE_ATUAL').attr('style', 'background: none repeat scroll 0% 0% rgb(222, 222, 222);');
+                    }
+
+                    if (typeof $('#DESP_FONTE_ATUAL').attr('disabled') !== 'undefined' &&
+                        typeof $('#DESP_FONTE_ATUAL').attr('disabled') !== 'undefined')
+                    {
+                        // $("#DESP_LIMPA_TUDO").show();
+                    }
+
+                });
+            });
+        });
+
+        $("#DESP_FONTE_NOVO").change(function() {
+
+            $("a.ui-corner-all").click(function() {
+
+                var fonten = $(this).text().split(" ", 1); // PTRES ATUAL
+
+                $("#DESP_FONTE_NOVO").load(base_url + '/orcamento/despesa/validafonte/fonte/' + fonten, function(response, status, xhr) {
+
+                    if (response === 'false') {
+                        $('#DESP_FONTE_NOVO').attr('style', 'border-style: solid; border-width: 1px; border-color: red;');
+                        $('#DESP_FONTE_NOVO').val('Infome uma fonte valido');
+                        $('#DESP_FONTE_NOVO').focus();
+                    } else {
+                        $("#DESP_FONTE_NOVO").attr('disabled', 'disabled');
+                        $('#DESP_FONTE_NOVO').attr('style', 'background: none repeat scroll 0% 0% rgb(222, 222, 222);');
+                        $("#DESP_INFORMAR_DESPESAS").show();
+                        $("#DESP_LIMPA_TUDO").show();
+                    }
+
+                    /*if (typeof $('#DESP_FONTE_ATUAL').attr('disabled') !== 'undefined' &&
+                        typeof $('#DESP_FONTE_NOVO').attr('disabled') !== 'undefined')
+                    {
+                        $("#DESP_LIMPA_TUDO").show();
+                    }
+                    */
+
+                });
+            });
+        });
+
+
+        // Loca os campos de ano, ptres atual e ptres novo...
+        $("#DESP_INFORMAR_DESPESAS").click(function() {
+
+            $('#carregando').show();
+
+            // verifica os campos vazios
+            if ($("#DESP_ANO").val() === '') {
+                alert('Informe o Ano do exercicio!');
+                return false;
+            }
+
+            // verifica os campos vazios
+            if ($("#DESP_FONTE_ATUAL").val() === '') {
+                alert('Informe a FONTE atual corretamente!');
+                return false;
+            }
+
+            // verifica os campos vazios
+            if ($("#DESP_FONTE_NOVO").val() === '') {
+                alert('Informe a FONTE nova corretamente!');
+                return false;
+            }
+
+            // verifica se tem o atributo disabilitado
+            if (typeof $('#DESP_FONTE_ATUAL').attr('disabled') === 'undefined') {
+                alert('Informe a FONTE atual corretamente! Selcione na lista.');
+                $('#DESP_FONTE_ATUAL').focus();
+                return false;
+            }
+
+            // verifica se tem o atributo disabilitado
+            if (typeof $('#DESP_FONTE_NOVO').attr('disabled') === 'undefined') {
+                alert('Informe a FONTE nova corretamente! Selecione na lista.');
+                $('#DESP_FONTE_NOVO').focus();
+                return false;
+            }
+
+
+            // verifica se as despesas são iguais
+            if ($("#DESP_FONTE_ATUAL").val() === $("#DESP_FONTE_NOVO").val()) {
+                alert('A FONTE atual não pode ser igual a nova FONTE.');
+                $("#DESP_ANO").removeAttr("disabled");
+                $("#DESP_ANO").removeAttr("style");
+                $("#DESP_FONTE_ATUAL").removeAttr("disabled");
+                $("#DESP_FONTE_ATUAL").removeAttr("style");
+                $("#DESP_FONTE_ATUAL").val("");
+                $("#DESP_FONTE_ATUAL").focus();
+                $("#DESP_FONTE_NOVO").removeAttr("disabled");
+                $("#DESP_FONTE_NOVO").val("");
+                $("#DESP_FONTE_NOVO").removeAttr("style");
+                return false;
+            }
+
+//            // desabilita o campo e configura a cor do input
+//            $("#DESP_ANO").attr('disabled', 'disabled');
+//            $("#DESP_ANO").attr('style', 'background: none repeat scroll 0% 0% rgb(222, 222, 222);');
+            // se tudo tiver ok habilita o restante do formulario
+
+            var ano = $("#DESP_ANO").val();
+            var fonte = $('#DESP_FONTE_ATUAL').val().split(" ", 1);
+            var ptres = $('#DESP_PTRES_ATUAL').val().split(" ", 1);
+            var ug    = $('#LOTACAO').val().split(" ", 1);
+
+            // Using the core $.ajax() method
+            $.ajax({
+                // the URL for the request
+                url: base_url + '/orcamento/despesa/ajaxfonte/ano/' + ano + '/fonte/' + fonte + '/ptres/' + ptres + '/ug/' + ug,
+                // whether this is a POST or GET request
+                type: "GET",
+                // the type of data we expect back
+                dataType: "json",
+                beforeSend: function() {
+                    $("#resultado").html('<div style="text-align: center;" id="ajaxload"> <img src="<?php echo $this->baseUrl ( 'img/ajax-loader_1.gif' ) ?>" /> carregando</div>');
+                },
+                // the response is passed to the function
+                success: function(data) {
+
+                    if( !data ){
+                        $("#resultado").append(
+                            '<tr><td colspan="4"><img height="16" width="16" src="<?php echo $this->baseUrl ( 'img/sosti/emergencial.png' ) ?>" /> Atenção: não foram encontradas despesas para o PTRES: '+ ptres +' em ' + $("#DESP_ANO").val() + ' !</td></tr>');
+                        return false;
+                    }
+
+                    $.each(data, function(i, response) {
+                        
+                        var name = response.label.split(" : ");
+
+                        $("#resultado").append(
+                            "<tr>\n\
+                                    <td><input name= 'despesas[]' type='checkbox' id='" + response.label.split(" ", 1) + "' value='" + response.label.split(" ", 1) + "'  /></td>\n\
+                                        <td>" + response.label.split(" ", 1) + "</td>\n\
+                                        <td>" + name[1] + "</td>\n\
+                                        <td>" + name[2] + "</td>\n\
+                                        <td>" + response.label + "</td>\n\
+                                </tr>"
+                        );
+                    });
+
+                    $("#dataregistros").html('Registros encontrados: ' + data.length);
+                    $("#ajaxload").remove();
+                },
+                // code to run if the request fails; the raw request and
+                // status codes are passed to the function
+                error: function(xhr, status, errorThrown) {
+                    alert("Sorry, there was a problem!");
+
+                    $("#ajaxload").remove();
+                },
+                // code to run regardless of success or failure
+                complete: function(xhr, status) {
+                    $("#ajaxload").remove();
+                }
+            });
+
+            $("#carregando").hide();
+            $("#divdespesa").show();
+        });
+
+        // adiciona os valores dos campos na div
+        $("#DESP_DESPESA_ADD").click(function() {
+
+
+
+            // valida o campo vazio
+            if ($("#DESP_NR_DESPESA").val() === "") {
+                alert('Informe uma despesa valida!');
+                return false;
+            }
+
+            // valida uma despesa sem descrição
+            if ($("#DESP_NR_DESPESA").val().length < 10) {
+                alert('Selecione uma despesa valida!');
+                return false;
+            }
+
+            var ano = $("#DESP_ANO").val();
+            var ptresa = $("#DESP_FONTE_ATUAL").val();
+            var ptresn = $("#DESP_FONTE_NOVO").val();
+            var codigo = parseInt($("#DESP_NR_DESPESA").val().split(" ", 1));
+
+            // popula os campos ocultos: ano, prtes e ptres novo do formulario
+            if ($("#DESPESA_ANO").val() === '') {
+                $("#DESPESA_ANO").val(ano);
+            }
+
+            if ($("#FONTE_INICIAL").val() === '') {
+                $("#FONTE_INICIAL").val(ptresa);
+            }
+
+            if ($("#FONTE_NOVO").val() === '') {
+                $("#FONTE_NOVO").val(ptresn);
+            }
+
+            // adiciona a despesa a listagem
+            var tr = "";
+            tr += "<tr class='linha_interessado'> ";
+            tr += "<td> " + codigo + " </td> ";
+            tr += "<td> " + $("#DESP_NR_DESPESA").val() + " </td> ";
+            tr += "<td> <a href='#' class='remover-parte' rel='" + codigo + "' >Remover</a> </td> ";
+            tr += "</tr>";
+
+            // cria um array de registros de despesas para salvar
+            var registro = "";
+            registro += "<input type='hidden' class='registro' name='registro[]' value='";
+            registro += codigo + " ";
+            registro += "' />";
+
+            // adiciono a tabela os valores
+            $("table#selecionados_partes").append(tr);
+            $("table#selecionados_partes").append(registro);
+
+
+        });
+
+        // configura a remoção de dados
+        $(document.body).delegate(".remover-parte", "click", function() {
+
+            // id a ser removido
+            var codigo = $(this).parent().parent().children('td:first').text().trim();
+
+            // remove o input do codigo informado
+            $('input[type=hidden]').each(function() {
+                if ($(this).val() === codigo) {
+                    $(this).remove();
+                    alert('removido');
+                }
+            });
+
+            // remove a linha da tabela
+            $(this).parent().parent().remove();
+
+        });
+
+        // configura a remoção de uma lista de dados
+        $(document.body).delegate(".removerTodos", "click", function() {
+            linhas_removidas = $("#selecionados_partes tbody").find("." + "linha_interessado");
+            linhas_removidas.remove();
+        });
+
+
+        $("#DESP_LIMPA_TUDO").hide();
+
+        // envia o formulario
+        $("#DESP_LIMPA_TUDO").click(function() {
+            $("#DESP_ANO").removeAttr("disabled");
+            $("#DESP_ANO").removeAttr("style");
+            $("#DESP_FONTE_ATUAL").removeAttr("disabled");
+            $("#DESP_FONTE_ATUAL").removeAttr("style");
+            $("#DESP_FONTE_ATUAL").val("");
+            $("#DESP_FONTE_ATUAL").focus();
+            $("#DESP_FONTE_NOVO").removeAttr("disabled");
+            $("#DESP_FONTE_NOVO").val("");
+            $("#DESP_FONTE_NOVO").removeAttr("style");
+            $("#divdespesa").hide();
+        });
+
+        $("#DESP_DESPESA_SUBMIT").click(function() {
+            $("#DESPESA_ANO").val( $('#DESP_ANO').val() );
+            $("#FONTE_INICIAL").val( $('#DESP_FONTE_ATUAL').val() );
+            $("#FONTE_NOVO").val( $('#DESP_FONTE_NOVO').val() );
+
+
+            $("#frmtrocafonte").submit();
+        });
+
+
+    });
+
+    function validaFonte(fonte, id) {
+        var resultado;
+        $.ajax({
+            url: base_url + '/orcamento/despesa/ajaxvalidafonte/fonte/' + ptres,
+            context: document.body,
+            type: "post",
+            success: function(data) {
+                resultado = data;
+                if (data === false) {
+
+                    $('#' + id).attr('style', 'border-style: solid; border-width: 1px; border-color: red;');
+                    alert('O ptres informado é invalido.');
+                    $('#' + id).focus();
+                }
+            }
+        });
+        return resultado;
+    }
+
+</script>

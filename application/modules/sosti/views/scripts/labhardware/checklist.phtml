@@ -1,0 +1,43 @@
+<script type="text/javascript">
+
+</script>
+<div id="container_pagination">
+  
+    <?php if (count($this->data)): ?>
+    <table class="grid">
+        <thead>
+            <tr>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/checklist/direcao/<?php echo $this->direcao ?> ">Editar</a></th>
+                <th width="20%" ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/checklist/direcao/<?php echo $this->direcao ?> ">Tombo Número<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            	<th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/checklist/direcao/<?php echo $this->direcao ?> ">Documento Número<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            	<th width="80%"  ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/checklist/direcao/<?php echo $this->direcao ?> ">Assunto<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): ?>
+                <tr>
+               
+                    <td  width="5%"><a title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/formchecklist/id/<?php echo $data['DOCM_NR_DOCUMENTO']?>" >Editar</a></td>
+                     <td ><?php echo $this->escape($data["NU_TOMBO"]); ?></td>
+                    <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?></td>
+                    <td title="<?php echo $this->escape($data["DOCM_DS_ASSUNTO_DOC"]); ?>"><?php echo $this->escape($data["RESUMO_ASSUNTO"]); if(strlen($data["DOCM_DS_ASSUNTO_DOC"])>=84){echo "...";} ?></td>
+                    
+               </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7">Total: <?php echo $this->data->getTotalItemCount()?>
+               </td>
+            </tr>
+            <tr>
+                <td colspan="7">
+                    <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                </td>
+            </tr>
+        </tfoot>
+        </table>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+    </div>

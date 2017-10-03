@@ -1,0 +1,107 @@
+<style>
+    #container{
+        margin: 0 auto;
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+        /*background-size: 190mm 170mm;
+        background-image: url(marca_d_agua.gif);
+        background-position: center;
+        background-repeat: no-repeat;*/
+    }
+    table#header{
+        width: 100%;
+    }
+    table#header td.brasao{
+        
+        background-image: url(<?= $this->baseUrl(); ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    .alinha-centro{
+        font-weight: bold;
+        text-align: center;
+    }
+    div#texto{
+        font-weight: bold;
+        text-align: justify;
+    }
+    div.titulo-tabela{
+        padding-top: 10px;
+        padding-bottom: 7px;
+    }
+    table.conteudo{
+        width: 207mm;;
+        margin-left: 3mm;
+        
+    }
+    table.conteudo td.titulo{
+        text-align: center;
+        font-weight: bold;
+        background-color: silver;
+        font-size: 13px;
+    }
+    table.conteudo td.dados{
+        font-size: 13px;
+    }
+    .rodape{
+        font-weight: bold;
+        font-size: 13px;
+    }
+    .rodape-total{
+        font-weight: bold;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+
+<div id="container">
+    <watermarkimage src="<?= $this->baseUrl(); ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+    <?php 
+    $soma = 0;
+    foreach ($this->arrayOrgaos as $nomeOrgao => $arrayHist):
+        $soma += count($arrayHist);
+        
+    ?>
+        <div class="titulo-tabela">
+            <b>ÓRGÃO JULGADOR: <?= $nomeOrgao?></b>
+        </div>
+        <table class="conteudo" border="0" cellspacing="0" cellpadding="3">
+            <tr >
+                <td nowrap="nowrap" class="titulo">PROCESSO</td>
+                <td nowrap="nowrap" class="titulo">MODALIDADE DE DISTRIBUIÇÃO</td>
+                <td nowrap="nowrap" class="titulo">DATA DISTRIBUIÇÃO</td>
+                <td nowrap="nowrap" width="35%" class="titulo">RELATOR</td>
+            </tr>
+            <!-- ############################# INICIO DO CONTEUDO-->
+            <?php 
+
+            foreach ($arrayHist as $hist):
+            ?>
+                <tr >
+                    <td align="right" class="dados"><?= $hist['DOCM_NR_DOCUMENTO']?></td>
+                    <td align="center" class="dados"><?= $hist['HDPA_IC_FORMA_DISTRIBUICAO']?></td>
+                    <td align="center" class="dados"><?= $hist['HDPA_TS_DISTRIBUICAO']?></td>
+                    <td class="dados"><?= $hist['PNAT_NO_PESSOA']?></td>
+                </tr>
+            <?php
+            endforeach;
+            ?>
+            <!-- ############################# FIM DO CONTEUDO-->
+            <tr >
+                <td colspan="4" class="rodape">TOTAL DE PROCESSOS NO ÓRGAO JULGADOR: <?=count($arrayHist)?></td>
+            </tr>
+        </table>
+        <hr/>
+    <?php
+    endforeach;
+    ?>
+    <center class="rodape-total"><b>TOTAL DE PROCESSOS DISTRIBUÍDOS ELETRONICAMENTE NESTA DATA: <?=$soma?></b></center>
+</div><!-- Fim da div Container-->

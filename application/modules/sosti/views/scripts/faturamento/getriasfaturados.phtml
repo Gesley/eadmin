@@ -1,0 +1,116 @@
+<script type="text/javascript">
+    function makeFileList() {
+        var input = document.getElementById("filesToUpload");
+        var ul = document.getElementById("fileList");
+        while (ul.hasChildNodes()) {
+            ul.removeChild(ul.firstChild);
+        }
+        for (var i = 0; i < input.files.length; i++) {
+            var li = document.createElement("li");
+            li.innerHTML = input.files[i].name;
+            ul.appendChild(li);
+        }
+        if(!ul.hasChildNodes()) {
+            var li = document.createElement("li");
+            li.innerHTML = 'Sem arquivos selecioandos!';
+            ul.appendChild(li);
+        }
+    }
+</script>
+<script type="text/javascript">
+   $(function() {
+       $("input:radio[name=TIPO_IMPORT]").click(
+        function() 
+        {
+            var pTip = /RIA/i;
+            var pVal = $(this).val();
+            var pBus = pTip.exec(pVal);
+            if (pBus != null)
+            {
+                 $('#filesToUpload').attr({ accept : "application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+            }
+                else
+                {
+                    $('#filesToUpload').attr({ accept : "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });   
+                }
+        });
+        
+        
+        
+        
+//        $('[type="file"]').change(function(evt) {
+//            
+//            var rValue = $("input:radio[name=TIPO_IMPORT]").val();
+//            var pTip = /RIA/i;
+//            var pBus = pTip.exec(rValue);
+//        
+//            if (pBus != null)
+//            {
+//                for(var i=0; i< this.files.length; i++)
+//                {
+//                    
+//                    var file = this.files[i];
+//                    name = file.name.toLowerCase();
+//                    var ext = name.split(".");
+//                    var e = ext[1];
+//                    
+//                    if ((e != "docx") && (e != "doc"))
+//                    {   
+//                        break;
+//                    }
+//                    
+//                 }
+//            }
+//        });
+        
+        
+        
+    });
+</script>
+<form method="post" action="" enctype="multipart/form-data">
+    <section class="left">
+        
+        <fieldset style="float: left; width: 350px; height: 150px;">
+            <legend>Desenvolvimento</legend>
+                <input type="radio" name="TIPO_IMPORT" value="PFDS_NR_DCMTO_RIA_ORIGINAL"/>
+                <label>RIA Original (doc, docx)</label><br/>
+                <input type="radio" name="TIPO_IMPORT" value="PFDS_NR_DCMTO_RIA_ESCLARECER"/>
+                <label>RIA a Esclarecer (doc, docx)</label><br/>
+                <input type="radio" name="TIPO_IMPORT" value="PFDS_NR_DCMTO_RIA_ESCLARECIDO"/>
+                <label>RIA Esclarecido (doc, docx)</label><br/>
+                <input type="radio" name="TIPO_IMPORT" value="PFDS_NR_DCMTO_CONTAGEM-1"/>
+                <label>Planilha de contagem PF - Modelo 1(xls, xlsx)</label><br />
+                <input type="radio" name="TIPO_IMPORT" value="PFDS_NR_DCMTO_CONTAGEM-2"/>
+                <label>Planilha de contagem PF - Modelo 2(xls, xlsx)</label><br />
+                <input type="radio" name="TIPO_IMPORT" value="PFDS_NR_DCMTO_CONTAGEM-3"/>
+                <label>Planilha de contagem PF - Modelo 3(xls, xlsx)</label>
+        </fieldset>
+        
+        <fieldset style="width:350px; height: 150px;">
+            <legend>Aferição</legend>
+                <input type="radio" name="TIPO_IMPORT" value="PFAF_NR_DCMTO_RIA_PARECER"/>
+                <label>RIA com Parecer a Efetuar: (doc, docx)</label><br/>
+                <input type="radio" name="TIPO_IMPORT" value="PFAF_NR_DCMTO_RIA_ESCLARECIDO"/>
+                <label>RIA com Parecer Efetuado: (doc, docx)</label><br/>
+                <input type="radio" name="TIPO_IMPORT" value="PFAF_NR_DCMTO_CONTAGEM-1"/>
+                <label>Planilha de Contagem PF - Modelo 1(xls, xlsx)</label><br/>
+                <input type="radio" name="TIPO_IMPORT" value="PFAF_NR_DCMTO_CONTAGEM-2"/>
+                <label>Planilha de Contagem PF - Modelo 2(xls, xlsx)</label><br/>
+                <input type="radio" name="TIPO_IMPORT" value="PFAF_NR_DCMTO_CONTAGEM-3"/>
+                <label>Planilha de Contagem PF - Modelo 3(xls, xlsx)</label>
+        </fieldset>
+        
+        
+        
+        
+        <p>
+           <strong>Selecione os Arquivos</strong> 
+        <input type="file" name="filesToUpload[]" id="filesToUpload" multiple="" onChange="makeFileList();"  /></p>
+
+        <p>
+            <strong>Arquivos Selecionados:</strong>
+        </p>
+        <ul id="fileList"><li>Nenhum Arquivo Selecionado</li></ul>
+        <input type="submit" name="Enviar" value="Enviar"/>
+    </section>
+</form>

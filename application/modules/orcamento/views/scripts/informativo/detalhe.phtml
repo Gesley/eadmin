@@ -1,0 +1,45 @@
+<br />
+<div id="detalheTabs" class="tabs">
+	<ul>
+		<li><a href="#detalhe">Detalhes do registro</a></li>
+	</ul>
+
+	<div id="detalhe">
+		<p>
+		<?php
+		// Array deve conter apenas 1 registro (fetchRow)
+		foreach ( $this->dados as $campoNome => $campoConteudo ) {
+            $conteudo = $this->escape ( $campoConteudo );
+            
+            if ( is_numeric (strpos(trim(strtolower($campoNome)), 'valor') ) ) {
+                // Formata o campo valor
+                $conteudo = $valor->retornaNumeroFormatadoValor ( $campoConteudo, $sinalMoeda );
+            }
+            
+            // Monta cada linha a ser exibida
+            $linha = "";
+            $linha .= "<strong>";
+            $linha .= $this->escape ( $campoNome );
+            $linha .= ":</strong> ";
+            $linha .= $conteudo;
+            $linha .= "<br />";
+            
+            // Apresenta uma linha com cada campo e seu conteúdo 
+            echo $linha . PHP_EOL;
+		}
+		?>
+		</p>
+        <hr/>
+        <h3>Destinatários:</h3>
+        <div id="listagem" style="border: 1px #ccc solid; margin: 5px; padding: 10px; width: 300px">
+            <ul class="list-style">
+                <!-- lista de destinatarios -->
+                <?php if ($this->responsaveis):?>
+                    <?php foreach ($this->responsaveis as $resp): ?>
+                    <li><?php echo $resp['LOTA_SIGLA_LOTACAO']?></li>
+                    <?php endforeach;?>
+                <?php endif;?>
+            </ul>
+        </div>
+	</div>
+</div>

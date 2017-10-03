@@ -1,0 +1,368 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.maskedinput-1.3.js'));
+$date = explode("/",$this->sysdate);
+?>
+<script type="text/javascript">
+    jQuery.fn.validacnpj = function(){
+        this.change(function(){
+            CNPJ = $(this).val();
+            if(!CNPJ){ return false;}
+            erro = new String;
+            if(CNPJ == "00.000.000/0000-00"){ erro += "CNPJ inválido\n\n";}
+            CNPJ = CNPJ.replace(".","");
+            CNPJ = CNPJ.replace(".","");
+            CNPJ = CNPJ.replace("-","");
+            CNPJ = CNPJ.replace("/","");
+
+            var a = [];
+            var b = new Number;
+            var c = [6,5,4,3,2,9,8,7,6,5,4,3,2];
+            for(i=0; i<12; i++){
+                a[i] = CNPJ.charAt(i);
+                b += a[i] * c[i+1];
+            }
+            if((x = b % 11) < 2){
+                a[12] = 0
+            }else{
+                a[12] = 11-x
+            }
+            b = 0;
+            for(y=0; y<13; y++){
+                b += (a[y] * c[y]);
+            }
+            if((x = b % 11) < 2){
+                a[13] = 0;
+            }else{
+                a[13] = 11-x;
+            }
+            if((CNPJ.charAt(12) != a[12]) || (CNPJ.charAt(13) != a[13])){ erro +="Dígito verificador com problema!";}
+            if (erro.length > 0){
+                $(this).val('');
+                alert(erro);
+                setTimeout(function(){ $(this).focus()},50);        
+            }
+            return $(this);
+        });
+    }
+    
+    jQuery.fn.validacpf = function(){
+        this.change(function(){
+            CPF = $(this).val();
+            if(!CPF){ return false;}
+            erro  = new String;
+            cpfv  = CPF;
+            if(cpfv.length == 14 || cpfv.length == 11){
+                cpfv = cpfv.replace('.', '');
+                cpfv = cpfv.replace('.', '');
+                cpfv = cpfv.replace('-', '');
+ 
+                var nonNumbers = /\D/;
+   
+                if(nonNumbers.test(cpfv)){
+                    erro = "A verificacao de CPF suporta apenas números!";
+                }else{
+                    if (cpfv == "00000000000" ||
+                        cpfv == "11111111111" ||
+                        cpfv == "22222222222" ||
+                        cpfv == "33333333333" ||
+                        cpfv == "44444444444" ||
+                        cpfv == "55555555555" ||
+//                        cpfv == "66666666666" ||
+                        cpfv == "77777777777" ||
+                        cpfv == "88888888888" ||
+                        cpfv == "99999999999") {
+                           
+                        erro = "Número de CPF inválido!"
+                    }
+                    var a = [];
+                    var b = new Number;
+                    var c = 11;
+ 
+                    for(i=0; i<11; i++){
+                        a[i] = cpfv.charAt(i);
+                        if (i < 9) b += (a[i] * --c);
+                    }
+                    if((x = b % 11) < 2){
+                        a[9] = 0
+                    }else{
+                        a[9] = 11-x
+                    }
+                    b = 0;
+                    c = 11;
+                    for (y=0; y<10; y++) b += (a[y] * c--);
+   
+                    if((x = b % 11) < 2){
+                        a[10] = 0;
+                    }else{
+                        a[10] = 11-x;
+                    }
+                    if((cpfv.charAt(9) != a[9]) || (cpfv.charAt(10) != a[10])){
+                        erro = "Número de CPF inválido. ";
+                    }
+                }
+            }else{
+                if(cpfv.length == 0){
+                    return false;
+                }else{
+                    erro = "Número de CPF inválido.";
+                }
+            }
+            if (erro.length > 0){
+                $(this).val('');
+                alert(erro);
+                setTimeout(function(){$(this).focus();},100);
+                return false;
+            }
+            return $(this);
+        });
+    }
+    
+      jQuery.fn.validaData = function(){    
+          $(this).change(function(event){
+            $valor = $(this).val();
+            if($valor){
+              $erro = "";
+              var expReg = /^((0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/[1-2][0-9]\d{2})$/;
+              if($valor.match(expReg)){
+                var $dia  = parseFloat($valor.substring(0,2));
+                var $mes  = parseFloat($valor.substring(3,5));
+                var $ano  = parseFloat($valor.substring(6,10));        
+
+                if(($mes==4 && $dia>30) || ($mes==6 && $dia>30) || ($mes==9 && $dia>30) || ($mes==11 && $dia>30)){
+                  $erro = "Data incorreta! O mês especificado na data "+$valor+" contém 30 dias.";
+                }else{
+                  if($ano%4!=0 && $mes==2 && $dia>28){
+                    $erro = "Data incorreta!! O mês especificado na data "+$valor+" contém 28 dias."
+                  }else{
+                    if($ano%4==0 && $mes==2 && $dia>29){
+                      $erro = "Data incorreta!! O mês especificado na data "+$valor+" contém 29 dias.";
+                    }
+                  }
+                }
+              }else{
+                $erro = "Formato de Data para "+$valor+" é inválido";
+              }
+              if($erro){
+                $(this).val('');
+                alert($erro);
+                setTimeout(function(){ $(this).focus();},50);                      
+              }else{
+                return $(this);
+              }      
+            }else{
+              return $(this);
+            }
+          });
+        }
+    
+    /**
+     * Monta o formulário de acordo com o tipo de pessoa selecionado pelo Button RADIO.
+     */
+    $(function(){
+        $("#FISICA").hide();
+        $("#JURIDICA").hide();
+        $("#INTERNACIONAL").hide();
+        $("#ENDERECO").hide();
+        $("#SALVAR").hide();
+        $('input[name="cadastro"]').click(function(){
+            if(this.value == 'FISICA'){
+                $("#FISICA").show();
+                $("#ENDERECO").show();
+                $("#SALVAR").show();
+                $("#JURIDICA").hide();
+                $("#INTERNACIONAL").hide();
+            }else if(this.value == 'JURIDICA'){
+                $("#FISICA").hide();
+                $("#JURIDICA").show();
+                $("#ENDERECO").show();
+                $("#SALVAR").show();
+                $("#INTERNACIONAL").hide();
+            }else if(this.value = 'INTERNACIONAL'){
+                $("#FISICA").hide();
+                $("#JURIDICA").hide();
+                $("#INTERNACIONAL").show();
+                $("#ENDERECO").show();
+                $("#SALVAR").show();
+            }
+            
+            /**
+             * Limpa os campos ao mudar um um tipo para o outro.
+             */
+            $('#JURIDICA input').each(function(){
+                $(this).val('');
+            });
+            $('#ENDERECO input').each(function(){
+                $(this).val('');
+            });
+            $('#FISICA input').each(function(){
+                $(this).val('');
+            });
+        });
+        
+        /**
+         * Auto complete nos campos de Pessoa Juridica e Carrega os dados nos campos.
+         */
+        $("#PJUR_NO_RAZAO_SOCIAL").autocomplete({
+            source: base_url+"/sisad/cadastrodcmtoext/ajaxnomedestinatario/tipo/juridica",
+            minLength: 3,
+            delay: 300
+        });
+        $("#PJUR_NO_RAZAO_SOCIAL").focusout(
+        function(){
+            $.ajax({
+                url: base_url+"/sisad/cadastrodcmtoext/ajaxdadospessoa/tipo/juridica/pessoa/"+this.value,
+                before:function(){
+                    $('#JURIDICA input').each(function(){
+                        $(this).addClass("carregandoInputText");
+                    });
+                    $('#ENDERECO input').each(function(){
+                        $(this).addClass("carregandoInputText");
+                    });
+                },
+                success: function(data){
+                    $('#JURIDICA input').each(function(){
+                        $(this).removeClass("carregandoInputText");
+                    });
+                    $('#ENDERECO input').each(function(){
+                        $(this).removeClass("carregandoInputText");
+                    });
+                    $.each(data, function(key,val){
+                        $("#ID_PESSOA").val(val.PJUR_ID_PESSOA)
+                        $("#PJUR_NR_CNPJ").val(val.PJUR_NR_CNPJ);
+                        $("#PJUR_NO_FANTASIA").val(val.PJUR_NO_FANTASIA);
+                        $("#PJUR_IC_PORTE").val(val.PJUR_IC_PORTE);
+                        $("#PEND_DS_ENDERECO").val(val.PEND_DS_ENDERECO);
+                        $("#PEND_NR_CEP").val(val.PEND_NR_CEP);
+                        $("#PEND_ID_TP_ENDERECO").val(val.PEND_ID_TP_ENDERECO);
+                    });
+                },
+                error:function(){
+                    $('#JURIDICA input').each(function(){
+                        $(this).removeClass("carregandoInputText");
+                    });
+                    $('#ENDERECO input').each(function(){
+                        $(this).removeClass("carregandoInputText");
+                    });
+                }
+            }); 
+        });
+        
+        /**
+         *  Auto complete do nome de pessoa fisica e carrega os dados nos campos específicos
+         */
+        $("#PNAT_NO_PESSOA").autocomplete({
+            source: base_url+"/sisad/cadastrodcmtoext/ajaxnomedestinatario/tipo/fisica",
+            minLength: 3,
+            delay: 300
+        });
+        $("#PNAT_NO_PESSOA").focusout(
+        function() {
+            $.ajax({
+                url: base_url+"/sisad/cadastrodcmtoext/ajaxdadospessoa/tipo/fisica/pessoa/"+this.value,
+                before: function(){
+                    $('#FISICA input').each(function(){
+                        $(this).addClass("carregandoInputText");
+                    });
+                    $('#ENDERECO input').each(function(){
+                        $(this).addClass("carregandoInputText");
+                    });
+                },
+                success: function(data){
+                    $('#FISICA input').each(function(){
+                        $(this).removeClass("carregandoInputText");
+                    });
+                    $('#ENDERECO input').each(function(){
+                        $(this).removeClass("carregandoInputText");
+                    });
+                    $.each(data, function(key,val){
+                        $("ID_PESSOA").val(val.ID_PESSOA);
+                        $("PNAT_NR_CPF").val(val.PNAT_NR_CPF);
+                        $("PNAT_NR_IDENTIDADE").val(val.PNAT_NR_IDENTIDADE);
+                        $("PNAT_SG_ORGAO_EMISSOR_ID").val(val.PNAT_SG_ORGAO_EMISSOR_ID);
+                        $("PNAT_DH_EMISSAO_ID").val(val.PNAT_DH_EMISSAO_ID);
+                        $("PNAT_DT_NASCIMENTO").val(val.PNAT_DT_NASCIMENTO);
+                        $("PNAT_LOCAL_NASCIMENTO").val(val.PNAT_LOCAL_NASCIMENTO);
+                        $("#PEND_DS_ENDERECO").val(val.PEND_DS_ENDERECO);
+                        $("#PEND_NR_CEP").val(val.PEND_NR_CEP);
+                        $("#PEND_ID_TP_ENDERECO").val(val.PEND_ID_TP_ENDERECO);
+                    });
+                },
+                error: function(){
+                    $('#FISICA input').each(function(){
+                        $(this).removeClass("carregandoInputText");
+                    });
+                    $('#ENDERECO input').each(function(){
+                        $(this).removeClass("carregandoInputText");
+                    });
+                }
+            });
+        });
+        $("#PJUR_NR_CNPJ").mask("99.999.999/9999-99");
+        $("#PEND_NR_CEP").mask("99999-999");
+        $("#PNAT_NR_CPF").mask("999.999.999-99");
+        $("#PNAT_DT_NASCIMENTO").mask("99/99/9999");
+        $("#PNAT_DH_EMISSAO_ID").mask("99/99/9999");
+        $('#PJUR_NR_CNPJ').validacnpj();
+        $('#PNAT_NR_CPF').validacpf();
+        $('#PNAT_DT_NASCIMENTO').validaData();
+        $('#PNAT_DT_NASCIMENTO').validaData();
+        $('#PNAT_DH_EMISSAO_ID').validaData();
+    })
+</script>
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+
+<form method="POST">
+    <fieldset>
+        <legend>Tipo Cadastro</legend>
+        <input type="radio" name="cadastro" value="FISICA">Física</input>
+        <input type="radio" name="cadastro" value="JURIDICA">Juridica</input>
+    </fieldset>
+
+    <div id="FISICA">
+        <h3> Cadastro de Dados de Pessoa Física </h3>
+        (*)Campos <b>Obrigatórios</b>
+        <?php 
+        echo $this->form->ID_PESSOA;
+        echo $this->form->PNAT_NO_PESSOA;
+        echo $this->form->PNAT_NR_CPF;
+        echo $this->form->PNAT_NR_IDENTIDADE;
+        echo $this->form->PNAT_SG_ORGAO_EMISSOR_ID;
+        echo $this->form->PNAT_SG_UF_EMISSOR_ID;
+        echo $this->form->PNAT_DH_EMISSAO_ID;
+        echo $this->form->PNAT_DT_NASCIMENTO;
+        echo $this->form->PNAT_CD_LOCAL_NASCIMENTO;
+        ?>
+    </div>
+
+    <div id="JURIDICA">
+        <h3> Cadastro de Dados de Pessoa Juridica </h3>
+        (*)Campos <b>Obrigatórios</b>
+        <?php
+        echo $this->form->ID_PESSOA;
+        echo $this->form->PJUR_NO_RAZAO_SOCIAL;
+        echo $this->form->PJUR_NR_CNPJ;
+        echo $this->form->PJUR_NO_FANTASIA;
+        echo $this->form->PJUR_IC_PORTE;
+        ?>
+    </div>
+
+    <div id="INTERNACIONAL">
+        <h3> Cadastro de Dados de Orgãos Internacionais </h3>
+    </div>
+
+    <div id="ENDERECO">
+        <?php
+        echo $this->form->PEND_DS_ENDERECO;
+        echo $this->form->PEND_NR_CEP;
+        echo $this->form->PEND_ID_TP_ENDERECO;
+        ?>
+    </div>
+    
+    <div id="SALVAR">
+        <?php
+        echo $this->form->Salvar;
+        ?>
+    </div>
+</form>

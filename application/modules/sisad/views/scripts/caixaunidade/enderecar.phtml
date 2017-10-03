@@ -1,0 +1,69 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.maskedinput-1.3.js'));
+?>
+
+<script>
+    $(function(){
+        botao_ajuda_by_id.delay(200).show('scale');
+    })
+</script>
+
+<script type="text/javascript">
+$(function(){
+    $("#POST_CD_PESSOA_DESTINO").autocomplete({
+            source: base_url+"/sisad/caixaunidade/ajaxnomedestinatario",
+            minLength: 3,
+            delay: 300
+    });
+    
+    /*
+     * Mascara de CEP
+     */
+    $("#POST_CD_CEP_DESTINO").mask("99999-999");
+
+    
+});
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+    
+<?php if (count($this->data)): ?>
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Número</th>
+            <th >Autor</th>
+            <th >Tipo</th>
+            <th >Data Criação</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php
+            $documentos = array();
+            $cont = 0;
+            foreach($this->data as $dados):
+        ?>
+            <tr>
+<!--                <td> <?php echo $this->escape($dados["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                <td style="width: 15%" title= <?php echo $this->escape($dados["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($dados["MASC_NR_DOCUMENTO"]) ?></td>                  
+                <td> <?php echo $this->escape($dados["ENCAMINHADOR"]) ?></td>
+                <td> <?php echo $this->escape($dados["DTPD_NO_TIPO"]) ?></td>
+                <td> <?php echo $this->escape($dados["DOCM_DH_CADASTRO"]) ?></td>
+            </tr>
+            <input type="hidden" name="<?php echo $documentos[$cont] ?>" value="<?php echo $this->escape($dados["DOCM_NR_DOCUMENTO"]) ?>">
+        <?php endforeach; ?>
+        <?php $cont++;?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+        </tr>
+    </tfoot>
+</table>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+
+<?php echo $this->formExterno;  ?>
+        

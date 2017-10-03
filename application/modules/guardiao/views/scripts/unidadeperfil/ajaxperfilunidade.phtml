@@ -1,0 +1,119 @@
+<!--
+Autor: Daniel Rorigues
+Página que contém as duas ListBox com os perfis de cada Unidade
+-->
+<script>
+
+    $(".um_direita").button({
+        icons: {
+            primary: "ui-icon-arrowthick-1-e"
+        }
+    });
+    $(".um_esquerda").button({
+        icons: {
+            primary: "ui-icon-arrowthick-1-w"
+        }
+    });
+    $(".todos_direita").button({
+        icons: {
+            primary: "ui-icon-arrowthickstop-1-e"
+        }
+    });
+    $(".todos_esquerda").button({
+        icons: {
+            primary: "ui-icon-arrowthickstop-1-w"
+        }
+    });
+    $(".desfazer").button({
+        icons: {
+            primary: "ui-icon-arrowreturnthick-1-s"
+        }
+    });
+    $("#Salvar").button();
+
+</script>
+<br />
+<div id="div_associar_perfil">
+    <table>
+        <tr>
+            <td>
+                <h3>PERFIS NÃO AUTORIZADOS</h3>
+                <select id="box1View" multiple="multiple" style="height:400px;width:415px;">
+                    <?php foreach ($this->perfis_nao_associados as $perfil_n): ?>
+                        <option value="<?php echo $perfil_n['PERF_ID_PERFIL']; ?>">
+                            <?php echo $this->escape($perfil_n['PERF_DS_PERFIL']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select><br/>
+                <!--select id="box1Storage">
+                </select-->
+            </td>
+            <td>
+                <button id="to2" type="button" title="Permitir Perfil" class="um_direita"></button><br />
+                <button id="allTo2" type="button" title="Permitir Todos os Perfis" class="todos_direita"></button><br />
+                <button id="allTo1" type="button" title="Retirar Todos os Perfis" class="todos_esquerda"></button><br />
+                <button id="to1" type="button" title="Retirar Perfil" class="um_esquerda"></button><br />
+                <button id="desfazer" type="button" title="Desfazer Alterações" class="desfazer"></button><br />
+            </td>
+            <td>
+                <h3>PERFIS AUTORIZADOS</h3>
+                <select id="box2View" multiple="multiple" style="height:400px;width:415px;" name="perfis_unidade[]">
+                    <?php foreach ($this->perfis_associados as $perfil_a): ?>
+                        <option value="<?php echo $perfil_a['UNPE_ID_PERFIL']; ?>">
+                            <?php echo $this->escape($perfil_a['PERF_DS_PERFIL']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select><br/>
+                <!--select id="box2Storage">
+                </select-->
+            </td>
+        </tr>
+    </table>
+    <!-- VALIDADOR DO FORMULARIO -->
+    <input type="hidden" name="form_validator" value="form_validator" id="form_validator" />
+</div>
+<br />
+<input id="Salvar" class="novo" type="submit" value="Salvar" name="Salvar" role="button" style="margin-bottom: 10px; margin-left: 5px;">
+<br />
+<fieldset>
+    <table>
+        <tr>
+            <td>
+                <b>Legenda:</b>
+            </td>
+            <td>
+                <img style="float: left;" src="<?php echo $this->baseUrl() . '/img/guardiao/legenda_btn_1.png' ?>" /> 
+                <span style="display: inline-block; height: 20px; float: left; padding-top: 5px; margin-left: 5px;">Permitir Perfil</span> 
+            </td>
+            <td>
+                <img style="float: left;" src="<?php echo $this->baseUrl() . '/img/guardiao/legenda_btn_2.png' ?>" /> 
+                <span style="display: inline-block; height: 20px; float: left; padding-top: 5px; margin-left: 5px;">Permitir Todos os Perfis</span> 
+            </td>
+            <td>
+                <img style="float: left;" src="<?php echo $this->baseUrl() . '/img/guardiao/legenda_btn_3.png' ?>" /> 
+                <span style="display: inline-block; height: 20px; float: left; padding-top: 5px; margin-left: 5px;">Retirar Todos os Perfis</span> 
+            </td>
+            <td>
+                <img style="float: left;" src="<?php echo $this->baseUrl() . '/img/guardiao/legenda_btn_4.png' ?>" /> 
+                <span style="display: inline-block; height: 20px; float: left; padding-top: 5px; margin-left: 5px;">Retirar Perfil</span> 
+            </td>
+            <td>
+                <img style="float: left;" src="<?php echo $this->baseUrl() . '/img/guardiao/legenda_btn_5.png' ?>" /> 
+                <span style="display: inline-block; height: 20px; float: left; padding-top: 5px; margin-left: 5px;">Desfazer Alterações</span> 
+            </td>
+        </tr>
+    </table>
+</fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+

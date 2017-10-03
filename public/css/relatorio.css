@@ -1,0 +1,41 @@
+div.item {
+	padding: 20px 10px;
+	font: 12px verdana;
+}
+
+div.cliente {
+	padding: 10px 5px;
+}
+
+div.defeito,div.solucao {
+	padding: 10px 5px;
+}
+
+div.ds {
+	padding: 10px 5px;
+	border: 1px solid #f7f7f7;
+}
+
+th,td {
+	margin: 0;
+	padding: 0;
+	border: 1px solid #000;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin-top: 10px;
+}
+
+caption,th {
+	font-style: normal;
+	font-weight: normal;
+	text-align: left;
+}
+
+th {
+	font-style: normal;
+	font-weight: bold;
+	text-align: left;
+}

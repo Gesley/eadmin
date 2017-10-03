@@ -1,0 +1,288 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.maskedinput-1.3.js'))
+        ->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/multiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'))
+        ->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<script>
+    $(function(){
+        botao_ajuda_by_id.delay(200).show('scale');
+        $("#SSOL_NR_TELEFONE_EXTERNO").mask("(99)9999-9999");
+    })
+</script>
+<div class="help" id="msg_ajuda" style="display: none; ">
+    <h3>Ajuda&ensp;</h3>
+    <p>Essa tela se inicia mostrando os dados pessoais do solicitante, conforme registrados no sistema RH e permissões concedidas através do sistema e-Guardião.</p>
+    <p>Devem ser preenchidos os campos:</p>
+    <ul>
+        <li><b>Ramal/telefone</b> (Registrar o telefone ou o ramal de contato para atendimento);</li>
+        <li><b>Local de atendimento</b> (é preenchido com as informações da unidade de lotação do solicitante);</li>
+        <li><b>Grupo de Serviço</b> (caso o solicitante não pertença ao quadro da TI, preencha sempre com <i>Atendimento aos Usuários</i>)</li>
+        <li><b>Serviço</b> (basta o solicitante  clicar na barra de rolagem ou digitar uma letra e selecionar o serviço desejado)*;</li>
+        <ul>
+            <i>*Quando o serviço solicitado exigir o número de tombamento patrimonial do equipamento, este campo irá surgir na tela para que seja digitado.</i><br />
+            <i>*Ao ser digitado o número do tombo, o sistema mostra a descrição do tombo, permitindo que o usuário confirme os dados do equipamento.</i>
+        </ul>
+        <li><b>Descrição do Serviço</b> (descrever a ocorrência que motivou a abertura do chamado);</li>
+        <li><b>Observação</b> (poderá ser digitada qualquer informação complementar, que auxilie o atendente na execução do serviço);</li>
+        <li><b>Inserir Anexos</b> (o sistema abre a possibilidade de buscar um documento no computador ou na rede)*;</li>
+        <ul>
+            <i>*Neste caso a sugestão é que os documentos digitalizados ou incluídos no sistema estejam na pasta do computador pessoal.</i><br />
+            <i>*Poderá ser enviado um arquivo com a imagem da ocorrência.</i>
+        </ul>
+        <li><b>Salvar</b> ao final da solicitação.</li>
+    </ul>
+    <p><i><b>Nota</b>: Todas as requisições criadas pelo usuário estarão no menu: Sisad / Minhas Solicitações de TI.</i></p>
+
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <a id="botao_ajuda_recolhe" href="#" ></a>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $("select#TRF1_SECAO").change(
+        function () {
+            var secao = $(this).val().split('|')[0];
+            var lotacao = $(this).val().split('|')[1];
+            var tipolotacao = $(this).val().split('|')[2];
+            $("select#SSER_ID_SERVICO").html("");
+            $.ajax({
+                url: base_url + '/sosti/solicitacaousertisecoes/ajaxgruposervicosecoes/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                dataType : 'html',
+                beforeSend:function() {
+                },
+                success: function(data) {
+                    $('select#SGRS_ID_GRUPO').html(data);
+                },
+                error: function(){
+                }
+            });
+        });
+    });
+    $(function() {
+        $('#SSER_ID_SERVICO').combobox({
+            selected: function(e, ui) {
+                var unidade = $(this).attr('value').split('|')[1];
+                if(unidade == 'S'){
+                    $("#SSOL_NR_TOMBO-label").show();
+                    $("#SSOL_NR_TOMBO-element").show();
+                    $("#DE_MAT-label").show();
+                    $("#DE_MAT-element").show();
+                }else{
+                    $("#SSOL_NR_TOMBO-label").hide();
+                    $("#SSOL_NR_TOMBO-element").hide();
+                    $("#DE_MAT-label").hide();
+                    $("#DE_MAT-element").hide();
+                }
+                var videoconferencia = $(this).attr('value').split('|')[2];
+                if(videoconferencia == 'S'){
+                    $("#SSES_DT_INICIO_VIDEO-label").show();
+                    $("#SSES_DT_INICIO_VIDEO-element").show();
+                }else{
+                    $("#SSES_DT_INICIO_VIDEO-label").hide();
+                    $("#SSES_DT_INICIO_VIDEO-element").hide();
+                }
+            }
+        });
+        $('#combobox-input-text-SSER_ID_SERVICO').attr('style','width:650px');
+        $('#SGRS_ID_GRUPO').change(
+        function(){
+            $('#SSER_ID_SERVICO').empty();
+            $('#combobox-input-text-SSER_ID_SERVICO').val('');
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            $("#SSES_DT_INICIO_VIDEO-label").hide();
+            $("#SSES_DT_INICIO_VIDEO-element").hide();
+            
+            var valorRaw = $('#SGRS_ID_GRUPO').val();
+            if(valorRaw != ''){
+                var obj = jQuery.parseJSON(valorRaw);
+                var grupoID = obj.SGRS_ID_GRUPO;
+
+                url = '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos';
+                $.ajax({
+                    url:url,
+                    type: 'get',
+                    data: 'grupoID='+grupoID,
+                    dataType:'html',
+                    error:function(){
+                        alert('error');
+                    },
+                    success:function(data){
+                        $('#SSER_ID_SERVICO').html(data);
+                        $('#SSER_ID_SERVICO').combobox({
+                            selected: function(e, ui) {
+                                var unidade = $(this).attr('value').split('|')[1];
+                                if(unidade == 'S'){
+                                    $("#SSOL_NR_TOMBO-label").show();
+                                    $("#SSOL_NR_TOMBO-element").show();
+                                    $("#DE_MAT-label").show();
+                                    $("#DE_MAT-element").show();
+                                }else{
+                                    $("#SSOL_NR_TOMBO-label").hide();
+                                    $("#SSOL_NR_TOMBO-element").hide();
+                                    $("#DE_MAT-label").hide();
+                                    $("#DE_MAT-element").hide();
+                                }
+                                var videoconferencia = $(this).attr('value').split('|')[2];
+                                if(videoconferencia == 'S'){
+                                    $("#SSES_DT_INICIO_VIDEO-label").show();
+                                    $("#SSES_DT_INICIO_VIDEO-element").show();
+                                }else{
+                                    $("#SSES_DT_INICIO_VIDEO-label").hide();
+                                    $("#SSES_DT_INICIO_VIDEO-element").hide();
+                                }
+                            }
+                        });
+                        $('#combobox-input-text-SSER_ID_SERVICO').attr('style','width:650px');
+                    }});  
+            }});
+        
+        
+        
+        
+        $("#SSOL_NR_TOMBO-label").hide();
+        $("#SSOL_NR_TOMBO-element").hide();
+        $("#DE_MAT-label").hide();
+        $("#DE_MAT-element").hide();
+        $("#SSES_DT_INICIO_VIDEO-label").hide();
+        $("#SSES_DT_INICIO_VIDEO-element").hide();
+            
+            
+        $('#SSER_ID_SERVICO').change(
+        function(){
+            var unidade = $(this).attr('value').split('|')[1];
+            if(unidade == 'S'){
+                $("#SSOL_NR_TOMBO-label").show();
+                $("#SSOL_NR_TOMBO-element").show();
+                $("#DE_MAT-label").show();
+                $("#DE_MAT-element").show();
+            }else{
+                $("#SSOL_NR_TOMBO-label").hide();
+                $("#SSOL_NR_TOMBO-element").hide();
+                $("#DE_MAT-label").hide();
+                $("#DE_MAT-element").hide();
+            }
+            var videoconferencia = $(this).attr('value').split('|')[2];
+            if(videoconferencia == 'S'){
+                $("#SSES_DT_INICIO_VIDEO-label").show();
+                $("#SSES_DT_INICIO_VIDEO-element").show();
+            }else{
+                $("#SSES_DT_INICIO_VIDEO-label").hide();
+                $("#SSES_DT_INICIO_VIDEO-element").hide();
+            }
+        });
+        var videoconferencia = $('#SSER_ID_SERVICO').attr('value').split('|')[2];
+        if(videoconferencia == 'S'){
+            $("#SSES_DT_INICIO_VIDEO-label").show();
+            $("#SSES_DT_INICIO_VIDEO-element").show();
+        }else{
+            $("#SSES_DT_INICIO_VIDEO-label").hide();
+            $("#SSES_DT_INICIO_VIDEO-element").hide();
+        }
+        
+        var unidade = $('#SSER_ID_SERVICO').attr('value').split('|')[1];
+        if(unidade == 'S'){
+            $("#SSOL_NR_TOMBO-label").show();
+            $("#SSOL_NR_TOMBO-element").show();
+            $("#DE_MAT-label").show();
+            $("#DE_MAT-element").show();
+        }else{
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+        }
+        
+        $('#SSOL_NR_TOMBO').focusout(
+        function(){
+            $.ajax({
+                //url: "sosti/solicitacao/ajaxdesctombo/id/"+this.value,
+                url: "ajaxdesctombo/id/"+this.value,
+                beforeSend:function() {
+                    $("#DE_MAT").removeClass('erroInputTextArea');
+                    $("#DE_MAT").val('');
+                    $("#DE_MAT").removeClass('x-form-field');
+                    $("#DE_MAT").addClass('carregandoTextArea');
+                },
+                success: function(data) {
+                    $("#DE_MAT").val(data);
+                    $("#DE_MAT").removeClass('carregandoInputTextArea');
+                    $("#DE_MAT").addClass('x-form-field');
+                    $("#DE_MAT").focus();
+                },
+                error: function(){
+                    $("#DE_MAT").removeClass('carregandoInputTextArea');
+                    $("#DE_MAT").removeClass('x-form-field');
+                    $("#DE_MAT").val('Erro ao carregar.');
+                    $("#DE_MAT").addClass('erroInputTextArea');
+                }
+            });  
+        }
+    );
+        $(function(){ 
+            $('#ANEXOS').MultiFile({
+                STRING: {
+                    file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+                    remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+                }
+            });
+        });
+        
+<?php $date = explode("/", $this->sysdate); ?>
+                    $(function() {
+                        $('#SSES_DT_INICIO_VIDEO').datetimepicker({
+                            dateFormat: 'dd/mm/yy',
+                            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+                            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+                            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+                            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                                'Outubro','Novembro','Dezembro'],
+                            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+                            nextText: 'Próximo',
+                            prevText: 'Anterior',
+                            changeMonth: true,
+                            numberOfMonths: 1,
+                            changeMonth: true,
+                            changeYear: true,
+                            changeMonth: true,
+                            showSecond: true,
+                            timeFormat: 'hh:mm:ss',
+                            timeOnlyTitle: 'Escolha a data e hora de início da videoconferência',
+                            timeText: 'Tempo',
+                            hourText: 'Hora',
+                            minuteText: 'Minutos',
+                            secondText: 'Segundos',
+                            currentText: 'Agora',
+                            closeText: 'OK',
+                            minDate: new Date(<?php echo $date[2]; ?>, <?php echo $date[1]; ?> - 1, <?php echo $date[0]; ?>),
+                            hour: 16,
+                            onClose: function(dateText, inst) {
+                            }
+                        });
+                    });
+                });
+</script>
+<?php
+if ($this->exitesolicitacoesparaAvaliar > 0) {
+    ?><br>
+    <div id="solicitacoesavaliar" class="info">Existem solicitações para avaliar (conforme portaria PRESI-SECIN 445 DE 3 DE NOVEMBRO DE 2011, artigo 3º e parágrafo único) <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/avaliacao">Clique aqui para avaliar.</a></div>
+<?php } else { ?>
+    <?php
+    if ($this->exitesolicitacoesparaAvaliar > 0) {
+        ?><br>
+        <div id="solicitacoesavaliar" class="info">Existem solicitações para avaliar (conforme portaria PRESI-SECIN 445 DE 3 DE NOVEMBRO DE 2011, artigo 3º e parágrafo único) <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/avaliacao">Clique aqui para avaliar.</a></div>
+    <?php } else { ?>
+
+        <?php
+        echo $this->form;
+    }
+    ?>
+    <span class="msg_alerta"> </span>
+    <?php echo $this->form->getElement('OBRIGATORIO'); ?>
+<?php } ?>

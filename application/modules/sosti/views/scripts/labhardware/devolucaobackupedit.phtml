@@ -1,0 +1,72 @@
+<script type="text/javascript" src="<?Php echo $this->baseUrl('/js/jquery.maskedinput-1.3.js') ?>"></script>
+<script type="text/javascript">
+    $(function() {
+        var dates = $( "#LSBK_DT_RECEBIMENTO_DEVOLUCAO" ).datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                'Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            changeMonth: true,
+            numberOfMonths: 1,
+            changeMonth: true,
+            changeYear: true,
+            changeMonth: true,
+            onSelect: function( selectedDate ) {
+                var option = this.id == "DATA_INICIAL" ? "minDate" : "maxDate",
+                instance = $( this ).data( "datepicker" );
+                date = $.datepicker.parseDate(
+                instance.settings.dateFormat ||
+                    $.datepicker._defaults.dateFormat,
+                selectedDate, instance.settings );
+                dates.not( this ).datepicker( "option", option, date );
+            }
+        });
+    
+        var dates_cadastro = $( "#DATA_INICIAL_CADASTRO, #DATA_FINAL_CADASTRO" ).datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                'Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            changeMonth: true,
+            numberOfMonths: 1,
+            changeMonth: true,
+            changeYear: true,
+            changeMonth: true,
+            onSelect: function( selectedDate ) {
+                var option = this.id == "DATA_INICIAL_CADASTRO" ? "minDate" : "maxDate",
+                instance = $( this ).data( "datepicker" );
+                date = $.datepicker.parseDate(
+                instance.settings.dateFormat ||
+                    $.datepicker._defaults.dateFormat,
+                selectedDate, instance.settings );
+                dates_cadastro.not( this ).datepicker( "option", option, date );
+            }
+        });
+        
+        /*
+         * Mascara para os campos de data
+         */
+        $( "#LSBK_DT_RECEBIMENTO_DEVOLUCAO").mask("99/99/9999");
+    });
+
+</script>
+<fieldset><legend>Tombo Detalhes</legend>
+    <strong>Solicitação Nr:</strong> <?php echo $this->DocmNrDocumento; ?><br/>
+    <strong>Número tombo:</strong> <?php echo $this->TomboNr; ?><br/>
+    <strong>Tipo Tombo:</strong><?php echo $this->TipoTombo; ?><br/>
+    <strong>Matrícula do Empréstimo:</strong> <?php echo $this->MatriculaEmprestimo; ?><br/>
+    <strong>Data do Empréstimo:</strong> <?php echo $this->DataEmprestimo; ?><br/>
+</fieldset>
+<?php
+echo $this->form;
+?>

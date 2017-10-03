@@ -1,0 +1,243 @@
+<script>
+    $(document).ready(function(){
+        
+        /*
+         *Ao inserir um valor no campo de quantidade, verificar se o valor é maior
+         *do que o solicitado
+         */
+        $('body').delegate('.campoQtdInsert','blur', function(){
+        
+            //captura o id da linha
+            var id = $(this).attr('id').split('-')[1];
+            //captura o valor disponivel para este id
+            var dispo = parseInt($('#disponivel-hardware-'+id).html(),10);
+            //captura o valor digitado
+            var solic = parseInt($('#solicitado-hardware-'+id).html(),10);
+        
+            var aprovado = $(this).val();
+            //valida o valor
+            var x = parseInt(aprovado);
+        
+            if(x > 0){
+                $('#'+$(this).attr('id')).val(x);
+                //fazer calculo basico de quantidade
+                if(x > solic){
+                    alert('Valor aprovado é maior que o solicitado!');
+                    $('#'+$(this).attr('id')).val(solic);
+                    return false;
+                }
+            }else{
+                alert('O valor informado não é válido!');
+                $('#'+$(this).attr('id')).val(solic);
+                return false;
+            }
+        });
+        
+        /**
+         * Ao submeter o formulario, enviar os Servicos, Softwares e Hardwares 
+         * Selecionados
+         */
+        $('#Salvar').click(function(){
+            if($('.campoQtdInsert').val() == ""){
+                alert('Campo Quantidade vazio! Digite um valor e salve novamente.');
+                return false;
+            }else{        
+                $('#form-checklist').submit();
+            }
+            
+        });
+        
+        
+    });
+
+</script>
+<style>
+
+    .titulo-checklist{
+        margin-top: 5px;
+        font-weight: bold;
+    }
+
+    .detalhe-checklist table{
+        margin: 10px 0 10px 0;
+    }
+
+    .info-checklist ul{
+        padding: 0;
+    }
+
+    .info-checklist ul li{
+        list-style: none;
+        width: 100%;
+    }
+
+    .servicos-extra{
+        margin-top: 10px;
+    }
+
+    .servicos-extra span{
+        display: inline-block;
+        padding: 3px;
+        background-color: #dfeefb;
+        border: 1px solid #769dc0;
+    }
+
+</style>
+<form name="formAprovacaoChecklist" action="<?php echo $this->baseurl() .'/sosti/labhardware/salvaraprovacaochecklist'?>" method="post">
+    <table class="grid tb-checklist">
+        <thead>
+            <tr>
+                <th colspan="3">Serviços Selecionados</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $dadosChecklistGeral = $this->dadosChecklistGeral;
+            foreach ($dadosChecklistGeral['servicos'] as $s) {
+                ?>
+                <tr>
+                    <td>
+                        <?php echo $s['TPSE_DS_TP_SERVICO'] ?>
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <table class="grid tb-checklist">
+        <thead>
+            <tr>
+                <th>Softwares Selecionados</th>
+                <th width="100px">Disponível</th>
+                <th width="80px">*Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($dadosChecklistGeral['softwares'] as $s) {
+                ?>
+                <tr>
+                    <td>
+                        <?php echo $s['LSFW_DS_SOFTWARE'] ?>
+                        <input type="hidden" name="softwares[]" value="<?php echo $s['LSFW_ID_SOFTWARE'] ?>" />
+                    </td>
+                    <td>
+                        <?php echo $s['QTD_DISPONIVEL'] ?>
+                    </td>
+                    <td>
+                        <input class="campo_radio" type="radio" 
+                               name="s_ic_aprovacao-<?php echo $s['LSFW_ID_SOFTWARE'] ?>" 
+                               value="A" <?php if($s['LSSA_IC_APROVACAO'] == 'A'){ echo "checked='checked'";}?> /> A
+                        <input class="campo_radio" type="radio" 
+                               name="s_ic_aprovacao-<?php echo $s['LSFW_ID_SOFTWARE'] ?>" 
+                               value="R" <?php if($s['LSSA_IC_APROVACAO'] == 'R'){ echo "checked='checked'";}?>/> R
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">*A - Aprovar R - Reprovar</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <table class="grid tb-checklist">
+        <thead>
+            <tr>
+                <th>Hardwares Selecionados</th>
+                <th width="50px">Disponível</th>
+                <th width="50px">Solicitado</th>
+                <th width="50px">*Aprovado</th>
+                <th width="80px">*Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($dadosChecklistGeral['hardwares'] as $h) {
+                ?>
+                <tr>
+                    <td>
+                        <?php echo $h['LHDW_DS_HARDWARE'] ?>
+                        <input type="hidden" name="hardwares[]" value="<?php echo $h['LHDW_ID_HARDWARE'] ?>" />
+                    </td>
+                    <td>
+                        <span id="disponivel-hardware-<?php echo $h['LHDW_ID_HARDWARE'] ?>"><?php echo $h['QTD_DISPONIVEL'] ?></span>
+                    </td>
+                    <td>
+                        <span id="solicitado-hardware-<?php echo $h['LHDW_ID_HARDWARE'] ?>"><?php echo $h['MTSA_QT_SOLIC_SAIDA_MATERIAL'] ?></span>
+                    </td>
+                    <td>
+                        <input type="text" class="campoQtdInsert" id="campoQtdInsert-<?php echo $h['LHDW_ID_HARDWARE'] ?>" name="qtd_aprovado-<?php echo $h['LHDW_ID_HARDWARE'] ?>" value="<?php echo $h['MTSA_QT_SOLIC_SAIDA_MATERIAL'] ?>" size="3" />
+                    </td>
+                    <td>
+                        <input class="campo_radio" type="radio" 
+                               name="h_ic_aprovacao-<?php echo $h['LHDW_ID_HARDWARE'] ?>" 
+                               value="A" <?php if($h['MTSA_IC_APROVACAO'] == 'A'){ echo "checked='checked'";}?>> A
+                        <input class="campo_radio" type="radio" 
+                               name="h_ic_aprovacao-<?php echo $h['LHDW_ID_HARDWARE'] ?>" 
+                               value="R" <?php if($h['MTSA_IC_APROVACAO'] == 'R'){ echo "checked='checked'";}?>> R
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">*A - Aprovar R - Reprovar</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="info-checklist">
+        <ul>
+            <li>
+                <b>Serviço Executado:</b>
+                <?php echo $dadosChecklistGeral['checklist']['LFSE_DS_SERVICO_EXECUTADO'] ?>
+            </li>
+            <li>
+                <b>Tipo de Usuário:</b>
+                <?php echo $dadosChecklistGeral['checklist']['LTPU_DS_TP_USUARIO'] ?>
+            </li>
+            <li>
+                <b>Tombo:</b>
+                <?php echo $dadosChecklistGeral['checklist']['LFSE_NR_TOMBO'] ?>
+            </li>
+            <li>
+                <b>Tipo de Tombo:</b>
+                T
+            </li>
+            <li>
+                <b>Tombo do backup:</b>
+                <?php echo $dadosChecklistGeral['checklist']['LSBK_NR_TOMBO'] ?>
+            </li>
+            <li>
+                <b>Nome na Rede:</b>
+                <?php echo $dadosChecklistGeral['checklist']['LFSE_NO_COMPUTADOR'] ?>
+            </li>
+            <li>
+                <b>Motivo da Manutenção:</b>
+                <?php echo $dadosChecklistGeral['checklist']['LFSE_DS_MOTIVO_MANUTENCAO'] ?>
+            </li>
+            <li class="servicos-extra">
+                <?php
+                foreach ($dadosChecklistGeral['opcoes'] as $opc) {
+                    if (!is_null($opc)) {
+                        ?>
+                        <span><?php echo $opc ?></span>
+                        <?php
+                    }
+                }
+                ?>
+            </li>
+        </ul>
+    </div>
+    
+    <input type="hidden" name="DOC_ID" value="<?php echo $dadosChecklistGeral['checklist']['LFSE_ID_DOCUMENTO']?>">    
+    <input type="submit" name="Salvar" value="Salvar Alterações" class="ui-button"/>
+</form>

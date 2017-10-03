@@ -1,0 +1,8 @@
+<script src="<?php echo $this->baseUrl() . '/js/tarefa/visualizar.js' ?>"></script>
+<fieldset name="visualizar">
+    <legend>Visualizar Tarefa</legend>
+    <?php if ($this->date): ?>
+        <p><strong>Data: </strong><?php echo $this->date; ?></p>
+    <?php endif; ?>
+    <?php echo $this->form; ?>
+</fieldset>

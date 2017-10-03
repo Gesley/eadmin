@@ -1,0 +1,99 @@
+<script type="text/javascript">
+    $(function() {
+        $( ".editar" ).button({
+            icons: {
+                primary: "ui-icon-pencil"
+            }
+        }).attr('style','width: 40px; height: 16px;');
+        
+        $("#dialog-ajuda_detalhe").dialog({
+            title    : 'Detalhe',
+            autoOpen : false,
+            modal    : false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580,140,0,0],
+            buttons : {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        
+        var grid_tbody_tr = $("table > tbody > tr");
+        var div_dialog_by_id =  $("#dialog-ajuda_detalhe");
+        
+        grid_tbody_tr.dblclick(function(){
+            var $this =  $(this).find('a').attr('href');
+            $this = $this.split("id/");
+            $this = $this[1];
+            var url = base_url+'/guardiao/ajuda/detalhe/acao/'+$this;
+       //    div_dialog_by_id.dialog("open");
+            
+            $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'GET',
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    if(! div_dialog_by_id.dialog( "isOpen" )){
+                        div_dialog_by_id.dialog("open");
+                    }
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+			});
+            
+            
+            
+        });
+        
+        
+        
+        
+        
+    });
+</script> 
+
+<?php  if (count($this->data)): ?>
+<table class="grid">
+    <thead>
+        <tr>
+            <th>ALTERAR</th>
+            <th>AÇÃO</th>
+            <th>CONTROLE</th>
+            <th>MODULO</th>
+            <th>SISTEMA</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+        <tr>
+            <td><a href="<?php echo $this->baseUrl(); ?>/guardiao/ajuda/edit/id/<?php echo $data['ACAO_ID_ACAO_SISTEMA'];?>"><span class="editar"></span></a></td>
+            <td><?php  echo $this->escape($data['ACAO_NM_ACAO_SISTEMA']) ?></td>
+            <td><?php echo $this->escape($data['CTRL_NM_CONTROLE_SISTEMA']) ?></td>
+            <td><?php echo $this->escape($data['MODL_NM_MODULO']) ?></td>
+            <td><?php echo $this->escape($data['MODL_NM_SISTEMA']) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<br />
+<?php echo $this->paginationControl($this->data, null, null, array('filtro'=>$this->filtro,'ordem'=> $this->ordem))?>
+<?php else:?>
+  <p>Não existem registros</p>
+<?php endif;?>
+<div id="dialog-ajuda_detalhe"></div>
+
+    

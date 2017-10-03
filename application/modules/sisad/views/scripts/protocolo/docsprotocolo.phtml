@@ -1,0 +1,307 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>A <b>Ordenação</b> é uma funcionalidade que está presente em todas as telas dos sistemas do projeto e-Admin.</p>
+    <p>O sistema permite ordenar os dados pelos campos do menu conforme a descrição:</p>
+    <ul>
+        <li><b>Tipo</b> - Mostra o tipo do documento conforme consta na tabela.</li>
+        <li><b>Número</b> - Numeração única de documentos na Primeira Região.</li>
+        <li><b>Data</b> - Data de criação ou tramitação do documento.</li>
+        <li><b>Origem</b> - É a unidade de criação ou de origem do documento encaminhado.</li>
+        <li><b>Encaminhador</b> - É o nome do responsável pelo encaminhamento do documento.</li>
+        <li><b>Tempo</b> - Mostra o tempo em que o documento foi criado ou tempo de tramitação.</li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<script type="text/javascript">
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+        
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        
+                             
+        $(".nav_check_boxes").keypress(
+            function(e) {
+                
+                code = e.keyCode ? e.keyCode : e.which;
+                
+                var KEY_CODE_h = 104;
+                var KEY_CODE_ESC = 27;
+                var KEY_CODE_UP = 38;
+                var KEY_CODE_w = 115;
+                var KEY_CODE_DOWN = 40;
+                var KEY_CODE_s = 119;
+                
+                
+                if(code.toString() == KEY_CODE_h) {
+                    $("#dialog-documentos_detalhe").dialog("open");
+                    $(this).focus();
+                }
+                if(code.toString() == KEY_CODE_ESC) {
+                    $("#dialog-documentos_detalhe").dialog("close");
+                    $(this).focus();
+                }
+                
+                var current_checkbox_index;
+                var this_navigation = this;
+                var first_checkbox_index = 0;
+                var last_checkbox_index;
+                
+                $(".nav_check_boxes").each(
+                    function(index){
+                        last_checkbox_index =  index;
+                        if(this_navigation == this){
+                            current_checkbox_index = index;
+                        }
+                    }
+                );
+                
+                if(code.toString() == KEY_CODE_DOWN ||  code.toString() == KEY_CODE_s) {
+                    
+                    var next_checkbox_index;
+                    var checkbox_achado = false;
+                    $(".nav_check_boxes").each(
+                        function(index){
+                            if(checkbox_achado == true){
+                                next_checkbox_index = index;
+                                checkbox_achado = false;
+                            }
+                            if( index == current_checkbox_index){
+                                checkbox_achado = true;
+                                if(index == last_checkbox_index){
+                                    next_checkbox_index = last_checkbox_index;
+                                }
+                            }
+                        
+                        }
+                    );
+                    $(".nav_check_boxes").each(
+                        function(index){
+                            if( index == next_checkbox_index){
+                                $("tr[name=rowList]").each(
+                                    function(index){
+                                        if( index == next_checkbox_index ){
+                                            $("tr[name=rowList]").removeClass('hover_nav');
+                                            $(this).addClass('hover_nav');
+                                        }
+                                    }
+                                );
+                                $(this).focus();
+                            }
+                        }
+                    );
+                }
+                
+                if( code.toString() == KEY_CODE_UP || code.toString() == KEY_CODE_w ) {
+                    
+                    var previews_checkbox_index;
+                    var checkbox_achado = false;
+                    $(".nav_check_boxes").each(
+                        function(index){
+                            if( index == current_checkbox_index){
+                                checkbox_achado = true;
+                                if(index == first_checkbox_index){
+                                    previews_checkbox_index = first_checkbox_index;
+                                }
+                            }
+                            if(checkbox_achado == false){
+                                previews_checkbox_index = index;
+                            }
+                        }
+                    );
+                    $(".nav_check_boxes").each(
+                        function(index){
+                            if( index == previews_checkbox_index){
+                                $("tr[name=rowList]").each(
+                                    function(index){
+                                        if( index == previews_checkbox_index ){
+                                            $("tr[name=rowList]").removeClass('hover_nav');
+                                            $(this).addClass('hover_nav');
+                                        }
+                                    }
+                                );
+                                $(this).focus();
+                            }
+                        }
+                    );
+                }
+        });
+            
+    $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_unid_ranscunho = $('form[name=cx_unid_entrada]');
+            if(acao == 'Encaminhar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/encaminhar');
+            }else if(acao == 'Parecer'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/parecer');
+            }else if(acao == 'Endereçar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/enderecar');
+            }else if(acao == 'Protocolar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/protocolar');
+            }else if(acao == 'Arquivar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivar');
+            }else if(acao == 'Pesquisa'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/pesquisa');
+            }
+        }
+    );
+    $('form[name=cx_unid_entrada]').submit(
+       function(){
+            var formulario_valido = true;
+            var documentoSelecionado = $(".nav_check_boxes:checked").val();
+            if (documentoSelecionado == undefined){                   
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('pulsate');
+                flashMessages_by_id.delay(2000).hide('puff');
+                return false;
+            }
+            grid_tbody_tr.each(
+                function(){
+                    var this_tr = $(this);
+                    var input_check_box = this_tr.find('input');
+                    var is_checked_input = input_check_box.attr('checked');
+                    if(is_checked_input != undefined){
+                        var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                        if(span_id_leitura.hasClass('naolido')){
+                            var mensagem = "<div class='notice'><strong>Alerta:</strong> Não é possível realizar ações sobre documentos <strong>não</strong> recebidos.</div>";
+                            flashMessages_by_id.hide();
+                            flashMessages_by_id.html(mensagem);
+                            flashMessages_by_id.show('pulsate');
+                            flashMessages_by_id.delay(6000).hide('puff');
+                            formulario_valido = false;
+                        }
+                    }
+                }
+            );
+            if(!formulario_valido){
+                return false;
+            }
+       }
+    );
+    
+    });
+</script>
+
+
+<?php if (count($this->data)): ?>
+<form method="POST" action="" name="cx_unid_entrada">
+    <div class="painel">
+        <input type="submit" title="Encaminha Documento/Processo"                       name="acao" value="Encaminhar" />
+        <input type="submit" title="Dar um parecer no Documento/Processo"               name="acao" value="Parecer"/>
+        <input type="submit" title="Endereçar Documento/Processo Para Postagem"         name="acao" value="Endereçar" />
+        <input type="submit" title="Enviar Documento/Processo Fisico Para o Protocolo"  name="acao" value="Protocolar"/>
+        <input type="submit" title="Arquivar um Documento/Processo" disabled="disabled" name="acao" value="Arquivar"/>
+        <input type="submit" title="Pesquisa Documento/Processo"    disabled="disabled" name="acao" value="Pesquisa"/>
+    </div>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" name="input_check_all_grid" id="check_all" /> 
+                </th>
+                <th></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/DTPD_NO_TIPO/direcao/<?php echo $this->direcao ?> ">Tipo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">Número<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Data<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/LOTA_SIGLA_LOTACAO/direcao/<?php echo $this->direcao ?> ">Origem<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/ENCAMINHADOR/direcao/<?php echo $this->direcao ?> ">Encaminhador<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Tempo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+<!--                <th ><a  href="<?php //echo $this->baseUrl(); ?>/sisad/caixaunidade/novos/ordem/DOCM_NR_DOCUMENTO_RED/direcao/<?php //echo $this->direcao ?> ">visualizar</a></th>-->
+            </tr>
+        </thead>
+                <tbody>
+                <?php
+                foreach ($this->data as $data):
+                    ?>
+                    <tr title="Duplo click para Abrir" class="grid_rows <?php echo $this->escape($data["CLASS_LIDO_TR"]); ?>" name="rowList" value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" > 
+                        <td>
+                            <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                        </td>
+                        <td>
+                            <span id="leitura" class="<?php echo $this->escape($data["CLASS_LIDO"]); ?>" title="<?php echo $this->escape($data["MSG_LIDO"]); ?>"></span>
+                            <?php 
+                                if($data["PARA_POSTAGEM"]){
+                            ?>
+                            <span id="leitura" class="<?php echo $this->escape($data["PARA_POSTAGEM"]); ?>" title="<?php echo $this->escape($data["MSG_POSTAGEM"]); ?>"></span>
+                            <?php } ?>
+                        </td>
+                        <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                        <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+                        <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO"]) ?></td>
+                        <td> <?php echo $this->escape($data["LOTA_SIGLA_LOTACAO"]) ?></td>
+                        <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                        <td> <?php echo $this->escape($data["TEMPO_TRANSCORRIDO"]) ?></td>
+<!--                        <td><a class="<?php //echo $this->escape($data["CLASS_ARQUIVO"]); ?>" target="_blank" title="<?php //echo $this->escape($data["MSG_ARQUIVO"]); ?>" href="<?php //echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/<?php //echo $this->escape($data["DOCM_NR_DOCUMENTO_RED"]) ?> "></a></td>-->
+                    </tr>
+    <?php endforeach; ?>
+            </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)?></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>        
+</form>
+
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

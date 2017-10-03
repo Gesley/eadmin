@@ -1,0 +1,14 @@
+<?php
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+
+echo $this->formulario;
+?>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        $("#CTRD_VL_DESPESA").focus();
+        $("#CTRD_NR_CONTRATO").focus();
+    });
+</script>

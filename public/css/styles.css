@@ -1,0 +1,42 @@
+
+.dojoxGrid table {
+	margin: 0;
+}
+
+html,body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#masterLayout {
+	width: 100%;
+	height: 100%
+}
+
+div#containerLayout {
+	margin: 0;
+	padding: 0;
+}
+
+.dojoxGridHiddenFocus {
+	position: absolute;
+	display: none;
+}
+
+.dijitToasterContainer {
+	font-size: 12px;
+}
+
+#navPane_splitter,#menuPane_splitter,#statusPane_splitter {
+	background: #ccc
+}
+#containerLayout{
+    witdh: 100%;
+    height: 90%;
+}
+
+form dd {
+    margin:0 0 10px 0;      
+}

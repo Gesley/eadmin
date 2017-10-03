@@ -1,0 +1,63 @@
+<?php
+// chama os partials da tela
+echo $this->partial ( '_partials/tela_detalhe_crud.phtml', array (
+    'msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo,
+    'dados' => $this->dados )
+);
+
+echo '<br />';
+?>
+
+<div id="incluir" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+
+    <div id="algumacoisa">
+        <div id="dialog_cadastra_parte">
+            <table id="selecionados_partes" class="grid tabela ui-widget ui-widget-content">
+                <thead> 
+                    <tr class="">
+                        <th colspan="4"> Regras Adicionadas </th>
+                    </tr>
+                    <tr>
+                        <td width="33%">PTRES</td>
+                        <td width="33%">Natureza</td>
+                        <td width="34%">Caráter</td>
+                    </tr>
+                </thead>
+
+                <tr id="acompanhantes">
+                    <?php if( $this->regras ): ?>
+                        <?php foreach ( $this->regras as $key => $value ): ?>
+                        <tr class='linha_interessado'>
+                            <td><?= $value->ELRG_CD_PT_RESUMIDO ?></td>
+                            <td><?= $value->ELRG_CD_ELEMENTO_DESPESA_SUB ?></td>
+                            <td><?= $this->formulario->DESP_CD_TIPO_DESPESA->options[ $value->ELRG_CD_TIPO_DESPESA ] ?></td>
+                        <input type='hidden' name='registro[]' value='<?= $value->ELRG_CD_PT_RESUMIDO ?> <?= $value->ELRG_CD_ELEMENTO_DESPESA_SUB ?> <?= $value->ELRG_CD_TIPO_DESPESA ?>'/>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<br />
+<?php
+
+echo $this->partial (
+    '_partials/botao.phtml', array ( 'nomeController' => 'regra',
+    'nomeAction' => Trf1_Orcamento_Definicoes::ACTION_INDEX,
+    'nomeClasse' => Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+    'textoBotao' => 'Voltar para listagem',
+    'textoAlternativo' => 'Retornar à tela de Listagem de Regras' ) );
+
+echo $this->partial (
+    '_partials/botao.phtml', array ( 'nomeController' => 'regra',
+    'nomeAction' => 'aplicar',
+    'parametros' => array ( 'cod' => $this->codigo ),
+    'nomeClasse' => Trf1_Orcamento_Definicoes::CLASSE_DETALHAR,
+    'textoBotao' => 'Aplicar regra',
+    'textoAlternativo' => 'Aplicar regra de reajuste nas depesas aderentes' ) );

@@ -1,0 +1,69 @@
+<br />
+<h3> Objetivo </h3>
+<p>O projeto e-Orçamento, sistema integrante do e-Admin, é a versão web do anterior CEO - Controle da Execução Orçamentária. O mesmo visa a gestão dos recursos orçamentários do Tribunal Regional Federal - Primeira Região e de todas suas Seccionais.</p>
+
+<h3>Responsáveis pelo projeto</h3>
+
+<div id='gridLinhas'>
+<table class="grid" cellspacing="0" cellpadding="0" width="50%">
+	<thead>
+		<tr>
+			<th width="30%">Nome</th>
+			<th width="40%">Função</th>
+			<th width="30%">Contato</th>
+		</tr>
+	</thead>
+	<tbody>
+        <?php
+        $equipe = $this->equipe;
+        
+        foreach ( $equipe as $pessoa ) {
+            $nome = $pessoa [ 'nome' ];
+            $funcao = $pessoa [ 'funcao' ];
+            $contato = $pessoa [ 'contato' ];
+            
+            echo "<tr>" . PHP_EOL;
+            echo "<td> $nome </td>" . PHP_EOL;
+            echo "<td> $funcao </td>" . PHP_EOL;
+            echo "<td> <a href='mailto:$contato?subject=e-Orçamento do TRF1'>$contato</a> </td>" . PHP_EOL;
+            echo "</tr>" . PHP_EOL;
+        }
+        ?>
+	</tbody>
+</table>
+</div>
+<p>
+
+<h3> Informações do ambiente / servidor web </h3>
+<p>Em página isolada podem ser observadas diversas informações sobre o ambiente, servidor web, variáveis e demais informações úteis para as equipes de desenvolvimento e infraestrutura.</p>
+
+<?php
+$url [ 'module' ] = Trf1_Orcamento_Definicoes::NOME_MODULO;
+$url [ 'controller' ] = 'projeto';
+$url [ 'action' ] = 'info';
+
+$link = $this->url ( $url, 0, true);
+?>
+
+<p> <a href="<?php echo $link; ?>" class="ceo_detalhar" target="_blank"> Verique as informações do sistema </a> </p>
+
+<h3> Versão atual </h3>
+<p>O sistema está em sua versão <strong><?php echo $this->versao; ?></strong> liberada em <strong><?php echo $this->dataLiberacao; ?></strong>.</p>
+
+<h3> Padrões visuais </h3>
+<p>
+<a href="#" class="ceo_novo"> Novo </a><br />
+<a href="#" class="ceo_detalhar"> Visualizar </a><br />
+<a href="#" class="ceo_editar"> Editar </a><br />
+<a href="#" class="ceo_excluir"> Excluir </a><br />
+<a href="#" class="ceo_salvar"> Salvar </a><br />
+<a href="#" class="ceo_importar"> Importar </a><br />
+<a href="#" class="ceo_confirmar"> Confirmar </a><br />
+<a href="#" class="ceo_negar"> Negar </a><br />
+<a href="#" class="ceo_consultar"> Consultar </a><br />
+<a href="#" class="ceo_pesquisar"> Pesquisar </a> ou <a href="#" class="pesquisar"> Pesquisar </a><br />
+<a href="#" class="ceo_cancelar"> Cancelar </a> ou <a href="#" class="cancelar"> Cancelar </a><br />
+<a href="#" class="ceo_voltar"> Voltar </a><br />
+<a href="#" class="ceo_relatorio"> Relatório </a><br />
+<a href="#" class="ceo_janela"> Janela </a><br />
+</p>

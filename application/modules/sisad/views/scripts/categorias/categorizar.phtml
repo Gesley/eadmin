@@ -1,0 +1,272 @@
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p><b>Categorias</b> - é uma funcionalidade que serve para diversificar um documento/processo de outro.</p> 
+    <ul>
+        <li>Para visualizar o tutorial de categorização <a href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/144451/dcmto/47334000100226" target="_blank">Clique Aqui.</a></li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<?php
+$this->headLink()
+        ->prependStylesheet($this->baseUrl() . '/js/farbtastic/farbtastic.css', 'screen, projection');
+$this->HeadScript()
+        ->appendFile($this->baseUrl() . '/js/farbtastic/farbtastic.js');
+
+echo $this->headLink();
+echo $this->headScript();
+?>
+<script type="text/javascript">
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+        
+        grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                    div_dialog_by_id.html('');
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                    var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                    span_id_leitura.removeClass('naolido');
+                    span_id_leitura.addClass('lido');
+                    span_id_leitura.attr('title','Documento lido');
+                    $(this_tr).removeClass('naolidoTr');
+                    $(this_tr).addClass('lidoTr');
+                    
+                    //console.log(value_input_check_box);
+                    
+                    datainput = jQuery.parseJSON(value_input_check_box);
+                    
+                    datainput.CLASS_LIDO = 'lido';
+                    datainput.CLASS_LIDO_TR = 'lidoTr';
+                    datainput.MSG_LIDO = 'Documento lido';
+                    
+                    datainput_atualizado = JSON.stringify(datainput, null, null);
+                    input_check_box.val(datainput_atualizado)
+                    
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        );
+        
+    $(".historico").hide('');
+    $("#des").hide();
+    $("#nova").hide();
+       
+    $("input[name=categorizar]:radio").click(function() { // attack a click event on all radio buttons with name 'radiogroup'
+        if($(this).val() == 'C') {//check which radio button is clicked 
+            $("#cat").show();
+            $("#des").hide();
+            $("#nova").hide();
+        } else if($(this).val() == 'D') {
+            $("#cat").hide();
+            $("#des").show();
+            $("#nova").hide();
+        } else if($(this).val() == 'N') {
+            $("#cat").hide();
+            $("#des").hide();
+            $("#nova").show();
+        } else  {
+            return false;
+        }
+    });
+    $(document).ready(function() {
+        $('#colorpicker').farbtastic('#color').removeClass('x-form-text').css('background-image','none');
+    });
+});
+</script> 
+<div class="painel" >
+    <a title="Minhas Categorias" name="acao" value="Minhas Categorias" id="Minhas_Categorias" href="<?php echo $this->baseUrl(); ?>/sisad/categorias/index" >Minhas Categorias</a>
+</div>
+<form method="POST" action="categorizar">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Selecionar</th>
+                <th >Tipo</th>
+                <th >Numero</th>
+                <th >Data</th>
+                <th >Origem</th>
+                <th >Encaminhador</th>
+                <th >Categorias</th>
+            </tr>
+        </thead>
+        <tbody id="documentosList">
+            <?php
+            $cateNs = new Zend_Session_Namespace('cateNs');
+            $userNs = new Zend_Session_Namespace('userNs');
+            $cado_categoria = new Application_Model_DbTable_SadTbCadoCategoriaDoc();
+            $cateCategoria = new Application_Model_DbTable_SadTbCateCategoria();
+            $cont = 0;
+            foreach ($this->data['documento'] as $data):
+                $dadosDocumentos = Zend_Json::decode($data);
+                $idDocumento = $dadosDocumentos["DOCM_ID_DOCUMENTO"];
+                if ($cont == 0) {
+                    $ids = $idDocumento;
+                } else {
+                    $ids = $ids . ',' . $idDocumento;
+                }
+                $cont++;
+                if($cateNs->tipo == 'unidade'){
+                    $categoriaDoc = $cado_categoria->getCategoriaDocs($idDocumento, null, $cateNs->sgSecao, $cateNs->cdLotacao);
+                }else if($cateNs->tipo == 'pessoal'){
+                    $categoriaDoc = $cado_categoria->getCategoriaDocs($idDocumento, $userNs->matricula);
+                }
+                ?>
+                <tr>
+                    <?php
+                    
+                    ?>  
+                    <td >
+                        <input id="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" checked="checked" value="<?php echo $this->escape($data); ?>"/>
+                    </td>
+                    <td> <?php echo $this->escape($dadosDocumentos["DTPD_NO_TIPO"]) ?></td>
+                    <td> <?php echo $this->escape($dadosDocumentos["DOCM_ID_DOCUMENTO"]) ?></td>
+                    <td> <?php echo $this->escape($dadosDocumentos["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                    <td> <?php echo $this->escape($dadosDocumentos["LOTA_SIGLA_LOTACAO_ORIGEM"]) ?></td>
+                    <td> <?php echo $this->escape($dadosDocumentos["ENCAMINHADOR"]) ?></td>
+                    <td>
+                        <?php
+                        $cont = 0;
+                        if ($categoriaDoc != null) {
+                            ?>
+                            <table>
+                                <tr>
+                                    <?php
+                                    foreach ($categoriaDoc as $categorias_p) {
+                                        if ($cont % 3 == 0) {
+                                            echo '</tr><tr>';
+                                        }
+                                        ?>
+                                        <td bgcolor="<?php echo $categorias_p['CATE_DS_DESCRICAO_COR'] ?>" title="Nome: <?php echo $categorias_p["CATE_NM_CATEGORIA"] ?> - Descrição: <?php echo $categorias_p["CATE_DS_OBSERVACAO"] ?>" > </td>
+                                        <?php
+                                        $cont++;
+                                    }
+                                    ?>
+                                </tr>
+                            </table>
+                            <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+            <?php
+                endforeach;
+                if($cateNs->tipo == 'unidade'){
+                    $descategorizar = $cado_categoria->getCategoriaDocs($ids,null,$cateNs->sgSecao, $cateNs->cdLotacao);
+                    $categorias = $cado_categoria->getCategoriasUnidadePessoa(null,$cateNs->sgSecao, $cateNs->cdLotacao);
+                }else if($cateNs->tipo == 'pessoal'){
+                    $descategorizar = $cado_categoria->getCategoriaDocs($ids,$userNs->matricula,null,null);
+                    $categorias = $cado_categoria->getCategoriasUnidadePessoa($userNs->matricula,null,null);
+                }
+            ?>
+        </tbody>
+        <tfoot><tr><td colspan="7">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+    </table>
+    <input type="radio" name="categorizar" value="C" checked="checked">Categorizar</input>
+    <input type="radio" name="categorizar" value="D">Descategorizar</input>
+    <input type="radio" name="categorizar" value="N">Nova Categoria</input>
+    </br></br>
+    <div id="cat">
+        <select name="cat">
+            <?php foreach ($categorias as $value) {
+                if($value['CATE_IC_ATIVO'] == 'S'){
+                ?>
+                    <option style="background-color:<?php echo $value["CATE_DS_DESCRICAO_COR"] ?>" value="<?php echo $value["CATE_ID_CATEGORIA"] ?>" title="Nome: <?php echo $value["CATE_NM_CATEGORIA"] ?> - Descrição: <?php echo $value["CATE_DS_OBSERVACAO"] ?>"><?php echo $value["CATE_NM_CATEGORIA"] ?></option>
+            <?php } 
+            }?>
+        </select>
+    </div>
+    <div id="des">
+        <select name="des">
+            <?php foreach ($descategorizar as $descategorizar_p) { ?>
+                    <option style="background-color:<?php echo $descategorizar_p["CATE_DS_DESCRICAO_COR"] ?>" value="<?php echo $descategorizar_p["CATE_ID_CATEGORIA"] ?>" title="Nome: <?php echo $descategorizar_p["CATE_NM_CATEGORIA"] ?> - Descrição: <?php echo $descategorizar_p["CATE_DS_OBSERVACAO"] ?>"><?php echo $descategorizar_p["CATE_NM_CATEGORIA"] ?></option>
+            <?php } ?>
+        </select>
+    </div>
+    <div id="nova">
+        <?php
+        echo $this->form->getElement('CATE_NM_CATEGORIA');
+        echo $this->form->getElement('CATE_DS_OBSERVACAO');
+        echo $this->form->getElement('CATE_ID_INDICADOR');
+        echo $this->form->getElement('CATE_IC_ATIVO');
+        if($cateNs->tipo == 'unidade'){ ?>
+            <input type="hidden" value="<?php echo $cateNs->sgSecao; ?>" name="CATE_SG_SECAO_CATEGORIA" />
+            <input type="hidden" value="<?php echo $cateNs->cdLotacao; ?>" name="CATE_CD_LOTACAO_CATEGORIA" />
+        <?php }else if($cateNs->tipo == 'pessoa'){ ?>
+            <input type="hidden" value="<?php echo $cateNs->cdMatricula; ?>" name="CATE_CD_MATRICULA_CATEGORIA" />
+        <?php } ?>
+        <input type="text" id="color" name="CATE_DS_DESCRICAO_COR" value="#6c6fd0" style="background-image: none"/>
+        <div id="colorpicker"></div>
+        <b>Atenção:</b> A nova categoria será inserida as solicitações selecionadas.
+    </div>
+    </br></br>
+    <input type="submit" value="Salvar" name="Salvar">
+    <div id="dialog-documentos_detalhe">
+        <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+        <div id="dialog-documentos_conteudo"></div>
+    </div>
+</form>

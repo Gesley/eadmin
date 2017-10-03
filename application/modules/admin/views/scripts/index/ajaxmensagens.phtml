@@ -1,0 +1,25 @@
+<script type="text/javascript">
+    $('#minhasSolicitacoes').show();
+</script>
+<?php if ($this->solicitacoesparaavaliar > 0): ?>
+    <div id="alertAvaliacoes" class="info">Existem solicitações para avaliar (<i>conforme portaria PRESI-SECIN 445 DE 3 DE NOVEMBRO DE 2011, artigo 3º e parágrafo único</i>). <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/avaliacao">Clique aqui para avaliar.</a></div>
+<?php endif; ?>
+<?php if ($this->solicitacoescompedidodeinformacao > 0): ?>
+    <div id="alertAvaliacoes" class="info">Existem solicitações com Pedido de Informação para responder. <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/pedidoinformacao">Clique aqui para incluir informação.</a></div>
+<?php endif; ?>
+<?php if ($this->solicitacoesematendimento > 0): ?>
+    <div id="alertAvaliacoes" class="info">Existem solicitações em Atendimento. <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/atendimento">Clique aqui para saber quais.</a></div>
+<?php endif; ?>
+<?php if ($this->solicitacoescompedidodeinformacaorespondido > 0): ?>
+    <div id="alertAvaliacoes" class="info">Existem solicitações com Pedido de Informação Respondido. <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/pedidoinformacaorespondido">Clique aqui para saber quais.</a></div>
+<?php endif; ?>
+<?php if (count($this->caixaextintacomdocumentos) > 0): ?>
+    <div id="alertAvaliacoes" class="info">
+        Existem documentos em unidades que foram extintas. <a href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/442544/dcmto/85461660100267" title="Procedimento para migrar os documentos" target="new">Clique aqui para saber como fazer a migração.</a><br />
+    <?php foreach ($this->caixaextintacomdocumentos as $d): ?>
+        <?php foreach ($d as $y=> $c): ?>
+            A caixa de atendimento <?php echo $y; ?> foi extinta. <a href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/trocarcaixa">Clique aqui para migrar os <?php echo $c; ?> documentos para uma caixa que está ativa.</a> 
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+        </div>
+<?php endif;

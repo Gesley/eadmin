@@ -1,0 +1,24 @@
+<script>
+	$(function() {
+		$( "#DOCM_ID_PCTT" ).combobox();
+		$( "#combobox-input-text-DOCM_ID_PCTT" ).attr('style','width: 500px;');
+		$( "#combobox-input-button-DOCM_ID_PCTT" ).attr('style','display: none;');
+                $( "#PréVisualizar").click(
+                    function(){
+                        $( "#Formulariocircular").attr('action','visualizar');
+                        $( "#Formulariocircular").submit();
+                    }
+                );
+
+                $( "#Salvar").click(
+                    function(){
+                        $( "#Formulariocircular").attr('action','save');
+                        $( "#Formulariocircular").submit();
+                    }
+                );
+
+
+	});
+</script>
+
+<? include('visualizar.phtml'); ?>

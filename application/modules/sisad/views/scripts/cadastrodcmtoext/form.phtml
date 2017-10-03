@@ -1,0 +1,156 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.MetaData.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.MultiFile.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/partesInteressadosDocumentos.js')); 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/partesInteressados.js')); 
+?>
+
+<script type="text/javascript">
+$(function(){
+    $("#DOCM_ID_PESSOA_EXTERNO").autocomplete({
+            //source: "sosti/solicitacao/ajaxnomesolicitante",
+            source: base_url+"/sisad/cadastrodcmtoext/ajaxnomedestinatario",
+            minLength: 3,
+            delay: 300
+    });
+
+    $( "#DOCM_ID_PCTT" ).combobox();
+    $( "#combobox-input-text-DOCM_ID_PCTT" ).attr('style','width: 500px;');
+    $( "#combobox-input-button-DOCM_ID_PCTT" ).attr('style','display: none;');
+    $( "#DOCM_ID_TIPO_DOC" ).combobox();
+    $( "#combobox-input-text-DOCM_ID_TIPO_DOC" ).attr('style','width: 500px;');
+    
+    /**
+     * Para apresentar a Lista completa de ASSUNTOS
+     */
+    var botao_detalhe_pctt = $("<input type='button' name='LST_CPT_PCTT' value='Lista completa de Assuntos' />");
+    botao_detalhe_pctt.css('position','relative');
+    botao_detalhe_pctt.css('display','inline');
+    botao_detalhe_pctt.css('float','right');
+    botao_detalhe_pctt.css('top','-58px');
+    botao_detalhe_pctt.css('left','-70px');
+    botao_detalhe_pctt.button();
+    $( "#DOCM_ID_PCTT-element").append(botao_detalhe_pctt);
+    botao_detalhe_pctt.click(
+        function(){
+            if($('#detalhe_pctt').attr('id') == undefined){
+                var detalhe_pctt = $("<div id='detalhe_pctt'></div>");
+                var select = $( "#DOCM_ID_PCTT" );
+                select.css('display','block');
+                select.css('width','680px');
+                select.css('height','480px');
+                select.attr('size','20');
+                detalhe_pctt.append(select);
+                $('body').append(detalhe_pctt);
+                detalhe_pctt.dialog({
+                            title: 'Lista completa de Assuntos',
+                            modal: true,
+                            width: 700,
+                            height: 600,
+                            buttons: {
+                                    OK: function() {
+                                      $("#DOCM_ID_PCTT").css('display','none');
+                                      selected = $("#DOCM_ID_PCTT").children( ":selected" );
+                                      $( "#combobox-input-text-DOCM_ID_PCTT" ).val(selected.text());
+                                      $( "#DOCM_ID_PCTT-element" ).append(select);
+                                      $(this).dialog('close');  
+                                      $( "#combobox-input-text-DOCM_ID_PCTT" ).focus();
+                                    }
+                            }
+                            });
+                detalhe_pctt.dialog('open');
+            }else{
+                $("#DOCM_ID_PCTT" ).css('display','block');
+                $('#detalhe_pctt').append($("#DOCM_ID_PCTT" ));
+                $('#detalhe_pctt').dialog('open');
+            }
+        }
+    );
+
+    $('#ANEXOS').MultiFile({
+        STRING: {
+            file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+            remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+        }
+    });
+    
+     //mostra/esconde o botao de vistas de acordo com a confidencialidade
+    $confidenc = $('#DOCM_ID_CONFIDENCIALIDADE');
+    if( $confidenc.val() != "0") { 
+        $("input[name='cadVistas']").show();
+    }
+
+    $confidenc.change( function(){
+           if( $(this).val() != "0" ){
+               $("input[name='cadVistas']").show();
+           }else{
+               $("input[name='cadVistas']").hide();
+           }
+    });
+    
+   $("form[name=cadastroExterno]").submit( function(){
+           
+        $(this).attr("action", "save");
+        return true;
+    });
+	
+
+
+ });     
+</script>
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+
+<form name="cadastroExterno" action="save" method="POST" enctype="multipart/form-data" >
+<?php 
+    echo $this->form->getElement('DOCM_ID_DOCUMENTO');
+    echo $this->form->getElement('DOCM_NR_DOCUMENTO');
+    echo $this->form->getElement('DOCM_NR_SEQUENCIAL_DOC');
+    echo $this->form->getElement('DOCM_DH_CADASTRO');
+    echo $this->form->getElement('DOCM_CD_MATRICULA_CADASTRO');
+    echo $this->form->getElement('DOCM_SG_SECAO_GERADORA');
+    echo $this->form->getElement('DOCM_CD_LOTACAO_GERADORA');
+    echo $this->form->getElement('DOCM_SG_SECAO_REDATORA');
+    echo $this->form->getElement('DOCM_CD_LOTACAO_REDATORA');
+    echo $this->form->getElement('DOCM_ID_PESSOA_EXTERNO');
+    echo $this->form->getElement('DOCM_DS_NOME_EMISSOR_EXTERNO');
+    echo $this->form->getElement('DOCM_ID_TIPO_DOC');
+    echo $this->form->getElement('DOCM_NR_DCMTO_USUARIO');
+    echo $this->form->getElement('DOCM_ID_PCTT');
+    echo $this->form->getElement('DOCM_DS_ASSUNTO_DOC');
+    echo $this->form->getElement('DOCM_DS_PALAVRA_CHAVE');
+    echo $this->form->getElement('DOCM_ID_TIPO_SITUACAO_DOC');
+    echo $this->form->getElement('DOCM_ID_CONFIDENCIALIDADE');
+
+?>
+    
+<div id="dialog_cadastra_parte_doc">  
+    <?php echo $this->partial('_partials/cadastrapartesinteressados.phtml',            
+                  array( 'form' => $this->formParte));?>
+                             
+</div>   
+<div id="partes_adicionadas"> </div>
+<div id="vistas_adicionadas"> </div>
+
+
+<fieldset style="margin-top: 10px; width: 250px;">
+    <legend> Cadastro de Vistas / Partes </legend>
+    <input type="button" value="Cadastrar partes"  class="ui-button ui-widget ui-state-default ui-corner-all cadPartes" name="cadPartes" title="Cadastrar Partes ao Documento" role="button" aria-disabled="false" style="margin: 10px 0px;"/>
+    <input type="button" value="Cadastrar vistas"  class="ui-button ui-widget ui-state-default ui-corner-all cadVistas" name="cadVistas" title="Cadastrar Vistas ao Documento" role="button" aria-disabled="false" style="margin: 10px 0px; display: none;"/>
+</fieldset>
+
+<?php 
+    echo $this->form->getElement('DOCM_NR_DOCUMENTO_RED');
+    echo $this->form->getElement('DOCM_DS_HASH_RED');
+?>
+
+<b>Anexos</b></br>
+<input id="ANEXOS" type="file" name="ANEXOS[]"  class="Multi" accept="pdf" maxlength="20" /><br/>
+Até 10 Anexos. </br>
+Somente serão aceitos arquivos com o formato PDF. </br>
+Soma dos arquivos até 50 Megas.</p>
+<input type="submit" name="salvar" value="Salvar" />
+<?php echo $this->form->getElement('OBRIGATORIO'); ?>
+</form>

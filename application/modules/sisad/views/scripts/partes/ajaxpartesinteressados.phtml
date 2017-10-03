@@ -1,0 +1,61 @@
+<script type="text/javascript">
+    
+    $(".docmto").click( function (){
+        id = $(this).attr("id");
+        $("."+id).toggle("blind");
+        return false;
+    });
+    
+    
+    
+    
+</script>
+
+
+<br />
+<?php  
+    $userNamespace = new Zend_Session_Namespace('userNs');
+    $Ns_partes_cadastrapartes = new Zend_Session_Namespace('data_post_partes');
+    
+    if ($this->partesDcmto): 
+   Zend_debug::dump($this->partesDcmto); ?>
+<ul>
+<?php 
+   for( $i=0; $i < count($this->partesDcmto); $i++):
+
+//foreach($this->partesDcmto as $dcmtos ): 
+    
+    
+    ?> 
+        
+    <li><a href="#" class="docmto" id="<?php echo $this->partesDcmto[$i]['ID_DOCUMENTO'] ?>"><?php echo $this->partesDcmto[$i]['TIPO_DOCUMENTO']; ?></a><li>
+        
+
+<!--
+        /*$arr = array();
+        $i = 0;
+       foreach( $this->partesDcmto as $partes){
+            $arr[$partes['NR_DOCUMENTO']."-".$partes['TIPO_DOCUMENTO']]['parte_trf'][$i] = $partes['PARTE_TRF'];
+            $arr[$partes['NR_DOCUMENTO']]['parte_lotacao'][$i] = $partes['LOTACAO'];
+            $i++;
+       }
+ //    Zend_debug::dump($arr);
+       $j=0;
+       foreach( $arr as $dcmto => $value):
+           echo "<b>".$dcmto."</b><br />";
+           foreach($value as $key2){
+              foreach($key2 as $val3){ 
+                  if( $val3 != " - " && $val3 != ""){
+ ?>
+                        <input type='checkbox' checked = 'checked' name='partes_pessoa[]' id='partes'/>
+ < ?php                  echo $val3."<br />";
+                  }
+              }
+           }*/
+           ?> -->
+         <br />
+<?php  
+       endfor;
+   endif;
+?>
+ 

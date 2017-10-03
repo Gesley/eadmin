@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+      <head>
+          <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		  <title><?php echo $this->escape($this->titleBrowser) .' - '. $this->escape($this->title); ?></title>
+        <?php
+		// Adiciona favicon
+		$this->headLink(array(	'rel'	=> 'shortcut icon',
+								'href'	=> $this->baseUrl() . '/img/trf1.ico',
+								'type'	=> 'image/x-icon'
+								), 'PREPEND');
+		
+        // Framework CSS
+        $this->headLink()
+                ->prependStylesheet($this->baseUrl() . '/css/blueprint/print.css', 'print')
+                ->prependStylesheet($this->baseUrl() . '/css/blueprint/screen.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl() . '/css/layout.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl() . '/css/form.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl() . '/css/layout_login.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl().'/js/jquery-ui-1.8.14/css/custom-theme/jquery-ui-1.8.14.custom.css','screen, projection');        
+        $this->headScript()
+             ->appendFile($this->baseUrl() . '/js/jquery-ui-1.8.14/js/jquery-1.6.2.min.js')
+             ->appendFile($this->baseUrl() . '/js/jquery.cookie.js')
+             ->appendFile($this->baseUrl() . '/js/login/matriculaBanco.js ')
+             ->appendFile($this->baseUrl().'/js/jquery-ui-1.8.14/js/jquery-ui-1.8.14.custom.min.js')
+             ->appendFile($this->baseUrl().'/js/wijmo-open/development-bundle/external/jquery.bgiframe-2.1.3-pre.js')
+             ->appendFile($this->baseUrl().'/js/wijmo-open/development-bundle/wijmo/jquery.wijmo.wijutil.js')
+             ->prependFile($this->baseUrl().'/js/jquery-1.8.2.js');
+          ?>
+          <?php echo $this->headLink();?>
+          <?php echo $this->headStyle();?>
+          <?php echo $this->headScript();?>
+      </head>
+      <body>
+        <div id="geral">
+            <div id="topo">
+                <h1>e-Admin Sistema de Gestão Administrativa Integrada</h1>
+            </div><!--topo-->
+            <div id="container">
+                <!--	<div id="menuEsquerdo"></div>--><!--menuEsquerdo-->
+                <div id="conteudo" >
+                    <div id="geralLogin">
+                        <div id="conteudoLogin">
+                            <?php echo $this->layout()->content; ?>
+                        </div>
+                    </div><!--gerallogin-->
+                </div><!--conteudo-->
+                <!--<div id="filtro"></div>filtro-->
+            </div><!--container-->
+        </div><!-- geral -->
+        <div id="rodape">
+            <div id="rodapeDados">
+                <h3>Informa&ccedil;&otilde;es:</h3>
+                <?php $dados = new Application_Model_DbTable_SosTbSaviAviso(); ?>
+                <?php $rows = $dados->getAvisosAtivos('SAVI_DH_CADASTRO DESC'); ?>
+                <ul>
+                    <?php foreach ($rows as $d): ?>
+                    <li style="/*color: #E17009*/" ><?php echo $d['SAVI_DS_AVISO']; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+           </div><!--rodapeDados-->
+           <div id="rodapeinfo">
+               <p>&copy;<?php echo date('Y');?> Tribunal Regional Federal de 1&ordf; Regi&atilde;o - SECIN/DISAD</p>
+               <div style="color: #0F1D29;"><?php echo $_SERVER['SERVER_ADDR']; ?> </div>
+           </div>
+       </div><!--rodape-->
+    </body>
+</html>

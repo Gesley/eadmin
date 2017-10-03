@@ -1,0 +1,83 @@
+<div id="message"></div>
+<?php // Zend_Debug::dump("grid".$this->arrayDocumento["SSOL_ID_DOCUMENTO"]); ?>
+<div id="grid<?php echo $this->arrayDocumento["SSOL_ID_DOCUMENTO"]; ?>">
+<script type="text/javascript">
+$(document).ready(function() {
+    var idDocumento = '';
+    idDocumento = $('#idDocumento').val();
+    $('#associar'+idDocumento).click(function() {
+        idForm = $(this).attr('id');
+        reloadGrid(idForm);
+    });
+    $('.detalhe_remover').live('click', function() {
+        idForm = $(this).attr('id');
+        reloadGrid(idForm);
+        $('#descAssoc'+idForm).show();
+        $('#detalhe_excluir'+idForm).live('submit', function() {
+            var descVinculacao = $('#descricaoVinculacao'+idForm).val();
+            if (descVinculacao.length < 5) {
+                $(".ulel"+idForm).html('');
+                $('#msgError'+idForm).append("<ul class='errors ulel"+idForm+"''><li>'' é menor que 5 (tamanho mínimo desse campo)</li>\n\
+                    <li>Preenchimento obrigatório</li></ul>");
+                return false;
+            }
+            var msg = '';
+            $.ajax({
+                url: base_url + '/sosti/solicitacao/associadosexcluir',
+                type: 'GET',
+                data: $(this).serialize(),
+                success: function(data) {
+                    msg = data.status === 'success' ? 'Sucesso' : 'Erro';
+                    $('#message').attr('class', data.status);
+                    $('#message').html("<strong>"+msg+": </strong>" + data.message);
+                    reloadGrid('');
+                }
+            });
+            return false;
+        });
+    });
+    function reloadGrid (idForm) {
+        $.ajax({
+            url: base_url + '/sosti/detalhesolicitacao/formassociados/idDocumento/' + idDocumento,
+            type: 'POST',
+            data: this.value,
+            success: function(data) {
+                $('#grid'+idDocumento).html(data);
+                if (idForm != '') {
+                    $('#message').html('');
+                    $('#message').removeClass('success');
+                    $('#message').removeClass('error');
+                    $('#descAssoc'+idForm).show();
+                }
+            },
+            error: function(){
+                $("#grid"+idDocumento).html('<p>Erro ao carregar</p>');
+            }
+        });
+    }
+    /**
+     * Validações para o formulário de vinculação 
+     */
+    $('form[name=vincular]').submit(function(){
+        var descVinculacao = $('#descricaoVinculacao').val();
+        var caixaSolicit = $('input[name=solicitacao]:checked').val();
+        var objSolicit = jQuery.parseJSON(caixaSolicit);
+        $('#flashMessages').html('');
+        var contaSolicitacoesSelecionadas = $( 'input[name^=solicitacao]:checked' ).length;
+        if (contaSolicitacoesSelecionadas == 0) {
+            var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação</div>";
+            $('#flashMessages').html(mensagem);
+            return false;
+        }
+        if (descVinculacao.length < 5) {
+            $('.errors').html('');
+            $('#msgError').append("<ul class='errors'><li>'' é menor que 5 (tamanho mínimo desse campo)</li>\n\
+                <li>Preenchimento obrigatório</li></ul>");
+            return false;
+        }
+    });
+});
+</script>
+</div>
+<div id="form"></div>
+<input type="hidden" name="idDocumento" id="idDocumento" value="<?php echo $this->arrayDocumento["SSOL_ID_DOCUMENTO"]; ?>" />

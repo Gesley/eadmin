@@ -1,0 +1,15 @@
+<?php
+
+if($this->software):  
+    echo '<option value="">::Selecione Software::</option>';  
+    foreach ($this->software as $value) : 
+?>
+<option value="<?php echo $value['LSFW_ID_SOFTWARE']; ?>"><?php echo $value['LSFW_DS_SOFTWARE']; ?></option>   
+<?php 
+    endforeach;
+    else: 
+?>
+        <option value="">Não exitem software para este tipo de software.</option>  
+<?php
+endif;
+?>

@@ -1,0 +1,205 @@
+<?php
+echo	'<br />';
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo $this->formulario;
+
+$ano = $this->formulario->ANO->getValue ();
+
+// Instancia objetos
+$valor = new Trf1_Orcamento_Valor ();
+$negocio = new Trf1_Orcamento_Negocio_Pendencia ();
+
+$linkBase = $this->url ( array ('module' => Trf1_Orcamento_Definicoes::NOME_MODULO ), 0, true ) . '/';
+
+$qtdeNeSemRdo = $this->escape ( $this->pendencia ['QTDE_NE_SEM_RDO'] );
+$qtdeNeInconsistente = $this->escape ( $this->pendencia ['QTDE_NE_INCONSISTENTE'] );
+$qtdeRdoSemNe = $this->escape ( $this->pendencia ['QTDE_RDO_SEM_NE'] );
+
+$qtdeNcSemDespesa = $this->escape ( $this->pendencia ['QTDE_NC_SEM_DESPESA'] );
+$qtdeNcSemDespesaReserva = $this->escape ( $this->pendencia ['QTDE_NC_SEM_DESPESA_RESERVA'] );
+$qtdeNcSemTipo = $this->escape ( $this->pendencia ['QTDE_NC_SEM_TIPO_NC'] );
+$qtdeNcInconsistente = $this->escape ( $this->pendencia ['QTDE_NC_INCONSISTENTE'] );
+$qtdeNcReservaInconsistente = $this->escape ( $this->pendencia ['QTDE_NC_INCONSISTENTE_RESERVA'] );
+
+$qtdeCredInconsistente = $this->escape ( $this->pendencia [ 'QTDE_CRED_INCONSISTENCIA' ] );
+
+$qtdeSolicitacaoDespesa = $this->escape ( $this->pendencia ['QTDE_SOLICITACAO_DESPESA'] );
+$qtdeSolicitacaoMovimentacao = $this->escape ( $this->pendencia ['QTDE_SOLICITACAO_MOVIMENTACAO'] );
+/* $qtdeSolicitacaoRdo = $this->escape ( $this->pendencia ['QTDE_SOLICITACAO_RDO'] );*/
+$qtdeSolicitacaoRdo = 0; 
+
+?>
+
+<div id="neTabs" class="tabs">
+	<ul>
+		<li><a href="#ne">Requisições / Notas de Empenho</a></li>
+	</ul>
+	<div id="ne">
+		<table width="500px">
+			<tbody>
+				<?php
+				$texto = 'Notas de empenho originais sem requisição:';
+				$qtde = $qtdeNeSemRdo;
+				$link = "ne/index/NOEM_ANO/=$ano/NOEM_NR_DESPESA/=0/NOEM_CD_NE_REFERENCIA/=NE original/NOEM_IC_ACERTADO_MANUALMENTE/=Não";
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link );
+				
+				$texto = 'Inconsistências entre despesa e nota de empenho:';
+				$qtde = $qtdeNeInconsistente;
+				$link = "ne/inconsistencia/NOEM_ANO/=$ano/NOEM_IC_ACERTADO_MANUALMENTE/=Não";
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link );
+				
+				$texto = 'Requisições sem nota de empenho:';
+				$qtde = $qtdeRdoSemNe;
+				$link = "rdo/requisicoessemempenho";
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link, false );
+				?>
+			</tbody>
+		</table>
+	</div>
+</div>
+<br />
+
+<div id="ncTabs" class="tabs">
+	<ul>
+		<li><a href="#nc">Despesa / Nota de Crédito</a></li>
+	</ul>
+
+	<div id="nc">
+		<table width="500px">
+			<tbody>
+				<?php
+				$texto = 'Notas de crédito sem despesa:';
+				$qtde = $qtdeNcSemDespesa;
+				$link = "nc/index/NOCR_ANO/=$ano/NOCR_NR_DESPESA/=0/NOCR_IC_ACERTADO_MANUALMENTE/=Não";
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link );
+				
+				$texto = 'Notas de crédito sem despesa reserva:';
+				$qtde = $qtdeNcSemDespesaReserva;
+				$link = "nc/index/NOCR_ANO/=$ano/NOCR_NR_DESPESA_RESERVA/=0/NOCR_IC_ACERTADO_MANUALMENTE/=Não";
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link );
+				
+				$texto = 'Notas de crédito sem tipo de nota de crédito:';
+				$qtde = $qtdeNcSemTipo;
+				$link = "nc/index/NOCR_ANO/=$ano/NOCR_CD_TIPO_NC/sem tipo/NOCR_IC_ACERTADO_MANUALMENTE/=Não";
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link );
+				
+				$texto = 'Inconsistências entre despesa e nota de crédito:';
+				$qtde = $qtdeNcInconsistente;
+				$link = "nc/inconsistencia/NOCR_ANO/=$ano/NOCR_IC_ACERTADO_MANUALMENTE/=Não";
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link );
+
+				$texto = 'Inconsistências entre despesa reserva e nota de crédito:';
+				$qtde = $qtdeNcReservaInconsistente;
+				$link = "nc/inconsistenciareserva/NOCR_ANO/=$ano/NOCR_IC_ACERTADO_MANUALMENTE/=Não";
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link );				
+                                
+				?>
+			</tbody>
+		</table>
+	</div>
+</div>
+<br />
+
+<!-- perfis seccionais não podem ver essa aba -->
+<?php if($this->perfil != 'seccional'): ?>
+
+	<div id="credTabs" class="tabs">
+		<ul>
+			<li><a href="#cred">Despesa / Crédito</a></li>
+		</ul>
+
+		<div id="cred">
+			<table width="500px">
+				<tbody>
+					<?php
+					$texto = 'Inconsistências entre despesa e crédito:';
+					$qtde = $qtdeCredInconsistente;
+					$link = "credito/inconsistencia/CRED_ANO/=$ano/CRED_IC_ACERTADO_MANUAL/=Não";
+					
+					echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link );
+					?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<br />
+<?php endif; ?>
+
+<div id="solicitacaoTabs" class="tabs">
+	<ul>
+		<li><a href="#solicitacao">Solicitação em aberto</a></li>
+	</ul>
+
+	<div id="solicitacao">
+		<table width="500px">
+			<tbody>
+				<?php
+				$texto = 'Novas despesa:';
+				$qtde = $qtdeSolicitacaoDespesa;
+				$link = 'novadespesa/index/TSOL_DS_TIPO_SOLICITACAO/solicitada/';
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link, false );
+				
+				$texto = 'Movimentações de crédito:';
+				$qtde = $qtdeSolicitacaoMovimentacao;
+				$link = 'movimentacaocrednova/index/TSOL_DS_TIPO_SOLICITACAO/solicitada/';
+				
+				echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link, false );
+				
+				$texto = 'Requisições de Disponibilidade Orçamentária:';
+				$qtde = $qtdeSolicitacaoRdo;
+				$link = 'novardo';
+				
+				// echo $negocio->retornaLinhaConteudo ( $texto, $qtde, $linkBase, $link, false );
+				?>
+			</tbody>
+		</table>
+	</div>
+</div>
+<br />
+
+<div id="importacaoTabs" class="tabs">
+	<ul>
+		<li><a href="#importacao">Importação de dados</a></li>
+	</ul>
+
+	<div id="importacao">
+		<table width="500px">
+			<tbody>
+				<tr>
+					<td width="80%">Última importação de nota de empenho:</td>
+					<td><?php echo $this->escape($this->pendencia['DATA_ULTIMA_IMPORTACAO_NE']); ?></td>
+				</tr>
+				<tr>
+					<td>Última importação da execução de empenho:</td>
+					<td><?php echo $this->escape($this->pendencia['DATA_ULTIMA_IMPORTACAO_EXEC']); ?></td>
+				</tr>
+				<tr>
+					<td>Última importação de nota de crédito:</td>
+					<td><?php echo $this->escape($this->pendencia['DATA_ULTIMA_IMPORTACAO_NC']); ?></td>
+				</tr>
+				<!--
+				<tr>
+					<td>Última importação de nota de dotação:</td>
+					<td><?php echo $this->escape($this->pendencia['DATA_ULTIMA_IMPORTACAO_ND']); ?></td>
+				</tr>
+				<tr>
+					<td>Última importação de documentos folha:</td>
+					<td><?php echo $this->escape($this->pendencia['ULTIMA_DATA_IMPORT_DF']); ?></td>
+				</tr>
+				-->
+			</tbody>
+		</table>
+	</div>
+</div>

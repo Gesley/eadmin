@@ -1,0 +1,191 @@
+<?php
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js'))
+                         ->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'))
+                         ->appendFile(($this->baseUrl() . '/js/multiUpload/multiFile.js'))
+                         ->appendFile($this->baseUrl() . '/js/sosti/limitaCaracteres.js', 'text/javascript');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>Esta tela permite a abertura de um chamado por telefone, para usuários internos ou externos ou um chamado presencial (caso o usuário esteja na área de tecnologia).</p>
+    <ul>
+        <li>No campo <b>Solicitante</b> o sistema permite que ao iniciar a digitação do nome do usuário, este irá localizar os dados do usuário no sistema de RH.</li>
+        <li>Incluído o usuário, o sistema irá mostrar os dados da sua lotação: <b>Unidade Solicitante</b>, o <b>e-mail</b> e o <b>Local de atendimento</b>.</li>
+        <li><b>Grupo de Serviço</b> são os grupos de atendimento das áreas de TI. Selecionar o grupo de serviço, conforme as informações do usuário.</li>
+        <li>Os <b>Serviços</b> estão cadastrados segundo os grupos e áreas de atendimento na TI. O sistema mostra todos os serviços existentes para o grupo escolhido.</li>
+        <li>Sendo um serviço que é necessário o número do <i>tombo do equipamento</i>, o sistema exige a digitação do número de tombo e mostra a descrição do bem.</li>
+        <li><b>Descrever</b> o serviço a ser executado conforme informado pelo usuário (Ex:monitor arranhado).</li>
+        <li>Registrar, nas <b>observações</b>, informações complementares que venham a facilitar o atendimento.</li>
+        <li>Os documentos a serem anexados deverão estar no formato <b>.pdf</b>.</li>
+        <li>Clicar no botão <b>Salvar</b> para encerrar o cadastramento.</li>
+        <li>Após Salvar a solicitação, o sistema mostra a mensagem de gravação com sucesso e permite que o atendente possa realizar 3 atividades: <b>Encaminhar</b>, <b>Baixar</b> e <b>Espera</b>.</li>
+        <li><b>Encaminhar</b>: Permite encaminhar a requisição para o segundo nível de atendimento, onde a mesma será analisada.</li>
+        <li>A opção <b>Baixar</b> permite buscar uma solicitação que acabou de ser gravada.</li>
+        <li>Uma solicitação pode ser colocada em <b>Espera</b> pelo atendente, devido ao usuário não estar disponível para que o atendimento seja executado.</li>
+        <li>As solicitações colocadas em Espera retornam a caixa de atendimento no dia seguinte, como a mais antiga.</li>
+    </ul>
+    
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<script type="text/javascript">
+	$(function() {
+             $('#SGRS_ID_GRUPO').change(
+                function(){
+                    $("#SSER_ID_SERVICO").removeAttr('disabled');
+                    $.ajax({
+                        url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos',
+                        dataType: 'html',
+                        type: 'POST',
+                        data: this.value,
+                        contentType: 'application/json',
+                        processData: false,
+                      beforeSend:function() {
+                          $("#SSER_ID_SERVICO").removeClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('');
+                          $("#SSER_ID_SERVICO").addClass('carregandoInputSelect');
+                      },
+                      success: function(data) {
+                          $("#SSER_ID_SERVICO").html(data);
+                          $("#SSER_ID_SERVICO").removeClass('carregandoInputSelect');
+                          $("#SSER_ID_SERVICO").focus();
+                      },
+                      error: function(){
+                          $("#SSER_ID_SERVICO").removeClass('x-form-field');
+                          $("#SSER_ID_SERVICO").val('Erro ao carregar.');
+                          $("#SSER_ID_SERVICO").addClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('<option>Erro ao carregar</option>');
+                      }
+                    });  
+                }
+            );
+            $('#SSOL_NR_TOMBO').focusout(
+                function(){
+                    $.ajax({
+                      //url: "sosti/solicitacao/ajaxdesctombo/id/"+this.value,
+                      url: base_url+"/sosti/solicitacao/ajaxdesctombo/id/"+this.value,
+                      beforeSend:function() {
+                          $("#DE_MAT").removeClass('erroInputTextArea');
+                          $("#DE_MAT").val('');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").addClass('carregandoTextArea');
+                      },
+                      success: function(data) {
+                          $("#DE_MAT").val(data);
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").addClass('x-form-field');
+                          $("#DE_MAT").focus();
+                      },
+                      error: function(){
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").val('Erro ao carregar.');
+                          $("#DE_MAT").addClass('erroInputTextArea');
+                      }
+                    });  
+                }
+            );
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            $('#SSER_ID_SERVICO').change(
+                function(){
+                    var unidade = $(this).val().split('|')[1];
+                    if(unidade == 'S'){
+                        $("#SSOL_NR_TOMBO-label").show();
+                        $("#SSOL_NR_TOMBO-element").show();
+                        $("#DE_MAT-label").show();
+                        $("#DE_MAT-element").show();
+                    }else{
+                        $("#SSOL_NR_TOMBO-label").hide();
+                        $("#SSOL_NR_TOMBO-element").hide();
+                        $("#DE_MAT-label").hide();
+                        $("#DE_MAT-element").hide();
+                    }
+                }
+            );
+            $("#DOCM_CD_MATRICULA_CADASTRO").autocomplete({
+                //source: "sosti/solicitacao/ajaxnomesolicitante",
+                source: base_url+"/sosti/solicitacao/ajaxnomesolicitante",
+                minLength: 3,
+                delay: 300
+            });
+            $('#DOCM_CD_MATRICULA_CADASTRO').focusout(
+                function(){
+                $.ajax({
+                  //url: "sosti/solicitacao/ajaxpessoaunidade/term/"+this.value,
+                  url: base_url+"/sosti/solicitacao/ajaxpessoaunidade/term/"+this.value,
+                  beforeSend:function() {
+                      $("#DOCM_CD_LOTACAO_GERADORA").remove('erroInputText');
+                            
+                      $("#DOCM_CD_LOTACAO_GERADORA").addClass('carregandoInputText');
+                      $("#SSOL_ED_LOCALIZACAO").addClass('carregandoInputText');
+                      $("#SSOL_DS_EMAIL_EXTERNO").addClass('carregandoInputText');
+                      $("#SSOL_NR_TELEFONE_EXTERNO").addClass('carregandoInputText');
+                  },
+                  success: function(data) {
+                    $("#DOCM_CD_LOTACAO_GERADORA").removeClass('carregandoInputText');
+                    $("#SSOL_ED_LOCALIZACAO").removeClass('carregandoInputText');
+                    $("#SSOL_DS_EMAIL_EXTERNO").removeClass('carregandoInputText');
+                    $("#SSOL_NR_TELEFONE_EXTERNO").removeClass('carregandoInputText');
+                    $.each(data, function(key, val) {
+                        $("#DOCM_CD_LOTACAO_GERADORA").val(val.UNIDADE);
+                        $("#SSOL_ED_LOCALIZACAO").val(val.LOCALIZACAO);
+                        matricula = val.MATRICULA;
+                        if(typeof(matricula) != 'undefined'){
+                            $("#SSOL_DS_EMAIL_EXTERNO").val( val.MATRICULA + '@trf1.jus.br' );
+                        }else{
+                            $("#SSOL_DS_EMAIL_EXTERNO").val('');
+                        }
+                        $("#SSOL_NR_TELEFONE_EXTERNO").val(val.TELEFONE);
+                    });
+                  },
+                  error: function(){
+                      $("#DOCM_CD_LOTACAO_GERADORA").removeClass('carregandoInputText');
+                      $("#SSOL_ED_LOCALIZACAO").removeClass('carregandoInputText');
+                      $("#SSOL_DS_EMAIL_EXTERNO").removeClass('carregandoInputText');
+                      $("#SSOL_NR_TELEFONE_EXTERNO").removeClass('carregandoInputText');
+                      $("#DOCM_CD_LOTACAO_GERADORA").addClass('erroInputText');
+                      $("#DOCM_CD_LOTACAO_GERADORA").val('Erro ao carregar.');
+                  }
+                }); 
+
+            }
+            );
+            $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+                //source: "sosti/solicitacao/ajaxunidade",
+                source: base_url+"/sosti/solicitacao/ajaxunidade",
+                minLength: 3,
+                delay: 500 
+            });
+	});
+</script>
+<!--<form method="post" action="sosti/helpdesk/acoesatendimento">-->
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<form method="post" action="acoesatendimento" enctype="multipart/form-data" > 
+    <?php 
+    $userNs = new Zend_Session_Namespace('userNs');
+    if ($userNs->siglasecao == 'TR'): ?>
+        <div class="painel">
+            <input type="submit" title="Carregar a próxima solicitação para atendimento" name="acao" value="Próxima" />
+        </div>
+    <?php endif; ?>
+    <br />
+    <label>Tipo de usuário:</label>
+    <br />
+    <label><input type="radio" onclick="this.form.submit()" name="acaor" value="I" />Interno</label>
+    <br />
+    <label><input type="radio" onclick="this.form.submit()" name="acaor" checked="checked" value="E" />Externo</label>
+    <?php 
+        echo $this->form; 
+    ?>
+    <span class="msg_alerta"> </span>
+</form>

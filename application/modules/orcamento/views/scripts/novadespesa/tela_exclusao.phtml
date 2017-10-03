@@ -1,0 +1,141 @@
+<style type="text/css">
+.alerta {
+	color: red;
+}
+</style>
+
+<?php
+/**
+ * @category	TRF1
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Anderson Sathler M. Ribeiro [asathler@gmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que gera a tela de exclusão de registros
+ * 
+ * @deprecated	string		campos				Nessa versão, tanto a variável $campos quanto $dados são aceitas;
+ * Sendo que $campos tem preferência.
+ * @deprecated	array		campos				...
+ * @deprecated	string		campoDescricao		...
+ * @deprecated	array		campoValor			...
+ * 
+ * @param		array		codigo				Código da chave primária a ser excluída
+ * @param		array		dados				Contém o array com registros.
+ * Nesse caso, a query deve conter aliás para os nomes dos campos utilizados.
+ * 
+ * @example		echo	$this->partial('_partials/tela_exclusao.phtml', array(	'msgAjuda'	=> $this->msgAjuda,
+ * 																				'msgInfo'	=> $this->msgInfo,
+ * 																				'codigo'	=> $this->codigo,
+ * 																				'dados'		=> $this->dados,
+ * 																				[@deprecated 
+ * 																				'campos'	=> array(	array(	'campoDescricao'	=> 'UG para travamento de projeção',
+ * 																												'campoValor'		=> $this->travaprojecao['TRVP_CD_UG']),
+ * 																										array(	'campoDescricao'	=> 'Data Início',
+ * 																												'campoValor'		=> $this->travaprojecao['TRVP_DT_INICIO']),
+ * 																										array(	'campoDescricao'	=> 'Data Fim',
+ * 																												'campoValor'		=> $this->travaprojecao['TRVP_DT_FIM'])
+ * 																									)
+ * 																				]
+ * 										);
+ */
+
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+// Define chave primária ou composta, conforme a quantidade de campos passados em $this->codigo
+$qtdeCamposChave = count ( $this->codigo );
+?>
+
+<br />
+<h3>Desejar excluir o(s) seguinte(s) registro(s)?</h3>
+
+<div id="exclusaoTabs" class="tabs">
+	<ul>
+		<li><a href="#resumo">Resumo</a></li>
+		<?php
+		foreach ( $this->dados as $registro ) {
+			$campos = '';
+			for($i = 0; $i < $qtdeCamposChave; $i ++) {
+				$campos .= $registro [$this->codigo [$i]] . '-';
+				$campos = str_replace ( '/', '-', $campos );
+			}
+			$campos = substr ( $campos, 0, - 1 );
+			$campos = str_replace ( ' ', '-', $campos );
+			
+			if (in_array ( $campos, $this->semexclusao )) {
+				echo '<li><a href="#' . $campos . '"><span class="alerta">' . $campos . '</span></a></li>' . PHP_EOL;
+			} else {
+				echo '<li><a href="#' . $campos . '">' . $campos . '</a></li>' . PHP_EOL;
+			}
+		}
+		?>
+	</ul>
+	
+	<div id="resumo">
+		<h3>Códigos a serem excluídos</h3>
+		
+		<?php
+		$campos_semexclusao = Array ();
+		$camposx = '';
+		$qtd_semexclusao = 0;
+		foreach ( $this->dados as $registro ) {
+			if ($registro ["Tipo"] == 1) {
+				$campos = '';
+				for($i = 0; $i < $qtdeCamposChave; $i ++) {
+					$campos .= $registro [$this->codigo [$i]] . '-';
+					$campos = str_replace ( '/', '-', $campos );
+				}
+				$campos = substr ( $campos, 0, - 1 );
+				
+				echo 'Código: ' . $campos . '<br />' . PHP_EOL;
+			} else {
+				$campos_semexclusao [$qtd_semexclusao] = $registro ["SOLD_NR_SOLICITACAO"];
+				$camposx = $camposx . '-' . $registro ["SOLD_NR_SOLICITACAO"];
+				$qtd_semexclusao ++;
+			}
+		}
+		
+		if ($qtd_semexclusao > 0) {
+			$camposx = substr ( $camposx, 1 );
+			?>
+			<br />
+			<h3>Códigos que não serão excluídos por não estarem mais com status de 'solicitada'</h3>
+			
+			<?php
+			for($i = 0; $i < count ( $campos_semexclusao ); $i ++) {
+				echo 'Código: ' . $campos_semexclusao [$i] . '<br />' . PHP_EOL;
+			}
+		}
+		?>
+	</div>
+	
+	<?php
+	foreach ( $this->dados as $registro ) {
+		$campos = '';
+		for($i = 0; $i < $qtdeCamposChave; $i ++) {
+			$campos .= $registro [$this->codigo [$i]] . '-';
+			$campos = str_replace ( '/', '-', $campos );
+			
+			unset ( $registro [$this->codigo [$i]] );
+		}
+		$campos = substr ( $campos, 0, - 1 );
+		$campos = str_replace ( ' ', '-', $campos );
+		echo '<div id="' . $campos . '">' . PHP_EOL;
+		
+		foreach ( $registro as $campoNome => $campoConteudo ) {
+			if ($campoNome != 'Tipo') {
+				echo '<strong>' . $this->escape ( $campoNome ) . ':</strong> ' . $this->escape ( $campoConteudo ) . '<br />' . PHP_EOL;
+			}
+		}
+		
+		echo "</div>" . PHP_EOL . PHP_EOL;
+	}
+	?>
+</div>
+<br />
+<?php
+echo $this->partial ( 'novadespesa/botoes_exclusao.phtml', array ('codigo' => $this->excluir ) );
+?>

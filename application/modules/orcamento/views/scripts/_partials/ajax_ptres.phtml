@@ -1,0 +1,20 @@
+<?php
+$nomeCampoPTRES = $this->campo;
+?>
+<script type="text/javascript">
+    $(function() {
+        $("#<?php echo $nomeCampoPTRES; ?>").keypress( function () {
+            $("#<?php echo $nomeCampoPTRES; ?>").autocomplete( {
+                source: base_url+'/orcamento/ptres/ajaxptres/',
+                minLength: 3,
+                delay: 100,
+                select: function (event, ui) {
+                    $("#<?php echo $nomeCampoPTRES; ?>").text(ui.item.label);
+                },
+                change: function (event, ui) {
+                    $("#<?php echo $nomeCampoPTRES; ?>").val(ui.item.label);
+                }
+            });
+        });
+    });
+</script>

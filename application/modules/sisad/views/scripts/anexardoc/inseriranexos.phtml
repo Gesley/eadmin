@@ -1,0 +1,222 @@
+<?php
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'));
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MultiFile.js'));
+?>
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div id="flashMessagesViewAlerta"><?php echo $this->flashMessagesViewAlerta; ?>
+    <div class="<?php echo $this->flashmessage['status']; ?>">
+        <strong><?php echo $this->flashmessage['label']; ?>&emsp;</strong><?php echo $this->flashmessage['message']; ?>
+    </div>
+</div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>O sistema mostra a lista de processos que estão na <b>Caixa da Unidade</b> para que se possa escolher a qual processo pretende-se incluir este documento.</p>
+    <p>A justificativa <b>inclusão/parecer</b> é obrigatória.</p>
+    <p>Ao clicar no botão <b>Adicionar</b> o sistema grava a fase de adição de documentos ao processo e gera a mensagem de sucesso.</p>
+    <br />
+    <p><b>Antenção</b>: Ao consultar o processo pode-se ver os documentos do processo que estão anexados por ordem de inclusão, ou seja, os primeiros documentos são os últimos incluídos.</p>
+
+
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var GLOGAL_formulario_valido = true;
+    var xhr_abrir_documento; 
+    
+    var grid_documentos_tbody_tr;
+    $(function(){
+        var this_button_acao = this;
+        var acao = $(this_button_acao).val();;
+        grid_documentos_tbody_tr = $("table.grid.documentos > tbody > tr");
+        grid_documentos_tbody_tr.click(
+        function(){
+            grid_documentos_tbody_tr.removeClass('hover_nav');
+            grid_documentos_tbody_tr.removeClass('marcado');
+            grid_documentos_tbody_tr.removeClass('hover');
+                
+            var this_tr = $(this);
+            var is_checked_tr = $(this).attr('marcado');
+                
+            var input_check_box = $(this).find('input');
+            var is_checked_input = input_check_box.attr('checked');
+                
+            if( 
+            (is_checked_input == undefined && is_checked_tr == undefined) || 
+                (is_checked_input != undefined && is_checked_tr == undefined) ||
+                (is_checked_input == undefined && is_checked_tr != undefined)
+        
+        ){
+                input_check_box.attr('checked','checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+            }else{
+                input_check_box.removeAttr('checked');
+                this_tr.removeAttr('marcado');
+                this_tr.removeClass('hover');
+            }
+            input_check_box.focus();
+        }
+    );
+            
+
+        
+        grid_documentos_tbody_tr.dblclick(
+        function(){
+            var this_tr = $(this);
+            var input_check_box = $(this).find('input');
+                
+            var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            this_tr.attr('marcado','marcado');
+            this_tr.addClass('hover');
+                
+            if (xhr_abrir_documento) {
+                xhr_abrir_documento.abort();
+            }
+                
+            url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+            xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                    div_dialog_by_id.html('');
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                    var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                    span_id_leitura.removeClass('naolido');
+                    span_id_leitura.addClass('lido');
+                    span_id_leitura.attr('title','Documento lido');
+                    $(this_tr).removeClass('naolidoTr');
+                    $(this_tr).addClass('lidoTr');
+                    
+                    //console.log(value_input_check_box);
+                    
+                    datainput = jQuery.parseJSON(value_input_check_box);
+                    
+                    datainput.CLASS_LIDO = 'lido';
+                    datainput.CLASS_LIDO_TR = 'lidoTr';
+                    datainput.MSG_LIDO = 'Documento lido';
+                    
+                    datainput_atualizado = JSON.stringify(datainput, null, null);
+                    input_check_box.val(datainput_atualizado)
+                    
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+            });
+        }
+    );
+            
+                             
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+            autoOpen : false,
+            modal    : false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            height: 600,
+            position: [580,140,0,0],
+            buttons : {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+    
+    $(function(){ 
+        $('#ANEXOS').MultiFile({
+            STRING: {
+                file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+                remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+            }
+        });
+    });
+    
+</script>
+<form method="POST" action="inseriranexos" enctype="multipart/form-data">
+    <div id="container_documentos">
+        <h3>Documentos:</h3>
+        <?php if (count($this->data)): ?>
+            <table class="grid documentos">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" name="input_check_all_grid" id="check_all" /> 
+                        </th>
+                        <th ></th>
+                        <th >Tipo</th>
+                        <th >Número</th>
+                        <th >Data</th>
+                        <th >Origem</th>
+                        <th >Autor</th>
+                        <th >Tempo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->data as $data): ?>
+                        <tr title="Duplo click para Abrir" name="rowList" value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>">
+                            <td>
+                                <input  class="nav_check_boxes" id="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                            </td>
+                            <td></td>
+                            <td><?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                            <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+                            <td><?php echo $this->escape($data["DOCM_DH_CADASTRO"]) ?></td>
+                            <td><?php echo $this->escape($data["LOTA_SIGLA_LOTACAO"]) ?></td>
+                            <td><?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                            <td><?php echo $this->escape($data["TEMPO_TRANSCORRIDO"]) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9"><?php
+                echo $this->paginationControl($this->data, null, null, null)
+                    ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+        <?php else: ?>
+            <p>Não existem registros</p>
+        <?php endif; ?>
+    </div>
+
+    <b>Anexos</b></br>
+    <input id="ANEXOS" type="file" name="ANEXOS[]"  class="Multi" accept="pdf" maxlength="20" />
+    Até 20 Anexos. </br>
+    Somente serão aceitos arquivos com o formato PDF. </br>
+    Soma dos arquivos até 50 Megas.</p>
+<input type="submit" name="salvar" value="Salvar" />
+<span class="msg_alerta"> </span>
+
+</form>

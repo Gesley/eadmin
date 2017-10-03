@@ -1,0 +1,42 @@
+<?php
+$this->inlineScript()
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/multiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/sosti/respostaPadrao.js'));
+?>
+ <table class="grid">
+    <thead>
+        <tr>
+            <th >Número</th>
+            <th >Autor</th>
+            <th >Tempo total</th>
+            <th >Serviço atual</th>
+            <th >Vinculada</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php foreach ($this->data as $data): ?>
+            <tr>
+                <?php $d = Zend_Json::decode($data);?>      
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td> <?php if(isset($d["NOME"])){echo $this->escape($d["NOME"]);}else{echo $this->escape($d["NOME_USARIO_CADASTRO"]);} ?></td>
+                <td> <?php echo $this->escape($d["TEMPO_TRANSCORRIDO"]); ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"] ) ?></td>
+                <td><?php if(isset ($d["VINCULADA"])&&($d["VINCULADA"]==1)){echo "SIM";}else{echo "";}?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<?php echo $this->form; ?>
+<div id="dialog_escolha_resposta">
+    <fieldset>
+        <?= $this->formResposta; ?>
+    </fieldset>
+    <fieldset>
+        <legend> Resultados </legend>
+        <div id="resultados_resposta">
+           
+        </div>
+    </fieldset>
+</div>

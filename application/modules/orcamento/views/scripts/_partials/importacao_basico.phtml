@@ -1,0 +1,71 @@
+<?php
+$valor = new Trf1_Orcamento_Valor();
+$sinalMoeda = true;
+?>
+
+<table>
+	<tbody>
+		<tr>
+			<td class="total"><abbr>Código:</abbr></td>
+			<td class="total"><?php echo $this->dados['IMPO_ID_IMPORTACAO'] ?></td>
+		</tr>
+		<tr>
+			<td>Ano exercicio:</td>
+			<td><?php echo $this->dados['IMPA_AA_IMPORTACAO']?></td>
+		</tr>			
+		<tr>
+			<td>UG:</td>
+			<td><?php echo $this->dados['UNGE_DS_UG']?></td>
+		</tr>
+		<tr>
+			<td>Conta Contábil:</td>
+			<td><?php echo $this->dados['IMPO_CD_CONTA_CONTABIL']?></td>
+		</tr>
+		<?php if ($this->dados['IMPO_IC_CATEGORIA'] != ""):?>
+		<tr>
+			<td>Categoria:</td>
+			<td><?php echo $this->dados['CATE_DS_CATEGORIA']?></td>
+		</tr>
+		<?php endif;?>				
+		<tr>
+			<td>Resultado Primário:</td>
+			<td><?php echo $this->dados['IMPO_CD_RESULTADO_PRIMARIO']?></td>
+		</tr>
+		<?php if ($this->dados['IMPO_CD_FONTE'] != ""):?>		
+		<tr>
+			<td>Fonte:</td>
+			<td><?php echo $this->dados['FONT_DS_FONTE']?></td>
+		</tr>
+		<?php endif; ?>		
+		<?php if ($this->dados['IMPO_CD_PTRES'] != ""):?>
+		<tr>
+			<td>PTRES:</td>
+			<td><?php echo $this->dados['IMPO_CD_PTRES']?></td>
+		</tr>			
+		<?php endif; ?>		
+		<?php if ($this->dados['IMPO_CD_ESFERA'] != ""):?>
+		<tr>
+			<td>Esfera:</td>
+			<td><?php echo $this->dados['ESFE_DS_ESFERA']?></td>
+		</tr>			
+		<?php endif; ?>
+		<?php if ($this->dados['IMPO_CD_NATUREZA_DESPESA'] != ""):?>
+		<tr>
+			<td>Natureza da despesa:</td>
+			<td><?php echo $this->dados['IMPO_CD_NATUREZA_DESPESA']?></td>
+		</tr>			
+		<?php endif; ?>		
+		<?php if ($this->dados['IMPO_CD_UG_RESPONSAVEL'] != ""):?>
+		<tr>
+			<td>UG Responsavel:</td>
+			<td><?php echo $this->dados['IMPO_CD_UG_RESPONSAVEL']?></td>
+		</tr>
+		<?php endif; ?>
+		<?php if ($this->dados['IMPO_CD_VINCULACAO'] != ""):?>
+		<tr>
+			<td>Vinculação:</td>
+			<td><?php echo $this->dados['VINC_DS_VINCULACAO']?></td>
+		</tr>
+		<?php endif;?>									
+	</tbody>
+</table>

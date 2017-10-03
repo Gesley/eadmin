@@ -1,0 +1,147 @@
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p><b>Tipo Documento</b> é uma lista com todos os tipos de documentos que constam do <i>Manual de Documentos Administrativos</i>.</p>
+    <p><b>Data inicial</b> registrar a data de provável criação do documento. O sistema mostra um calendário para que se selecione a data da pesquisa desejada.</p>
+    <p><b>Data final</b> registrar a data de provável criação do documento. O sistema mostra um calendário para que se selecione a data da pesquisa desejada.</p>
+</p>
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+<span id="botao_ajuda_recolhe" ></span>
+</div>
+<script type="text/javascript">
+    $(function() {
+        var secao;
+            
+        $("#DOCM_ID_TIPO_DOC").autocomplete({
+            source: base_url+"/admin/utilidades/ajaxidnometipodoc",
+            minLength: 3,
+            delay: 300
+        });
+           
+        $(function() {
+            var dates = $( "#DATA_INICIAL, #DATA_FINAL" ).datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+                dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+                dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+                monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                    'Outubro','Novembro','Dezembro'],
+                monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+                nextText: 'Próximo',
+                prevText: 'Anterior',
+                changeMonth: true,
+                numberOfMonths: 1,
+                changeMonth: true,
+                changeYear: true,
+                changeMonth: true,
+                onSelect: function( selectedDate ) {
+                    var option = this.id == "DATA_INICIAL" ? "minDate" : "maxDate",
+                    instance = $( this ).data( "datepicker" );
+                    date = $.datepicker.parseDate(
+                    instance.settings.dateFormat ||
+                        $.datepicker._defaults.dateFormat,
+                    selectedDate, instance.settings );
+                    dates.not( this ).datepicker( "option", option, date );
+                }
+            });
+        }); 
+        
+        $('#ACO').hide();
+        $('#EST').hide();
+        $('#data').hide();
+        $('#imprimir').hide();
+      
+        $("input[name=relatorio]:radio").click(function() {
+            if($(this).val() == 'ACO') {
+                $('#data').hide();
+                $('#EST').hide();
+                $('#ACO').show();
+                $('#imprimir').show();
+            } else if($(this).val() == 'DES') {
+                $('#ACO').hide();
+                $('#EST').hide();
+                $('#data').show();
+                $('#imprimir').show();
+            } else if($(this).val() == 'EST') {
+                $('#data').hide();
+                $('#EST').show();
+                $('#ACO').hide();
+                $('#imprimir').show()
+            } else if($(this).val() == 'ESS') {
+                $('#EST').hide();
+                $('#ACO').hide();
+                $('#data').show();
+                $('#imprimir').show()
+            } else if($(this).val() == 'MAL') {
+                $('#EST').hide();
+                $('#ACO').hide();
+                $('#data').show();
+                $('#imprimir').show()
+            } else if($(this).val() == 'REL') {
+                $('#EST').hide();
+                $('#ACO').hide();
+                $('#data').show();
+                $('#imprimir').show()
+            } else {
+                return false;
+            }
+        });
+    });
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div id="pesq_div" >
+    <form enctype="" method="post" name="relatorio" >
+        <fieldset>
+            <legend>Tipo do Relatório</legend>
+            <div class="span-25">
+                <div class="span-12">
+                    <input type="radio" name="relatorio" value="ACO">Acompanhamento de Correspondências</input><br/>
+                    <input type="radio" name="relatorio" value="DES">Desmostrativo de Valores das Correspondências</input><br/>
+                    <input type="radio" name="relatorio" value="EST">Estatísticas de Documentos Enviados aos Correios</input><br/>
+                </div>
+                <div class="span-10">
+                    <input type="radio" name="relatorio" value="ESS">Estatísticas de Sedex</input><br/>
+                    <input type="radio" name="relatorio" value="MAL">Malotes enviados(por Data)</input><br/>
+                    <input type="radio" name="relatorio" value="REL">Relatórios(por Data)</input><br/>
+                </div>
+            </div>
+        </fieldset>
+        <div id="ACO"> //Acompanhamento de Correspondencias
+        </div>
+        <div id="EST">
+            <table>
+                <tr>
+                    <td><label>*Tipo</label></td>
+                    <td><input type='text' title='Descrição do tipo de documento' id="DOCM_ID_TIPO_DOC" name='DOCM_ID_TIPO_DOC' class="actipo"  style='width: 220px'/></br></td>
+                </tr>
+                <tr>
+                    <td><label>*Data Inicial</label></td>
+                    <td><input type="text" name="DATA_INICIAL" id="DATA_INICIAL"></input><br/></td>
+                </tr>
+                <tr>
+                    <td><label>*Data Fim</label></td>
+                    <td><input type="text" name="DATA_FINAL" id="DATA_FINAL"></input></td>
+                </tr>
+            </table>
+        </div>
+        <div id="data">
+            <table>
+                <tr>
+                    <td><label>*Data Inicial</label></td>
+                    <td><input type="text" name="DATA_INICIAL" id="DATA_INICIAL"></input></td>
+                </tr>
+                <tr>
+                    <td><label>*Data Fim</label></td>
+                    <td><input type="text" name="DATA_FINAL" id="DATA_FINAL"></input></td>
+                </tr>
+            </table>
+        </div>
+        <div id="imprimir" class="painel">
+            <input type="submit" value="Gerar" name="gerar">
+        </div>
+    </form>
+</div>

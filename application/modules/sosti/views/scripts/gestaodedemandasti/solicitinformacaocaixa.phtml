@@ -1,0 +1,754 @@
+<?php
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/tooltipster-1.2/js/jquery.tooltipster.min.js', 'text/javascript');
+?>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.tooltip').tooltipster({
+            fixedWidth: 650,
+            position: 'bottom-left'
+        });
+        $(function () {
+            $(".tooltip").each(function () {
+                $(this).attr("data-oldhref", $(this).attr("href"));
+                $(this).removeAttr("href");
+            });
+        });
+        $('#MOFA_ID_FASE').find('option[value=1024]').attr('selected', 'selected');
+       
+       
+//           $('form#helpdesk').load(function () {
+//        alert('chegoufs');
+//       $(this).submit();
+//    });
+       
+//        $( "#helpdesk" ).submit(function( event ) {
+//  alert( "Handler for .submit() called." );
+//  event.preventDefault();
+//});
+    });
+</script>
+<script type="text/javascript">
+    function verificaNumero(e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    }
+    
+    $(document).ready(function () {
+        $("#SSOL_NR_TOMBO").keypress(verificaNumero);
+
+    });
+</script>
+
+<script type="text/javascript">
+
+    var GLOBAL_indice_abas = 0;
+    var xhr_abrir_documento;
+
+    var grid_tbody_tr;
+    $(function () {
+        $("#SERVICO-inativos").click(function () {
+            var URL = base_url + '/sosti/gestaodedemandasti/inativos';
+            window.location.href = URL;
+        });
+        $("#SERVICO-inativos").removeAttr('checked');
+        $("#SERVICO-nomecompleto").attr('checked', 'checked');
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function () {
+                grid_tbody_tr.removeClass('hover_nav');
+
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+
+                var input_check_box = $(this).find('input[type=checkbox]');
+                var is_checked_input = input_check_box.attr('checked');
+
+                if ((is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined)) {
+                    input_check_box.attr('checked', 'checked');
+                    this_tr.attr('marcado', 'marcado');
+                    this_tr.addClass('hover');
+                } else {
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+        grid_tbody_tr.dblclick(
+            function () {
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+
+                grid_tbody_tr.each(
+                    function () {
+                        var this_tr = $(this);
+
+                        this_tr.removeAttr('marcado');
+                        this_tr.removeClass('hover');
+                    }
+                );
+
+                var div_dialog_by_id = $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado', 'marcado');
+                this_tr.addClass('hover');
+
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol/act/<?php echo $this->action; ?>';
+                xhr_abrir_documento = $.ajax({
+                    url: url,
+                    dataType: 'html',
+                    type: 'POST',
+                    data: value_input_check_box,
+                    contentType: 'application/json',
+                    processData: false,
+                    beforeSend: function () {
+                        if (!div_dialog_by_id.dialog("isOpen")) {
+                            div_dialog_by_id.dialog("open");
+                        }
+                    },
+                    success: function (data) {
+                        div_dialog_by_id.html(data);
+
+                    },
+                    complete: function () {
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        );
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function () {
+                if ($(this).attr('checked')) {
+                    $(".nav_check_boxes").attr('checked', 'checked');
+                    $("tr[name=rowList]").addClass('hover');
+                } else {
+                    $(".nav_check_boxes").removeAttr('checked');
+                    $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        var form_valido = false;
+        $('input[name=acao]').click(
+            function () {
+                var acao = this.value;
+                var formhelpdesk = $('form[name=helpdesk]');
+                if (acao == 'Incluir Informação') {
+                    formhelpdesk.attr('action', '<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/pedidoinformacaoadd');
+                } else if (acao == 'Solicitar Informação ao Usuário Cadastrante') {
+                    formhelpdesk.attr('action', '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/solicitarinformacao');
+                } else if (acao == 'Trocar Categoria de Serviço') {
+                    if ($('input[type=checkbox]:checked').length > 1) {
+                        var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha apenas uma solicitação!</div>";
+                        $('#flashMessages').html(mensagem);
+                        return false;
+                    } else {
+                        formhelpdesk.attr('action', '<?php echo $this->baseUrl(); ?>/os/solicitacao/trocarservico');
+                }
+            }
+            }
+        );
+
+        $("#Filtrar").click(
+            function () {
+                form_valido = true;
+            }
+        );
+
+        $('form[name=helpdesk]').submit(
+            function () {
+                if (form_valido) {
+                    return true;
+                }
+
+                var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                if (solictacaoSelecionada == undefined) {
+                    var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                    $('#flashMessages').html(mensagem);
+                    return false;
+                } else {
+                    return true;
+                }
+
+            }
+        );
+        $("#dialog-documentos_detalhe").dialog({
+            title: 'Detalhe',
+            autoOpen: false,
+            modal: false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580, 140, 0, 0],
+            buttons: {
+                Ok: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#DOCM_CD_MATRICULA_CADASTRO").autocomplete({
+            source: base_url + "/sosti/solicitacao/ajaxnomesolicitante",
+            minLength: 3,
+            delay: 300,
+            select: function (event, ui) {
+                if (ui.item.value != null) {
+                    $("#DOCM_CD_MATRICULA_CADASTRO_VALUE").val(ui.item.value);
+                }
+            },
+            change: function (event, ui) {
+                if (ui.item.value != null) {
+                    $("#DOCM_CD_MATRICULA_CADASTRO_VALUE").val(ui.item.value);
+                }
+            }
+
+        }).keyup(
+            function () {
+                if (this.value == "") {
+                    $("#DOCM_CD_MATRICULA_CADASTRO_VALUE").val('');
+                }
+            });
+
+        $("#SSOL_CD_MATRICULA_ATENDENTE").autocomplete({
+            source: base_url + "/sosti/solicitacao/ajaxnomesolicitante",
+            minLength: 3,
+            delay: 300,
+            select: function (event, ui) {
+                if (ui.item.value != null) {
+                    $("#SSOL_CD_MATRICULA_ATENDENTE_VALUE").val(ui.item.value);
+                }
+            },
+            change: function (event, ui) {
+                if (ui.item.value != null) {
+                    $("#SSOL_CD_MATRICULA_ATENDENTE_VALUE").val(ui.item.value);
+                }
+            }
+
+        }).keyup(
+            function () {
+                if (this.value == "") {
+                    $("#SSOL_CD_MATRICULA_ATENDENTE_VALUE").val('');
+                }
+            });
+
+        $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+            source: base_url + "/sosti/solicitacao/ajaxunidade",
+            minLength: 3,
+            delay: 500,
+            select: function (event, ui) {
+                if (ui.item.value != null) {
+                    $("#DOCM_CD_LOTACAO_GERADORA_VALUE").val(ui.item.value);
+                }
+            },
+            change: function (event, ui) {
+                if (ui.item.value != null) {
+                    $("#DOCM_CD_LOTACAO_GERADORA_VALUE").val(ui.item.value);
+                }
+            }
+        }).keyup(
+            function () {
+                if (this.value == "") {
+                    $("#DOCM_CD_LOTACAO_GERADORA_VALUE").val('');
+                }
+            });
+
+
+        $('#pesquisar')
+            .click(function () {
+                var pesq_div = $("#pesq_div");
+
+                if (pesq_div.css('display') == "none") {
+                    pesq_div.show('');
+                } else {
+                    pesq_div.hide('');
+                }
+            });
+
+        $('#Filtrar').button();
+
+        if ($('#statusfiltro').text() == 'Filtro Ativo') {
+            $("#pesq_div").hide();
+        }
+
+        $("#botao_ajuda_recolhe").click(
+            function () {
+                $("#pesq_div").hide();
+                $("#pesquisar").show();
+            });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        var dates = $("#DATA_INICIAL, #DATA_FINAL").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro',
+                'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            changeMonth: true,
+            numberOfMonths: 1,
+            changeMonth: true,
+            changeYear: true,
+            changeMonth: true,
+            onSelect: function (selectedDate) {
+                var option = this.id == "DATA_INICIAL" ? "minDate" : "maxDate",
+                    instance = $(this).data("datepicker");
+                date = $.datepicker.parseDate(
+                    instance.settings.dateFormat ||
+                    $.datepicker._defaults.dateFormat,
+                    selectedDate, instance.settings);
+                dates.not(this).datepicker("option", option, date);
+            }
+        });
+
+        var dates_cadastro = $("#DATA_INICIAL_CADASTRO, #DATA_FINAL_CADASTRO").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro',
+                'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            changeMonth: true,
+            numberOfMonths: 1,
+            changeMonth: true,
+            changeYear: true,
+            changeMonth: true,
+            onSelect: function (selectedDate) {
+                var option = this.id == "DATA_INICIAL_CADASTRO" ? "minDate" : "maxDate",
+                    instance = $(this).data("datepicker");
+                date = $.datepicker.parseDate(
+                    instance.settings.dateFormat ||
+                    $.datepicker._defaults.dateFormat,
+                    selectedDate, instance.settings);
+                dates_cadastro.not(this).datepicker("option", option, date);
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#SGRS_ID_GRUPO').change(
+            function () {
+                $("#SSER_ID_SERVICO").removeAttr('disabled');
+                $.ajax({
+                    url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos',
+                    dataType: 'html',
+                    type: 'POST',
+                    data: this.value,
+                    contentType: 'application/json',
+                    processData: false,
+                    beforeSend: function () {
+                        $("#SSER_ID_SERVICO").removeClass('erroInputSelect');
+                        $("#SSER_ID_SERVICO").html('');
+                        $("#SSER_ID_SERVICO").addClass('carregandoInputSelect');
+                    },
+                    success: function (data) {
+                        $("#SSER_ID_SERVICO").html(data);
+                        $("#SSER_ID_SERVICO").removeClass('carregandoInputSelect');
+                        $("#SSER_ID_SERVICO").focus();
+                    },
+                    error: function () {
+                        $("#SSER_ID_SERVICO").removeClass('x-form-field');
+                        $("#SSER_ID_SERVICO").val('Erro ao carregar.');
+                        $("#SSER_ID_SERVICO").addClass('erroInputSelect');
+                        $("#SSER_ID_SERVICO").html('<option>Erro ao carregar</option>');
+                    }
+                });
+            }
+        );
+        $("#DE_MAT-label").hide();
+        $("#DE_MAT-element").hide();
+
+        if ($('#SERVICO-nomecompleto').is(':checked') == true) {
+
+            $('#SSER_DS_SERVICO').hide();
+            $('#SSER_DS_SERVICO-label').hide();
+            $('#SSER_DS_SERVICO').attr('disabled', 'disabled');
+
+            $('#SSER_ID_SERVICO').show();
+            $('#SSER_ID_SERVICO-label').show();
+            $('#SSER_ID_SERVICO').removeAttr('disabled');
+            var description_obj = $('#SSER_ID_SERVICO-element').find('.description');
+            description_obj.show();
+        } else if ($('#SERVICO-partenome').is(':checked') == true) {
+            $('#SSER_ID_SERVICO').hide();
+            $('#SSER_ID_SERVICO-label').hide();
+            $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+            var description_obj = $('#SSER_ID_SERVICO-element').find('.description');
+            description_obj.hide();
+
+            $('#SSER_DS_SERVICO').show();
+            $('#SSER_DS_SERVICO-label').show();
+            $('#SSER_DS_SERVICO').removeAttr('disabled');
+        }
+        $('input[type=radio][name=SERVICO]').click(
+            function () {
+                if (this.value == 'nomecompleto') {
+                    $('#SSER_DS_SERVICO').hide();
+                    $('#SSER_DS_SERVICO').val("");
+                    $('#SSER_DS_SERVICO-label').hide();
+                    $('#SSER_DS_SERVICO').attr('disabled', 'disabled');
+                    $('#SSER_ID_SERVICO').show();
+                    $('#SSER_ID_SERVICO-label').show();
+                    $('#SSER_ID_SERVICO').removeAttr('disabled');
+                    var description_obj = $('#SSER_ID_SERVICO-element').find('.description');
+                    description_obj.show();
+                } else if (this.value == 'partenome') {
+                    $('#SSER_ID_SERVICO').hide();
+                    $('#SSER_ID_SERVICO').val("");
+                    $('#SSER_ID_SERVICO-label').hide();
+                    $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+                    var description_obj = $('#SSER_ID_SERVICO-element').find('.description');
+                    description_obj.hide();
+
+                    $('#SSER_DS_SERVICO').show();
+                    $('#SSER_DS_SERVICO-label').show();
+                    $('#SSER_DS_SERVICO').removeAttr('disabled');
+                }
+
+            });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        // Função para verificar se o campo atendente esta vazio
+        $(".grid").each(function () {
+            $(".desvincular").click(function () {
+                var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]").is(':checked');
+                var ckeckBox = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                var splite = ckeckBox.split(',')[2];
+                var splite2 = splite.split(':')[1];
+                var spliteMatricula = ckeckBox.split(',')[1];
+                var spliteMatriculaAtendentes = spliteMatricula.split('-')[0];
+                var string = spliteMatriculaAtendentes.split(':')[1];
+                var spliteMatriculaAtendentesArray = string.substring(1, 10);
+                var usuarioLogado = $("#usuarioLogado").val();
+                var idPerfil = $("#idPerfil").val();
+                if (solictacaoSelecionada == true) {
+                    if (splite2 == 'null') {
+                        var mensagem = "<div class='notice'><strong>Alerta:</strong> Campo atendente vazio!</div>";
+                        $('#flashMessages').html(mensagem);
+                        return false;
+                    }
+                    ;
+                }
+                ;
+                if ((usuarioLogado != spliteMatriculaAtendentesArray) && (idPerfil != 9)) {
+
+                    var mensagem = "<div class='notice'>\n\
+                                 <strong>Alerta:</strong>\n\
+                                   Desvinculação somente com atendente ou o responsável pela caixa!\n\
+                                 </div>";
+                    $('#flashMessages').html(mensagem);
+                    return false;
+                }
+            });
+        });
+        function h2d(h) {
+            return parseInt(h, 16);
+        }
+
+        var labels = $("#CATE_ID_CATEGORIA-element").find('label');
+        var cores = $("input[type=checkbox][name=CATE_ID_CATEGORIA[]] ").attr('cores');
+        cores = jQuery.parseJSON(cores);
+        if (cores) {
+            $.each(cores, function (chave, cor) {
+                $(labels[chave]).css('background-color', cor);
+                var cor_numeros = cor.substr(1, cor.length);
+                var aux_numeros = h2d(cor_numeros);
+                if (aux_numeros >= (h2d('FFFFFF') / 2)) {
+                    $(labels[chave]).css('color', '#000');
+                } else {
+                    $(labels[chave]).css('color', '#FFFFFF');
+                }
+            });
+        }
+    });
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; ">
+    <script>
+        $(function () {
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+
+    <p>Esta <b>Caixa de Entrada</b> permite a visualização das solicitações pelos gerentes do Tribunal.</p>
+    <ul>
+        <li>Para ver o conteúdo de uma solicitação, clica-se duas vezes onde o cursor estiver posicionado.</li>
+        <li>O sistema mostrará a tela <i>Detalhe</i>, onde constam os dados do Documento (solicitação) e o seu <i>Histórico</i>.
+        </li>
+        <li>Utilize o filtro informando os parâmetros desejados</li>
+        <li><strong>Para listar todos os registros envie o formulário de filtro em branco.</strong></li>
+        <li><strong>É altamente recomendável utilizar o filtro para melhor desempenho da consulta.</strong></li>
+    </ul>
+    <p>Após a escolha da(s) solicitação(ões) poderá encaminhar uma ou mais solicitações para <b>Grupo de atendimento</b>
+        ou para um <b>Técnico determinado</b>.</p>
+
+    <p>Clicando no botão <b>Baixar</b>, as solicitações podem ser baixadas individualmente ou por lote.</p>
+
+    <p>Em <b>Solicitar informação</b>, inclua no campo <b>Descrição da Informação</b> a informação que deseja enviar ao
+        solicitante e clique no botão salvar.</p>
+
+    <p>Em <b>Trocar Serviço</b> selecione uma ou mais solicitações que deseja trocar o serviço e clique no botão Trocar
+        serviço.</p>
+
+    <p>Em <b>Vincular</b> selecione uma ou mais solicitações que deseja vincular, escolha no Vincularc e clique no botão
+        Salvar.</p>
+
+    <p>Em <b>Atendentes</b> selecione uma pessoa que deseja ativar ou desativar como atendente desta caixa e clique no
+        botão Salvar.</p>
+    <br/>
+
+    <p><b>SLA do Desenvolvimento:</b></p>
+    <ul>
+        <li>De acordo com a categoria de servi&ccedil;o s&atilde;o definidos prazos autom&aacute;ticos padr&otilde;es de
+            acordo com o edital, paginas 36, 37, 38 e 39. Lembrando que <i>por conven&ccedil;&atilde;o</i>,
+            devido &agrave; aus&ecirc;ncia de contagem estimada, os prazos padr&otilde;es s&atilde;o considerados <i>o
+                menor valor das tabelas:</i> Desenvolvimento de Novos Sistemas (1 m&ecirc;s corrido), Manuten&ccedil;&atilde;o
+            Evolutiva e Adaptativa(3 meses corridos) e Documenta&ccedil;&atilde;o de Sistemas(1 m&ecirc;s corrido). Para
+            as manuten&ccedil;&otilde;es corretivas consideram-se os prazos da tabela: Prazos De Atendimento De Servi&ccedil;os
+            (1&ordm; n&iacute;vel 6h ou 9h, 2&ordm; n&iacute;vel 12h ou 24h, 3&ordm; n&iacute;vel 24h ou 32h todas das
+            horas &uacute;teis e de acordo com o tipo causa ou problema). Para as categorias de Medi&ccedil;&atilde;o e
+            Atendimento Externo Nas Seccionais &eacute; considerado o mesmo prazo considerado para Manuten&ccedil;&atilde;o
+            Evolutiva e Adaptativa, isto &eacute; o menor valor dessa tabela (tr&ecirc;s meses corridos). Os prazos padr&otilde;es
+            s&atilde;o gen&eacute;ricos, por isso, existe a funcionalidade: solicitar extens&atilde;o de prazo onde os
+            prazos podem ser ajustados. &Eacute; muito importante manter as solicita&ccedil;&otilde;es no prazo, uma vez
+            que existem dois indicadores que incidem sobre o prazo, um sobre o quantitativo de solicita&ccedil;&otilde;es
+            fora do prazo e outro sobre a m&eacute;dia de dias de atraso.
+        </li>
+    </ul>
+
+    <p><b>Garantia Desenvolvimento<span style="text-decoration: underline;"></span></b></p>
+
+    <p>&nbsp;</p>
+
+    <p><b><i>A &nbsp;funcionalidades de Garantia &nbsp;afeta as seguintes funcionalidades: </i></b></p>
+    <ul>
+        <li>- <b>Encaminhamento da Caixa de Gest&atilde;o de Demandas de TI.</b></li>
+    </ul>
+    <p>Nesta funcionalidade &eacute; poss&iacute;vel solicitar garantia por meio de uma justificativa. &Eacute; necess&aacute;rio
+        somente selecionar o <i>checkbox</i>: solicitar garantia. E justificar seu pedido.</p>
+    <ul>
+        <li><b>- Baixa da Caixa de Desenvolvimento e Sustenta&ccedil;&atilde;o.</b></li>
+    </ul>
+    <p>Caso a justificativa seja aceita pelo atendente &nbsp;que baixar a solicita&ccedil;&atilde;o a negocia&ccedil;&atilde;o
+        de garantia &eacute; terminada e a solicita&ccedil;&atilde;o &eacute; considerada garantia.</p>
+
+    <p>Caso contr&aacute;rio a solicita&ccedil;&atilde;o que &nbsp;o pedido de garantia for &nbsp;negado constar&aacute;
+        na caixa de diverg&ecirc;ncia para negocia&ccedil;&atilde;o posterior, por meio das op&ccedil;&otilde;es de
+        concordo &nbsp;e discordo.</p>
+
+    <p>Cada gerente &eacute; respons&aacute;vel por sanar as diverg&ecirc;ncias de seus respectivos sistemas.<span
+            style="text-decoration: underline;"></span></p>
+    <ul>
+        <li><b>- Diverg&ecirc;ncia Garantia. </b></li>
+    </ul>
+    <p>Nesta caixa constam todas as solicita&ccedil;&otilde;es que entraram em diverg&ecirc;ncia.</p>
+
+    <p>Existe a a&ccedil;&atilde;o de avaliar, onde constam as op&ccedil;&otilde;es concordo e discordo.</p>
+
+    <p>Caso a op&ccedil;&atilde;o de concordo for selecionada a solicita&ccedil;&atilde;o <b><i>n&atilde;o</i></b> ser&aacute;
+        considerada garantia, caso contr&aacute;rio <b><i>sim</i></b>.</p>
+
+    <p>At&eacute; o momento do fechamento do SLA &eacute; poss&iacute;vel alterar a decis&atilde;o de concord&acirc;ncia.
+        Ap&oacute;s o fechamento essas solicita&ccedil;&otilde;es n&atilde;o ser&atilde;o mais listadas.<span
+            style="text-decoration: underline;"></span></p>
+    <span id="botao_ajuda_recolhe"></span>
+</div>
+<fieldset style="display:inline;">
+    <legend>Filtro da Caixa</legend>
+    <?php if (!$this->ultima_pesq == true) { ?>
+        <p><br/><strong>Utilize o filtro informando os parâmetros desejados <br> Para listar todos os registros envie o
+                formulário de filtro em branco.<br/> É altamente recomendável utilizar o filtro para melhor desempenho
+                da consulta.</strong></p>
+    <?php } ?>
+    <div class="painel">
+        <div class="painel">
+            <input type="button" title="Último Filtro" name="acao" value="Filtro" id="pesquisar">
+            <a title="Novo Filtro" name="acao" value="Filtrar" id="ultimo_filtro"
+               href="<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/solicitinformacaocaixa/nova/1">Limpar Filtro/Retirar
+                Filtro</a>
+            &emsp;&emsp;<span style="color: #2E4557;"
+                              id="statusfiltro"><strong><?php if ($this->ultima_pesq == true) echo "Filtro Ativo"; else echo "Filtro Inativo"; ?></strong></span>
+        </div>
+    </div>
+    <div id="pesq_div" style="display: block;">
+        <?php echo $this->form; ?>
+        <span id="botao_ajuda_recolhe"></span>
+    </div>
+</fieldset>
+<form name="helpdesk" action="" id="helpdesk" method="post">
+<?php if ($this->ultima_pesq == true) { ?>
+    <?php if (count($this->data)): ?>
+        <div class="painel">
+            <input type="submit" title="Incluir Informação" name="acao" value="Incluir Informação"/>
+            <input type="submit" title="Solicitar Informação ao Usuário Cadastrante" name="acao" value="Solicitar Informação ao Usuário Cadastrante"/>
+            <input type="submit" title="Trocar Categoria de Serviço da OS" name="acao" value="Trocar Categoria de Serviço" >
+        </div>
+        <div id="container_pagination">
+        <input type="hidden" id="cx" value="<?php echo $this->action; ?>" />
+        <table class="grid">
+            <thead>
+            <tr>
+                <th><input type="checkbox" name="input_check_all_grid" id="check_all"/></th>
+                <th></th>
+                <th>
+                    <a href="<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/solicitinformacaocaixa/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">N.
+                        da solicitação<span
+                            class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a>
+                </th>
+                <th>
+                    <a href="<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/solicitinformacaocaixa/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Tempo
+                        total<span
+                            class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a>
+                </th>
+                <th>
+                    <a href="<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/solicitinformacaocaixa/ordem/NOME_USARIO_CADASTRO/direcao/<?php echo $this->direcao ?> ">Nome
+                        do solicitante<span
+                            class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a>
+                </th>
+                <th>
+                    <a href="<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/solicitinformacaocaixa/ordem/SSER_DS_SERVICO/direcao/<?php echo $this->direcao ?> ">Serviço
+                        atual<span
+                            class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a>
+                </th>
+                <th>
+                    <a href="<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/solicitinformacaocaixa/ordem/NOME_ATENDENTE/direcao/<?php echo $this->direcao ?> ">Atendente<span
+                            class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php $tempoInicial = new App_Sosti_TempoSla();
+            $CateNs = new Zend_Session_Namespace('CateNs');
+            $identificador = $CateNs->idGrupo;
+            $tipo = 'GRUPO';
+            foreach ($this->data as $data):
+                $caso_categoria = new Application_Model_DbTable_SosTbCasoCategoriaSolic();
+                $categoriasGrupo = $caso_categoria->getCategoriasDocumentoGrupo($data["SSOL_ID_DOCUMENTO"], $identificador, $tipo);
+                $data['DADOS_INPUT'] = Zend_Json::encode($data);
+                $data['TEMPO_TRANSCORRIDO'] = $tempoInicial->tempoTotalHelpdesk($data['MOVIMENTACAO'], '', '07:00:00', '20:00:00');
+                ?>
+                <tr name="rowList" value="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>">
+                    <td <?php echo App_View_Helper_CorStatus::corCaixa($this->controller, 1024, $data["SESP_DH_LIMITE_ESP"], $data["TEMPO_TOTAL"], ''); ?>
+                        <?php echo (isset($this->vinc[$data["SSOL_ID_DOCUMENTO"]])) ? '' : '' ?>
+                        >
+                        <input class="nav_grid_check_box nav_check_boxes"
+                               id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" name="solicitacao[]"
+                               type="checkbox" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                    </td>
+                    <td>
+                        <?php if (isset($this->vinc[$data["SSOL_ID_DOCUMENTO"]])) : ?>
+                            <a href="#" class="plus-vinc <?php echo $data["SSOL_ID_DOCUMENTO"] ?>">
+                                <img src="<?php echo $this->baseUrl('img/a-plus-icon.png') ?>" alt=""/>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <a href="#" class="tooltip"
+                           title="<?php echo $data[DOCM_DS_ASSUNTO_DOC]; ?>"><?php echo $this->escape($data["MASCARA_DOCM"]); ?>
+                    </td>
+                    <td><?php echo $this->escape($data["TEMPO_TRANSCORRIDO"]); ?></td>
+                    <td><?php echo $this->escape($data["DOCM_CD_MATRICULA_CADASTRO"] . ' - ' . $data['NOME_USARIO_CADASTRO']); ?></td>
+                    <td><?php echo $this->escape($data["SSER_DS_SERVICO"]); ?></td>
+                    <td><?php echo $this->escape($data["NOME_ATENDENTE"]); ?></td>
+                </tr>
+                <?php if (isset($this->vinc[$data["SSOL_ID_DOCUMENTO"]])) : ?>
+                    <?php foreach ($this->vinc[$data["SSOL_ID_DOCUMENTO"]] as $vinc): ?>
+                        <?php
+                            $vinc['TEMPO_TRANSCORRIDO'] = $tempoInicial->tempoTotalHelpdesk($vinc['MOVIMENTACAO'], '', '07:00:00', '20:00:00');
+                        ?>
+                        <tr class="vinculados <?php echo $data["SSOL_ID_DOCUMENTO"] ?>">
+                            <td style="display: none" colspan="2" <?php echo App_View_Helper_CorStatus::corCaixa($this->controller, $vinc["MOFA_ID_FASE"], $vinc["SESP_DH_LIMITE_ESP"], $vinc["TEMPO_TOTAL"], ''); ?> >
+                                <input style="visibility: hidden" class="nav_grid_check_box nav_check_boxes"
+                                       id="<?php echo $this->escape($vinc["SSOL_ID_DOCUMENTO"]); ?>" name="solicitacao[]"
+                                       type="checkbox" value="<?php echo $this->escape(json_encode($vinc)); ?>"/>
+                            </td>
+                            <td style="display: none">
+                                <a href="#" class="tooltip"
+                                   title="<?php echo $vinc[DOCM_DS_ASSUNTO_DOC]; ?>"><?php echo $this->escape($vinc["MASCARA_DOCM"]); ?>
+                            </td>
+                            <td style="display: none"><?php echo $this->escape($vinc["TEMPO_TRANSCORRIDO"]); ?></td>
+                            <td style="display: none"><?php echo $this->escape($vinc["DOCM_CD_MATRICULA_CADASTRO"] . ' - ' . $vinc['NOME_USARIO_CADASTRO']); ?></td>
+                            <td style="display: none"><?php echo $this->escape($vinc["SSER_DS_SERVICO"]); ?></td>
+                            <td style="display: none"><?php echo $this->escape($vinc["NOME_ATENDENTE"]); ?></td>
+                            <td style="display: none"><?php if (isset ($vinc["VINCULADA"]) && ($vinc["VINCULADA"] == 1)) {
+                                    echo "SIM";
+                                } else {
+                                    echo "";
+                                } ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+            <?php endif; ?>
+            <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount(); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="9">
+                    <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    <?php else: ?>
+
+        <?php if ($this->ultima_pesq): ?>
+            <p><br/><strong>Não existem registros</strong></p>
+        <?php else: ?>
+            <p><br/>Não existem registros</p>
+        <?php endif; ?>
+
+
+    <?php endif; ?>
+    </div>
+<?php } else { ?>
+    <p><br/><strong>Utilize o filtro informando os parâmetros desejados</strong></p>
+<?php } ?>
+
+<?php echo $this->partial('_partials/caixahiddeninputs.phtml', array('view' => $this)); ?>
+</form>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>
+
+<script>
+    $(".plus-vinc").click(function (e) {
+        e.preventDefault();
+        var id = $(this).attr('class').replace('plus-vinc ', '');
+        var tr = $(".vinculados." + id);
+        tr.find('td').slideToggle(300);
+        if ($(this).find('img').attr('src') == "<?php echo $this->baseUrl('img/a-plus-icon.png') ?>")
+            $(this).find('img').attr('src', "<?php echo $this->baseUrl('img/a-minus-icon.png') ?>");
+        else
+            $(this).find('img').attr('src', "<?php echo $this->baseUrl('img/a-plus-icon.png') ?>");
+    });
+</script>

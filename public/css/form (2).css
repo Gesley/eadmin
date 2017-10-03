@@ -1,0 +1,127 @@
+.x-form-item {
+	-x-system-font:none;
+	display:block;
+	font-family:tahoma,arial,helvetica,sans-serif;
+	font-size:12px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:normal;
+	line-height:normal;
+	margin-bottom:4px;
+}
+
+.x-form-label-left label {
+	text-align:left;
+}
+
+.x-form-item label {
+	width:75px;
+	clear:left;
+	display:block;
+	float:left;
+	padding:3px 3px 3px 0;
+	position:relative;
+	width:100px;
+	z-index:2;
+	font-weight: bold;
+}
+
+.x-form-element {
+	padding-left:80px;
+	position:relative;
+}
+
+.x-form-text, textarea.x-form-field {
+	background:#FFFFFF url(../imagens/text-bg.gif) 	repeat-x scroll 0 0;
+	border:1px solid #B5B8C8;
+	padding:1px 3px;
+	/*width:222px;*/
+	padding-top:2px;
+	/*height:18px;*/
+	vertical-align:middle;
+}
+
+textarea.x-form-field {
+   /* height:auto;*/
+}
+
+.x-form-field {
+	-x-system-font:none;
+	font-family:tahoma,arial,helvetica,sans-serif;
+	font-size:12px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:normal;
+	line-height:normal;
+	margin:0;
+}
+
+.x-form-clear-left {
+	clear:left;
+	font-size:0;
+	height:0;
+	line-height:0;
+	overflow:hidden;
+}
+
+.box {
+    background:#F7F7F7 none repeat scroll 0 0;
+    border:1px solid #DADADA;
+    /*padding:15px 20px;*/
+}
+
+.avisos {
+    background:#fff none repeat scroll 0 0;
+    border:1px solid #fff;
+}
+
+
+h2 {
+    color:#002D53;
+    font:bold 18px arial,helvetica;
+    margin:10px 0;
+}
+
+/*ERROS*/
+ul.errors {
+    padding:0;
+    margin:2px 0 0 !important;
+
+}
+
+ul.errors li {
+    font:10px Arial,sans-serif;
+    color:#EC4A24 !important;
+    list-style-type:none;
+
+}
+dt {
+    margin:10px 0 0;
+}
+dd {
+    margin:0;
+}
+
+select {
+    margin:0;
+}
+
+h2.thin {
+    font-weight:lighter;
+}
+
+.form-buttons {
+    padding:0;
+    margin:0;
+    border:0;
+    border-top:1px solid #E4E4E4;
+    clear:both;
+    margin-top:3em;
+    padding-top:8px;
+    text-align:right;
+}
+

@@ -1,0 +1,34 @@
+<?php if (count($this->data)): ?>
+<div><a  class="novo" href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/form">Novo</a> </div>
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Ações</th>
+            <th ><a href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/index/ordem/FADM_DS_FASE/direcao/<?php echo $this->direcao ?> ">Descrição<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            <th ><a href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/index/ordem/FADM_IC_FASE_ATIVA/direcao/<?php echo $this->direcao ?> ">Fase Ativa<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            <th ><a href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/index/ordem/FADM_IC_DCTO_FASE/direcao/<?php echo $this->direcao ?> ">Documento da Fase<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+        </tr>
+    </thead>
+     
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+        <tr>
+            <td class="painel"><a title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/sisad/faseadm/form/id/<?php echo $data->FADM_ID_FASE ?>">editar</a>
+            <!--<a style="height: 20px; width: 28px;" title="Excluir" class="excluir" href="sisad/faseadm/form/id/<?php //echo $data->FADM_ID_FASE ?>" ></a>--></td>
+            <td><?php echo $this->escape($data->FADM_DS_FASE) ?></td>
+            <td><?php echo $this->escape($data->FADM_IC_FASE_ATIVA) ?></td>
+            <td><?php echo $this->escape($data->FADM_IC_DCTO_FASE) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+</table>
+<?php echo $this->paginationControl($this->data, null, null, null)
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>

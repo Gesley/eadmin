@@ -1,0 +1,127 @@
+<script type="text/javascript">
+            
+    $(function() {
+        $("#LOTA_COD_LOTACAO").autocomplete({
+                    source: "ajaxunidade",
+                    minLength: 3,
+                    delay: 500 
+         });
+        
+        $("#APSP_ID_PESSOA").focus(
+            function(){
+            var unidade = $("#LOTA_COD_LOTACAO").val().split(' - ')[2];
+            $.ajax({
+              url: "ajaxpessoa/id/"+unidade,
+              beforeSend:function() {
+                  $("#APSP_ID_PESSOA").removeClass('erroInputSelect');
+                  $("#APSP_ID_PESSOA").val("");
+                  $("#APSP_ID_PESSOA").addClass('carregandoInputSelect');
+              },
+              success: function(data) {
+                  $("#APSP_ID_PESSOA").html(data);
+                  $("#APSP_ID_PESSOA").removeClass('carregandoInputSelect');
+              },
+              error: function(){
+                  $("#APSP_ID_PESSOA").removeClass('x-form-field');
+                  $("#APSP_ID_PESSOA").val('Erro ao carregar.');
+                  $("#APSP_ID_PESSOA").addClass('erroInputSelect');
+                  $("#APSP_ID_PESSOA").html('<option>Erro ao carregar</option>');
+              }
+            });      
+        }
+        );
+        
+//        $("#PSPA_ID_PERFIL").focus(
+//            function(){
+//            var unidade = $("#LOTA_COD_LOTACAO").val().split(' - ')[2];
+//            var secao = $("#LOTA_COD_LOTACAO").val().split(' - ')[3];
+//            $.ajax({
+//              url: "ajaxperfil/unidade/"+unidade+"/secao/"+secao,
+//              beforeSend:function() {
+//                  $("#PSPA_ID_PERFIL").removeClass('erroInputSelect');
+//                  $("#PSPA_ID_PERFIL").val("");
+//                  $("#PSPA_ID_PERFIL").addClass('carregandoInputSelect');
+//              },
+//              success: function(data) {
+//                  $("#PSPA_ID_PERFIL").html(data);
+//                  $("#PSPA_ID_PERFIL").removeClass('carregandoInputSelect');
+//              },
+//              error: function(){
+//                  $("#PSPA_ID_PERFIL").removeClass('x-form-field');
+//                  $("#PSPA_ID_PERFIL").val('Erro ao carregar.');
+//                  $("#PSPA_ID_PERFIL").addClass('erroInputSelect');
+//                  $("#PSPA_ID_PERFIL").html('<option>Erro ao carregar</option>');
+//              }
+//            });      
+//        }
+//        );
+
+        
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                }
+            }
+        );
+        $('input[name=acao]').click(
+            function(){
+                var acao = this.value;
+                var sistemapapel = $('form[name=sistemapapel]');
+                if(acao == 'Alterar'){
+                    sistemapapel.attr('action','<?php echo $this->baseUrl(); ?>/guardiao/responsavel/form');
+                }
+            }
+        );
+                
+     });
+</script>
+<form id="form" name="sistemapapel" action="<?php echo $this->baseUrl(); ?>/guardiao/responsavel/form" method="post">
+    
+<?php echo $this->form->LOTA_COD_LOTACAO; ?>
+<?php echo $this->form->APSP_ID_PESSOA; ?>
+    
+<br/><div style="margin-bottom: 15px; "><input id="ALTERAR" name="acao" type="submit" class="novo" value="Associar"/> </div>
+
+<?php if (count($this->data)): ?>
+<input type="hidden" name="pmat_id_pessoa" value="<?php echo $this->pmat_id_pessoa;?>">
+<input type="hidden" name="lota_cod_lotacao" value="<?php echo $this->lota_cod_lotacao;?>">
+<input type="hidden" name="apsp_id_pessoa" value="<?php echo $this->apsp_id_pessoa;?>">
+<input type="hidden" name="apas_sg_sistema" value="<?php echo $this->apas_sg_sistema;?>">
+<br/>
+<!--<div style="margin-bottom: 30px; margin-top: -25px;"><a  class="novo" href="guardiao/unidadepessoa/form">Voltar</a> </div>-->
+<table class="grid">
+    <thead>
+        <tr>
+            <th ><input type="checkbox" name="input_check_all_grid" id="check_all" /></th>
+            <th ><a href="guardiao/unidadepessoa/form/ordem/APSU_ID_PAPEL_SISTEMA_UNIDADE/direcao/<?php echo $this->direcao ?> ">Código<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th ><a href="guardiao/unidadepessoa/form/ordem/APAS_SG_SISTEMA/direcao/<?php echo $this->direcao ?> ">Sistema<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th ><a href="guardiao/unidadepessoa/form/ordem/APAP_NM_PAPEL/direcao/<?php echo $this->direcao ?> ">Nome Papel Associado<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th ><a href="guardiao/unidadepessoa/form/ordem/APAP_DS_FINALIDADE/direcao/<?php echo $this->direcao ?> ">Descrição da Finalidade<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc'); ?>"></span></a></th>
+        </tr>
+    </thead>
+     
+    <tbody>
+        <?php foreach($this->data as $data): $i++; ?>
+        <tr>
+            <td> 
+                <input class="nav_check_boxes" type="checkbox" name="papeis[<?php echo $i; ?>][1]" <?php if($data['APSP_ID_PAPEL_SIST_UNID']!="")echo "checked"; ?> value="<?php if($data['APSP_ID_PAPEL_SIST_UNID']==""){ echo $data['APSU_ID_PAPEL_SISTEMA_UNIDADE']." - associar";}else{ echo $data['APSU_ID_PAPEL_SISTEMA_UNIDADE']." - associado";}?>">
+                <input type="hidden" name="papeis[<?php echo $i; ?>][2]" value="<?php if($data['APSP_ID_PAPEL_SIST_UNID']==""){ echo $data['APSU_ID_PAPEL_SISTEMA_UNIDADE']." - dissociado";}else{ echo $data['APSU_ID_PAPEL_SISTEMA_UNIDADE']." - associado";} ?>" > 
+                <!--<a style="height: 20px; width: 28px;" title="Excluir" class="excluir" href="guardiao/unidadepessoa/form"/id/<?php //echo $data->FADM_ID_FASE ?>" ></a>-->
+            </td>
+            <td><?php echo $this->escape($data['APSU_ID_PAPEL_SISTEMA_UNIDADE']) ?></td>
+            <td><?php echo $this->escape($data['APAS_SG_SISTEMA']) ?></td>
+            <td><?php echo $this->escape($data['APAP_NM_PAPEL']) ?></td> 
+            <td><?php echo $this->escape($data['APAP_DS_FINALIDADE']) ?></td>           
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+</table>
+</form>
+<?php echo $this->paginationControl($this->data, null, null, null)?>
+<?php else:?>
+    <p>Não existem permissões</p>
+<?php endif;?>

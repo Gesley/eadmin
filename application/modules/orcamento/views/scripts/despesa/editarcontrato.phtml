@@ -1,0 +1,78 @@
+<?php
+$valor = new Trf1_Orcamento_Valor();
+
+echo	$this->partial('_partials/ajax_responsaveis.phtml');
+echo	$this->partial('_partials/ajax_bloqueio.phtml');
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+?>
+
+<form id="frmContratoDespesa" enctype="application/x-www-form-urlencoded" method="post" action="">
+<dl class="zend_form">
+
+<br />
+<div id="editar" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+	<ul>
+		<li><a href="#contrato">Contrato</a></li>
+	</ul>
+	
+	<div id="contrato">
+		<?php
+		// Código da despesa
+		echo '<strong> Despesa </strong><br />';
+		echo $this->escape ( $this->despesa [ 'DESP_NR_DESPESA' ] ) . '<br /><br />' . PHP_EOL;
+		// Descrição da despesa
+		echo '<strong> Descrição da despesa </strong><br />';
+		echo $this->escape ( $this->despesa [ 'DESP_DS_ADICIONAL' ] ) . '<br /><br />' . PHP_EOL;
+		// Ano
+		echo '<strong> Ano </strong><br />';
+		echo $this->escape ( $this->despesa [ 'DESP_AA_DESPESA' ] ) . '<br /><br />' . PHP_EOL;
+		// UG
+		echo '<strong> Unidade gestora </strong><br />';
+		echo $this->escape ( $this->despesa [ 'DESP_CD_UG' ] . ' - ' . $this->despesa [ 'UNGE_DS_UG' ] ) . '<br /><br />' . PHP_EOL;
+		// Responsável
+		echo '<strong> Responsável </strong><br />';
+		echo $this->escape ( $this->despesa [ 'SG_DS_FAMILIA_RESPONSAVEL' ] ) . '<br /><br />' . PHP_EOL;
+		// PTRES
+		echo '<strong> PTRES </strong><br />';
+		echo $this->escape ( $this->despesa [ 'DESP_CD_PT_RESUMIDO' ] . ' - ' . $this->despesa [ 'PTRS_DS_PT_RESUMIDO' ] ) . '<br /><br />' . PHP_EOL;
+		// Natureza
+		echo '<strong> Natureza da despesa </strong><br />';
+		echo $this->escape ( $this->despesa [ 'DESP_CD_ELEMENTO_DESPESA_SUB' ] . ' - ' . $this->despesa [ 'EDSB_DS_ELEMENTO_DESPESA_SUB' ] ) . '<br /><br />' . PHP_EOL;
+		// Caráter
+		echo '<strong> Caráter da despesa </strong><br />';
+		echo $this->escape ( $this->despesa [ 'TIDE_DS_TIPO_DESPESA' ] ) . '<br /><br />' . PHP_EOL;
+		// Orçamento aprovado
+		echo '<strong> Orçamento aprovado </strong><br />';
+		echo $valor->retornaNumeroFormatadoValor ( $this->despesa [ 'VL_DESPESA_SECOR' ] ) . '<br /><br />' . PHP_EOL;
+		
+		// Número do contrato
+		echo $this->formContrato->CTRD_NR_CONTRATO . '<br />';
+		// Nome da empresa contratada
+		echo $this->formContrato->CTRD_NM_EMPRESA_CONTRATADA . '<br />';
+		// CPF/CNPJ da empresa contratada
+		echo $this->formContrato->CTRD_CPFCNPJ_DESPESA . '<br />';
+		// Data de início da vigência
+		echo $this->formContrato->CTRD_DT_INICIO_VIGENCIA . '<br />';
+		// Data de término da vigência
+		echo $this->formContrato->CTRD_DT_TERMINO_VIGENCIA . '<br />';
+		// Valor do contrato
+		echo $this->formContrato->CTRD_VL_DESPESA . '<br />';
+		?>
+	</div>
+</div>
+<br />
+
+<button name="Salvar" id="Salvar" type="submit" class="ceo_salvar"> Salvar </button>
+
+<?php
+//echo $this->formulario;
+// // echo $this->formulario->Salvar;
+// echo $this->formulario->DESP_CD_RESPONSAVEL . '<br />';
+?>
+</dl>
+</form>
+<?php
+// echo	$this->partial('despesa/js_soma.phtml');

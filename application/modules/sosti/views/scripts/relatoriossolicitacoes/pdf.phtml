@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    </head>
+    <body>
+<?php $total = count($this->cache['arrayData']); ?>
+<?php if ($total > 0): ?> 
+    <table class="grid">
+        <thead>
+            <tr class="title"><td colspan='4'><h3>TRIBUNAL REGIONAL FEDERAL DA 1ª REGIÃO</h3></td></tr>
+            <tr class="title"><td colspan='4'><h3>SECRETARIA DE TECNOLOGIA DA INFORMAÇÃO</h3></td></tr>
+            <tr class="title"><td colspan='4'><h3>DATA: <?php echo $this->cache['dataHora']; ?></h3></td></tr>
+            <tr class="title"><td colspan='4'><center><h2><?php echo $this->cache['title']; ?></h2></center></td></tr>
+            <?php echo $this->cache['unidade'] != "" ? "<tr><td colspan='4'>UNIDADE: ".$this->cache['unidade']."</td></tr>" : ""; ?>
+            <?php echo $this->cache['grupo'] != "" ? "<tr><td colspan='4'>GRUPO DE SERVIÇO: ".$this->cache['grupo']."</td></tr>" : ""; ?>
+            <?php echo $this->cache['dataInicial'] != "" ? "<tr><td colspan='4'>PERÍODO: ".$this->cache['dataInicial']." A ".$this->cache['dataFinal']."</td></tr>" : ""; ?>
+            <tr>
+                <th>Número da Solicitação</th>
+                <th>Data da Solicitação</th>
+                <th>Nome do Solicitante</th>
+                <th>Serviço Atual</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->cache['arrayData'] as $d): ?>
+                <tr>
+                    <td><?php echo $d["DOCM_NR_DOCUMENTO"]; ?></td>
+                    <td><?php echo $d["DOCM_DH_CADASTRO"]; ?></td>
+                    <td><?php echo $d["NOME_USARIO_CADASTRO"]; ?></td>
+                    <td><?php echo $d["SSER_DS_SERVICO"]; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">Total de registros: <?php echo $total; ?></td>
+            </tr>
+        </tfoot>
+    </table>
+<?php endif; ?>
+</body>
+</html>

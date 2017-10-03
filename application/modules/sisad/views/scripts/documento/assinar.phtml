@@ -1,0 +1,121 @@
+<?php
+$this->inlineScript()
+        ->appendFile(($this->baseUrl() . '/js/sisad/mensagem.js'))
+//        ->appendFile(($this->baseUrl() . '/js/sisad/documento/assinar.js'))
+        ->appendFile(($this->baseUrl() . '/js/eassinador/api-sdk.js'))
+        ->appendFile(($this->baseUrl() . '/js/sisad/documento/assinaSenhaToken.js'))
+//        ->appendFile(($this->baseUrl() . '/js/eadmin/eassinador/manipulador.js'))
+;
+?>
+<div class="info"><strong>Informação: </strong> Apenas documentos públicos ou que possuam-no como vista aparecem abaixo.</div>
+<div class="info" id="digitMsg" style="display: none;"><strong>Informação: </strong>Apenas documentos no formato PDF podem ser assinados por certificado digital.</div>
+<div class="help" id="msg_ajuda" style="display: none;" >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>- A funcionalidade Assinar permite assinar documentos públicos.</p>
+    <p>- Existem duas opções para assinar documentos:</p>
+    <ul>
+        <li>Assinatura por senha;</li>
+        <li>Assinatura por certificado digital.</li>   
+    </ul>
+    <p><b>Assinatura por senha:</b> Primeiro marcar os documentos que deseja assinar. Informar a senha e acionar o botão Assinar. Após isso, será apresentada uma lista contendo os documentos que foram assinados ou não.</p>
+    <p>- Será registrado na aba histórico as informações da assinatura realizada.</p>
+    </br>
+    <p><b>Assinatura por certificado digital</b>: Primeiro marcar os documentos que deseja assinar e acionar o botão Assinar. Após isso será apresentada uma tela onde deverá ser informado o nome e a senha do token. Acionar o botão ok.</p>
+    <p>- Será apresentada uma lista contendo os documentos que foram assinados ou não.</p>
+    <p>- Será registrado na aba histórico as informações da assinatura realizada.</p>
+    </br>
+    <p><b>Obs:</b> O CPF do usuário logado deverá ser o mesmo CPF do certificado digital.</p>
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<applet id="assinadorDigital" width="1px" height="1px"
+        code="br/gov/trf1/assinador/api/web/applet/AssinadorApplet"
+        archive="http://prd.trf1.gov.br/e-assinador/website/applet/assinadorApplet.jar">
+    <param name=servidorCarimboTempo value="SCT.TRF1.GOV.BR, SCT2.TRF1.GOV.BR">
+    <param name=portaCarimboTempo value="318, 318">
+</applet>
+<form id="form_documentos" name="assinatura" action="" method="POST">
+
+    <?php echo $this->form->TIPO_ASSINATURA; ?>
+    <?php if (count($this->documentos) > 0): ?>
+        <br/>
+        <strong>Marque os documentos que deseja assinar</strong>
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="check_todos_documentos"/></th>
+                    <th>Número</th>
+                    <th>Tipo</th>
+                    <th>Unidade emissora</th>
+                    <th>Autor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->documentos as $documento): ?>
+                    <tr>
+                        <td>
+                            <input name="documentos[]" type="checkbox" id="<?php echo $documento['DOCM_ID_DOCUMENTO'] ?>" 
+                                class="check_documento <?php echo (!$documento['aceita_assinatura_digital'] ? 'nao_aceita_assinatura_digital' : ''); ?> <?php echo (($documento['DOCM_ID_TP_EXTENSAO']  != 1) ? ('nao_aceita_assinatura_digital') : ('')); ?>" 
+                                value="<?php echo $this->escape(Zend_Json::encode($documento)) ?>"
+                            />
+                        </td>
+                        <td><?php echo $documento['MASC_NR_DOCUMENTO'] ?></td>
+                        <td><?php echo $documento['DTPD_NO_TIPO'] ?></td>
+                        <td><?php echo $documento['FAMILIA_EMISSORA'] ?></td>
+                        <td><?php echo $documento['PMAT_CD_MATRICULA_AUTOR'] . ' - ' . $documento['PNAT_NO_PESSOA_AUTOR'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <br />
+    <?php endif; ?>
+    <?php if (count($this->arrayProcessos) > 0): ?>
+        <?php foreach ($this->arrayProcessos as $processo): ?>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th colspan="6"> 
+                            Documentos para o processo: <?php echo $processo[0]["MASC_NR_DOCUMENTO"]; ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th><input type="checkbox" class="check_todos_documentos"/></th>
+                        <th>Número</th>
+                        <th>Tipo</th>
+                        <th>Unidade emissora</th>
+                        <th>Autor</th>
+                        <th>Juntado em</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($processo as $pr): ?>
+                        <tr>
+                            <td><input name="documentos[]" type="checkbox" id="<?php echo $pr['DOCM_ID_DOCUMENTO'] ?>" class="check_documento <?php echo (!$pr['aceita_assinatura_digital'] ? 'nao_aceita_assinatura_digital' : '') ?>" value="<?php echo $this->escape(Zend_Json::encode($pr)) ?>"/></td>
+                            <td><?php echo $pr['MASC_NR_DOCUMENTO'] ?></td>
+                            <td><?php echo $pr['DTPD_NO_TIPO'] ?></td>
+                            <td><?php echo $pr['FAMILIA_LOTACAO'] ? : $pr["FAMILIA_EMISSORA"] ?></td>
+                            <td><?php echo $pr['PMAT_CD_MATRICULA_AUTOR'] . ' - ' . $pr['PNAT_NO_PESSOA_AUTOR'] ?></td>
+                            <td><?php echo $pr['DCPR_DH_VINCULACAO_DOC'] ? : $pr["DOCM_DH_CADASTRO"] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <br />
+        <?php endforeach; ?>
+    <?php
+    endif;
+    echo '<br/>';
+    echo '<br/>';
+    echo '<div id="assinatura_por_senha">';
+    echo $this->form->USUARIO;
+    echo $this->form->SENHA;
+    echo '</div>';
+    echo $this->form->BT_ASSINAR;
+    ?>
+</form>
+<div id="dialog-message" title="Documento(s) assinado(s)" style="display: none;"></div>

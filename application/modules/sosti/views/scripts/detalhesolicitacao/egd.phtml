@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        #container{
+            margin: 0 auto;
+            font-family: arial;
+            width: 210mm;
+            height: 297mm;
+        }
+        table#header{
+            width: 100%;
+        }
+        table#header td.brasao{
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 97px;
+            width: 271px;
+        }
+        table#header td.date-time{
+            text-align: right;
+            font-size: 13px;
+        }
+        div#texto{
+            font-weight: bold;
+            text-align: justify;
+        }
+        .alinha-centro{
+            font-weight: bold;
+            text-align: center;
+        }
+        div.titulo-tabela{
+            padding-top: 10px;
+            padding-bottom: 7px;
+        }
+        table.conteudo{
+            width: 207mm;;
+            margin-left: 3mm;
+
+        }
+        table.conteudo tr.titulo{
+            text-align: center;
+            font-weight: bold;
+            background-color: silver;
+            font-size: 13px;
+        }
+        table.conteudo tr.dados{
+            font-size: 13px;
+        }
+        .rodape{
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .rodape-total{
+            font-weight: bold;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+    </head>
+    <body>
+        <?php             
+            $data = new Zend_Date();
+            $hora = $data->get(Zend_Date::HOUR);
+            $minuto = $data->get(Zend_Date::MINUTE);
+            $segundo = $data->get(Zend_Date::SECOND);
+            $dia = $data->get(Zend_Date::DAY);
+            $mes = $data->get(Zend_Date::MONTH);
+            $ano = $data->get(Zend_Date::YEAR);
+        ?>
+<div style="width: 1000px; margin: 0 auto; display: block;">
+    <table  style="font-size: 12px;" border="1" class="" style="width: 1000px;" >
+        <thead>
+            <tr>
+                <th colspan="11">
+                    Relatório do Desenvolvimento e Sustentação:  
+                    <?php echo $dia.'/'.$mes.'/'.$ano.' '.$hora.':'.$minuto.':'.$segundo; ?>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Número do Sosti</th>
+                <th>Descrição do Serviço</th>
+                <th>Nome do Atendente</th>
+                <th>Últ. F. Data</th>
+                <th>Últ. F. Hora</th>
+                <th>Descrição da Última Fase</th>
+                <th>Pz.Res. Dia</th>
+                <th>Pz.Res. Hora</th>
+                <th>Pz.Res. Minuto</th>
+                <th>Pz. Percent.</th>
+                <th>Ocor./Cat./Nív.</th>
+            </tr>
+            <?php foreach ($this->arraySolic as $v): ?>
+                <tr>
+                    <td><?php echo $v["DOCM_NR_DOCUMENTO"].'.'; ?></td>
+                    <td><?php echo $v["SSER_DS_SERVICO"]; ?></td>
+                    <td><?php echo $v["ATENDENTE"]; ?></td>
+                    <td><?php echo $v["ULT_F_DATA"]; ?></td>
+                    <td><?php echo $v["ULT_F_HORA"]; ?></td>
+                    <td><?php echo $v['DESCRICAO_ULTIMA_FASE']; ?></td>
+                    <td><?php echo $v["PRAZO_RESTANTE_D"]; ?></td>
+                    <td><?php echo $v["PRAZO_RESTANTE_H"]; ?></td>
+                    <td><?php echo $v["PRAZO_RESTANTE_M"]; ?></td>
+                    <td><?php echo $v["PRAZO_RESTANTE_PERCENTUAL"]; ?></td>
+                    <td><?php echo $v["OSIS_NM_OCORRENCIA"].' - '.$v["CTSS_NM_CATEGORIA_SERVICO"]; ?></td>
+                </tr>
+                <?php if(strcmp($v["DOC_VINC"]["DOCM_NR_DOCUMENTO"], $v['DOCM_NR_DOCUMENTO'])&&$v["DOC_VINC"]["DOCM_NR_DOCUMENTO"]!=NULL): ?>
+                <tr>
+                    <td colspan="11"> 
+                        <strong>Solicitação Vinculada:</strong>
+                        ESTA SOLICITAÇÃO ESTÁ VINCULADA A UMA PRINCIPAL: <?php echo $v["DOC_VINC"]["DOCM_NR_DOCUMENTO"]?>
+                    </td>
+                </tr>
+                <?php elseif (!(strcmp($v["DOC_VINC"]["DOCM_NR_DOCUMENTO"], $v['DOCM_NR_DOCUMENTO']))&&$v["DOC_VINC"]["DOCM_NR_DOCUMENTO"]!=NULL): ?>
+                 <tr>
+                    <td colspan="11">
+                        <strong>Solicitação Vinculada:</strong> 
+                        ESTA SOLICITAÇÃO É A PRINCIPAL DE UMA VINCULAÇÃO
+                    </td>
+                </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

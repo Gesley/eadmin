@@ -1,0 +1,229 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.maskedinput-1.3.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MultiFile.js'));
+?>
+<script type="text/javascript">
+    var grid_tbody_tr;
+    var xhr_abrir_documento;
+    $(function() {
+        $(".membros" ).button();
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            });
+        grid_tbody_tr.dblclick(function(){
+            
+            var this_tr = $(this);
+            var input_check_box = $(this).find('input');
+                console.log(input_check_box);
+            var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            this_tr.attr('marcado','marcado');
+            this_tr.addClass('hover');
+                
+            if (xhr_abrir_documento) {
+                xhr_abrir_documento.abort();
+            }
+            datainput = jQuery.parseJSON(value_input_check_box);
+                
+            if(datainput.DOCM_ID_TIPO_SITUACAO_DOC == 3 && datainput.CLASS_LIDO_TR == 'naolidoTr' && datainput.CLASS_LIDO == 'naolido'){
+                confirm('Paraca receber documentos físicos, adicione ao carrinho de documentos, logo em seguida RECEBER.\n\
+                            Somente confirmar transação caso esteja com documentos em mãos')
+            }else{
+                url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+                xhr_abrir_documento = $.ajax({
+                    url: url,
+                    dataType: 'html',
+                    type: 'POST',
+                    data: value_input_check_box,
+                    contentType: 'application/json',
+                    processData: false, 
+                    beforeSend:function() {
+                        div_dialog_by_id.dialog("open");
+                        div_dialog_by_id.html('');
+                    },
+                    success: function(data) {
+                        datainput = jQuery.parseJSON(value_input_check_box);
+                        div_dialog_by_id.html(data);
+
+                        var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                        span_id_leitura.removeClass('naolido');
+                        span_id_leitura.addClass('lido');
+                        span_id_leitura.attr('title','Documento lido');
+                        $(this_tr).removeClass('naolidoTr');
+                        $(this_tr).addClass('lidoTr');
+
+                        //console.log(value_input_check_box);
+
+
+                        datainput.CLASS_LIDO = 'lido';
+                        datainput.CLASS_LIDO_TR = 'lidoTr';
+                        datainput.MSG_LIDO = 'Documento lido';
+
+                        datainput_atualizado = JSON.stringify(datainput, null, null);
+                        input_check_box.val(datainput_atualizado)
+
+                    },
+                    complete: function(){
+
+                    },
+                    error : function(){
+
+                    }
+                });
+            }//end else
+        });//end grid_tbody_tr.dblclick
+        
+        $('input[name=acao]').click(function(){
+            var acao = this.value;
+            if(acao == 'Alterar Dados do Julgamento'){
+                var url = '<?php echo $this->baseUrl(); ?>/sisad/distribuicao/formdadosjulgamento/';
+                var $form = $('form#processo');
+                
+                $.ajax({
+                    url: url,
+                    
+                    data: $form.serialize(),
+                    success: function(data){
+                        $('#dialog-dadosjulgamento').html('');
+                        $('#dialog-dadosjulgamento').html(data);
+                        $('#dialog-dadosjulgamento').dialog({
+                            height:500,
+                            width:900,
+                            title:'Alteração de dados do Julgamento Processual',
+                            buttons: {
+                                "Salvar": function() {
+                                    var $formJulgamento = $('form#dadosJulgamento');
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '<?php echo $this->baseUrl(); ?>/sisad/distribuicao/formdadosjulgamento/',
+                                        data: $formJulgamento.serialize(),
+                                        success: function(data){
+                                            if(data.success){
+                                                
+                                                $('form#processo').append("<input type='hidden' name='resposta' value='sucesso'/>");
+                                                $form.submit();
+                                                $( '#dialog-dadosjulgamento' ).dialog( "close" );
+                                                //$( '#flashMessagesView' ).html( '<div class="success"><strong>Sucesso:</strong> Alteração de dados de julgamento realizada com sucesso.</div>');
+                                                
+                                            }else{
+                                                $( '#dialog-dadosjulgamento' ).html( data );
+                                            }
+                                        }// FIM success:
+                                        ,error : function(){
+                                            alert('Erro: Não foi possivel alterar os dados.');
+                                        }
+                                    });// FIM $.ajax({
+                                }, //FIM "Salvar":
+                                "Fechar": function() {
+                                    $( '#dialog-dadosjulgamento' ).dialog( "close" );
+                                }//FIM "Fechar":
+                            }// FIM buttons: {
+
+                        });// FIM $('#dialog-dadosjulgamento').dialog(
+                    },
+                    error : function(){
+                        alert('Erro: Não foi possivel localizar os dados das distribuições marcadas.');
+                    }
+                });
+//                $('#dialog-dadosjulgamento').html('');                   
+//                $('#dialog-dadosjulgamento').html(data);
+//                $('#dialog-dadosjulgamento').dialog('open');
+//                $('#dialog-dadosjulgamento').attr('css','overflow:auto;');
+            }//fim if(acao == 'Inserir Dados do Julgamento'){
+        });
+    });
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php if (count($this->data)): ?>
+<div class="painel">
+    <input type="submit" name="acao" value="Alterar Dados do Julgamento" class="Alterar Dados do Julgamento Dados do Julgamento" /> 
+</div>
+<form method="POST" id="processo" name="processos" enctype="multipart/form-data" >
+<input type="hidden" name="tipoPagina" value="alterar"/> 
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr> 
+                <th ></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaojulgados/ordem/HDPA_CD_PROC_ADMINISTRATIVO/direcao/<?php echo $this->direcao ?> ">
+                        Processo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaojulgados/ordem/HDPA_TS_DISTRIBUICAO/direcao/<?php echo $this->direcao ?> ">
+                        Data Distribuição<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaojulgados/ordem/HDPA_DT_JULGAMENTO/direcao/<?php echo $this->direcao ?> ">
+                        Data do Julgamento<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaojulgados/ordem/HDPA_DS_RESUMO_DECISAO/direcao/<?php echo $this->direcao ?> ">
+                        Resumo da Decisão<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaojulgados/ordem/HDPA_DT_PUBLIC_JULGAMENTO_DJ/direcao/<?php echo $this->direcao ?> ">
+                        Pub. Diário da Justiça<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaojulgados/ordem/HDPA_DT_PUBLIC_JULGAMENTO_BS/direcao/<?php echo $this->direcao ?> ">
+                        Pub. Boletim de Serviço<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                
+                
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): 
+                $dadosJSon = Zend_Json::encode($data)
+            ?>
+<!--                <tr title="Duplo click para Abrir">-->
+                <tr id='<?=$this->escape($data["HDPA_CD_PROC_ADMINISTRATIVO"]); ?>'>
+                    <td><input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["HDPA_CD_PROC_ADMINISTRATIVO"]); ?>" name="processo[]" type="checkbox" value="<?php echo $this->escape($dadosJSon); ?>"/></td>
+                    <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?></td>
+                    <td><?php echo $this->escape($data["HDPA_TS_DISTRIBUICAO"]); ?></td>
+                    <td><?php echo $this->escape($data["HDPA_DT_JULGAMENTO"]); ?></td>
+                    <td><?php echo $this->escape($data["HDPA_DS_RESUMO_DECISAO"]); ?></td>
+                    <td><?php echo $this->escape($data["HDPA_DT_PUBLIC_JULGAMENTO_DJ"]); ?></td>
+                    <td><?php echo $this->escape($data["HDPA_DT_PUBLIC_JULGAMENTO_BS"]); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" >Total: <span id="qtdRegistros"><?php echo $this->data->getTotalItemCount()     
+                                            ////-- pagination
+                                            //-- style
+                                            //-- partial
+                                            //-- data?></span>
+                   </td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+<div id="dialog-dadosjulgamento"></div>
+<div id="dialog-carrinho_detalhe" style="overflow: scroll;">
+</div>

@@ -1,0 +1,221 @@
+<?php
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/sisad/pesquisadocumentoemprocesso.js'));
+?>
+<?php // Zend_Debug::dump($this->dados_documento);
+// exit;
+?>
+<br/>
+<div class="painel" id="pesquisar">
+    <input type="button" title="Última pesquisa" name="acao" value="Última Pesquisa" id="UltPesquisa"/>
+</div>
+<fieldset>
+    <legend>Dados do Processo</legend>
+    <table class="" style="cursor: default;" >
+        <tr style="font-size: 12px; font-weight: bold;">
+            <td title="Tipo do documento" colspan="1"><?= $this->dados_documento['DTPD_NO_TIPO'] ?></td>
+            <td title="Número do documento" NOWRAP>Nº:&emsp;<?= $this->dados_documento['DOCM_NR_DOCUMENTO'] ?></td>
+            <td title="Data e hora de cadastro" NOWRAP>D/H criação:&emsp;<?= $this->dados_documento['DOCM_DH_CADASTRO'] ?></td>
+        </tr>
+        <tr>
+            <th >Nº Documento Usuário:</th>
+            <td title="Número do documento"><?= $this->dados_documento['DOCM_NR_DCMTO_USUARIO'] ?></td>
+        </tr>
+        <tr>
+            <th >Assunto do documento: </th>
+            <td colspan="3" title="Número do documento">
+                <?= $this->dados_documento['AQVP_CD_PCTT'] . ' - ' . $this->dados_documento['AQAT_DS_ATIVIDADE'] ?>
+            </td>
+        </tr>
+        <?php if (is_array($this->dados_processo)): ?>
+            <tr>
+                <th >Objeto do Processo: </th>
+                <td colspan="3" title="Objeto do Processo"><?= $this->dados_processo['PRDI_DS_TEXTO_AUTUACAO'] ?></td>
+            </tr>
+        <?php endif; ?>
+        <tr>
+            <th >Situação:</th>
+            <td title="Número do documento"><?= $this->dados_documento['TPSD_DS_TIPO_SITUACAO_DOC'] ?></td>
+            <th >Confidencialidade:</th>
+            <td title="Número do documento"><?= $this->dados_documento['CONF_DS_CONFIDENCIALIDADE'] ?></td>
+        </tr>
+        <tr>
+            <th >Unidade Emissora:</th>
+            <td colspan="3">
+                <?= $this->dados_documento['LOTA_SIGLA_LOTACAO_EMISSORA'] ?>
+                - <?= $this->dados_documento['LOTA_DSC_LOTACAO_EMISSORA'] ?>
+                - <?= $this->dados_documento['LOTA_COD_LOTACAO_EMISSORA'] ?>
+                - <?= $this->dados_documento['FAMILIA_EMISSORA'] ?>
+            </td>
+        </tr>
+        <tr>
+            <th >Unidade Redatora:</th>
+            <td colspan="3">
+                <?= $this->dados_documento['LOTA_SIGLA_LOTACAO_REDATORA'] ?>
+                - <?= $this->dados_documento['LOTA_DSC_LOTACAO_REDATORA'] ?>
+                - <?= $this->dados_documento['LOTA_COD_LOTACAO_REDATORA'] ?>
+                - <?= $this->dados_documento['FAMILIA_REDATORA'] ?>
+            </td>
+        </tr>
+        <tr>
+            <th>Cadastrante:</th>
+            <td colspan="1"><?= $this->dados_documento['NOME'] ?></td>
+            <th>Matrícula:</th>
+            <td colspan="1"><?= $this->dados_documento['DOCM_CD_MATRICULA_CADASTRO'] ?></td>
+        </tr>
+        <?php if (is_array($this->processos_pai)): ?>
+            <tr>
+                <th>Inserido no PA número:</th>
+                <td colspan="3">
+                    <?php
+                    foreach ($this->processos_pai as $processoPai):
+                        echo $processoPai['DOCM_NR_DOCUMENTO_PROC']
+                        . ' em ' . $processoPai['DCPR_DH_VINCULACAO_DOC']
+                        . ' por ' . $processoPai['PNAT_NO_PESSOA']
+                        . '<br/>';
+                    endforeach;
+                    ?>
+                </td>
+            </tr>
+        <?php endif; ?>
+        <?php if (is_array($this->apensacao['principal'])): ?>
+            <tr>
+                <th>Inserido no PA número:</th>
+                <td colspan="3">
+                    <?php
+                    foreach ($this->processos_pai as $processoPai):
+                        echo $processoPai['dados_processo']['DOCM_NR_DOCUMENTO']
+                        . ' em ' . $processoPai['historico_processo']['MOFA_DH_FASE']
+                        . ' por ' . $processoPai['historico_processo'][0]['MOFA_CD_MATRICULA_NOME'] // pega o primeiro dado do histórico (ultima movimentação)
+                        . '<br/>';
+                    endforeach;
+                    ?>
+                </td>
+            </tr>
+        <?php endif; ?>
+        <!-- Se o documento for uma minuta -->
+        <?php if (is_array($this->minutas['documento_da_minuta'])): ?>
+            <tr>
+                <th>Vinculada ao documento:</th>
+                <td><?= $this->minutas['documento_da_minuta']['DOCM_NR_DOCUMENTO'] ?></td>
+            </tr>
+        <?php endif; ?>
+        <!-- Se o documento tiver uma minuta -->
+        <?php if (is_array($this->minutas['minuta_do_documento'])): ?>
+            <tr>
+                <th>Minuta vinculada:</th>
+                <td><?= $this->minutas['minuta_do_documento']['DOCM_NR_DOCUMENTO'] ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php
+        if (is_null($this->dados_documento['DOCM_NR_DOCUMENTO_RED']) && ($this->dados_documento['DTPD_NO_TIPO'] == Trf1_Sisad_Definicoes::TIPO_DOCUMENTO_PROCESSO_DESCRICAO)) {
+            /* NAO MOSTRA A LINHA "ABRIR:" */
+        } elseif ((!is_null($this->dados_documento['DOCM_NR_DOCUMENTO_RED']) && $this->dados_documento['DTPD_NO_TIPO'] == Trf1_Sisad_Definicoes::TIPO_DOCUMENTO_PROCESSO_DESCRICAO) || ($this->dados_documento['DTPD_NO_TIPO'] != Trf1_Sisad_Definicoes::TIPO_DOCUMENTO_PROCESSO_DESCRICAO)) {
+            /* Dados relativos ao link Abrir */
+            if (is_null($this->dados_documento['DOCM_NR_DOCUMENTO_RED'])) {
+                if ($this->dados_documento['DTPD_NO_TIPO'] != Trf1_Sisad_Definicoes::TIPO_DOCUMENTO_PROCESSO_DESCRICAO) {
+                    $textoLink = 'Sem Arquivo';
+                } else {
+                    $textoLink = '';
+                }
+                $classAbrir = 'alertaButton';
+                $title = 'Sem Arquivo';
+            } else {
+                $classAbrir = 'abrirAnexo';
+                $title = 'Abrir Documento';
+                $textoLink = '';
+            }
+            ?>
+            <tr >
+                <th>Abrir:</th>
+                <td>
+                    <a class="<?= $classAbrir ?>" target="_blank" title="<?= $title ?>" href="<?= $this->baseUrl() ?>/sisad/gerenciared/recuperar/id/<?= $this->dados_documento['DOCM_ID_DOCUMENTO'] ?>/dcmto/<?= $this->dados_documento['DOCM_NR_DOCUMENTO_RED'] ?>/tipo/<?= $this->dados_documento['DOCM_ID_TP_EXTENSAO'] ?> ">
+                        <?= $textoLink ?>
+                    </a>
+                </td>
+            </tr>
+        <?php } ?>
+        <tr >
+            <th colspan="4">Descrição:</th>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <div style="font-size: 10pt; padding-left: 6px;">
+                    <?= $this->dados_documento['DOCM_DS_ASSUNTO_DOC'] ?>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+
+<div class="help" id="pesq_div" style="<?php if ($this->ultima_pesq) echo "display: none;" ?>">
+    <form name="Pesquisar" method="post" action="" >
+        <input type="submit" name="Pesquisar" id="Pesquisar" value="Pesquisar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
+        <br /><br />
+        <?php
+        // echo $this->form; 
+        echo $this->form->TRF1_SECAO_1;
+        echo $this->form->OPCAO_NR_DOCUMENTO;
+        echo $this->form->DOCM_ID_DOCUMENTO;
+        echo $this->form->NUMERO_ANO;
+        echo $this->form->OPCAO_DOCUMENTO;
+        echo $this->form->DOCM_CD_MATRICULA_CADASTRO;
+        echo $this->form->DOCM_CD_LOTACAO_GERADORA;
+        echo $this->form->DOCM_CD_LOTACAO_REDATORA;
+        echo $this->form->TIPO_PROCESSO;
+        echo $this->form->DOCM_ID_TIPO_DOC;
+        echo $this->form->DOCM_NR_DCMTO_USUARIO;
+        echo $this->form->DOCM_ID_PCTT;
+        echo $this->form->DOCM_DS_PALAVRA_CHAVE;
+        echo $this->form->DOCM_ID_TIPO_SITUACAO_DOC;
+        echo $this->form->DOCM_ID_CONFIDENCIALIDADE;
+        echo $this->form->DOCM_NR_DOCUMENTO_RED;
+        echo $this->form->DATA_INICIAL;
+        echo $this->form->DATA_FINAL;
+        echo $this->form->dcpr_id;
+        ?> 
+        <br />
+        <input type="submit" name="Pesquisar" id="Pesquisar" value="Pesquisar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
+    </form>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<?php if ($this->retornoPesq) { ?>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Tipo</th>
+                <th>Número</th>
+                <th>Data de Criação</th>
+                <th>Localização</th>
+                <th>Encaminhador</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->retornoPesq as $data) { 
+                $idEncodado = Zend_Json_Encoder::encode($data);?>
+                <tr title="Duplo click para Abrir" class="grid_rows" name="rowList" value="<?php echo $data["DOCM_ID_DOCUMENTO"]; ?>" > 
+                    <td><input class="nav_grid_check_box nav_check_boxes" value="<?php echo $this->escape($idEncodado); ?>" name="documento[]" type="checkbox" /></td>
+                    <td><?php echo $this->escape($data["DTPD_NO_TIPO"]); ?></td>
+                    <td><?php echo $this->escape($data["MASC_NR_DOCUMENTO"]); ?></td>
+                    <td><?php echo $this->escape($data["DOCM_DH_CADASTRO"]); ?></td>
+                    <td><?php echo $this->escape($data["LOTA_SIGLA_LOTACAO"]); ?></td>                        
+                    <td><?php echo $this->escape($data["ENCAMINHADOR"]); ?></td>
+                </tr>
+            <?php }; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6">Total: <?php echo count($this->retornoPesq); ?></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<?php }else{?>
+    <p><br/><strong>Não existem registros para os parametros de pesquisa informados</strong></p>
+<?php }; ?>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

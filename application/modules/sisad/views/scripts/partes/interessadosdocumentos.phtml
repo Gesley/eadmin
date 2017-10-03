@@ -1,0 +1,36 @@
+
+ <div id="dialog_cadastra_interessado">
+ 
+   <?php 
+     if(count($this->interessados_docs) > 0): ?>  
+     <table id="interessados_documentos" style="margin-top: 20px; width: 80%;" class="grid">
+            <thead> 
+                <tr>
+                    <th colspan="2"> Interessados cadastrados no(s) Documento(s) <br/>
+                         Para removê-los clique em 'Remover' ou 'Remover todos' <br/>
+                         Se eles não forem removidos, serão inseridos também como interessados no Processo
+                        </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2"><a href='#' class='removerPartesDocs' rel='' >Remover todos</a></td>
+                </tr>
+                
+                        
+                <?php //Zend_debug::dump($this->interessados_docs);
+                        foreach($this->interessados_docs as $i):  ?>
+                            
+                            <tr class="linha_interessado linha_remover"> 
+                                <td style='width: 5%'><a href='#' class='remover' rel='' > Remover </a></td>
+                                <td> <?php echo $i['nome']." - ".$i['id']?> </td>
+                                <input type="hidden" class="" value="<?php echo $i['value']?>" name="<?php echo $i['input_name'] ?>"/>
+                            </tr>
+                            
+               <?php  endforeach;
+                   
+               ?>
+           </tbody>
+      </table>
+  <?php  endif; ?>
+ </div> 

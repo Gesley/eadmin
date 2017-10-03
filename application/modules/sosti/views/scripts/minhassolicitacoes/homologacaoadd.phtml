@@ -1,0 +1,170 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/multiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/sosti/respostaPadrao.js'));
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+   <p>Texto explicando a homologação pros caras</p>
+
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<script type="text/javascript">
+    
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+        
+    $(function(){
+        
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.dblclick(
+        function(){
+            var this_tr = $(this);
+            var input_check_box = $(this).find('input');
+            //var input_check_box = $(this).find('input[type=checkbox]');
+            var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            this_tr.attr('marcado','marcado');
+            this_tr.addClass('hover');
+                
+            if (xhr_abrir_documento) {
+                xhr_abrir_documento.abort();
+            }
+                
+            url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                
+            //alert(value_input_check_box);
+                
+            xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    $("#loading").hide();
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+            });
+        }
+    );
+        $('form[name=avaliacao]').submit(
+        function() {          
+            var solictacaoSelecionada = $("input[type=radio][name=satisfacao[]]:checked").val();
+            var descricao = $("#descricao").val();
+            if (((solictacaoSelecionada == 6) && (descricao == ''))) { 
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Para avaliar a solicitação como RECUSADA, é necessário preencher o campo Descrição da Avaliação!</div>";
+                $('#flashMessages').html(mensagem);
+                return false;
+            }
+            if (solictacaoSelecionada == undefined) { 
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma opção para avaliação!</div>";
+                $('#flashMessages').html(mensagem);
+                return false;
+            }
+        }
+    );
+        $("#ANEXAR").hide('');
+        $("#ANEXAR-label").hide('');
+        $(".description").hide('');
+        $("input[type=radio][name=satisfacao]").click(function() {
+            var sat = $("input[type=radio][name=satisfacao]:checked").val();
+            if (sat == 6) {
+                $("#ANEXAR").show('');
+                $("#ANEXAR-label").show('');
+                $(".description").show('');
+            } else {
+                $("#ANEXAR").hide('');
+                $("#ANEXAR-label").hide(''); 
+                $(".description").hide('');
+            }
+        });
+         
+        var sat = $("input[type=radio][name=satisfacao]:checked").val();
+        if (sat == 6) {
+            $("#ANEXAR").show('');
+            $("#ANEXAR-label").show('');
+            $(".description").show('');
+        } else {
+            $("#ANEXAR").hide('');
+            $("#ANEXAR-label").hide(''); 
+            $(".description").hide('');
+        }
+         
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+            autoOpen : false,
+            modal    : false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580,140,0,0],
+            buttons : {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+</script>
+<?php echo $this->flashMessagesView ?>
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Número</th>
+            <th >Autor</th>
+            <th >Tempo total</th>
+            <th >Serviço atual</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php foreach ($this->data as $data): ?>
+            <?php $d = Zend_Json::decode($data); ?>      
+            <tr>
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?>
+                    <input style="display: none;" class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($d["SSOL_ID_DOCUMENTO"]); ?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data); ?>"/>
+                </td>
+                <td> <?php echo $this->escape($d["NOME_USARIO_CADASTRO"]) ?></td>
+                <td> <?php echo $this->escape($d["TEMPO_TRANSCORRIDO"]); ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"]) ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="7">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<form action="" method="post" name="homologacaoadd" enctype="multipart/form-data" >
+
+    <fieldset style="width:490px;">
+        <legend>Status da Homologação</legend>
+        <input type="radio" name="homologacao" value="1">Homologado<br />
+        <input type="radio" name="homologacao" value="2">Não Homologado
+    </fieldset>
+    
+    
+<?php echo $this->form ?>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>
+</form>

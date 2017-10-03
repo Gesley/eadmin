@@ -1,0 +1,90 @@
+<script>
+    $(function(){
+        botao_ajuda_by_id.delay(200).show('scale');
+    })
+</script>
+<script type="text/javascript">
+    $(function() {
+        
+        $("#POST_CD_PESSOA_DESTINO").autocomplete({
+            source: base_url+"/sisad/protocolo/ajaxnomedestinatario",
+            minLength: 3,
+            delay: 300,
+        });
+        $( ".editar" ).button({
+                    icons: {
+                        primary: "ui-icon-pencil"
+                    }
+        }).attr('style','width: 40px; height: 16px;');
+        $( ".excluir" ).button({
+                    icons: {
+                        primary: "ui-icon-trash"
+                    }
+        }).attr('style','width: 40px; height: 16px;');
+        
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_unid_ranscunho = $('form[name=protocolo]');
+            if(acao == 'Cadastrar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/protocolo/add');
+            }
+        }
+    );
+     });
+</script> 
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <h3>Ajuda&ensp;</h3>
+     <p>Endereçamento de Documentos para Postagem</p>
+     <ul>
+         <li><b>Órgão Destino</b> - constam todos os órgãos cadastrados  pelas Secam’s 1ªreg.</li>
+         <li><b>Destinatário</b> - neste campo pode-se digitar o nome da pessoa que irá receber o documento.</li>
+         <li><b>Tratamento</b> - escolher a forma de tratamento para o destinatário.</li>
+         <li><b>Endereço</b> - o endereço será mostrado caso ele exista, ou permitida a sua digitação.</li>
+         <li><b>CEP</b> - o sistema irá trazer, não existindo poderá ser digitado</li>
+         <li><b>Preferência de Postagem</b> - conforme definido pelos Correios poderá ser solicitado pelo usuário, no entanto, caberá ao setor de protocolo definir o melhor tipo de postagem.</li>
+     </ul>
+    
+    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<form method="POST" action="" name="protocolo" >
+    <div class="painel"><input type="submit" title="Cadastrar novo Orgão / Endereço" name="acao" value="Cadastrar" class="carrinhoMenu"/></div>
+    <fieldset>
+    <legend>Pesquisa de Endereços Cadastrados</legend>
+    <?php 
+        echo $this->formAdd->ACAO; 
+        echo $this->formAdd->POST_CD_PESSOA_DESTINO;  
+        echo $this->formAdd->Consultar; 
+    ?>
+    <br/>
+    <?php 
+        if (count($this->data)): 
+    ?>
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Tipo de Endereço</th>
+                <th >Endereço</th>
+                <th >CEP</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): ?>
+            <?php $i++;?>
+            <tr>
+                <td><?php echo $this->escape($data['PTEN_NO_TP_ENDERECO']) ?></td>           
+                <td><?php echo $this->escape($data['PEND_DS_ENDERECO']) ?></td>           
+                <td><?php echo $this->escape($data['PEND_NR_CEP']) ?></td>           
+            </tr>
+            <?php endforeach;?>
+        </tbody>
+        <tfoot><tr><td colspan="7">Quantidade de Endereços: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+    </table>
+    <?php //echo $this->paginationControl($this->data, null, null, null)?>
+<?php endif; ?>
+</fieldset>
+</form>

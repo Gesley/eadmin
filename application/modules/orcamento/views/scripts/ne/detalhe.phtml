@@ -1,0 +1,19 @@
+<?php
+$valor = new Trf1_Orcamento_Valor ();
+
+echo	$this->partial('_partials/tela_detalhe_crud.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo,
+				'dados'		=> $this->dados));
+
+echo	'<br />';
+
+echo $this->partial ( '_partials/execucao.phtml', array ( 'execucao' => $this->execucao ) );
+echo '<br />';
+
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'ne',
+				'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+				'textoBotao'		=> 'Voltar para listagem',
+				'textoAlternativo'	=> 'Retornar à tela de Listagem de Notas de Empenho'));

@@ -1,0 +1,101 @@
+<style>
+    #container{
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+        margin: 0 auto;
+        /*background-size: 190mm 170mm;
+        background-image: url(marca_d_agua.gif);
+        background-position: center;
+        background-repeat: no-repeat;*/
+    }
+    table#header{
+        width: 100%;
+        font-size: 12px;
+        padding-bottom: 35px;
+    }
+    table#header td.brasao{
+
+        background-image: url(<?= $this->baseUrl() ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    div#texto{
+        font-weight: bold;
+        text-align: justify;
+        font-size: 15px;
+        padding-top: 70px; 
+    }
+    div.titulo-tabela{
+        padding-top: 50px;
+        padding-bottom: 7px;
+        font-size: 12pt;
+
+    }
+    table.conteudo{
+        width: 207mm;;
+        margin-left: 3mm;
+
+    }
+    table.conteudo td.titulo{
+        text-align: center;
+        font-weight: bold;
+        background-color: silver;
+        font-size: 13px;
+    }
+    table.conteudo td.dados{
+        font-size: 13px;
+    }
+    .rodape{
+        font-weight: bold;
+        font-size: 13px;
+    }
+    .alinha-titulo{
+        font-size: 15px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+</style>
+
+<div id="container">
+    <watermarkimage src="<?= $this->baseUrl() ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+    <div class='alinha-titulo' style="font-size: 15px;"><b>ATA DE DISTRIBUIÇÃO DE PROCESSOS ADMINISTRATIVOS</b></div>
+    <br/>
+    <div id="texto">
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aos <?= $this->dataExtenso; ?> foi distribuído eletronicamente, na forma estabelecida pelo 
+        &#167; <!-- simbolo do paragrafo--> 2º do art. 405 do Regimento Interno do Tribunal Regional Federal da 1ª Região, o Processo
+        Administrativo abaixo citado:
+
+    </div><!-- Fim da div texto-->
+    <div class="titulo-tabela">
+        <b>ÓRGÃO JULGADOR: <?= $this->orgaoJulgador; ?></b>
+    </div>
+    <br/>
+    <table class="conteudo" border="0" cellspacing="0" cellpadding="3">
+        <tr >
+            <td nowrap="nowrap" class="titulo">PROCESSO</td>
+            <td nowrap="nowrap" class="titulo">MODALIDADE DE DISTRIBUIÇÃO</td>
+            <td nowrap="nowrap" class="titulo">DATA DISTRIBUIÇÃO</td>
+            <td nowrap="nowrap" width="35%" align="left" class="titulo">RELATOR</td>
+        </tr>
+        <!-- ############################# INICIO DO CONTEUDO-->
+
+        <tr>
+            <td align="right" nowrap="nowrap"  class="dados"><?= $this->processo; ?></td>
+            <td align="center"  class="dados"><?= $this->modalidadeDistribuicao; ?></td>
+            <td align="center" nowrap="nowrap"  class="dados"><?= $this->dataDistribuicao; ?></td>
+            <td  class="dados"><?= $this->relator; ?> </td>
+        </tr>
+
+        <!-- ############################# FIM DO CONTEUDO-->
+    </table>
+    <hr/>
+</div><!-- Fim da div Container-->

@@ -1,0 +1,13 @@
+<?php
+if($this->acoes):  
+    foreach ($this->acoes as $value) : 
+?>
+    <option value="<?php echo $value['ACAO_ID_ACAO_SISTEMA']; ?>"><?php echo $value['ACAO_NM_ACAO_SISTEMA']; ?></option>   
+<?php 
+    endforeach;
+    else: 
+?>
+        <option value="">Todas as ações já foram cadastradas ou Não existem Acões para este controle</option>  
+<?php
+endif;
+?>

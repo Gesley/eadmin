@@ -1,0 +1,156 @@
+<script>
+
+    $(function(){
+        $('.detalhes').click(function(){
+            currentID = $(this).attr('id');
+            $('#loc'+currentID).toggle();
+    
+        });
+        $('#solic').submit(function(){
+    
+            $('#Pesquisar').attr('value', 'Pesquisando...');
+            $('#Pesquisar').attr('Disabled', 'Disabled');
+            $('#info').removeClass('grid');
+        });
+    });
+</script>
+<style type="text/css">
+
+    table{
+        margin-top: 30px;
+    }
+    
+    tbody tr:last-child td:first-child{
+        text-align: right;
+    }
+    
+    tbody tr:last-child td{
+        font-weight: 700;
+    }
+
+    tbody tr:nth-last-of-type(2) td:first-child{
+        text-align: right;
+    }
+    
+    tbody tr td[colspan="2"]{
+        text-align: right;
+    }
+    
+    tbody tr td[colspan="3"]{
+        background-color: #f0f0f0;
+        border-top: 1px solid #fff;
+    }
+
+    tbody tr:first-child th{
+        background-color: #e1e1e1;
+        border-top: 2px solid #ccc;
+    }
+
+</style>
+<div id="container_pagination">
+    <table class="grid2">
+        <thead>
+            <tr>
+                <th colspan="3">
+                    Relatório Detalhado de Movimentação de Peças
+                </th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="3">
+                    Total <?php echo $this->data->getTotalItemCount() ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                </td>
+            </tr>
+        </tfoot>
+        <?php if (count($this->data)): ?>
+            <?php
+            $objHardwareRelatorio = new Application_Model_DbTable_SosTbLhdwMaterialAlmox ();
+            $objMaterialEntrada = new Application_Model_DbTable_SosTbMtenMaterialEntrada ();
+            $objMaterialSaida = new Application_Model_DbTable_SosTbMtsaMaterialSaida ();
+            foreach ($this->data as $data):
+                $totalEntrada = 0;
+                $totalsaida = 0;
+                $hardwareEntradasRegistros = $objMaterialEntrada->getHardwareEntradaInfo($data['LHDW_ID_HARDWARE']);
+                $hardwareSaidasRegistros = $objMaterialSaida->getMaterialSaidaInfo($data['LHDW_ID_HARDWARE']);
+                ?>
+                <tbody>
+                    <tr>
+                        <th colspan="3">
+                            <?php echo $this->escape($data["LHDW_DS_HARDWARE"]); ?> - <?php echo $this->escape($data["LHDW_CD_MATERIAL"]); ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            Registros de Entrada
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Data</th>
+                        <th>Quantidade</th>
+                    </tr>
+                    <?php foreach ($hardwareEntradasRegistros as $registros):
+                        ?>
+                        <tr>
+                            <td><?php echo $this->escape($registros['MTEN_DS_OBSERVACAO']); ?></td>
+                            <td><?php echo $this->escape($registros['ENTRADA_MATERIAL']); ?></td>
+                            <td><?php echo $this->escape($registros['MTEN_QT_ENTRADA_MATERIAL']); ?></td>
+                        </tr>
+                        <?php
+                        $totalEntrada +=$registros['MTEN_QT_ENTRADA_MATERIAL'];
+                    endforeach;
+                    ?>
+                    <tr>
+                        <td colspan="2">
+                            Total
+                        </td>
+                        <td>
+                            <?php echo $totalEntrada; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            Registros de Saída
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Solicitação</th>
+                        <th>Data</th>
+                        <th>Quantidade</th>
+                    </tr>
+                    <?php foreach ($hardwareSaidasRegistros as $registrosSaida):
+                        ?>
+                        <tr>
+                            <td><?php echo $this->escape($registrosSaida['DOCM_NR_DOCUMENTO']); ?></td>
+                            <td><?php echo $this->escape($registrosSaida['MTSA_DT_SAIDA_MATERIAL']); ?></td>
+                            <td><?php echo $this->escape($registrosSaida['MTSA_QT_SAIDA_MATERIAL']); ?></td>
+                        </tr>
+                        <?php
+                        $totalsaida += $registrosSaida['MTSA_QT_SAIDA_MATERIAL'];
+                    endforeach;
+                    ?>
+                    <tr>
+                        <td colspan="2">
+                            Total
+                        </td>
+                        <td><?php echo $totalsaida; ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            Saldo
+                        </td>
+                        <td><?php echo $totalEntrada - $totalsaida; ?></td>
+                    </tr>
+                </tbody>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <h3>Não existem registros.</h3>
+        <?php endif; ?>
+    </table>
+</div>

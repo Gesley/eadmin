@@ -1,0 +1,37 @@
+ <?php
+// Framework CSS
+    $this->headLink()
+        ->prependStylesheet($this->baseUrl().'/js/farbtastic/farbtastic.css','screen, projection');
+// Library JS
+  $this->HeadScript()
+        ->appendFile($this->baseUrl().'/js/farbtastic/farbtastic.js');
+    ?>
+<?php echo $this->headLink(); ?>
+<?php echo $this->headScript(); ?>
+ 
+ <script type="text/javascript">
+   $(document).ready(function() {
+     $('#colorpicker').farbtastic('#color').removeClass('x-form-text').css('background-image','none');
+     
+     
+   });
+ </script>
+ <form action='nova'  method="POST">
+<?php 
+    echo $this->form->getElement('CATE_NM_CATEGORIA');
+    echo $this->form->getElement('CATE_DS_OBSERVACAO');
+    echo $this->form->getElement('CATE_ID_INDICADOR');
+    echo $this->form->getElement('CATE_IC_ATIVO');
+    $cateNs = new Zend_Session_Namespace('cateNs');
+    if($cateNs->tipo == 'unidade'){ ?>
+        <input type="hidden" value="<?php echo $cateNs->sgSecao; ?>" name="CATE_SG_SECAO_CATEGORIA" />
+        <input type="hidden" value="<?php echo $cateNs->cdLotacao; ?>" name="CATE_CD_LOTACAO_CATEGORIA" />
+    <?php }else if($cateNs->tipo == 'pessoa'){ ?>
+        <input type="hidden" value="<?php echo $cateNs->cdMatricula; ?>" name="CATE_CD_MATRICULA_CATEGORIA" />
+    <?php } ?>
+<input type="text" id="color" name="CATE_DS_DESCRICAO_COR" value="#6c6fd0" style="background-image: none"/>
+<div id="colorpicker"></div>
+<?php     
+    echo $this->form->getElement('Salvar');
+?>
+ </form>

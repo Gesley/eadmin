@@ -1,0 +1,154 @@
+
+
+<?php
+echo $this->partial('_partials/ajax_responsaveis.phtml');
+echo $this->partial('_partials/ajax_bloqueio.phtml');
+echo $this->partial('_partials/ajuda_informacao.phtml', array(
+    'msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+?>
+
+<style type="text/css">
+.hiddenElemento {
+    display: none;
+}
+</style>
+
+
+<br />
+<form id="formregra" name="formregra" action="" method="POST" enctype="">
+
+    <div id="incluir" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+
+        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+            <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
+                <a href="#incluir">Editar</a>
+            </li>
+        </ul>
+        <br />
+        <div id="incluir" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+
+            <fieldset>
+                
+                <?php
+                $this->formulario->REGC_ID_REGRA;
+                echo $this->formulario->REGC_AA_REGRA;
+                echo $this->formulario->REGC_IC_TB_IMPACTO;
+                
+                ?>
+                
+                <div id="natureza_despesa_inicio">
+                    <?php 
+                    echo $this->formulario->REGC_VL_NATUREZA_DESP_INICIAL;
+                    ?>
+                </div>
+                
+                                
+                <div id="natureza_despesa_fim">
+                    <?php 
+                    echo $this->formulario->REGC_VL_NATUREZA_DESP_FINAL;
+                    ?>
+                </div>
+                                
+                <div id="ic_categoria">
+                    <?php 
+                    echo $this->formulario->REGC_IC_CATEGORIA;  
+                    ?>
+                </div>
+                
+                <?php
+                echo $this->formulario->REGC_ID_INCISO;
+                
+                echo $this->formulario->REGC_ID_ALINEA;
+                ?>
+                <br />
+            </fieldset>
+
+        </div>
+        <!-- fim div incluir -->
+    </div>
+    
+    <input type="hidden" id="alinea_selected" value="<?php echo $this->alinea_selected; ?>" />
+    
+    <?php 
+        echo $this->formulario->Enviar. "<br/>";
+        echo $this->partial(
+           '_partials/botao.phtml', array('nomeController' => 'regracnj',
+           'nomeAction' => Trf1_Orcamento_Definicoes::ACTION_INDEX,
+           'nomeClasse' => Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+           'textoBotao' => 'Voltar para listagem',
+           'textoAlternativo' => 'Retornar à tela de Listagem de Regras'));
+    ?>
+</form>
+
+<script type="text/javascript">
+    
+    var tipoTabela = $("#REGC_IC_TB_IMPACTO");
+    var id_inciso = $("#REGC_ID_INCISO");
+    var flag_incluir = false;
+    
+    function carregarTipo() {
+        if (id_inciso.val() === "0") {
+            $("#REGC_ID_ALINEA").attr("disabled", true);
+        }else{
+            $("#REGC_ID_ALINEA").attr("disabled", false);
+        }
+        
+        // inabilita o botao incluir
+        if (tipoTabela.val() === "1") {
+            $("#natureza_despesa_inicio").hide();
+            $("#natureza_despesa_fim").hide();
+            $("#ic_categoria").show();
+        }else{
+            $("#natureza_despesa_inicio").show();
+            $("#natureza_despesa_fim").show();
+            $("#ic_categoria").hide();
+        }
+    }
+    
+    $(document).ready(function () {
+        
+        carregarTipo();
+        
+        // habilita o botao de incluir em caso do preenchimento
+        tipoTabela.change(function () {
+            carregarTipo();
+        });
+        
+         // habilita o botao de incluir em caso do preenchimento
+        id_inciso.change(function () {
+            carregarAjaxAlinea();
+            carregarTipo();
+        });
+        
+        carregarAjaxAlinea();
+        
+    });
+    
+    function carregarAjaxAlinea() {
+        
+        var postAlinea = $("#alinea_selected").val();
+        var popular_alinea = $("#REGC_ID_INCISO").val();
+        
+        $.post(base_url + "/orcamento/regracnj/ajaxmontacomboregracnj/",
+            {id: popular_alinea},
+            function(data) {
+
+               $("#REGC_ID_ALINEA").empty();
+               $('#REGC_ID_ALINEA').append(new Option("Selecione", ""));
+
+                for(i in data){
+                    var alineaID = data[i].ALIN_ID_ALINEA;
+                    var alineaDescricao = data[i].ALIN_VL_ALINEA;
+                    $('#REGC_ID_ALINEA').append(new Option(alineaDescricao, alineaID));
+                }
+
+                if (postAlinea != null && !flag_incluir) {
+                    $('#REGC_ID_ALINEA').val(postAlinea);
+                    flag_incluir = true;
+                }
+            }
+        );
+    }
+
+</script>

@@ -1,0 +1,18 @@
+<?php
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript');
+$this->inlineScript()->prependFile($this->baseUrl() . '/js/combobox_app_jquery.js');
+$this->inlineScript()->prependFile($this->baseUrl() . '/js/sosti/solicitacoesSetor.js');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+        <fieldset>
+            <legend>Filtro do Relatório</legend>
+            <input type="button" title="Último Filtro" name="acao" value="Filtro" id="pesquisar" class="ui-button ui-widget ui-state-default ui-corner-left" role="button" aria-disabled="false">
+    <div id="pesq_div" style="display: block;">
+            <form id="form" action="" method="post">
+                <?php echo $this->form; ?>
+                <div id="div_associar_perfil"></div>
+            </form>
+            <span title="Recolher ajuda" style="position: relative; left: 350px; bottom: -10px; width: 28px; height: 16px;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="botao_ajuda_recolhe"><span class="ui-button-icon-primary ui-icon ui-icon-arrowstop-1-n"></span><span class="ui-button-text"></span></span>
+    </div>
+        </fieldset>
+<div id="grid"></div>

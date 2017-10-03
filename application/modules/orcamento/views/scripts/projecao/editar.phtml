@@ -1,0 +1,180 @@
+<?php
+echo $this->partial ( '_partials/ajuda_informacao.phtml', array ( 'msgAjuda' => $this->msgAjuda, 'msgInfo' => $this->msgInfo ) );
+echo '<br />';
+
+echo $this->partial ( '_partials/despesa_detalhe.phtml', array ( 'despesa' => $this->despesa ) );
+echo '<br />';
+
+$msgProjecaoTravada = '';
+if( $this->bTravaTudo ) {
+    $msgProjecaoTravada = '';
+    $msgProjecaoTravada .= '<thead>';
+    $msgProjecaoTravada .= '<th class="notice" colspan="6">';
+    $msgProjecaoTravada .= 'A projeção orçamentária das despesas desta unidade gestora está travada devido o período de crédito adicional de ' . $this->dtTravaIni . ' a ' . $this->dtTravaFim . '.';
+    $msgProjecaoTravada .= '';
+    $msgProjecaoTravada .= '</th>';
+    $msgProjecaoTravada .= '</thead>';
+}
+
+$currency = new Zend_Currency();
+$valor = new Trf1_Orcamento_Valor ();
+?>
+
+<form id="frmProjecao" enctype="application/x-www-form-urlencoded"
+      method="post" action="">
+    <dl class="zend_form">
+
+        <div id="saldoTabs" class="tabs">
+            <ul>
+                <li><a href="#saldo">Saldo</a></li>
+            </ul>
+
+            <div id="gridLinhas">
+                <div id="saldo">
+                    <?php
+                    echo $this->partial ( '_partials/saldo_basico.phtml', array ( 'saldo' => $this->saldo ) );
+                    ?>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div id="complementarTabs" class="tabs">
+            <ul>
+                <li><a href="#complementar">Informações complementares</a></li>
+            </ul>
+
+            <div id="gridLinhas">
+                <div id="complementar">
+                    <?php
+                    echo $this->partial ( '_partials/saldo_complementar.phtml', array ( 'saldo' => $this->saldo ) );
+                    ?>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div id="situacaoTabs" class="tabs">
+            <ul>
+                <li><a href="#situacao">Situação</a></li>
+            </ul>
+
+            <div id="gridLinhas">
+                <div id="situacao">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <?php
+                                /*
+                                 * No caso de alteração no campo 'Dotação autorizada final' lembrar de alterar o arquivo views\scripts\_partials\saldo_basico.html
+                                 */
+                                ?>
+                                <td width="80%" class="total"><abbr title="Campo calculado: Dotação descentralizada no exercício + proposta aprovada a receber + crédito aprovado a receber">Dotação autorizada do exercício:</abbr></td>
+                                <td class="total valorPositivo" id="dotacaofinal">R$ 0,00</td>
+                            </tr>
+                            <tr>
+                                <td>Projeção anual:</td>
+                                <td class="valorNegativo" id="futuro">R$ 0,00</td>
+                            </tr>
+                            <tr>
+                                <td>Percentual de Reajuste:</td>
+                                <td class="percentualreajuste" id="percentualreajuste">R$ 0,00</td>
+                            </tr><!--
+<!--                            <tr>
+                                <td>Valor de referência do mês atual:</td>
+                                <td class="valorNegativo" id="atual">R$ 0,00</td>
+                            </tr>
+                            <tr>
+                                <td>Valor executado até o mês anterior:</td>
+                                <td class="valorNegativo" id="executado">R$ 0,00</td>
+                            </tr>-->
+                            <tr>
+                                <td class="total"><abbr title="Campo calculado: Dotação autorizada final - Projeção futura - Valor do mês atual - Executado até o mês anterior">Situação Orçamentária:</abbr></td>
+                                <td class="total valorPositivo" id="situacaoorcamentaria">R$ 0,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div id="projecaoTabs" class="tabs">
+            <ul>
+                <li><a href="#projecao">Projeção</a></li>
+            </ul>
+
+            <div id="projecao">
+                <table>
+                    <?php echo $msgProjecaoTravada; ?>
+                    <tbody>
+                        <tr>
+                            <td> <?php echo $this->formulario->PROJ_VR_JANEIRO; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_FEVEREIRO; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_MARCO; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_ABRIL; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_MAIO; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_JUNHO; ?> </td>
+                        </tr>
+                        <tr>
+                            <td> <?php echo $this->formulario->PROJ_VR_JULHO; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_AGOSTO; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_SETEMBRO; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_OUTUBRO; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_NOVEMBRO; ?> </td>
+                            <td> <?php echo $this->formulario->PROJ_VR_DEZEMBRO; ?> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5"> <?php echo $this->formulario->Salvar; ?> </td>
+                            <td><?php echo $this->formulario->PROJ_VR_TOTAL; ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+
+        <?php
+        echo $this->partial ( '_partials/execucao.phtml', array ( 'execucao' => $this->execucao ) );
+        echo '<br />';
+        ?>
+
+        <div id="justificativasTabs" class="tabs">
+            <ul>
+                <li><a href="#justificativas">Justificativas</a></li>
+            </ul>
+
+            <div id="justificativas">
+                <table>
+                    <?php echo $msgProjecaoTravada; ?>
+                    <tbody>
+                        <?php
+                        foreach ( $this->justificativas as $key => $value ) {
+                            echo '<tr><td width="100%"><strong>' . $value [ 'ORIGEM' ] . '</strong> em ' . $value [ 'DATA_JUSTIFICATIVA' ] . '</td></tr>';
+                            echo '<tr><td>' . $value [ 'PRJJ_DS_JUSTIFICATIVA' ] . '</td></tr>';
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <br />
+
+                <div class="clearfix">
+                    <?php
+                    if( $this->bTravaTudo ) {
+                        echo 'Não é possível incluir novas justificativas durante o período de crédito adicional.';
+                    } else {
+                        echo $this->partial ( '_partials/botao.phtml', array ( 'nomeController' => 'projecaojustificativa',
+                            'nomeAction' => Trf1_Orcamento_Definicoes::ACTION_INDEX,
+                            'parametros' => array ( 'cod' => $this->despesa [ 'DESP_NR_DESPESA' ] ),
+                            'nomeClasse' => Trf1_Orcamento_Definicoes::CLASSE_INCLUIR,
+                            'textoBotao' => 'Criar / Modificar Justificativas',
+                            'textoAlternativo' => 'Acessar manutenção das justificativa da projeção' ) );
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <br />
+
+    </dl>
+</form>

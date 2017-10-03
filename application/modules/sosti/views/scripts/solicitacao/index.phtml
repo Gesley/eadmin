@@ -1,0 +1,44 @@
+<?php if (count($this->data)): ?>
+<!--<div><a  class="novo" href="sosti/solicitacao/form">Novo</a> </div>-->
+<div><a  class="novo" href="form">Novo</a> </div>
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Ações</th>            
+            <th ><a href="sosti/solicitacao/index/ordem/SSOL_ID_TIPO_CAD/direcao/<?php echo $this->direcao ?> ">Tipo Cadastro<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            <th ><a href="sosti/solicitacao/index/ordem/SSOL_ED_LOCALIZACAO/direcao/<?php echo $this->direcao ?> ">Localização<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            <th ><a href="sosti/solicitacao/index/ordem/SSOL_NR_TOMBO/direcao/<?php echo $this->direcao ?> ">Nº Tombo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            <th ><a href="sosti/solicitacao/index/ordem/SSOL_SG_TIPO_TOMBO/direcao/<?php echo $this->direcao ?> ">Tipo Tombo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            <th ><a href="sosti/solicitacao/index/ordem/SSOL_DS_OBSERVACAO/direcao/<?php echo $this->direcao ?> ">Observação<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            <th ><a href="sosti/solicitacao/index/ordem/SSOL_HH_INICIO_ATEND/direcao/<?php echo $this->direcao ?> ">Data-Hora Início Atendimento<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            <th ><a href="sosti/solicitacao/index/ordem/SSOL_HH_FINAL_ATEND/direcao/<?php echo $this->direcao ?> ">Data-Hora Final Atendimento<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+        <tr>
+            <td class="painel"><a title="Editar" class="editar" href="sosti/solicitacao/form/id1/<?php echo $data->SSOL_CD_DOCUMENTO ?>/id2/<?php echo $data->SSOL_NR_VERSAO_ANOTACAO ?>">editar</a>
+            <!--<a style="height: 20px; width: 28px;" title="Excluir" class="excluir" href="sosti/solicitacao/form/id/<?php //echo $data->FADM_ID_FASE ?>" ></a>--></td>
+            <td><?php echo $this->escape($data->SSOL_NR_VERSAO_ANOTACAO) ?></td>
+            <td><?php echo $this->escape($data->SSOL_ID_TIPO_CAD) ?></td>
+            <td><?php echo $this->escape($data->SSOL_ED_LOCALIZACAO) ?></td>
+            <td><?php echo $this->escape($data->SSOL_NR_TOMBO) ?></td>
+            <td><?php echo $this->escape($data->SSOL_SG_TIPO_TOMBO) ?></td>
+            <td><?php echo $this->escape($data->SSOL_DS_OBSERVACAO) ?></td>
+            <td><?php echo $this->escape($data->SSOL_HH_INICIO_ATEND) ?></td>
+            <td><?php echo $this->escape($data->SSOL_HH_FINAL_ATEND) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+</table>
+<?php echo $this->paginationControl($this->data, null, null, null)
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>

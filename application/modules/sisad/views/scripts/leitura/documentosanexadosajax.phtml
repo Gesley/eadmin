@@ -1,0 +1,63 @@
+<?php
+if (count($this->anexos) > 0) {
+    ?>
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Ordem</th>
+                <th >Ação</th>
+                <th >Número</th>
+                <th >Tipo</th>
+                <th >Assunto</th>
+                <th >Data de inserção</th>
+                <th >Usuário</th>
+                <th >Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($this->anexos as $apensos):
+                $apensos['APARTIR_DE_DOCM_ID_DOCUMENTO'] = $this->documento['DOCM_ID_DOCUMENTO'];
+                ?>
+                <tr name="rowList" value="<?= $this->escape(Zend_Json::encode($apensos)) ?>" >
+                    <td class="ordem_leitura"></td>
+                    <td style="width: 65px;"> 
+                        <?php
+                        if (Trf1_Sisad_Negocio_Leitura::isDocumentoComJuntada($apensos) || $apensos['QTD_ANEXOS_SEM_METADADOS'] != 0) {
+                                $isNovaAba = true;
+                                echo '<button class="nova_aba" title="O documento possui outros documentos juntados ou anexos sem metadados. Logo a visualização do documento será aberta em uma nova aba inferior."></button>';
+                            } else {
+                                $isNovaAba = false;
+                                if ($apensos['DOCM_NR_DOCUMENTO_RED'] != null) {
+                                    echo '<button class="nova_dialog" title="Este botão abre a visualização do processo."></button>';
+                                } else {
+                                    echo '<button disabled="false" class="nova_dialog" title="Ao cadastrar o documento não foi escolhido um arquivo para leitura."></button>';
+                                }
+                            }
+                            ?>
+                        <button class="subir" title="Este botão trocará a ordem de leitura com o documento superior."></button>
+                        <button class="remover_tr" title="Este botão removerá o documento da visualização."></button>
+                        <button class="descer" title="Este botão trocará a ordem de leitura com o documento posterior."></button>
+                    </td>
+                    <td><?= $apensos['MASC_NR_DOCUMENTO'] ?></td>
+                    <td><?= $apensos['DTPD_NO_TIPO'] ?></td>
+                    <td><?= $apensos['AQVP_CD_PCTT'] . ' - ' . $apensos['AQAT_DS_ATIVIDADE'] ?></td>
+                    <td><?= $apensos['DH_JUNTADA'] ?></td>
+                    <td><?= $apensos['PMAT_CD_MATRICULA'] . ' - ' . $apensos['PNAT_NO_PESSOA'] ?></td>
+                    <td><?= ($apensos['IC_ORIGINAL'] == 'S' ? 'ORIGINAL' : 'CÓPIA ANEXADA') ?></td>
+                </tr>
+                <?php
+            endforeach;
+            ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <!--<td colspan="8">Total: </td>-->
+            </tr>
+        </tfoot>
+    </table> 
+    <?php
+} else {
+    echo $this->mensagem;
+}
+?>

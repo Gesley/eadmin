@@ -1,0 +1,33 @@
+<script type="text/javascript">      
+$(function() {
+                $('.dataehora').datetimepicker({
+                    dateFormat: 'dd/mm/yy',
+                    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+                    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+                    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+                    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                    'Outubro','Novembro','Dezembro'],
+                    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+                    nextText: 'Próximo',
+                    prevText: 'Anterior',
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    changeMonth: true,
+                    changeYear: true,
+                    changeMonth: true,
+                    showSecond: true,
+                    timeFormat: 'hh:mm:ss',
+                    timeOnlyTitle: 'Escolha a data e hora de início da videoconferência',
+                    timeText: 'Tempo',
+                    hourText: 'Hora',
+                    minuteText: 'Minutos',
+                    secondText: 'Segundos',
+                    currentText: 'Agora',
+                    closeText: 'OK',
+                    minDate: new Date(2012, 11 - 1, 06),
+                    hour: 16,
+                    onClose: function(dateText, inst) {
+                    }
+                });
+            });
+</script>

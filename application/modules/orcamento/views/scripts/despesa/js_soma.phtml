@@ -1,0 +1,92 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        // formata todos os campos do formulario
+        $('#frmDespesa input').each(function(i) {
+            // formata os valores 0 do formulário
+            if ($(this).val() >= '0') {
+                // $(this).val(formataMoeda($(this).val()));
+                $(this).blur();
+            }
+        });
+
+        // soma os campos
+        realizaSoma();
+
+        $('#VL_DESPESA_AJUSTE_DIPLA').blur(function() {
+            realizaSoma();
+        });
+    });
+
+    function realizaSoma() {
+        var vlde6  = $('#vlde6').val(); // 100 
+        var vlde13 = $('#vlde13').val();
+        var vldipla = $('#VL_DESPESA_DIPLA').val();
+
+    //        var vlde7 = $('#VL_DESPESA_AJUSTE_DIPLA').val();
+
+        if (vlde6 == '-' || !vlde6) {
+            vlde6 = '0';
+        }
+
+        if (vlde13 == '' || !vlde13 ) {
+            vlde13 = '0';
+        }
+
+        if (vldipla == '' || !vldipla ) {
+            vldipla = '0';
+        }
+       
+
+        vlde6 = formataNumero(vlde6);
+        vlde13 = formataNumero(vlde13);
+        vldipla = formataNumero(vldipla);      
+
+        soma = parseFloat(vlde6) + parseFloat(vlde13) + parseFloat(vldipla);
+
+        var valorFormatado = formataMoeda(soma);
+
+        // $('#VL_DESPESA_RESPONSAVEL').val(valorFormatado);
+    }
+
+    function formataNumero(num) {
+        if (typeof num != 'undefined') {
+            num = num.replace(".", "");
+            num = num.replace(".", "");
+            num = num.replace(".", "");
+            num = num.replace(".", "");
+            num = num.replace(".", "");
+            num = num.replace(",", ".");
+
+            // Arredondamento de centavos
+            var numero = Math.round(num * Math.pow(10, 2)) / Math.pow(10, 2);
+            numFinal = parseFloat(numero).toFixed(2);
+
+            return numFinal;
+        }
+       
+    }
+
+    function formataMoeda(num) {
+        x = 0;
+        if (num < 0) {
+            num = Math.abs(num);
+            x = 1;
+        }
+        if (isNaN(num))
+            num = "0,00";
+        //Transforma tudo em centavos
+        cents = Math.floor((num * 100 + 0.5) % 100);
+        num = Math.floor((num * 100 + 0.5) / 100).toString();
+
+        if (cents < 10)
+            cents = "0" + cents;
+        for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++)
+            // A cada 3 casas acrescenta um ponto
+            num = num.substring(0, num.length - (4 * i + 3)) + '.' + num.substring(num.length - (4 * i + 3));
+        ret = num + ',' + cents;
+        if (x == 1)
+            ret = ' - ' + ret;
+        return ret;
+    }
+</script>

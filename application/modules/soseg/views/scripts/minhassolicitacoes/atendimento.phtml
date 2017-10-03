@@ -1,0 +1,335 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>Para obter maiores informações sobre uma solicitação, clica-se duas vezes na solicitação desejada e o sistema mostrará a tela <b>Detalhe</b>.</p>
+    <ul>
+        <li>Neste campo encontra-se o botão <b>Histórico</b>, importante para saber qual o estágio do atendimento.</li>
+        
+    </ul>
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento;
+    var docsSelected = '';
+	var docsSelectedPost = ''; 
+      
+    var grid_tbody_tr;
+     $(function(){
+
+            grid_tbody_tr = $("table.grid > tbody > tr");
+            grid_tbody_tr.click(
+                function(){
+                    grid_tbody_tr.removeClass('hover_nav');
+
+                    var this_tr = $(this);
+                    var is_checked_tr = $(this).attr('marcado');
+
+                    var input_check_box = $(this).find('input[type=checkbox]');
+                    var is_checked_input = input_check_box.attr('checked');
+
+                    if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                        input_check_box.attr('checked','checked');
+                        this_tr.attr('marcado','marcado');
+                        this_tr.addClass('hover');
+                    }else{
+                        input_check_box.removeAttr('checked');
+                        this_tr.removeAttr('marcado');
+                        this_tr.removeClass('hover');
+                    }
+                    input_check_box.focus();
+                }
+            );
+            grid_tbody_tr.dblclick(
+                function(){
+                    var this_tr = $(this);
+                    var input_check_box = $(this).find('input');
+
+                    var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                    value_input_check_box = input_check_box.val();
+                    input_check_box.attr('checked', 'checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+
+                    if (xhr_abrir_documento) {
+                        xhr_abrir_documento.abort();
+                    }
+
+                    url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                    xhr_abrir_documento = $.ajax({
+                        url: url,
+                        dataType: 'html',
+                        type: 'POST',
+                        data: value_input_check_box,
+                        contentType: 'application/json',
+                        processData: false, 
+                        beforeSend:function() {
+                            div_dialog_by_id.dialog("open");
+                        },
+                        success: function(data) {
+                            div_dialog_by_id.html(data);
+
+                        },
+                        complete: function(){
+
+                        },
+                        error : function(){
+
+                        }
+                    });
+                }
+            );   
+            $("input[type=checkbox][name=input_check_all_grid]").click(
+                function(){
+                    if($(this).attr('checked')){
+                        $(".nav_check_boxes").attr('checked','checked');
+                        $("tr[name=rowList]").addClass('hover');
+                    }else{
+                        $(".nav_check_boxes").removeAttr('checked');
+                        $("tr[name=rowList]").removeClass('hover');
+                    }
+                }
+            );
+            $('input[name=acao]').click(
+                function(){
+                    var acao = this.value;
+                    
+                    var formhelpdesk = $('form[name=helpdesk]');
+                    if(acao == 'Cancelar'){
+                        formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/cancelar');
+                    }else if(acao == 'Baixar'){
+                        formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/baixarcaixa');
+                    }else if(acao == 'Espera'){
+                        formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/esperacaixa');
+                    }else if(acao == 'Parecer'){
+                        formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/solicitacao/parecer');
+                    }else if(acao == 'Recebimento de equipamento'){
+                        formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/atendimento/tipo/recebimentoequipamento');
+                    }else if(acao == 'Todas'){
+                        formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/atendimento/tipo/Todas');
+                    }else if(acao = 'Autorizar recebimento de Equipamento'){
+                        formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/recebimentoequipamento');
+                        var hiddenAcao = "<input type=hidden id=acao name=acao value=\"Autorizar Recebimento\">";
+                        var Controller = "<input type=hidden id=Controller name=Controller value=\"minhassolicitacoes\">";
+                        var Acao = "<input type=hidden id=Acao name=Acao value=\"atendimento\">";
+                        $('form[name=helpdesk]').append(hiddenAcao);
+                        $('form[name=helpdesk]').append(Controller);
+                        $('form[name=helpdesk]').append(Acao);
+                        $('form[name=helpdesk]').submit();
+                    }
+                }
+            );
+            /*$('form[name=helpdesk]').submit(
+                function(){          
+                   var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                   if (solictacaoSelecionada == undefined){ 
+                        var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                        $('#flashMessages').html(mensagem);
+                        return false;
+                    }
+                }
+            );*/
+            $("#dialog-documentos_detalhe").dialog({
+                title    : 'Detalhe',
+                autoOpen : false,
+                modal    : false,
+                show: 'fold',
+                hide: 'fold',
+                resizable: true,
+                width: 800,
+                position: [580,140,0,0],
+                buttons : {
+                    Ok: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+           
+        function getselectedDocs()
+        {
+            
+						var desc = "Documento:";
+            $('input:checked').each(
+            function() 
+            {
+                if($(this).is(':checked')){
+                    if($(this).attr('id')!= 'check_all')
+                    {
+                        var obj = $.parseJSON($(this).val());
+                         var docmrs = obj.DOCM_NR_DOCUMENTO; 
+                         var MOFA_ID_MOVIMENTACAO = obj.MOFA_ID_MOVIMENTACAO;
+                        //desc = obj.DTPD_NO_TIPO;
+                          docsSelected += desc + docmrs + "<br>";
+                          docsSelectedPost += docmrs+":"+MOFA_ID_MOVIMENTACAO;
+                    }
+                }
+            });
+            $('#documentosSelecionados').val(docsSelectedPost);
+            $('#docsSelecionados').html(docsSelected);
+        }
+        $("#AssinarEquip").click(function(){
+             documentoSelecionado = $(".nav_check_boxes:checked").val();
+             var count = $("[type='checkbox']:checked").length;
+            if (documentoSelecionado == undefined){                   
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('drop');
+                flashMessages_by_id.delay(2000).hide('drop');
+                return false;
+            }else if(count >1){
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Selecione somente um documento!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('drop');
+                flashMessages_by_id.delay(2000).hide('drop');
+                return false;
+                
+                }else{
+            docsSelected = '';
+            docsSelectedPost = '';
+            getselectedDocs();
+            $('#assinarporsenha').dialog({
+                            
+                title:"Assinar recebimento de equipamento por assinatura.",
+                width:500,
+                close:function(event,ui){
+                    $('#flashMessage').html('');
+                    $('#flashMessage').removeClass('error');
+                    
+                }
+            });
+                }
+       
+        $('*').keyup(function(e){
+            if (e.keyCode == 13 && ($('#assinarporsenha:visible').length > 0))
+            {
+                e.stopImmediatePropagation();
+                $('#Verificar').trigger('click'); 
+            }
+        });
+       $('#Verificar').click(function(){
+           
+           var url = '<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/verificaassinante';
+                 
+           $.ajax(
+           {
+               // The link we are accessing.
+               url: url,
+                                  
+               // The type of request.
+               type: 'POST',
+                                  
+               // The type of data that is getting returned.
+               dataType: 'html',
+               data:'COU_COD_MATRICULA='+ $('#COU_COD_MATRICULA').val()+'&COU_COD_PASSWORD='+$('#COU_COD_PASSWORD').val(),
+               error: function(request, status, error){
+                   
+               },
+               success: function( strData ){
+
+                   if(strData == 0){
+                       $('#flashMessage').show();
+                       $('#flashMessage').html('Verificação negada');
+                       $('#flashMessage').addClass('error');
+                       $('#flashMessage').delay(2000).hide('fadeout');
+                   }else{
+                       
+                       $('#login').submit();
+                   }
+               }
+           });                                        
+       });
+       
+       }); 
+    });
+
+</script>
+<form name="helpdesk" action="" method="post" >
+    <div class="painel">
+        <input type="submit" title="Dar parecer" name="acao" value="Parecer"/>
+
+        <input type="button" title="Assinar equipamento recebido por senha" id="AssinarEquip" name="AssinarEquip" value="Autorizar Saída de Equipamento"/>
+        <?php if($this->tipo == 'recebimentoequipamento') {?>
+        <input type="button" title="Assinar equipamento recebido por senha" id="AssinarEquip" name="acao" value="Autorizar recebimento de Equipamento"/>
+        <?php }?>
+    <fieldset>
+    	<legend>Solicitações</legend>
+
+        <input type="submit" title="Cancelar" name="acao" value="Cancelar"/>
+		<input type="button" title="Assinar equipamento por senha" id="AssinarEquip" name="AssinarEquip" value="Assinar Equipamento  por Senha"/>
+        <input type="submit" title="Recebimento de equipamento" name="acao" value="Recebimento de equipamento"/>
+        <input type="submit" title="Recebimento de equipamento" name="acao" value="Todas"/>
+        </fieldset>
+    </div>
+    <?php if (count($this->data)): ?>
+    <div id="container_pagination">
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" name="input_check_all_grid" id="check_all" /></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/atendimento/ordem/SSOL_ID_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">N. da solicitação<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/atendimento/ordem/DH_CADASTRO/direcao/<?php echo $this->direcao ?> ">Tempo total<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/atendimento/ordem/NOME_USARIO_CADASTRO/direcao/<?php echo $this->direcao ?> ">Nome do solicitante<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/atendimento/ordem/SSER_DS_SERVICO/direcao/<?php echo $this->direcao ?> ">Serviço atual<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($this->data as $data): ?>
+                   <tr name="rowList" value="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" >
+                        <td <?php echo App_View_Helper_CorStatus::corCaixa($this->controller, $data["MOFA_ID_FASE"], $data["SESP_DH_LIMITE_ESP"], $data["TEMPO_TOTAL"]); ?> >
+                            <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                        </td>
+<!--			<td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?></td>-->
+                        <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                        <td><?php echo $this->escape($data["TEMPO_TRANSCORRIDO"]); ?></td>
+                        <td><?php echo $this->escape($data["DOCM_CD_MATRICULA_CADASTRO"].' - '.$data['NOME_USARIO_CADASTRO']); ?></td>
+                        <td><?php echo $this->escape($data["SSER_DS_SERVICO"]); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">Total: <?php echo $this->data->getTotalItemCount(); ?></td>
+                </tr>
+                <tr>
+                    <td colspan="7"><?php echo $this->paginationControl($this->data, null, null, null); ?></td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="painel">
+        <input type="submit" title="Dar parecer" name="acao" value="Parecer"/>
+        <input type="submit" title="Cancelar" name="acao" value="Cancelar"/>
+		<input type="button" title="Assinar equipamento recebido por senha" id="AssinarEquip" name="AssinarEquip" value="Assinar Equipamento  por Senha"/>
+        <input type="submit" title="Recebimento de equipamento" name="acao"  value="Recebimento de equipamento"/>
+    </div>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+    </div>
+    <input type="hidden" name="controller" value="minhassolicitacoes" />
+    <input type="hidden" name="action" value="atendimento" />
+	
+    <?php echo $this->partial('_partials/caixahiddeninputs.phtml',array('view'=> $this));?>
+</form>
+
+    <?php echo App_View_Helper_CorStatus::corLegenda();?>
+<div id="dialog-documentos_detalhe">
+    <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+</div>
+<div id="assinarporsenha" style="display:none">
+<div id="flashMessage"></div>
+<fieldset>
+<legend style='font-weight:normal'>Documento Selecionado</legend>
+<div id="docsSelecionados"></div>
+</fieldset>
+<?php echo $this->formVerificar; ?>
+</div>

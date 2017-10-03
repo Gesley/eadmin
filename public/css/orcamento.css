@@ -1,0 +1,69 @@
+.ui-state-default a:hover {
+	color: #ffffff;
+}
+
+.filtro input[type=text] {
+	width: 100%;
+}
+
+.filtro span {
+	color: white;
+	font-weight: bold;
+}
+
+.rodapeTotalizador {
+	color: white;
+	font-weight: bolder;
+	background: #313F59;
+}
+
+.valorPositivo {
+	color: blue;
+}
+
+.valorNegativo {
+	color: red;
+}
+
+.valorNaoRecebido {
+	color: green;
+}
+
+#gridLinhas table tr td {
+	border-bottom: 1px solid #dedede;
+	font-weight: normal;
+}
+
+#gridLinhas .total {
+	font-weight: bold;
+	background-color: #dedede;
+}
+
+#rodapeinfo {
+	bottom: 0px;
+	position: relative;
+	width: 100%;
+}
+
+#msg_informacao a {
+	color: black;
+}
+
+#carregando {	
+    width: 100%;
+    height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;    
+	background: white;
+	position: absolute;
+	z-index: 100;
+	top: 50px;
+	left: 0px;  
+	right: 0px;  
+	bottom: 0px;
+	visibility: hidden;
+}

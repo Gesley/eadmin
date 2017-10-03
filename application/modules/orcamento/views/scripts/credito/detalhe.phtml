@@ -1,0 +1,37 @@
+<?php
+/**
+ * Contém view da action específica
+ * 
+ * e-Admin
+ * e-Orçamento
+ * View
+ * 
+ * @author Anderson Sathler M. Ribeiro <asathler@gmail.com>
+ */
+
+/**
+ * Disponibiliza as informações a serem exibidas na view
+ *
+ * @category Orcamento
+ * @package Orcamento_View_Credito_Detalhe
+ * @author Anderson Sathler M. Ribeiro <asathler@gmail.com>
+ * @license Creative Commons Atribuição 3.0 não adaptada
+ *          <http://creativecommons.org/licenses/by/3.0/deed.pt_BR>
+ * @ignore Este código é livre para uso dentro do TRF! Fora do TRF pode apenas
+ *         servir como fonte de estudo ou base para futuros códigos-fonte sem
+ *         nenhuma restrição, salvo pelas informações de @copyright e @author
+ *         que devem ser mantidas inalteradas.
+ * @copyright Tribunal Regional Federal ©2007-2014 <http://www.trf1.jus.br>
+ */
+echo	$this->partial('_partials/tela_detalhe_crud.phtml',
+array(	'msgAjuda'	=> $this->msgAjuda,
+        'msgInfo'	=> $this->msgInfo,
+        'dados'		=> $this->dados));
+
+echo	'<br />';
+echo	$this->partial('_partials/botao.phtml',
+array(	'nomeController'	=> 'credito',
+        'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+        'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+        'textoBotao'		=> 'Voltar para listagem',
+        'textoAlternativo'	=> 'Retornar à tela de Listagem de créditos'));

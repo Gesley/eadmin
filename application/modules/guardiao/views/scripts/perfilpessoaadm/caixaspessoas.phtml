@@ -1,0 +1,144 @@
+<?php
+    echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda));
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/guardiao/detalhe_permissao.js'));
+?>
+
+<script>     
+    $(function() {
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                }
+            }
+        );
+        $('input[name=acao]').click(
+            function(){
+                var acao = this.value;
+                var sistemapapel = $('form[name=sistemapapel]');
+                if(acao == 'Alterar'){
+                    sistemapapel.attr('action','<?php echo $this->baseUrl(); ?>/guardiao/perfilpessoaadm/caixaspessoas');
+                }
+            }
+        );
+        
+        var grid_tbody_tr;
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+        function buscaUnidade(matricula){
+            $.ajax({
+                url: base_url+"/guardiao/perfilpessoaadm/ajaxcaixaspessoa/PMAT_CD_MATRICULA/"+matricula+'/caixa/<?=$this->caixa;?>',
+                beforeSend:function() {
+                    $("#LOTA_COD_LOTACAO").removeClass('erroInputSelect');
+                    $("#LOTA_COD_LOTACAO").val("");
+                    $("#LOTA_COD_LOTACAO").addClass('carregandoInputSelect');
+                },
+                success: function(data) {
+                    
+                    $("#LOTA_COD_LOTACAO").html(data);
+                    $("#LOTA_COD_LOTACAO").removeClass('carregandoInputSelect');
+                },
+                error: function(){
+                    $("#LOTA_COD_LOTACAO").removeClass('x-form-field');
+                    $("#LOTA_COD_LOTACAO").val('Erro ao carregar.');
+                    $("#LOTA_COD_LOTACAO").addClass('erroInputSelect');
+                    $("#LOTA_COD_LOTACAO").html('<option>Erro ao carregar</option>');
+                }
+            }); 
+        }
+        if($('#PMAT_CD_MATRICULA').val().split(' - ')[0]!=''){
+            buscaUnidade($('#PMAT_CD_MATRICULA').val().split(' - ')[0]);
+        }
+        $("#PMAT_CD_MATRICULA").autocomplete({
+            //source: "sosti/solicitacao/ajaxnomesolicitante",
+            source: base_url+"/guardiao/perfilpessoaadm/ajaxpessoastribunal",
+            minLength: 3,
+            delay: 300,
+            select: function(event, ui){
+                var matricula = ui.item.label.split(' - ')[0];
+                buscaUnidade(matricula);
+            }
+        })});
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<form id="form" name="sistemapapel" action="<?php echo $this->baseUrl(); ?>/guardiao/perfilpessoaadm/caixaspessoas" method="post">
+    <?php echo $this->form->PMAT_CD_MATRICULA; ?>
+    <?php echo $this->form->LOTA_COD_LOTACAO; ?>
+    <br/>
+
+    <?php if (count($this->data)): ?>
+        <br/>
+        <div class="containerpainel">
+            <div class="painel">
+                <input id="ALTERAR" name="acao" type="submit" class="novo" value="Alterar"/>
+                <input id="historico" name="acao" type="button" class="novo" value="Histórico"/>
+            </div>
+        </div>
+        <br />
+        <!--<div style="margin-bottom: 30px; margin-top: -25px;"><a  class="novo" href="guardiao/unidadepessoa/form">Voltar</a> </div>-->
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th >
+        <!--            <input type="checkbox" name="input_check_all_grid" id="check_all" />-->
+                    </th>
+                    <th >Descrição do Perfil</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php foreach ($this->data as $data): $i++; ?>
+                    <tr class="<?php if ($data['PUPE_ID_UNIDADE_PERFIL'] != "") echo 'hover'; ?>" <?php if ($data['PUPE_ID_UNIDADE_PERFIL'] != "") echo "marcado = 'marcado'"; ?>>
+                        <td> 
+                            <input class="nav_check_boxes" type="checkbox" name="papeis[<?php echo $i; ?>][1]" <?php if ($data['PUPE_ID_UNIDADE_PERFIL'] != "") echo "checked"; ?> value="<?php
+            if ($data['PUPE_ID_UNIDADE_PERFIL'] == "") {
+                echo $data['UNPE_ID_UNIDADE_PERFIL'] . " - " . $data['PUPE_ID_UNIDADE_PERFIL'] . " - associar";
+            } else {
+                echo $data['UNPE_ID_UNIDADE_PERFIL'] . " - " . $data['PUPE_ID_UNIDADE_PERFIL'] . " - associado";
+            }
+                    ?>">
+                            <input type="hidden" name="papeis[<?php echo $i; ?>][2]" value="<?php
+                           if ($data['PUPE_ID_UNIDADE_PERFIL'] == "") {
+                               echo $data['UNPE_ID_UNIDADE_PERFIL'] . " - " . $data['PUPE_ID_UNIDADE_PERFIL'] . " - dissociado";
+                           } else {
+                               echo $data['UNPE_ID_UNIDADE_PERFIL'] . " - " . $data['PUPE_ID_UNIDADE_PERFIL'] . " - associado";
+                           }
+                    ?>" > 
+                            <!--<a style="height: 20px; width: 28px;" title="Excluir" class="excluir" href="guardiao/unidadepessoa/form"/id/<?php //echo $data->FADM_ID_FASE    ?>" ></a>-->
+                        </td>
+                        <td><?php echo $this->escape($data['PERF_DS_PERFIL']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot><tr><td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+        </table>
+
+    <?php endif; ?>
+</form>
+
+<div id="dialog-detalhe_permissao">
+    
+</div>

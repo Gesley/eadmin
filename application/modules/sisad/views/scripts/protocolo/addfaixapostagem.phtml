@@ -1,0 +1,59 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.maskedinput-1.3.js'));
+?>
+<script>
+    $(function(){
+        botao_ajuda_by_id.delay(200).show('scale');
+    })
+</script>
+<script type="text/javascript">
+    $(function() {
+        
+        $("#FPDP_CD_MATRICULA_GESTOR").autocomplete({
+            source: base_url+"/sisad/protocolo/ajaxmatriculanome",
+            minLength: 3,
+            delay: 300
+        });
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_unid_ranscunho = $('form[name=faixapostagem]');
+            if(acao == 'Cadastrar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/protocolo/addfaixapostagem');
+            }
+        }
+    );
+ });
+</script> 
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<!--<div class="help" id="msg_ajuda" style="display: none; " >
+    <h3>Ajuda&ensp;</h3>
+     <p>Endereçamento de Documentos para Postagem</p>
+     <ul>
+         <li><b>Órgão Destino</b> - constam todos os órgãos cadastrados  pelas Secam’s 1ªreg.</li>
+         <li><b>Destinatário</b> - neste campo pode-se digitar o nome da pessoa que irá receber o documento.</li>
+         <li><b>Tratamento</b> - escolher a forma de tratamento para o destinatário.</li>
+         <li><b>Endereço</b> - o endereço será mostrado caso ele exista, ou permitida a sua digitação.</li>
+         <li><b>CEP</b> - o sistema irá trazer, não existindo poderá ser digitado</li>
+         <li><b>Preferência de Postagem</b> - conforme definido pelos Correios poderá ser solicitado pelo usuário, no entanto, caberá ao setor de protocolo definir o melhor tipo de postagem.</li>
+     </ul>
+    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>-->
+<form method="POST" action="" name="faixapostagem" >
+    <?php 
+        echo $this->formAdd->FPDP_ID_TIPO_POSTAGEM; 
+        echo $this->formAdd->FPDP_NO_TIPO_POSTAGEM; 
+        echo $this->formAdd->FPDP_NR_NUMERO_INICIAL; 
+        echo $this->formAdd->FPDP_NR_NUMERO_FINAL;
+        echo $this->formAdd->FPDP_DS_LETRA_INICIAL;
+        echo $this->formAdd->FPDP_DS_LETRA_FINAL;
+        echo $this->formAdd->FPDP_CD_MATRICULA_INCLUSAO; 
+        echo $this->formAdd->FPDP_NR_SEGURANCA_POSTAGEM; 
+        echo $this->formAdd->FPDP_CD_MATRICULA_GESTOR; 
+        echo $this->formAdd->FPDP_IC_POSTAGEM_ATIVO; 
+        echo $this->formAdd->TIPO; 
+        echo $this->formAdd->Salvar; 
+    ?>
+</form>

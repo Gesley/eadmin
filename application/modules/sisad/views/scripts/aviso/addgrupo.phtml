@@ -1,0 +1,19 @@
+<!--<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>-->
+
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.MetaData.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.MultiFile.js')); 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/cadastroDocumentoGrupo.js')); 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/cadastroDocumento.js')); 
+?>
+
+<form name="addGrupo" action="savegrupo" method="POST" enctype="multipart/form-data">
+
+    <?php echo $this->form->GRDV_DS_GRUPO_DIVULGACAO; ?>
+    <?php echo $this->partial('aviso/cadastrocomponente.phtml', array('form' => $this->form)); ?>
+    <div id="partes_adicionadas"> </div>
+
+    <?php echo $this->form->Criar; ?>
+
+</form>

@@ -1,0 +1,174 @@
+<script type="text/javascript">
+$(function() {
+    $( ".editar" ).attr('style','width: 28px; height: 16px; ');
+    $( ".excluir" ).attr('style','width: 28px; height: 16px; ');
+    $( ".adicionar" ).attr('style','width: 28px; height: 16px; ');
+});
+</script>
+<script type="text/javascript">
+                
+    $(function() {
+        
+         $("#CXEN_ID_TIPO_CAIXA").change(
+            function(){
+                $("select#TRF1_SECAO").val('');
+                $("select#SECAO_SUBSECAO").html('');
+                $("select#CXGS_ID_GRUPO").html('');
+                
+                $("table.grid").hide();
+
+            }
+        );
+        
+        $("select#TRF1_SECAO").change(
+            function () {
+                if(this.value === ''){
+                    $("select#SECAO_SUBSECAO").html('');
+                    $("select#CXGS_ID_GRUPO").html('');
+                    $("table.grid").hide();
+                    return;
+                }
+                var secao = $(this).val().split('|')[0];
+                var lotacao = $(this).val().split('|')[1];
+                var tipolotacao = $(this).val().split('|')[2];
+                $.ajax({
+                    url: base_url + '/sosti/caixagruposervico/ajaxsubsecoes/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                    dataType : 'html',
+                    beforeSend:function() {
+                        $("select#SECAO_SUBSECAO").html('');
+                        $("select#CXGS_ID_GRUPO").html('');
+                        $("table.grid").hide();
+
+                    },
+                    success: function(data) {
+                        $('select#SECAO_SUBSECAO').html(data);
+                    },
+                    error: function(){
+                      
+                        $('select#SECAO_SUBSECAO').html('<option>Erro ao carregar</option>');
+                    }
+                });
+            }
+        );
+            
+        $("select#SECAO_SUBSECAO").change(
+            function () {
+                if(this.value === ''){
+                    $("select#CXGS_ID_GRUPO").html('');
+                    $("table.grid").hide();
+                    return;
+                }
+                $.ajax({
+                    url: '<?php echo $this->baseUrl(); ?>/sosti/caixagruposervico/ajaxgruposervicoporpai',
+                    dataType: 'html',
+                    type: 'POST',
+                    data: this.value,
+                    contentType: 'application/json',
+                    processData: false,
+                  beforeSend:function() {
+                      $("select#CXGS_ID_GRUPO").html('');
+                      $("table.grid").hide();
+                  },
+                  success: function(data) {
+
+                      $("select#CXGS_ID_GRUPO").html('');
+                      if(data === '[]'){
+                          var option_object = $("<option></option>");
+                            /**
+                             *  Valor do option do select
+                             *  @param option_value
+                             */
+                            option_value = ''
+                            option_object.attr('value',option_value);
+                            /**
+                             *  Label do option do select
+                             *  @param option_label
+                             */
+                            option_label = "NÃO EXITE GRUPOS DE SERVIÇO CADASTRADOS PARA ESSA SEÇÃO/SUBSEÇÃO/TRF1"
+                            option_object.html(option_label);
+
+                            $("select#CXGS_ID_GRUPO").append(option_object);
+                      }else{
+                          data = jQuery.parseJSON(data);
+                          $.each(data, function(key, val) {
+                                var option_object = $("<option></option>");
+                                /**
+                                 *  Valor do option do select
+                                 *  @param option_value
+                                 */
+                                option_value = JSON.stringify(val, null, null);
+                                option_object.attr('value',option_value);
+                                /**
+                                 *  Label do option do select
+                                 *  @param option_label
+                                 */
+                                //option_label = val.SGRS_DS_GRUPO; 
+                                option_label = val.SGRS_DS_GRUPO + ' UNIDADE RESP.: ' + val.LOTA_SIGLA_LOTACAO + ' - ' + val.LOTA_DSC_LOTACAO + ' - ' + val.LOTA_COD_LOTACAO + ' - ' + val.LOTA_SIGLA_SECAO;
+                                option_object.html(option_label);
+
+                                unidade_responsavel =  val.LOTA_SIGLA_LOTACAO + ' - ' + val.LOTA_DSC_LOTACAO + ' - ' + val.LOTA_COD_LOTACAO + ' - ' + val.LOTA_SIGLA_SECAO;
+                                $("select#CXGS_ID_GRUPO").append(option_object);
+                            });
+
+                      }
+                  },
+                  error: function(){
+
+                  }
+                });
+           }
+       );
+
+    });
+</script>
+<div class="painel">
+    <a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/caixagruposervico/add">Novo</a>
+</div>
+<?php echo $this->form; ?>
+<?php if (count($this->data)): ?>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th colspan="3" >Ações</th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/caixagruposervico/list/ordem/CXEN_ID_CAIXA_ENTRADA/direcao/<?php echo $this->direcao ?> ">Id<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/caixagruposervico/list/ordem/CXEN_DS_CAIXA_ENTRADA/direcao/<?php echo $this->direcao ?> ">Descrição do Caixa<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/caixagruposervico/list/ordem/TPCX_DS_CAIXA_ENTRADA/direcao/<?php echo $this->direcao ?> ">Tipo da Caixa<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/caixagruposervico/list/ordem/SGRS_DS_GRUPO/direcao/<?php echo $this->direcao ?> ">Grupo de Serviço Atendente<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): ?>
+                <tr>
+                    <td ><a title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/sosti/caixagruposervico/edit/id/<?php echo $this->escape($data["CXEN_ID_CAIXA_ENTRADA"]); ?>" ></a></td>
+                    <td ><a title="Inativar" class="excluir" href="<?php echo $this->baseUrl(); ?>/sosti/caixagruposervico/del/id/<?php echo $this->escape($data["CXEN_ID_CAIXA_ENTRADA"]); ?>" ></a></td>
+                    <td ><a title="Adicionar" class="adicionar" href="<?php echo $this->baseUrl(); ?>/sosti/caixagruposervico/addnovogrupo/id/<?php echo $this->escape($data["CXEN_ID_CAIXA_ENTRADA"]); ?>" ></a></td>
+                    <td><?php echo $this->escape($data["CXEN_ID_CAIXA_ENTRADA"]); ?></td>
+                    <td><?php echo $this->escape($data["CXEN_DS_CAIXA_ENTRADA"]); ?></td>
+                    <td><?php echo $this->escape($data["TPCX_DS_CAIXA_ENTRADA"]); ?></td>
+                    <td><?php echo $this->escape($data["SGRS_DS_GRUPO"]. " DO(A) ". $data["LOTA_SIGLA_LOTACAO"].' - '.$data["LOTA_DSC_LOTACAO"].' - '.$data["LOTA_COD_LOTACAO"].' - '.$data["LOTA_SIGLA_SECAO"]); ?></td>
+               </tr>
+            <?php endforeach; ?>
+        </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">Total: <?php echo $this->data->getTotalItemCount()     
+                                            ////-- pagination
+                                            //-- style
+                                            //-- partial
+                                            //-- data
+                                            ?>
+                   </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+    </div>
+</form>

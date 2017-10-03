@@ -1,0 +1,44 @@
+<div style="width: 700px; margin: 0 auto; display: block;">
+<p style="text-align:center">PODER JUDICIÁRIO<br /><strong><? echo $this->descrisaosecsubsec; ?></strong> - PCTT: <? echo $this->codpctt['AQVP_CD_PCTT']; ?></p><br />
+<div style="width: 200px;"><p style="text-align:left"><strong>OFÍCIO/<? echo $this->data["DOCM_NR_DCMTO_USUARIO"];  ?></strong></div><div style="margin-left: 400px;margin-top: -35px;"><strong><? echo $this->cidade["CIDADE"] . ', '. date("d") . ' de ' . date("F") . ' de ' . date("Y") . '.'; ?></strong></p></div>
+<br />
+<p>Processo: <? $this->view["DOCM_NR_PROCESSO"] ?>    - Processo Original: 
+<br />
+AGRTE:
+<br />
+ADV:
+<br />
+AGRDO:
+<br />
+PROCUF:</p>
+<?
+foreach ($this->partes as $partes) {
+    echo '
+    <p>Senhor(a)
+    <br />
+    ' . $partes["PARTE"] . '
+    <br />
+    ' . $partes["CIDADE"] . $partes["ENT_CID"];
+
+    if($partes["CIDADE"] || $partes["ENT_CID"]){
+        echo ' - ';
+    }
+
+    echo $partes["UF"] . $partes["ENT_UF"];
+
+    echo '</p>';
+}
+?>
+<br />
+<div style="width: 500px;display: block;overflow: hidden; margin: 0 auto 0 auto;">
+        <p style="text-align:justify"><? echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->data["DOCM_DS_ASSUNTO_DOC"]; ?></p>
+</div>
+<br />
+<p style="text-align:center"><? echo $this->data["DOCM_CD_SAUDACAO"];?></p>
+<br />
+<p style="text-align:center"><strong><? echo $this->nome.'</strong> - '.$this->matricula;  ?><br />
+<strong><?  
+            echo substr($this->data["DOCM_CD_LOTACAO_GERADORA"], 0,strlen($this->data["DOCM_CD_LOTACAO_GERADORA"])-4);  ?></strong></p>
+<br />
+<br />
+</div>

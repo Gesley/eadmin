@@ -1,0 +1,44 @@
+<?php
+/**
+ * Contém view da action específica
+ * e-Admin
+ * e-Orçamento
+ * View
+ * @author Victor Eduardo Barreto <vesilva1@latam.stefanini.com>
+ */
+/**
+ * Disponibiliza as informações a serem exibidas na view
+ *
+ * @category Orcamento
+ * @package Orcamento_View_Esfera_Index
+ * @author Victor Eduardo Barreto <vesilva1@latam.stefanini.com>
+ * @license Creative Commons Atribuição 3.0 não adaptada
+ *          <http://creativecommons.org/licenses/by/3.0/deed.pt_BR>
+ * @ignore Este código é livre para uso dentro do TRF! Fora do TRF pode apenas
+ *         servir como fonte de estudo ou base para futuros códigos-fonte sem
+ *         nenhuma restrição, salvo pelas informações de @copyright e @author
+ *         que devem ser mantidas inalteradas.
+ * @copyright Tribunal Regional Federal ©2007-2014 <http://www.trf1.jus.br>
+ */
+// Exibe o grid
+echo $this->grid;
+
+$despesa = Zend_Controller_Front::getInstance()->getRequest()->getParam('CTRD_NR_DESPESA');
+?>
+
+<br />
+
+<a href = "<?php echo $this->baseUrl("orcamento/despesa/editar/cod/" . $despesa); ?>" class = "ceo_salvar ui-button ui-widget ui-state-default ui-corner-all" role = "button" name = "Contrato">
+    Voltar para despesa
+</a>
+<script>
+
+    $(document).ready(function () {
+
+        var $parametro = "<?php echo Zend_Controller_Front::getInstance()->getRequest()->getParam('CTRD_NR_DESPESA'); ?>"
+
+        // insere o numero da despesa no link do incluir
+        $('.paginationControl a:first-child').attr('href', $('.paginationControl a:first-child').attr('href') + '/CTRD_NR_DESPESA/' + $parametro);
+    });
+
+</script>

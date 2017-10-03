@@ -1,0 +1,56 @@
+<script type="text/javascript">
+    $(function() {
+        $( ".editar" ).button({
+                    icons: {
+                        primary: "ui-icon-pencil"
+                    }
+        }).attr('style','width: 40px; height: 16px;');
+        $( ".excluir" ).button({
+                    icons: {
+                        primary: "ui-icon-trash"
+                    }
+        }).attr('style','width: 40px; height: 16px;');
+     });
+</script> 
+
+<?php if (count($this->data)): 
+    ?>
+<div class="painel"><a title="Nova" class="novo" href="<?php echo $this->baseUrl(); ?>/sisad/categorias/nova">Nova</a></div>
+<table class="grid">
+    <thead>
+        <tr>
+            <th>Alterar</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Ativo</th>
+            <th>Cor</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->data as $data):?>
+        <tr>
+            <td><a href="<?php echo $this->baseUrl(); ?>/sisad/categorias/editar/id/<?php echo$data["CATE_ID_CATEGORIA"]?>"><span class="editar"></span></a</td>
+            <td><?php echo $data["CATE_NM_CATEGORIA"] ?></td>
+            <td><?php echo $data["CATE_DS_OBSERVACAO"] ?></td>
+            <td><?php if ($data["CATE_IC_ATIVO"]== 'S'){ echo 'SIM'; }else { echo 'NÃO'; } ?></td>
+            <td <?php echo "bgcolor='".$data['CATE_DS_DESCRICAO_COR']."'>" ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="7">Total: <?php echo $this->data->getTotalItemCount(); ?>
+           </td>
+        </tr>
+        <tr>
+            <td colspan="7">
+                <?php echo $this->paginationControl($this->data, null, null, null); ?>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<br />
+<?php else:?>
+    <div class="painel"><a title="Nova" class="novo" href="<?php echo $this->baseUrl(); ?>/sisad/categorias/nova">Nova</a></div>
+    <p>Não existem registros</p>
+<?php endif;?>

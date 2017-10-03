@@ -1,0 +1,44 @@
+<form method="POST" action="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/forms" name="laboratorio">
+    <div class="painel">
+        <input type="submit" title="Novo Tipo de Usuário" name="botao" value="Novo" />
+        <input type="hidden" title="Acao" name="acao" value="tipoSoftware" />
+    </div>
+<?php if (count($this->data)): ?>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/tiposoftware/ordem/LTPS_ID_TP_SOFTWARE/direcao/<?php echo $this->direcao ?> ">Id<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/tiposoftware/ordem/LTPS_DS_TP_SOFTWARE/direcao/<?php echo $this->direcao ?> ">Descrição<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/tiposoftware/ordem/DOCM_NR_DOCUMENTO_RED/direcao/<?php echo $this->direcao ?> ">Editar</a></th>
+            </tr>
+        </thead>
+                <tbody>
+                <?php
+                foreach ($this->data as $data):
+                    ?>
+                    <tr name="rowList" value="<?php echo $this->escape($data["LTPS_ID_TP_SOFTWARE"]); ?>" > 
+                        <td> <?php echo $this->escape($data["LTPS_ID_TP_SOFTWARE"]) ?></td>
+                        <td> <?php echo $this->escape($data["LTPS_DS_TP_SOFTWARE"]) ?></td>
+                         <td><a class="editar" title="<?php echo $msg_anexo; ?>" href="<?php echo $this->baseUrl(); ?>/sosti/laboratorio/forms/tipo/editarSoftware/id/<?php echo $this->escape($data["LTPS_ID_TP_SOFTWARE"]) ?> "></a></td>
+                    </tr>
+    <?php endforeach; ?>
+            </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)
+                ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>        
+</form>

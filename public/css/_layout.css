@@ -1,0 +1,126 @@
+body {
+	background:#999;
+	margin:0;
+	padding:0;
+	font:verdana;
+}
+div#container {
+	width:777px;
+	margin:0 auto;
+	display:block;
+	padding:0;
+	overflow:hidden;
+}
+
+div#menu, div#corpo {
+/*	border-right:2px solid #b1bb4b;
+	border-left:2px solid #b1bb4b;*/
+	background:#999;
+	overflow:hidden;
+	
+}
+div#corpo {
+	margin:0;
+	padding:5px;
+	background:#fff;
+}
+
+div#corpo div#conteudo {
+	padding:0px 0px 0px 10px;
+	width:500px;
+	float:left;
+	height:100%;
+}
+
+div#corpo div#menuLateral {
+	width:200px;
+	float:right;
+	background:#989f42;
+	background:#820719;
+	margin:0;
+}
+div.principal {
+	border: 1px solid #ededed;
+	display:block;
+	overflow:hidden;
+	padding:10px;/* 10px 50px 10px;*/
+	width:340px;
+	background:#f7f7f7;
+	text-align:center;
+	margin:10px 5px;
+}
+div.principal img {
+/*
+	margin:10px 10px 10px 0;
+	padding:3px;
+	border:1px solid #ccc;
+	float:left;
+	*/
+}
+img.left {
+	margin:10px 10px 10px 0;
+	padding:3px;
+	border:1px solid #ccc;
+	float:left;
+}
+iframe {
+	margin:10px 10px 10px 0;
+	padding:3px;
+	border:1px solid #ccc;
+}
+
+h1 {
+	background:url(../images/topo1.jpg) no-repeat;
+	background:#fff url(/sgd/public/images/logoSGA.gif) no-repeat;
+	height:133px;
+	margin:0;
+	display:block;
+	font:bold 12px verdana;
+	padding:0;/*40px 0px 0px 230px;*/
+	line-height:20px;
+}
+
+p {
+	margin:10px 0 0 0;
+	font:12px Verdana, sans-serif;
+	text-align:left;
+}
+
+p.sutien {
+	margin:5px 0 0 0;
+	font:10px Verdana, sans-serif ;
+	color:#003300;
+}
+
+div#rodape {
+	font:12px Verdana, sans-serif;
+	text-align:center;
+	background:#999;
+	color:#fff;
+	padding:5px;
+}
+
+div#menu {
+	height:36px;
+	padding-top:5px;
+}
+
+div#tools {
+	background:#f7f7f7;
+	border-bottom:1px solid #d5d5d5;
+	padding:5px 10px;
+	font:12px Verdana, sans-serif;
+	overflow:hidden;
+}
+
+div#tools span#user {
+	float:right;
+	display:block;
+}
+
+div#grid {
+	margin-top:10px;
+}
+
+
+

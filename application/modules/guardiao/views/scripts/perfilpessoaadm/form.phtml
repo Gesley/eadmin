@@ -1,0 +1,161 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/guardiao/detalhe_permissao.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/listBox/duallistbox.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/guardiao/perfilPessoaAdm.js'));
+?>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+        
+        $(document).ready(function(){
+            /*
+             * Funcao usada para manter ultima pesquisa
+             */
+            carregaValores({
+                "secao":"<?php echo $this->secao ?>",
+                "subsecao":"<?php echo $this->subsecao ?>",
+                "pupe_matricula":"<?php echo $this->pupe_matricula ?>",
+                "pmat_matricula":"<?php echo $this->pmat_matricula ?>",
+                "resp_matricula":"<?php echo $this->resp_matricula ?>",
+                "unidade":"<?php echo $this->unidade ?>",
+                "labelunidade":"<?php echo $this->label_unidade ?>",
+                "pesquisa":"<?php echo $this->pesquisa ?>"
+            });
+        });
+    </script>
+    <h3>Ajuda&ensp;</h3>
+
+    <p>
+       - A funcionalidade <b>Perfil Pessoa ADM</b> permite associar pessoas a um determinado perfil, podendo assim ter acessos direcionados dentro do sistema.
+    </p>
+    <p>
+       - Primeiramente é feita a busca pela Unidade. Neste caso só poderão ser listadas as unidades que pertencem à Seção/Subseção
+        do usuário, onde o mesmo poderá conceder ou retirar permissões.
+    </p>
+    <p>
+       - Após a escolha da Unidade desejada, será pedido abaixo um tipo de pesquisa, usada para filtrar a busca dos usuários do sistema.
+    </p>
+    <ul>
+        <li>
+            <b>Pessoas da Unidade:</b> Traz somente as pessoas que possuem perfil naquela Unidade;
+        </li>
+        <li>
+            <b>Responsáveis pela Caixa:</b> Traz somente pessoas que possuem o perfil '<b>Responsável pela Caixa da Unidade</b>' naquela Unidade;
+        </li>
+        <li>
+            <b>Todas as pessoas do TRF1:</b> Traz todas as pessoas do TRF1.
+        </li>
+    </ul>
+    
+    <p>
+        - Após a escolha da pessoa desejada, serão listados abaixo, duas listas de perfis. Uma das listas trata-se dos perfis que
+       não estão vinculados àquele usuário. A outra lista mostra os perfis que já estão vinculados ao usuário.  
+    </p>
+    
+    <br>
+    <p>
+        <h3>Vinculando Perfis ao Usuário</h3> 
+    </p>
+    <p>
+        Existem algumas formas de vincular perfis ao usuário que serão listadas abaixo:
+    </p>
+    <ul>
+        <li>
+            Dê um clique duplo com o mouse sobre algum perfil na coluna <b>PERFIS NÃO AUTORIZADOS</b>;
+        </li>
+        <li>
+            Selecione um perfil da coluna <b>PERFIS NÃO AUTORIZADOS</b> e clique no primeiro botão de ação, com legenda 
+            <b>Permitir Perfil</b>; 
+        </li>
+        <li>
+            Selecione vários perfis da coluna <b>PERFIS NÃO AUTORIZADOS</b> e clique no primeiro botão de ação, com legenda 
+            <b>Permitir Perfil</b>; 
+        </li>
+        <li>
+            Clicar no segundo botão de ação, com legenda <b>Permitir Todos os Perfis</b> para vincular todos os perfis ao usuário naquela Unidade;
+        </li>
+    </ul>
+    <p>
+        Após efetuar qualquer ação listada acima, para efetuar as alterações, basta clicar no botão <b>Salvar</b>.
+    </p>
+    
+    <br>
+    <p>
+        <h3>Retirando Perfis do Usuário</h3> 
+    </p>
+    <p>
+        Existem algumas formas de retirar os perfis de um usuário que serão listadas abaixo:
+    </p>
+    <ul>
+        <li>
+            Dê um clique duplo com o mouse sobre algum perfil na coluna <b>PERFIS AUTORIZADOS</b>;
+        </li>
+        <li>
+            Selecione um perfil da coluna <b>PERFIS AUTORIZADOS</b> e clique no quarto botão de ação, com legenda 
+            <b>Retirar Perfil</b>; 
+        </li>
+        <li>
+            Selecione vários perfis da coluna <b>PERFIS AUTORIZADOS</b> e clique no quarto botão de ação, com legenda 
+            <b>Retirar Perfil</b>; 
+        </li>
+        <li>
+            Clicar no terceiro botão de ação, com legenda <b>Retirar Todos os Perfis</b> para retirar todos os perfis do usuário naquela Unidade;
+        </li>
+    </ul>
+    <p>
+       Após efetuar qualquer ação listada acima, para efetuar as alterações, basta clicar no botão <b>Salvar</b>.
+    </p>
+    <br>
+    
+    <p>
+        <h3>Desfazer alterações</h3> 
+    </p>
+    <p>
+        - Último botão de ação, com legenda <b>Desfazer Alterações</b>.
+    </p>
+    <p>
+        - A opção Desfazer Alterações, recarrega a relação dos perfis originais, desfazendo todas as alterações realizadas antes de clicar no 
+        botão <b>Salvar</b>. Ou seja, ele volta para a última relação de perfis salva.
+    </p>
+    <p>
+        <b>É importante relembrar que após clicar no botão SALVAR, a opção de desfazer alterações não retornará para um estado anterior ao último salvo.</b>
+    </p>
+    <br>
+    <p>
+        <h3>Histórico</h3>
+    </p>
+    <p>
+       - O botão Histórico mostrará uma lista de permissões, concedidas ou retiradas, daquele usuário, para aquela Unidade. Serão mostrados
+       detalhes como, <b>Perfil, Data e Hora da ação e o Responsável pela ação</b>.
+    </p>
+    <br>
+    <p>
+        <b>Obs: Todas as permissões feitas para um usuário, conceder ou retirar perfis, serão sempre em relação à Unidade selecionada.</b>
+    </p>
+
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<fieldset>
+    <form id="form" name="sistemapapel" action="<?php echo $this->baseUrl(); ?>/guardiao/perfilpessoaadm/form" method="post">
+        <?php echo $this->form->TRF1_SECAO; ?>
+        <?php echo $this->form->SECAO_SUBSECAO; ?>
+        <?php echo $this->form->LOTA_COD_LOTACAO; ?>
+        <?php echo $this->form->GRUPOPESSOAS; ?>
+        <?php echo $this->form->PUPE_CD_MATRICULA; ?>
+        <?php echo $this->form->PMAT_CD_MATRICULA; ?>
+        <?php echo $this->form->RESPCAIXA_CD_MATRICULA; ?>
+        <?php echo $this->form->SECAO_CD_MATRICULA; ?>
+        <br />
+        <input type="button" value="Histórico" class="novo" id="historico">
+        <div id="div_associar_perfil"></div>
+    </form>
+</fieldset>
+<div id="confirma">
+    <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Antes de mudar a pesquisa, deseja salvar as alterações atuais?
+</div>
+<div id="dialog-detalhe_permissao">  
+</div>

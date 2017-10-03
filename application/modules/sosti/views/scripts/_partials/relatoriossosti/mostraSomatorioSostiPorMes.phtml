@@ -1,0 +1,24 @@
+<style>
+    .tabelaSomatoriosMes td, th{
+        padding: 3px 5px;
+    }
+</style>
+
+<div class="tabelaSomatoriosMes">
+    <table style="border: 1px solid;">
+       <thead>
+           <tr>
+                <th>Somatório por Mês</th>
+                <th style="text-align: center;">Quantidade</th>
+           </tr>
+       </thead>
+       <tbody>
+           <?php foreach( $this->somatorioMensal as $desc => $total): ?>
+           <tr>
+                <td> <?php  echo $desc ?> </td>
+                <td style="text-align: center; width: 10%"> <?php  echo $total ?>  </td>   
+           </tr>
+           <?php endforeach; ?>
+       </tbody>
+    </table>
+</div>

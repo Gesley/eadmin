@@ -1,0 +1,24 @@
+<?php
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+
+echo $this->formulario;
+?>
+
+<script>
+
+    $(document).ready(function () {
+
+        var $parametro = "<?php echo Zend_Controller_Front::getInstance()->getRequest()->getParam('CTRD_NR_DESPESA'); ?>"
+
+        // insere o numero da despesa no campo "Despesa";
+        $('#CTRD_NR_DESPESA').val($parametro);
+
+        // caso não haja o parâmetro, abre o campo.
+        if (!$parametro) {
+
+            $('#CTRD_NR_DESPESA').removeAttr('readOnly');
+        }
+    });
+
+</script>

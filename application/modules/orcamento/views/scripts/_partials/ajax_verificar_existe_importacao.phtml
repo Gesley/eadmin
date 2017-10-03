@@ -1,0 +1,36 @@
+<script type="text/javascript">
+$(function() {
+    var form = $("#frmImportar");
+    var botao = $("#Importar");
+    
+    form.submit(function (e) {
+        e.preventDefault();
+        botao.attr('disabled', 'disabled');
+
+        var formAno = $("#IMPA_AA_IMPORTACAO").val();
+        var formMes = $("#IMPA_IC_MES").val();
+        var formTipo = <?php echo $this->tipoImportacao; ?>;
+
+        var request = $.post(base_url + "/orcamento/importarverificarcnj/ajaxverificarimportado/",
+            {ano: formAno, mes: formMes, tipo: formTipo},
+            function(data) {
+                if (data) {
+                    if (confirm("Dados deste mês e ano já foram importados anteriormente! Deseja prosseguir com a importação?")) {
+                        form.unbind('submit').submit();
+                    } else {
+                        botao.removeAttr('disabled', 'disabled');
+                    }
+                } else {
+                    form.unbind('submit').submit();
+                }
+        }, "json");
+
+        request.fail(function() {
+            botao.removeAttr('disabled', 'disabled');
+            alert("Falha ao verificar se existe mês e ano já importados.");
+        });
+        
+        return false;
+    });
+});
+</script>

@@ -1,0 +1,76 @@
+<?php
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+?>
+
+<h3>Acesso rápido às principais rotinas do sistema</h3>
+
+<div>
+	<?php $sDescricao = 'Listagem Resumida de Despesas'; ?>
+	<div class="span-6">
+		<a	href="<?php echo $this->url(array(	'module'		=> 'orcamento',
+												'controller'	=> 'despesa',
+												'action'		=> 'index'), 0, true); ?>"
+			title="<?php echo $sDescricao; ?>" >
+		<img src="<?php echo $this->baseUrl(); ?>/img/orcamento/ceo_desp.jpg" height="120" width="200" alt="<?php echo $sDescricao; ?>" title="<?php echo $sDescricao; ?>" />
+		<?php echo $sDescricao; ?>
+		</a>
+	</div>
+	
+	<?php $sDescricao = 'Consulta Saldo'; ?>
+	<div class="span-6">
+		<a	href="<?php echo $this->url(array(	'module'		=> 'orcamento',
+												'controller'	=> 'saldo',
+												'action'		=> 'index'), 0, true); ?>"
+			title="<?php echo $sDescricao; ?>" >
+		<img src="<?php echo $this->baseUrl(); ?>/img/orcamento/ceo_sald.jpg" height="120" width="200" alt="<?php echo $sDescricao; ?>" title="<?php echo $sDescricao; ?>" />
+		<?php echo $sDescricao; ?>
+		</a>
+	</div>
+	
+	<?php $sDescricao = 'Extrato da Despesa'; ?>
+	<div class="span-6">
+		<a	href="<?php echo $this->url(array(	'module'		=> 'orcamento',
+												'controller'	=> 'extrato',
+												'action'		=> 'index'), 0, true); ?>"
+			title="<?php echo $sDescricao; ?>" >
+		<img src="<?php echo $this->baseUrl(); ?>/img/orcamento/ceo_extr.jpg" height="120" width="200" alt="<?php echo $sDescricao; ?>" title="<?php echo $sDescricao; ?>" />
+		<?php echo $sDescricao; ?>
+		</a>
+	</div>
+	
+	<?php $sDescricao = 'Projeção Orçamentária'; ?>
+	<div class="span-6">
+		<a	href="<?php echo $this->url(array(	'module'		=> 'orcamento',
+												'controller'	=> 'projecao',
+												'action'		=> 'index'), 0, true); ?>"
+			title="<?php echo $sDescricao; ?>" >
+		<img src="<?php echo $this->baseUrl(); ?>/img/orcamento/ceo_proj.jpg" height="120" width="200" alt="<?php echo $sDescricao; ?>" title="<?php echo $sDescricao; ?>" />
+		<?php echo $sDescricao; ?>
+		</a>
+	</div>
+</div>
+<br />&nbsp;
+<br />&nbsp;
+
+<h3>Pendências</h3>
+
+<div>
+<?php
+	$linkPendencia = $this->url(array(	'module'		=> 'orcamento',
+										'controller'	=> 'pendencia',
+										'action'		=> 'index'), 0, true);
+	
+	if (!$this->haPendencias) {
+		?>
+		<p>Não há pendências nos dados do sistema e-Orçamento no momento para o ano <?php echo $this->ano; ?>.</p>
+		<?php 
+	} else {
+		?>
+		<p class="alert">É necessária a <a href="<?php echo $linkPendencia; ?>" alt="" title="">verificação de pendências</a> nos dados do e-Orçamento para o ano <?php echo $this->ano; ?>.</p>
+		<?php 
+	}
+?>
+</div>

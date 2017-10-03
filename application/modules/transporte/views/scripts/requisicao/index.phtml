@@ -1,0 +1,83 @@
+<?php if (count($this->data)): ?>
+<div><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/add">Novo</a></div>
+<table cellspacing="1" border="1">
+    <thead>
+        <tr>
+            <th>Alterar</th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_ID_REQUISICAO/direcao/<?php echo $this->direcao ?> ">Id Requisição<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_AA_REQUISICAO/direcao/<?php echo $this->direcao ?> ">Ano<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_MM_REQUISICAO/direcao/<?php echo $this->direcao ?> ">Mês<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_SG_SECAO/direcao/<?php echo $this->direcao ?> ">Seção<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_CD_LOTACAO/direcao/<?php echo $this->direcao ?> ">Lotação<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_NR_FONE_USUARIO/direcao/<?php echo $this->direcao ?> ">Telefone<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_ID_VEICULO_REQUISICAO/direcao/<?php echo $this->direcao ?> ">Id Veículo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_CD_MATR_MOTORISTA/direcao/<?php echo $this->direcao ?> ">Matrícula Motorista<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_IC_TP_REQUISICAO/direcao/<?php echo $this->direcao ?> ">Tipo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_DS_ITINERARIO/direcao/<?php echo $this->direcao ?> ">Itinerário<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_DS_NATUREZA_JUSTIFICATIVA/direcao/<?php echo $this->direcao ?> ">Justificativa<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_DS_OCORRENCIA/direcao/<?php echo $this->direcao ?> ">Ocorrência<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_IC_AVS/direcao/<?php echo $this->direcao ?> ">Cód. AVS<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_DH_ABERTURA/direcao/<?php echo $this->direcao ?> ">Dt-hr Abertura<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_DH_SAIDA/direcao/<?php echo $this->direcao ?> ">Dt-hr Saída<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_QT_KM_SAIDA/direcao/<?php echo $this->direcao ?> ">Kilometragem Saída<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_DH_RETORNO/direcao/<?php echo $this->direcao ?> ">Dt-hr Retorno<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_QT_KM_RETORNO/direcao/<?php echo $this->direcao ?> ">Kilometragem Retorno<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_DH_UTILIZACAO/direcao/<?php echo $this->direcao ?> ">Dt-hr Utilização<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_QT_HH_PREVISTO/direcao/<?php echo $this->direcao ?> ">Tempo Previsto<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_QT_HH_USO/direcao/<?php echo $this->direcao ?> ">Tempo Utilizado<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_CD_MATR_USER_CADASTRO/direcao/<?php echo $this->direcao ?> ">Matrícula Usuário<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_IC_AUTORIZACAO/direcao/<?php echo $this->direcao ?> ">Autorização<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_CD_MATR_USER_AUTORIZADOR/direcao/<?php echo $this->direcao ?> ">Matrícula Autorizador<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_DH_AUTORIZACAO/direcao/<?php echo $this->direcao ?> ">Dt-hr Autorização<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_CD_MATR_USER_BAIXA/direcao/<?php echo $this->direcao ?> ">Matrícula Baixa<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/index/ordem/REQU_DH_BAIXA/direcao/<?php echo $this->direcao ?> ">Dt-hr Baixa<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>           
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+        <tr>
+            <td class="painel"><a title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/transporte/multa/edit/id/<?php echo $data->MULT_ID_MULTA ?>" >Editar</a></td>
+            <td><?php echo $this->escape($data->REQU_ID_REQUISICAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_AA_REQUISICAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_MM_REQUISICAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_SG_SECAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_CD_LOTACAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_NR_FONE_USUARIO) ?></td>
+            <td><?php echo $this->escape($data->REQU_ID_VEICULO_REQUISICAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_CD_MATR_MOTORISTA) ?></td>
+            <td><?php echo $this->escape($data->REQU_IC_TP_REQUISICAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_DS_ITINERARIO) ?></td>
+            <td><?php echo $this->escape($data->REQU_DS_NATUREZA_JUSTIFICATIVA) ?></td>
+            <td><?php echo $this->escape($data->REQU_DS_OCORRENCIA) ?></td>
+            <td><?php echo $this->escape($data->REQU_IC_AVS) ?></td>
+            <td><?php echo $this->escape($data->REQU_DH_ABERTURA) ?></td>
+            <td><?php echo $this->escape($data->REQU_DH_SAIDA) ?></td>
+            <td><?php echo $this->escape($data->REQU_QT_KM_SAIDA) ?></td>
+            <td><?php echo $this->escape($data->REQU_DH_RETORNO) ?></td>
+            <td><?php echo $this->escape($data->REQU_QT_KM_RETORNO) ?></td>
+            <td><?php echo $this->escape($data->REQU_DH_UTILIZACAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_QT_HH_PREVISTO) ?></td>
+            <td><?php echo $this->escape($data->REQU_QT_HH_USO) ?></td>
+            <td><?php echo $this->escape($data->REQU_CD_MATR_USER_CADASTRO) ?></td>
+            <td><?php echo $this->escape($data->REQU_IC_AUTORIZACAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_CD_MATR_USER_AUTORIZADOR) ?></td>
+            <td><?php echo $this->escape($data->REQU_DH_AUTORIZACAO) ?></td>
+            <td><?php echo $this->escape($data->REQU_CD_MATR_USER_BAIXA) ?></td>
+            <td><?php echo $this->escape($data->REQU_DH_BAIXA) ?></td>           
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<p>Total: <?php echo $this->data->getTotalItemCount()?></p>
+<br />
+<?php echo $this->paginationControl($this->data, null, null, array('filtro'=>$this->filtro,
+                                                                   'ordem'=> $this->ordem))
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+    <div class="painel"><a title="Novo" class="novo" href="<?php echo $this->baseUrl(); ?>/transporte/requisicao/add">Novo</a></div>
+<?php endif;?>

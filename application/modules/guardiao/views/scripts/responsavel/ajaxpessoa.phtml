@@ -1,0 +1,14 @@
+<?php
+if($this->PapSistUnidPess_array):  
+    foreach ($this->PapSistUnidPess_array as $value) : 
+?>
+    <option value="<?php echo $value['PMAT_CD_MATRICULA']; ?>"><?php echo $value['PNAT_NO_PESSOA'].' - '.$value['PMAT_CD_MATRICULA']; ?></option>   
+    <?php 
+    endforeach; ?>
+<!--    <option value=""></option>  -->
+    <?php else: 
+?>
+        <option value="">INFORME PRIMEIRO A UNIDADE ADMINISTRATIVA</option>  
+<?php
+endif;
+?>

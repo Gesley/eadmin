@@ -1,0 +1,47 @@
+<?php
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'saldo',
+				'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_CONSULTAR,
+				'textoBotao'		=> 'Nova consulta',
+				'textoAlternativo'	=> 'Realizar nova consulta de saldo'));
+
+echo '<br />&nbsp;';
+
+echo	$this->partial('_partials/despesa_detalhe.phtml',
+		array(	'despesa'	=> $this->despesa));
+echo '<br />';
+?>
+
+	<div id="saldoTabs" class="tabs">
+		<ul>
+			<li><a href="#saldo">Saldo</a></li>
+		</ul>
+
+		<div id="gridLinhas">
+			<div id="saldo">
+			<?php
+			echo $this->partial ( '_partials/saldo_basico.phtml', array ('saldo' => $this->saldo, 'inconsistencia' => $this->inconsistencia ) );
+			?>
+		</div>
+		</div>
+	</div>
+	<br />
+	
+	<div id="complementarTabs" class="tabs">
+		<ul>
+			<li><a href="#complementar">Informações complementares</a></li>
+		</ul>
+
+		<div id="gridLinhas">
+			<div id="complementar">
+			<?php
+			echo $this->partial ( '_partials/saldo_complementar.phtml', array ('saldo' => $this->saldo ) );
+			?>
+		</div>
+		</div>
+	</div>

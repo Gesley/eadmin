@@ -1,0 +1,17 @@
+<?php
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo	$this->formulario;
+?>
+
+
+<script>
+    
+    $( document ).ready(function() {
+        $('#PERS_ID_PERSPECTIVA-label').hide();
+        $('#PERS_ID_PERSPECTIVA-element').hide();
+    });
+
+</script>

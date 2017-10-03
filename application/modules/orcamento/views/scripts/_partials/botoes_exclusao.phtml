@@ -1,0 +1,41 @@
+<?php
+/**
+ * @category	TRF1
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Anderson Sathler M. Ribeiro [asathler@gmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que gera botões de Sim ou Não para uso nas telas de exclusão de registros
+ * 
+ * @deprecated	string		codigo				Código da chave primária a ser excluída
+ * 
+ * @example		echo $this->partial ( '_partials/botoes_exclusao.phtml', array ('codigo' => $this->codigo ) );
+ */
+// Define informações sobre a ação desta partial
+$acao = $this->acao;
+
+// Excluir
+$nomeBotao [ 'excluir' ] = 'cmdExcluir';
+$verbo [ 'excluir' ] = 'exclusão';
+
+// Restaurar
+$nomeBotao [ 'restaurar' ] = 'cmdRestaurar';
+$verbo [ 'restaurar' ] = 'restaurados';
+
+if (! $acao) {
+    $acao = Orcamento_Business_Dados::ACTION_EXCLUIR;
+}
+
+$nomeBotao = $nomeBotao [ $acao ];
+$verbo = $verbo [ $acao ];
+
+?>
+<form action="<?php echo $this->url(array('action' => $acao)) ?>" method="post">
+	<div>
+		<!-- <input type="hidden" name="cod" value="<?php echo $this->escape($this->codigo); ?>" /> -->
+		<button type="submit" name="<?php echo $nomeBotao; ?>" title="Confirma a <?php echo $verbo; ?>" value="Sim" class="ceo_confirmar">Sim</button>
+		<button type="submit" name="<?php echo $nomeBotao; ?>" title="Cancela a <?php echo $verbo; ?>" value="Não" class="ceo_negar">Não</button>
+	</div>
+</form>

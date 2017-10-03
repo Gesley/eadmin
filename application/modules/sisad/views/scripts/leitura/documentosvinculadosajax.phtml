@@ -1,0 +1,51 @@
+<?php
+if (count($this->vinculos) > 0) {
+    ?>
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Ordem</th>
+                <th >Ação</th>
+                <th >Número</th>
+                <th >Tipo</th>
+                <th >Assunto</th>
+                <th >Data de inserção</th>
+                <th >Usuário</th>
+                <th >Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($this->vinculos as $apensos):
+                $apensos['APARTIR_DE_DOCM_ID_DOCUMENTO'] = $this->documento['DOCM_ID_DOCUMENTO'];
+                ?>
+                <tr name="rowList" value="<?= $this->escape(Zend_Json::encode($apensos)) ?>" >
+                    <td class="ordem_leitura"></td>
+                    <td style="width: 65px;"> 
+                        <button class="nova_aba" title="Este botão abrirá uma nova aba para a leitura do processo administrativo."></button>
+                        <button class="subir" title="Este botão trocará a ordem de leitura com o processo superior."></button>
+                        <button class="remover_tr" title="Este botão removerá o processo da visualização."></button>
+                        <button class="descer" title="Este botão trocará a ordem de leitura com o processo posterior."></button>
+                    </td>
+                    <td><?= $apensos['MASC_NR_DOCUMENTO'] ?></td>
+                    <td><?= $apensos['DTPD_NO_TIPO'] ?></td>
+                    <td><?= $apensos['AQVP_CD_PCTT'] . ' - ' . $apensos['AQAT_DS_ATIVIDADE'] ?></td>
+                    <td><?= $apensos['VIPD_DH_VINCULACAO'] ?></td>
+                    <td><?= $apensos['PMAT_CD_MATRICULA'] . ' - ' . $apensos['PNAT_NO_PESSOA'] ?></td>
+                    <td><?= $apensos['STATUS_JUNTADA'] ?></td>
+                </tr>
+                <?php
+            endforeach;
+            ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <!--<td colspan="8">Total: </td>-->
+            </tr>
+        </tfoot>
+    </table>
+    <?php
+} else {
+    echo $this->mensagem;
+}
+?>

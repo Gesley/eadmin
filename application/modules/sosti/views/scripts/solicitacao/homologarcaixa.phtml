@@ -1,0 +1,262 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/multiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/sosti/respostaPadrao.js'));
+$userNs = new Zend_Session_Namespace('userNs');
+$SosTbSsolSolicitacao       = new Application_Model_DbTable_SosTbSsolSolicitacao();
+$ocsTbPupePerfilUnidPessoa  = new Application_Model_DbTable_OcsTbPupePerfilUnidPessoa();
+$perfis_associados = $ocsTbPupePerfilUnidPessoa->getPerfisPessoaNaUnidade($userNs->siglasecao, $userNs->codlotacao, $userNs->matricula);
+
+foreach ($this->data as $data)
+{
+    $d = Zend_Json::decode($data);
+
+    if ($d['VINCULADA'] == 1)
+    {
+        $v = $d["SSOL_ID_DOCUMENTO"];
+        $w = $SosTbSsolSolicitacao->getPrincipalVinculacao($v);
+        $nsosti = $w['DOCM_NR_DOCUMENTO'];
+    }
+        else
+        {
+            $nsosti = $d["DOCM_NR_DOCUMENTO"];
+        }
+}
+    
+?>
+<script type="text/javascript">
+  
+    
+    $(document).ready(function() {
+        $('[type="file"]').change(function(evt) {
+        
+        var sosti = /<?php echo $nsosti; ?>/i;
+        var arquivo = $(this).val();
+        var valida = sosti.exec(arquivo);
+
+        if (valida == null)
+        {
+            alert('Número da Solicitação no nome do documento não coincide com a solicitação, selecione o documento correto!');
+            $(this).text('');
+            $(this).val('');
+            $(this).attr('required',true); 
+        }
+        });
+     
+    
+    });    
+</script>
+<script type="text/javascript">
+    function Calcula() {
+        var HORAS = document.homologarcaixa.HORAS.value;
+        var MINUTOS = document.homologarcaixa.MINUTOS.value;
+        var Soma = (parseFloat(HORAS) + (parseFloat(MINUTOS)/60))*0.15;
+        document.homologarcaixa.TOTAL.value = Soma.toFixed(2);
+    }
+    var GLOBAL_indice_abas = 0;
+    var xhr_abrir_documento;
+
+    var grid_tbody_tr;
+    $(function() {
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+                function() {
+                    grid_tbody_tr.removeClass('hover_nav');
+
+                    var this_tr = $(this);
+                    var is_checked_tr = $(this).attr('marcado');
+
+                    var input_check_box = $(this).find('input[type=checkbox]');
+                    var is_checked_input = input_check_box.attr('checked');
+
+                    if ((is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined)) {
+                        input_check_box.attr('checked', 'checked');
+                        this_tr.attr('marcado', 'marcado');
+                        this_tr.addClass('hover');
+                    } else {
+                        input_check_box.removeAttr('checked');
+                        this_tr.removeAttr('marcado');
+                        this_tr.removeClass('hover');
+                    }
+                    input_check_box.focus();
+                }
+        );
+        grid_tbody_tr.dblclick(
+                function() {
+                    var this_tr = $(this);
+                    var input_check_box = $(this).find('input');
+
+                    var div_dialog_by_id = $("#dialog-documentos_detalhe");
+                    value_input_check_box = input_check_box.val();
+                    input_check_box.attr('checked', 'checked');
+                    this_tr.attr('marcado', 'marcado');
+                    this_tr.addClass('hover');
+
+                    if (xhr_abrir_documento) {
+                        xhr_abrir_documento.abort();
+                    }
+
+                    url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                    xhr_abrir_documento = $.ajax({
+                        url: url,
+                        dataType: 'html',
+                        type: 'POST',
+                        data: value_input_check_box,
+                        contentType: 'application/json',
+                        processData: false,
+                        beforeSend: function() {
+                            div_dialog_by_id.dialog("open");
+                        },
+                        success: function(data) {
+                            div_dialog_by_id.html(data);
+
+                        },
+                        complete: function() {
+
+                        },
+                        error: function() {
+
+                        }
+                    });
+                }
+        );
+        $("#dialog-documentos_detalhe").dialog({
+            title: 'Detalhe',
+            autoOpen: false,
+            modal: false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580, 140, 0, 0],
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $(".historico").hide('');
+
+        $("#NEGA_IC_ACEITE-element").hide('');
+        $("#NEGA_IC_ACEITE-label").hide('');
+        $("#NEGA_DS_JUST_ACEITE_RECUSA-element").hide('');
+        $("#NEGA_DS_JUST_ACEITE_RECUSA-label").hide('');
+        if (<?php
+if ($this->NsAction->existeGarantiaPorMovimentacoes) {
+    echo '1';
+} else {
+    echo '2';
+}
+?> == '1') {
+            $("#NEGA_IC_ACEITE-element").show('');
+            $("#NEGA_IC_ACEITE-label").show('');
+            $("#NEGA_DS_JUST_ACEITE_RECUSA-element").hide('');
+            $("#NEGA_DS_JUST_ACEITE_RECUSA-label").hide('');
+        }
+        if ($('#NEGA_IC_ACEITE-R:checked').attr('value') == "R") {
+            $("#NEGA_DS_JUST_ACEITE_RECUSA-element").show('');
+            $("#NEGA_DS_JUST_ACEITE_RECUSA-label").show('');
+        }
+        $('input[type=radio][name=NEGA_IC_ACEITE]').click(
+            function() {
+                if (this.value == 'R') {
+                    $("#NEGA_DS_JUST_ACEITE_RECUSA-element").show('');
+                    $("#NEGA_DS_JUST_ACEITE_RECUSA-label").show('');
+                } else if (this.value == 'A') {
+                    $("#NEGA_DS_JUST_ACEITE_RECUSA-element").hide('');
+                    $("#NEGA_DS_JUST_ACEITE_RECUSA-label").hide('');
+                }
+            });
+  
+    });
+</script>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function() {
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>Texto de ajuda aqui</p>
+    
+
+
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Número</th>
+            <th >Autor</th>
+            <th >Serviço atual</th>
+            <th >Vinculada</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php $TimeInterval = new App_TimeInterval(); ?>
+        <?php foreach ($this->data as $data): ?>
+            <tr>
+                <?php $d = Zend_Json::decode($data); ?>  
+                
+                <td class="historico" <?php
+                echo ($data["TEMPO_TOTAL"] > 120) ? ('style="background-color:#EE4115;" title="Solicitação com o tempo de atendimento ultrapassado!"') : ('');
+                echo ($data["MOFA_ID_FASE"] == 1019) ? ('style="background-color:#E88400;" title="Solicitação recusada!"') : ('');
+                echo ($data["ESPERA_FLAG"] >= 0 && !is_null($data["ESPERA_FLAG"])) ? ('style="background-color:#0099FF;" title="Solicitação colocada em espera!"') : ('');
+                ?> >
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data); ?>"/>
+                </td>
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td> <?php
+                    if (isset($d["NOME"])) {
+                        echo $this->escape($d["NOME"]);
+                    } else {
+                        echo $this->escape($d["NOME_USARIO_CADASTRO"]);
+                    }
+                    ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"]) ?></td>
+                <td><?php
+                    if (isset($d["VINCULADA"]) && ($d["VINCULADA"] == 1)) {
+                        echo "SIM";
+                    } else {
+                        echo "";
+                    }
+                    ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<form name="homologarcaixa" id="homologarcaixa" action="" method="POST" enctype="multipart/form-data" >
+    <?php
+    echo $this->form->MOFA_ID_MOVIMENTACAO;
+    echo $this->form->DOCM_ID_DOCUMENTO;
+    echo $this->form->DOCM_NR_DOCUMENTO;
+    echo $this->form->MOFA_DS_COMPLEMENTO;
+    echo $this->form->ANEXOS;
+    ?>
+   
+    <div id="dialog_escolha_resposta">
+        <fieldset>
+            <?php 
+                echo $this->formResposta->REPD_NM_RESPOSTA_PADRAO;
+                echo $this->formResposta->REPD_DS_RESPOSTA_PADRAO;
+                echo $this->formResposta->REPD_ID_GRUPO;
+                echo $this->formResposta->REPD_ID_SERVICO;
+                echo $this->formResposta->Buscar;
+            ?>
+        </fieldset>
+        <fieldset>
+            <legend> Resultados </legend>
+            <div id="resultados_resposta">
+
+            </div>
+        </fieldset>
+    </div>
+    <div id="dialog-documentos_detalhe">
+        <div id="dialog-documentos_conteudo"></div>
+    </div>
+    <?php
+        echo $this->form->Salvar;
+    ?>
+</form>

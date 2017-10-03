@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        table {
+            width: 100%;
+            border: 1px solid #769dc0;
+            color: #000000;
+        }
+
+        table th {
+            text-align: left;
+            background: #c3d9ff;
+        }
+
+        table td table {
+            width: 750px;
+            margin: 0 auto;
+        }
+
+        table table th {
+            font-weight: bold;
+        }
+
+        .accordion {
+            border: 1px solid #769dc0;
+        }
+
+        .accordion th {
+            font-weight: bold;
+            background: #deedf7 url(images/ui-bg_glass_50_deedf7_1x400.png) 50% 50% repeat-x;
+            font-weight: normal;
+            color: #000000;
+        }
+
+        .accordion td:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+<table style="border: none">
+    <tr>
+        <td style="width: 15%" align="center"><img width="100" src="<?php echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" /></td>
+        <td style="width: 35%; font-size: 12px" align="center"><strong>
+                PODER JUDICIÁRIO <br/>
+                TRIBUNAL REGIONAL FEDERAL DA PRIMEIRA REGIÃO <br/>
+                SLA - SEÇÕES
+        </strong></td>
+        <td style="width: 50%; font-size: 12px" align="center">
+            <strong>
+                DATA E HORA DA EMISSÃO: <?php echo $this->sysdate?><br/>
+                EMITIDO POR: <?php echo $this->emissor ?><br/>
+            </strong>
+        </td>
+    </tr>
+</table>
+<br/>
+<strong><?php echo $this->secao; ?></strong><br />
+<strong>PERÍODO DE TEMPO DE ACORDO COM O FUSO HORÁRIO DA SEÇÃO: </strong><?php echo "(".$this->fusoHorario.") HORA(S)"; ?><br />
+<strong>PERÍODO: </strong>  <?php echo $this->data["DATA_INICIAL"] ?> À  <?php echo $this->data["DATA_FINAL"] ?><br />
+<br/>
+<table cellspacing="0" cellpadding="5">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Indicadores de Nível Mínimo de Serviço</th>
+        <th>Meta Exigida</th>
+        <th>Meta Alcançada</th>
+        <th>Glosa</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->indicadoresMinimos as $im): ?>
+        <tr>
+            <td><?php echo $im["SINS_CD_INDICADOR"]; ?></td>
+            <td><?php echo $im["SINS_DS_INDICADOR"]; ?></td>
+            <td><?php echo $im["SINS_DS_SINAL_META"] . " " . $im["SINS_NR_META"]; ?></td>
+            <td><?php echo $im["META_ALCANCADA"]; ?></td>
+            <td><?php echo $im["GLOSA"]; ?></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<br/>
+<table cellspacing="0" cellpadding="5" class="accordion">
+    <thead>
+    <tr>
+        <th><strong>Índice de Início de Atendimento no Prazo</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <br/>
+
+            <span><strong>Total de Chamados Atendidos: </strong><?php echo $this->totalIiaSolicitacoes; ?></span><br/>
+            <span><strong>Chamados com Início de Atendimento no
+                    Prazo: </strong><?php echo $this->noPrazoIiaSolicitacoes; ?></span><br/>
+            <span><strong>Chamados com Início de Atendimento
+                    Ultrapassado: </strong><?php echo $this->foradoPrazoIiaSolicitacoes; ?></span><br/>
+            <br/>
+            <table cellspacing="0" cellpadding="5" style="border-bottom: none">
+                <thead style="border-bottom: none">
+                <tr style="border-bottom: none">
+                    <th colspan="5" style="border-bottom: none">
+                        <center>Lista de Chamados com o Início de Atendimento Ultrapassado</center>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            <table cellspacing="0" cellpadding="5" style="border-top: none">
+                <thead>
+                <tr>
+                    <th>Nº do Documento</th>
+                    <th>Descrição</th>
+                    <th>Data do Chamado</th>
+                    <th>Data do Primeiro Atendimento</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (!empty($this->solicitacoesIia)): ?>
+                    <?php foreach ($this->solicitacoesIia as $iia): ?>
+                        <tr>
+                            <td><?php echo $iia["DOCM_NR_DOCUMENTO"]; ?></td>
+                            <td><?php echo $iia["MOFA_DS_COMPLEMENTO"]; ?></td>
+                            <td><?php echo $iia["DATA_CHAMADO"]; ?></td>
+                            <td><?php echo $iia["DATA_PRIMEIRO_ATENDIMENTO"]; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5">Não existem registros.</td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<table cellspacing="0" cellpadding="5" class="accordion">
+    <thead>
+    <tr>
+        <th><strong>Índice de Soluções das Solicitações no Prazo</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <br/>
+            <span><strong>Total de Chamados Baixados/Encaminhados: </strong><?php echo $this->totalIssSolicitacoes; ?></span><br/>
+            <span><strong>Chamados com Atendimento no prazo: </strong><?php echo $this->noPrazoIssSolicitacoes; ?></span><br/>
+            <span><strong>Chamados com Atendimento com prazo ultrapassado: </strong><?php echo $this->foradoPrazoIssSolicitacoes; ?></span><br/>
+            <br/>
+            <table cellspacing="0" cellpadding="5" style="border-bottom: none">
+                <thead style="border-bottom: none">
+                <tr style="border-bottom: none">
+                    <th colspan="5" style="border-bottom: none">
+                        <center>Lista de Chamados com Atendimento com prazo ultrapassado</center>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            <table cellspacing="0" cellpadding="5" style="border-top: none">
+                <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Nº do Documento</th>
+                    <th>Data do Chamado</th>
+                    <th>Data Baixa/Encaminhamento</th>
+                    <th>Prazo Acordado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (!empty($this->solicitacoesIssUltrapassado)): ?>
+                    <?php foreach ($this->solicitacoesIssUltrapassado as $iss): ?>
+                        <tr>
+                            <td><?php echo $iss["MOFA_DS_COMPLEMENTO"]; ?></td>
+                            <td><?php echo $iss["DOCM_NR_DOCUMENTO"]; ?></td>
+                            <td><?php echo $iss["DATA_CHAMADO"]; ?></td>
+                            <td><?php echo $iss["DATA_FIM_CHAMADO"]; ?></td>
+                            <td><?php echo $iss["SSPA_DT_PRAZO"]; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="5">Não existem registros.</td></tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<table cellspacing="0" cellpadding="5" class="accordion">
+    <thead>
+    <tr>
+        <th><strong>Índice de Chamados Solucionados no Mesmo Dia</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <br/>
+            <span><strong>Total de Chamados: </strong><?php echo $this->totalIsdSolicitacoes; ?></span><br/>
+            <span><strong>Chamados Solucionados no Mesmo Dia: </strong><?php echo $this->noPrazoIsdSolicitacoes; ?> </span><br/>
+            <span><strong>Chamados que Não Foram Solucionados no Mesmo Dia: </strong><?php echo $this->foradoPrazoIsdSolicitacoes; ?> </span><br/>
+            <br/>
+            <table cellspacing="0" cellpadding="5" style="border-bottom: none">
+                <thead style="border-bottom: none">
+                <tr style="border-bottom: none">
+                    <th colspan="5" style="border-bottom: none">
+                        <center>Lista de Chamados que Não Foram Solucionados no Mesmo Dia</center>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            <table cellspacing="0" cellpadding="5" style="border-top: none">
+                <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Nº do Documento</th>
+                    <th>Data do Chamado</th>
+                    <th>Data Baixa/Encaminhamento</th>
+                    <th>Prazo Acordado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (!empty($this->solicitacoesIsdUltrapassado)): ?>
+                    <?php foreach ($this->solicitacoesIsdUltrapassado as $isd): ?>
+                        <tr>
+                            <td><?php echo $isd["MOFA_DS_COMPLEMENTO"]; ?></td>
+                            <td><?php echo $isd["DOCM_NR_DOCUMENTO"]; ?></td>
+                            <td><?php echo $isd["DATA_CHAMADO"]; ?></td>
+                            <td><?php echo $isd["DATA_FIM_CHAMADO"]; ?></td>
+                            <td><?php echo $isd["SSPA_DT_PRAZO"]; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="5">Não existem registros.</td></tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<table cellspacing="0" cellpadding="5" class="accordion">
+    <thead>
+    <tr>
+        <th><strong>Índice de Ligações Telefônicas Perdidas</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <br/>
+
+            <span><strong>Total de Ligações: </strong></span><br/>
+            <span><strong>Ligações Telefônicas Atendidas: </strong></span><br/>
+            <span><strong>Ligações Telefônicas Perdidas: </strong></span><br/>
+
+            <br/>
+            <table cellspacing="0" cellpadding="5" style="border-bottom: none">
+                <thead style="border-bottom: none">
+                <tr style="border-bottom: none">
+                    <th colspan="5" style="border-bottom: none">
+                        <center>Lista de Ligações Telefônicas Perdidas</center>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            <table cellspacing="0" cellpadding="5" style="border-top: none">
+                <thead>
+                <?php $qtdeSolicitacoesItp = 0; ?>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Nº do Documento</th>
+                    <th>Data do Chamado</th>
+                    <th>Data Baixa/Encaminhamento</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if ($qtdeSolicitacoesItp > 0): ?>
+                    <?php foreach ($qtdeSolicitacoesItp as $itp): ?>
+                        <tr>
+                            <td><?php echo $itp["MOFA_DS_COMPLEMENTO"]; ?></td>
+                            <td><?php echo $itp["DOCM_NR_DOCUMENTO"]; ?></td>
+                            <td><?php echo $itp["DATA_CHAMADO"]; ?></td>
+                            <td><?php echo $itp["DATA_FIM_CHAMADO"]; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="4">Não existem registros.</td></tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<table cellspacing="0" cellpadding="5" class="accordion">
+    <thead>
+    <tr>
+        <th><strong>Índice de Ausência de Prazo</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <br/>
+
+            <span><strong>Total de Chamados: </strong><?php echo $this->totalIapSolicitacoes; ?> </span><br/>
+            <span><strong>Chamados no Prazo: </strong><?php echo $this->noPrazoIapSolicitacoes; ?> </span><br/>
+            <span><strong>Chamados com Ausência de Prazo: </strong><?php echo $this->foradoPrazoIapSolicitacoes; ?></span><br/>
+
+            <br/>
+            <table cellspacing="0" cellpadding="5" style="border-bottom: none">
+                <thead style="border-bottom: none">
+                <tr style="border-bottom: none">
+                    <th colspan="5" style="border-bottom: none">
+                        <center>Lista de Chamados com Ausência de Prazo</center>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            <table cellspacing="0" cellpadding="5" style="border-top: none">
+                <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Nº do Documento</th>
+                    <th>Data do Chamado</th>
+                    <th>Data Baixa/Encaminhamento</th>
+                    <th>Prazo Acordado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (!empty($this->solicitacoesIapUltrapassado)): ?>
+                    <?php foreach ($this->solicitacoesIapUltrapassado as $iap): ?>
+                        <tr>
+                            <td><?php echo $iap["MOFA_DS_COMPLEMENTO"]; ?></td>
+                            <td><?php echo $iap["DOCM_NR_DOCUMENTO"]; ?></td>
+                            <td><?php echo $iap["DATA_CHAMADO"]; ?></td>
+                            <td><?php echo $iap["DATA_FIM_CHAMADO"]; ?></td>
+                            <td><?php echo $iap["SSPA_DT_PRAZO"]; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="5">Não existem registros.</td></tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<table cellspacing="0" cellpadding="5" class="accordion">
+    <thead>
+    <tr>
+        <th><strong>Índice de Chamados com Não Conformidade</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <br/>
+
+            <span><strong>Total de Chamados: </strong><?php echo $this->totalIncSolicitacoes; ?> </span><br/>
+            <span><strong>Chamados em Conformidade: </strong><?php echo $this->noPrazoIncSolicitacoes; ?> </span><br/>
+            <span><strong>Chamados com Não Conformidade: </strong><?php echo $this->foradoPrazoIncSolicitacoes; ?> </span><br/>
+
+            <br/>
+            <table cellspacing="0" cellpadding="5" style="border-bottom: none">
+                <thead style="border-bottom: none">
+                <tr style="border-bottom: none">
+                    <th colspan="5" style="border-bottom: none">
+                        <center>Lista de Chamados com Não Conformidade</center>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            <table cellspacing="0" cellpadding="5" style="border-top: none">
+                <thead>
+                <?php $qtdeSolicitacoesInc = count($this->solicitacoesIncUltrapassado); ?>
+                <tr>
+                    <th>Nº do Documento</th>
+                    <th>Data da avaliação</th>
+                    <th>Data Encaminhamento</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (!empty($this->solicitacoesIncUltrapassado)): ?>
+                    <?php foreach ($this->solicitacoesIncUltrapassado as $inc): ?>
+                        <tr>
+                            <td><?php echo $inc["DOCM_NR_DOCUMENTO"]; ?></td>
+                            <td><?php echo $inc["DATA_AVALIACAO"]; ?></td>
+                            <td><?php echo $inc["MOVI_DH_ENCAMINHAMENTO"]; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="3">Não existem registros.</td></tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<table cellspacing="0" cellpadding="5" class="accordion">
+    <thead>
+    <tr>
+        <th><strong>Índice de Chamados Reabertos</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <br/>
+             <span><strong>Total de Chamados Avaliados: </strong><?php echo $this->totalIcrSolicitacoes; ?></span><br/>
+             <span><strong>Chamados Avaliados Positivamente: </strong><?php echo $this->AvaliadasPositivamenteIcrSolicitacoes; ?></span><br/>
+             <span><strong>Chamados Reabertos: </strong><?php echo $this->RecusadasIcrSolicitacoes; ?></span><br/>
+            <br/>
+            <table cellspacing="0" cellpadding="5" style="border-bottom: none">
+                <thead style="border-bottom: none">
+                <tr style="border-bottom: none">
+                    <th colspan="5" style="border-bottom: none">
+                        <center>Lista de Chamados Reabertos (Recusados em 24 horas úteis)</center>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            <table cellspacing="0" cellpadding="5" style="border-top: none">
+                <thead>
+                <tr>
+                    <th>Nº do Documento</th>
+                    <th>Data Chamado</th>
+                    <th>Data da Baixa</th>
+                    <th>Data da recusa</th>
+                    <th>Data da avaliação final</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (!empty($this->IcrRecusadasSolicitacoes)): ?>
+                    <?php foreach ($this->IcrRecusadasSolicitacoes as $icr): ?>
+                        <tr>
+                            <td><?php echo $icr["DOCM_NR_DOCUMENTO"]; ?></td>
+                            <td><?php echo $icr["DATA_CHAMADO"]; ?></td>
+                            <td><?php echo $icr["DATA_BAIXA"]; ?></td>
+                            <td><?php echo $icr["DATA_RECUSA"]; ?></td>
+                            <td><?php echo $icr["DATA_AVALIACAO_FINAL"]; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="5">Não existem registros.</td></tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+</html>

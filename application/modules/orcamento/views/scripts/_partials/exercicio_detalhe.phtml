@@ -1,0 +1,41 @@
+<?php
+/**
+ * @category	TRF1
+ * @package	_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author	Anderson Sathler M. Ribeiro [asathler@gmail.com]
+ * @license	FREE, keep original copyrights
+ * @version	controlada pelo SVN
+ * 
+ * @return	string							Código HTML que gera a tela de exibição de detalhe de um único registro
+ * 
+ * @param	array		dados				Contém o array com registros.
+ * Nesse caso, a query deve conter aliás para os nomes dos campos utilizados.
+ * 
+ * @example	echo $this->partial('_partials/tela_detalhe_crud.phtml',
+ * 									array(	'msgAjuda'	=> $this->msgAjuda,
+ * 											'msgInfo'	=> $this->msgInfo,
+ * 											'dados'		=> $this->dados
+ * 										)
+ * 									);
+ */
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+?>
+
+<br />
+<div id="detalheTabs" class="tabs">
+    <ul>
+        <li><a href="#detalhe">Detalhes do registro</a></li>
+    </ul>
+
+    <div id="detalhe">
+        <p>
+            <b>Ano:</b> <?php echo $this->dados['ANOE_AA_ANO']; ?> <br />
+            <b>Descrição    :</b> <?php echo $this->dados['ANOE_DS_OBSERVACAO']; ?> <br />
+            <b>Status       :</b> <?php echo $this->dados['FASE_NM_FASE_EXERCICIO']; ?> <br />
+        
+        </p>
+
+    </div>
+</div>

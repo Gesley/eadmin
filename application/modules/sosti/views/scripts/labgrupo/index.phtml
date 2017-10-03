@@ -1,0 +1,80 @@
+<script type="text/javascript">
+    $(function() {
+        $( ".associar" ).button({
+            icons: {
+                primary: "ui-icon-transferthick-e-w"
+            }
+        });
+    });
+</script>
+<div id="container_pagination">
+    <div style="margin-bottom: 5px;">
+        <a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/labgrupo/add">Novo</a>
+    </div>
+    <?php
+    if (count($this->data)):
+        $objGrupoassociacao = new Application_Model_DbTable_OcsTbGramGrupoMarca ()
+        ?>
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labgrupo/index/ordem/GRUP_ID_GRUPO_MAT_SERV/direcao/<?php echo $this->direcao ?> ">Editar<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labgrupo/index/ordem/GRUP_DS_GRUPO_MAT_SERV/direcao/<?php echo $this->direcao ?> ">Descrição<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labgrupo/index/ordem/GRUP_CD_MAT_INCLUSAO/direcao/<?php echo $this->direcao ?> ">Incluído por<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labgrupo/index/ordem/GRUP_DT_INCLUSAO/direcao/<?php echo $this->direcao ?> ">Data Inclusão<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labgrupo/index/ordem/GRUP_DT_INCLUSAO/direcao/<?php echo $this->direcao ?> ">Marcas Associadas<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->data as $data):
+                    $marcaLista = "";
+                    $marcasAssociadas = $objGrupoassociacao->getgrupoAssociacoes($data["GRUP_ID_GRUPO_MAT_SERV"]);
+
+                    foreach ($marcasAssociadas as $marcas) {
+                        $marcaLista .="<li>" . $marcas['MARC_DS_MARCA'] . "</li> ";
+                    }
+                    ?>
+                    <tr>
+                        <td class="painel" style="width: 120px;">
+                            <a title="Editar Descrição" style="margin: 6px;" class="editar" href="<?php echo $this->baseUrl(); ?>/sosti/labgrupo/editdesc/id/<?php echo $this->escape($data["GRUP_ID_GRUPO_MAT_SERV"]); ?>" >Editar Descrição</a> 
+                            <a title="Associar Grupo" class="editar" href="<?php echo $this->baseUrl(); ?>/sosti/labgrupo/editassoc/id/<?php echo $this->escape($data["GRUP_ID_GRUPO_MAT_SERV"]); ?>" >Associar Grupo</a>
+                        </td>
+                        <td style="width: 220px;">
+                            <?php
+                            if (strlen($data["GRUP_DS_GRUPO_MAT_SERV"]) > 40) {
+                                echo substr($this->escape($data["GRUP_DS_GRUPO_MAT_SERV"]), 0, 40) . '...';
+                            } else {
+                                echo $this->escape($data["GRUP_DS_GRUPO_MAT_SERV"]);
+                            }
+                            ?>
+                        </td>
+                        <td style="width: 80px;"><?php echo $this->escape($data["GRUP_CD_MAT_INCLUSAO"]); ?></td>
+                        <td style="width: 80px;"><?php echo $this->escape($data["GRUP_DT_INCLUSAO"]); ?></td>
+                        <td style="width: 250px;"><?php echo $marcaLista; ?></td>
+                    </tr>
+                    <?php
+                    $marcaLista = '';
+                endforeach;
+                ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">
+                        Total: 
+                        <?php
+                        echo $this->data->getTotalItemCount()
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    <?php else: ?>
+        <p>Não existem registros.</p>
+    <?php endif; ?>
+</div>

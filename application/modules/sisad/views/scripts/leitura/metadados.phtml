@@ -1,0 +1,10 @@
+<?php
+
+if (!isset($this->mensagem)) {
+    echo $this->partial('_partials/leitura/tabs_metadados.phtml', array(
+        'documento' => $this->documento
+    ));
+} else {
+    echo $this->mensagem;
+}
+?>

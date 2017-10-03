@@ -1,0 +1,107 @@
+<?php
+echo	'<br />';
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'importarliquidado',
+				'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+				'textoBotao'		=> 'Voltar para listagem',
+				'textoAlternativo'	=> 'Retornar à tela de Importar Liquidado'));
+
+$valor = new Trf1_Orcamento_Valor();
+
+?>
+<br />
+		<div id="saldoTabs" class="tabs">
+			<ul>
+				<li><a href="#saldo">Liquidado</a></li>
+			</ul>
+
+			<div id="gridLinhas">
+				<div id="saldo">
+				<?php
+				echo	$this->partial('_partials/importacao_basico.phtml',
+						array(	'dados'	=> $this->dados));
+				?>
+			</div>
+			</div>
+		</div>
+		<br />
+
+
+<div id="projecaoTabs" class="tabs">
+			<ul>
+				<li><a href="#projecao">Meses</a></li>
+			</ul>
+			
+			<div id="projecao">
+				<table>
+					<tbody>
+						<tr>
+							<td> <strong>Janeiro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_JAN'])); ?></span> </td>
+							
+							<td> <strong>Fevereiro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_FEV'])); ?></span> </td>
+							
+							<td> <strong>Março:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_MAR'])); ?></span> </td>
+							
+							<td> <strong>Abril:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_ABR'])); ?></span> </td>
+							
+							<td> <strong>Maio:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_MAI'])); ?></span> </td>
+							
+							<td> <strong>Junho:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_JUN'])); ?></span> </td>
+						</tr>
+						<tr>
+							<td> <strong>Julho:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_JUL'])); ?></span> </td>
+							
+							<td> <strong>Agosto:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_AGO'])); ?></span> </td>
+							
+							<td> <strong>Setembro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_SET'])); ?></span> </td>
+							
+							<td> <strong>Outubro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_OUT'])); ?></span> </td>
+							
+							<td> <strong>Novembro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_NOV'])); ?></span> </td>
+							
+							<td> <strong>Dezembro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL_DEZ'])); ?></span> </td>
+						</tr>
+						<tr>
+							<td colspan="5"> &nbsp; </td>
+							<td> <strong>Total:</strong><br />
+							<?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->dados['IMPO_VL_TOTAL'])); ?> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<br />
+<div id="projecaoTabs" class="tabs">
+			<ul>
+				<li><a href="#projecao">Associação Manual de Inciso</a></li>
+			</ul>
+			
+			<div id="projecao">
+				<table>
+					<tbody>
+						<tr>
+							<td><b>Inciso:</b></td>
+							<td><?php echo $this->dados['INCI_DS_INCISO']; ?></td>
+						</tr>
+						<tr>
+							<td><b>Alinea:</b></td>
+							<td><?php echo $this->dados['ALIN_DS_ALINEA']; ?></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<br />		

@@ -1,0 +1,13 @@
+<script type="text/javascript">
+
+$(function() {
+      $("#ATENDENTE").autocomplete({
+            source: base_url+"/sosti/atendentecaixa/ajaxnomeatendente/idcaixa/<?php echo $this->idCaixa ?>",
+            minLength: 3,
+            delay: 300
+        });
+});
+
+</script>
+
+<?php echo $this->form; ?>

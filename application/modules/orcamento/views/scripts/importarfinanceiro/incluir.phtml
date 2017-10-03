@@ -1,0 +1,42 @@
+<?php
+
+$ptres [ 'campo' ] = 'IMPO_CD_PTRES';
+$natureza ['campo'] = 'IMPO_CD_NATUREZA_DESPESA';
+
+echo $this->partial ( '_partials/ajax_ptres.phtml', $ptres );
+echo $this->partial ( '_partials/ajax_natureza.phtml', $natureza );
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo	$this->formulario;
+?>
+<script type="text/javascript">
+    $('#IMPO_ID_ALINEA').attr('readonly', true);
+
+    $('#IMPO_ID_INCISO').change(function(){
+
+        $('#IMPO_ID_ALINEA').html("<option>carregando...</option>").fadeIn('slow');
+
+        if ($(this).val() != 0){               
+                var cod = $(this).val();                
+                $.ajax({
+                    url: '<?php echo $this->baseUrl(); ?>/orcamento/alinea/ajaxcomboalinea/cod/'+cod,
+                    dataType: 'html',
+                    data: $(this).serialize(),
+                    type: 'POST',
+                    processData: false,
+                    error:function(){
+                        $('#IMPO_ID_ALINEA').html("<option>Ocorreu um erro ao carregar combo...</option>").fadeIn('slow');
+                        $('#IMPO_ID_ALINEA').attr('readonly', true);
+                    },
+                    success:function(data){
+                        $('#IMPO_ID_ALINEA').attr('readonly', false);
+                        $('#IMPO_ID_ALINEA').removeAttr('style');
+                        $('#IMPO_ID_ALINEA').html(data);
+
+                    }});  
+        }
+
+    });
+</script>

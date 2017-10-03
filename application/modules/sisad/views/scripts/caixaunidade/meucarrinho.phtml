@@ -1,0 +1,365 @@
+
+<script type="text/javascript">
+
+    var GLOGAL_formulario_valido = true;
+
+    $(function() {
+        $(".painel").buttonset();
+        $(".remover").button({
+            icons: {
+                primary: "ui-icon-circle-close"
+            }
+        }).css('width', '30px').css('height', '20px');
+        $(".nav_check_boxes_carrinho").hide();
+
+        $('input[name=acao]&.carrinhoMenu').click(
+                function() {
+                    var this_button_acao = this;
+                    var acao = this.value;
+                    var carrinho = $('form[name=carrinho]');
+                    if (acao == 'Encaminhar') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/documento/encaminhar');
+                    } else if (acao == 'Encaminhar Pessoa') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/encaminharpessoa');
+                    } else if (acao == 'Parecer') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/parecer');
+                    } else if (acao == 'Distribuição') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/distribuicao/iniciadistribuicao');
+                    } else if (acao == 'Endereçar') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/enderecar');
+                    } else if (acao == 'Protocolar') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/protocolar');
+                    } else if (acao == 'Arquivar') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivar');
+                    } else if (acao == 'Cancelar') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/cancelar');
+                    } else if (acao == 'Excluir') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/excluir');
+                    } else if (acao == 'Autuar') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/autuar/autuar');
+                    } else if (acao == 'Adicionar a Processo') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/juntada/documentoaprocesso');
+                    } else if (acao == 'Juntada entre Processos') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/juntada/processoaprocesso');
+                    } else if (acao == 'Assinar') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/documento/assinar');
+                    } else if (acao == 'Categorias') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/categorias/categorizar');
+                    } else if (acao == 'Despacho') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/despacho');
+                    } else if (acao == 'Cadastrar Partes') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/partes/cadastrapartes/tipo/1');
+                    } else if (acao == 'Cadastrar Vistas') {
+                        carrinho.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/partes/cadastrapartes/tipo/3');
+                    }
+                    else if (acao == 'Remover') {
+
+                        removeCarrinho();
+                        return;
+
+                    } else if (acao == 'Limpar') {
+
+                        cleanCarrinho();
+                        return;
+
+                    }
+
+                    GLOGAL_formulario_valido = validaForm(acao);
+                    
+                    if (GLOGAL_formulario_valido) {
+                        GLOGAL_formulario_valido = false;
+                        var visualizar = "<input id='limpar_para_acao' name='limpar_para_acao' type='hidden' value='limpar_para_acao'/>";
+                        $('form[name=carrinho]').append($(visualizar));
+
+                        var div_dialog_by_id = $("#dialog-carrinho_detalhe");
+                        url = '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/meucarrinho';
+                        xhr_carrinho = $.ajax({
+                            url: url,
+                            dataType: 'html',
+                            type: 'POST',
+                            data: $('form[name=carrinho]').serialize(),
+                            beforeSend: function() {
+                            },
+                            success: function(data) {
+                                GLOGAL_formulario_valido = true;
+
+                                var acao = $(this_button_acao).val();
+                                input_acao = "<input name='acao' type='hidden' value='" + acao + "'/>";
+
+                                $('form[name=carrinho]').append($(input_acao));
+                                $('form[name=carrinho]').submit();
+
+                                var flashMessagesViewCarrinho = $('#flashMessagesViewCarrinho');
+                                var mensagem = "<div class='notice'><strong>Alerta:</strong> Aguarde... </div>";
+                                flashMessagesViewCarrinho.html(mensagem);
+                                flashMessagesViewCarrinho.show('');
+                                //div_dialog_by_id.html('<strong>Aguarde...</strong>');
+
+                            },
+                            complete: function() {
+
+                            },
+                            error: function() {
+
+                            }
+                        });
+                        $("#limpar_para_acao").remove();
+                    }
+                }
+        );
+
+        $('form[name=carrinho]').submit(
+                function() {
+                    if (GLOGAL_formulario_valido) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+        );
+    });
+
+    function validaForm(acao) {
+
+        var flashMessagesViewCarrinho = $('#flashMessagesViewCarrinho');
+        var grid_tbody_tr_carrinho = $("table.grid.carrinho > tbody > tr");
+        flashMessagesViewCarrinho.html('');
+
+        /**
+         * Validações em cada valor dos inputs
+         *
+         */
+        grid_tbody_tr_carrinho.each(function() {
+            var this_tr = $(this);
+            var input_check_box = this_tr.find('input');
+            var is_checked_input = input_check_box.attr('checked');
+            if (is_checked_input != undefined) {
+                datainput = jQuery.parseJSON(input_check_box.val());
+                /** 
+                 * Validação da ação autuar
+                 */
+                if (datainput.DTPD_NO_TIPO == "Processo administrativo" && acao === "Autuar") {
+                    //alert('Não e possivel autuar um processo!');
+                    var mensagem = "<div class='notice'><strong>Alerta:</strong> Não é possivel autuar um processo. Processo nº: " + datainput.DOCM_NR_DOCUMENTO + " encontra-se no Carrinho</div>";
+                    //alert(flashMessagesViewCarrinho.html());
+                    flashMessagesViewCarrinho.html(flashMessagesViewCarrinho.html() + mensagem);
+                    GLOGAL_formulario_valido = false;
+                }
+                /**
+                 * Validação para a ação de adicionar a processo
+                 */
+                if (datainput.DTPD_NO_TIPO == "Processo administrativo" && acao === "Adicionar a Processo") {
+                    //alert('Não e possivel autuar um processo!');
+                    var mensagem = "<div class='notice'><strong>Alerta:</strong> Não é possivel adicionar processos a processos. Processo nº: " + datainput.DOCM_NR_DOCUMENTO + " encontra-se no Carrinho</div>";
+                    //alert(flashMessagesViewCarrinho.html());
+                    flashMessagesViewCarrinho.html(flashMessagesViewCarrinho.html() + mensagem);
+                    GLOGAL_formulario_valido = false;
+                }
+            }
+        });
+        if (!GLOGAL_formulario_valido) {
+            flashMessagesViewCarrinho.show('drop');
+        }
+
+        return GLOGAL_formulario_valido;
+    }
+
+    $('.removerCarrinho').click(
+            function() {
+
+                this_removerCarrinho = $(this);
+
+                var div_dialog_by_id = $("#dialog-carrinho_detalhe");
+                url = '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/meucarrinho';
+                xhr_carrinho = $.ajax({
+                    url: url,
+                    dataType: 'html',
+                    type: 'POST',
+                    data: 'remover_item=remover_item&item=' + this_removerCarrinho.attr('value'),
+                    beforeSend: function() {
+                        div_dialog_by_id.dialog("open");
+                        //div_dialog_by_id.html('');
+                    },
+                    success: function(data) {
+                        div_dialog_by_id.html(data);
+
+                    },
+                    complete: function() {
+
+                    },
+                    error: function() {
+
+                    }
+                });
+
+            }
+    );
+
+
+</script>
+<div id="flashMessagesViewCarrinho">
+    <div class="<?php echo $this->flashmessage['status']; ?>">
+        <strong><?php echo $this->flashmessage['label']; ?>:&emsp;</strong><?php echo $this->flashmessage['message']; ?>
+    </div>
+    <div class="<?php echo $this->flashmessage['statusErro']; ?>">
+        <strong><?php echo $this->flashmessage['labelErro']; ?></strong><?php echo $this->flashmessage['messageErro']; ?>
+    </div>
+</div>
+<?php
+if (count($this->data)):
+    $contNaoProcAdm = 0;
+    foreach ($this->data as $data):
+        $siglaUnidade = $data['LOTA_SIGLA_LOTACAO_DESTINO'];
+        if ($this->escape($data["DTPD_ID_TIPO_DOC"]) != 152) {
+            $contNaoProcAdm++;
+            break;
+        }
+    endforeach;
+    ?>
+    <form method="POST" action="" name="carrinho" >
+        <div class="containerpainel">
+            <div class="painel">
+                <input type="button" title="Adicionar documentos a um processo"                 name="acao" value="Adicionar a Processo" class="carrinhoMenu"/>
+                <input type="button" title="Juntada entre processos"                            name="acao" value="Juntada entre Processos" class="carrinhoMenu"/>
+                <input type="submit" title="Arquivar um Documento/Processo"                     name="acao" value="Arquivar"          class="carrinhoMenu"/>
+                <input type="submit" title="Assinar"                        name="acao" value="Assinar" class="carrinhoMenu"/>
+                <!-- Alteração para restringir autuação de documentos para atender a solicitação: 2014010001784017840160000030 -->
+                <?php $userNs = new Zend_Session_Namespace('userNs'); ?>
+                <?php if (!(
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'TRF1') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJAC') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJAP') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJAM') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJBA') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJDF') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJGO') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJMA') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJMG') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJMT') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJPA') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJPI') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJRO') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJRR') || 
+					((strtoupper($userNs->siglasecsubseclotacao)) == 'SJTO')
+					)): ?>
+                    <input type="submit" title="Autuar um Processo"                                 name="acao" value="Autuar"            class="carrinhoMenu"/>
+                <?php endif; ?>
+                <input type="submit" title="Cadastrar Partes"                                   name="acao" value="Cadastrar Partes"   class="carrinhoMenu"/>
+                <input type="submit" title="Cadastrar Vistas"                                   name="acao" value="Cadastrar Vistas"    class="carrinhoMenu"/>
+                <input type="submit" title="Criar / Remover categoria(s) de Documento/Processo" name="acao" value="Categorias"        class="carrinhoMenu"/>
+                <input type="submit" title="Dar um despacho no Documento/Processo"               name="acao" value="Despacho"           class="carrinhoMenu"/>
+                <input type="submit" title="Encaminha Documento/Processo"                       name="acao" value="Encaminhar"        class="carrinhoMenu"/>
+                <!--input type="submit" title="Encaminha Documento/Processo para uma Pessoa da Unidade"   name="acao" value="Encaminhar Pessoa"        class="carrinhoMenu"/-->
+                <input type="submit" title="Endereçar Documento/Processo Para Postagem"         name="acao" value="Endereçar"         class="carrinhoMenu"/>
+                <input type="submit" title="Dar um parecer no Documento/Processo"               name="acao" value="Parecer"           class="carrinhoMenu"/>
+                <?php if ($contNaoProcAdm == 0 && ($siglaUnidade == 'COGER' || $siglaUnidade == 'DIGES')): ?>
+                    <input type="submit" title="Distribuição de Processos"               name="acao" value="Distribuição"           class="carrinhoMenu"/>
+                <?php endif; ?>
+
+            <!--            <input type="submit" title="Excluir Documento/Processo"                         name="acao" value="Excluir"          class="carrinhoMenu"/>-->
+            </div>
+        </div>
+        <div class="containerpainel">
+            <div class="painel">
+                <fieldset>
+                    <legend>Opções do Carrinho</legend>
+                    <div class="painel">
+                        <input type="button" title="Limpar o carrinho"                               name="acao" value="Limpar"  class="carrinhoMenu"/>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <table class="grid carrinho">
+            <thead>
+                <tr>
+                    <th>
+    <!--                    <input type="checkbox" name="input_check_all_grid_carrinho" id="check_all" /> -->
+                    </th>
+                    <th></th>
+                    <th>Tipo</th>
+                    <th>Número</th>
+                    <th>Data</th>
+                    <th>Origem</th>
+                    <th>Assunto</th>
+                    <th>Categoria</th>
+    <!--                <th>Tempo</th>-->
+                </tr>
+            </thead>
+            <tbody id="documentosList">
+                <?php
+                $cateNs = new Zend_Session_Namespace('cateNs');
+                $cado_categoria = new Application_Model_DbTable_SadTbCadoCategoriaDoc();
+                $documentos = array();
+                $cont = 0;
+                foreach ($this->data as $data):
+                    ?>
+                    <tr name="rowList_carrinho">        
+                        <td>
+                            <input class="nav_check_boxes_carrinho" id="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" checked="checked" value="<?php echo $this->escape(Zend_Json::encode($data)); ?>"/>
+                            <span value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" class="remover removerCarrinho" title="Remover do Carrinho"></span>
+                        </td>
+                        <td>
+                            <span id="leitura" class="<?php echo $this->escape($data["CLASS_LIDO"]); ?>" title="<?php echo $this->escape($data["MSG_LIDO"]); ?>"></span>
+                            <?php
+                            if ($data["ENDERECADO"]) {
+                                ?>
+                                <span id="leitura" class="<?php echo $this->escape($data["ENDERECADO"]); ?>" title="<?php echo $this->escape($data["MSG_ENDERECADO"]); ?>"></span>
+                            <?php } ?>
+                            <?php
+                            if ($data["PARA_POSTAGEM"]) {
+                                ?>
+                                <span id="leitura" class="<?php echo $this->escape($data["PARA_POSTAGEM"]); ?>" title="<?php echo $this->escape($data["MSG_POSTAGEM"]); ?>"></span>
+                            <?php } ?>
+                        </td>
+                        <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+        <!--                        <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                        <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                        <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO"]) ?></td>
+                        <td> <?php echo $this->escape($data["LOTA_SIGLA_LOTACAO_ORIGEM"]) ?></td>
+                        <td> <?php echo $this->escape($data["AQAT_DS_ATIVIDADE"]) ?></td>
+        <!--                        <td> <?php echo $this->escape($data["TEMPO_TRANSCORRIDO"]) ?></td>-->
+        <!--                <td> <?php //echo $this->escape($data["LOTA_SIGLA_LOTACAO"])    ?></td>-->
+                        <td> 
+                            <?php
+                            $categoriaDoc = $cado_categoria->getCategoriaDocs($data["DOCM_ID_DOCUMENTO"], null, $cateNs->sgSecao, $cateNs->cdLotacao);
+                            $cont = 0;
+                            if ($categoriaDoc != null) {
+                                ?>
+                                <table>
+                                    <tr>
+                                        <?php
+                                        foreach ($categoriaDoc as $categorias_p) {
+                                            if ($cont % 3 == 0) {
+                                                echo '</tr><tr>';
+                                            }
+                                            ?>
+                                            <td bgcolor="<?php echo $categorias_p['CATE_DS_DESCRICAO_COR'] ?>" title="Nome: <?php echo $categorias_p['CATE_NM_CATEGORIA'] ?> - Descrição: <?php echo $categorias_p['CATE_DS_OBSERVACAO'] ?>" > </td>
+                                            <?php
+                                            $cont++;
+                                        }
+                                        ?>
+                                    </tr>
+                                </table>
+                                <?php
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php $cont++; ?>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="8">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+                </tr>
+        <!--        <tr>
+                    <td colspan="4"><?php //echo $this->paginationControl($this->data, null, null, null)   ?></td>
+                </tr>-->
+            </tfoot>
+        </table>
+        <input name="controller" type="hidden"  value="<?php echo $this->controlerRequisicao; ?>"/>        
+        <input name="action"     type="hidden"  value="<?php echo $this->actionRequisicao; ?>"/>   
+    </form>
+<?php else: ?>
+    <p>Não existem registros</p>
+<?php endif; ?>

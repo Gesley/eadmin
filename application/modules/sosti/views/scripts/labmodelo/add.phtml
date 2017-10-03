@@ -1,0 +1,54 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+            
+            $("#MODE_DS_MODELO").autocomplete({
+                source: base_url + '/sosti/labmodelo/ajaxcadastromodelo/',
+                minLength: 2,
+                dataType: 'json',       
+               change: function( event, ui ) {
+                   	console.log(ui);
+                            $("#GRUP_DS_GRUPO_MAT_SERV").val(ui.item.label);   
+                        }
+            });
+
+            $('#MODE_ID_GRUPO_MAT_SERV').change(
+                function(){
+                    $.ajax({
+                      url: base_url +"/sosti/labmodelo/ajaxgetmarcapelogrupo/id/"+this.value,
+                      dataType: 'html',
+                      beforeSend:function() {
+                          $("#MODE_ID_MARCA").removeClass('erroInputSelect');
+                          $("#MODE_ID_MARCA").html('');
+                          $("#MODE_ID_MARCA").addClass('carregandoInputSelect');
+                      },
+                      success: function(data) {
+                          $("#MODE_ID_MARCA").html(data);
+                          $("#MODE_ID_MARCA").removeClass('carregandoInputSelect');
+                          $("#MODE_ID_MARCA").focus();
+                      },
+                      error: function(){
+                          $("#MODE_ID_MARCA").removeClass('x-form-field');
+                          $("#MODE_ID_MARCA").val('Erro ao carregar.');
+                          $("#MODE_ID_MARCA").addClass('erroInputSelect');
+                          $("#MODE_ID_MARCA").html('<option>Erro ao carregar</option>');
+                      }
+                    });  
+                }
+            );
+            $("#MODE_DS_MODELO").css('text-transform','uppercase');
+        });
+       
+    </script>
+ 
+</div>
+<?php if (isset($this->msg_error)) { ?>
+    <div id="flashMessages">
+        <div class="notice">
+            <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+        </div>
+    </div>
+<?php } ?>
+<?php echo $this->form; ?>

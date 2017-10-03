@@ -1,0 +1,83 @@
+<script type="text/javascript">
+    $(function() {
+        $( ".novo" ).button({
+                    icons: {
+                        primary: ""
+                    }
+        });
+        $('#PAPL_SG_SISTEMA').change(
+            function(){
+                $("#CTRL_ID_MODULO").removeAttr('disabled');
+                $.ajax({
+                  url: base_url +"/guardiao/papel/ajaxmodulo/id/"+this.value,
+                  beforeSend:function() {
+                      $("#CTRL_ID_MODULO").removeClass('erroInputSelect');
+                      $("#CTRL_ID_MODULO").html('');
+                      $("#CTRL_ID_MODULO").addClass('carregandoInputSelect');
+                  },
+                  success: function(data) {
+                      $("#CTRL_ID_MODULO").html(data);
+                      $("#CTRL_ID_MODULO").removeClass('carregandoInputSelect');
+                      $("#CTRL_ID_MODULO").focus();
+                  },
+                  error: function(){
+                      $("#CTRL_ID_MODULO").removeClass('x-form-field');
+                      $("#CTRL_ID_MODULO").val('Erro ao carregar.');
+                      $("#CTRL_ID_MODULO").addClass('erroInputSelect');
+                      $("#CTRL_ID_MODULO").html('<option>Erro ao carregar</option>');
+                  }
+                });  
+            }
+        );
+        $('#CTRL_ID_MODULO').change(
+            function(){
+                $("#CTRL_ID_MODULO").removeAttr('disabled');
+                $.ajax({
+                  url: base_url +"/guardiao/papel/ajaxcontrole/id/"+this.value,
+                  beforeSend:function() {
+                      $("#ACAO_ID_CONTROLE_SISTEMA").removeClass('erroInputSelect');
+                      $("#ACAO_ID_CONTROLE_SISTEMA").html('');
+                      $("#ACAO_ID_CONTROLE_SISTEMA").addClass('carregandoInputSelect');
+                  },
+                  success: function(data) {
+                      $("#ACAO_ID_CONTROLE_SISTEMA").html(data);
+                      $("#ACAO_ID_CONTROLE_SISTEMA").removeClass('carregandoInputSelect');
+                      $("#ACAO_ID_CONTROLE_SISTEMA").focus();
+                  },
+                  error: function(){
+                      $("#ACAO_ID_CONTROLE_SISTEMA").removeClass('x-form-field');
+                      $("#ACAO_ID_CONTROLE_SISTEMA").val('Erro ao carregar.');
+                      $("#ACAO_ID_CONTROLE_SISTEMA").addClass('erroInputSelect');
+                      $("#ACAO_ID_CONTROLE_SISTEMA").html('<option>Erro ao carregar</option>');
+                  }
+                });  
+            }
+        );
+        $('#ACAO_ID_CONTROLE_SISTEMA').change(
+            function(){
+                $("#CTRL_ID_MODULO").removeAttr('disabled');
+                $.ajax({
+                  url: base_url +"/guardiao/papel/ajaxacao/id/"+this.value,
+                  beforeSend:function() {
+                      $("#PAPL_ID_ACAO_SISTEMA").removeClass('erroInputSelect');
+                      $("#PAPL_ID_ACAO_SISTEMA").html('');
+                      $("#PAPL_ID_ACAO_SISTEMA").addClass('carregandoInputSelect');
+                  },
+                  success: function(data) {
+                      $("#PAPL_ID_ACAO_SISTEMA").html(data);
+                      $("#PAPL_ID_ACAO_SISTEMA").removeClass('carregandoInputSelect');
+                      $("#PAPL_ID_ACAO_SISTEMA").focus();
+                  },
+                  error: function(){
+                      $("#PAPL_ID_ACAO_SISTEMA").removeClass('x-form-field');
+                      $("#PAPL_ID_ACAO_SISTEMA").val('Erro ao carregar.');
+                      $("#PAPL_ID_ACAO_SISTEMA").addClass('erroInputSelect');
+                      $("#PAPL_ID_ACAO_SISTEMA").html('<option>Erro ao carregar</option>');
+                  }
+                });  
+            }
+        );
+     });
+</script> 
+<?php echo $this->form; ?>
+<div style="margin-left: 80px; margin-top: -43px;"><a title="Novo" class="novo" href="<?php echo $this->baseUrl(); ?>/guardiao/papel/index">Voltar</a></div>

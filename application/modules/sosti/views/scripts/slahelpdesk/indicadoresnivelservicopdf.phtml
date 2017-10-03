@@ -1,0 +1,31 @@
+<table>
+    <tr><th rowspan="6"><img width="80" height="76" src="<?php echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" /></th></tr>
+    <tr><td>PODER JUDICIÁRIO</td><td>DATA E HORA DA EMISSÃO: <?php echo $this->horaAtual; ?></td></tr>
+    <tr><td><?php echo $this->titulo; ?></td></tr>
+    <tr><td><?php echo $this->periodo; ?></td></tr>
+</table>
+<br />
+<table class="legenda ui-widget-content" >
+    <thead>
+        <tr>
+            <th colspan="2" align="left" style="border: 1px solid #C3C3C3; padding: 3px;">Indicadores de Nível Mínimo de Serviço</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">Meta Exigida</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">Meta Alcançada</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">Glosa</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->slaIndices as $im): ?>
+        <tr>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["SINS_CD_INDICADOR"]; ?></td>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["SINS_DS_INDICADOR"]; ?></td>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["SINS_DS_SINAL_META"]." ".$im["SINS_NR_META"]; ?></td>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["META_ALCANCADA"]; ?></td>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["GLOSA"]; ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr></tr>
+    </tfoot>
+</table>

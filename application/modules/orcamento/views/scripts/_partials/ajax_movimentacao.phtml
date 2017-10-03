@@ -1,0 +1,120 @@
+<script type="text/javascript">
+    $(function() {
+        
+        var origem =  $("#MOVC_NR_DESPESA_ORIGEM").val();
+        var destino = $("#MOVC_NR_DESPESA_DESTINO").val();
+        
+        if(origem != ''){
+           url = '<?php echo $this->baseUrl(); ?>/orcamento/movimentacaocred/ajaxretornadespesa/cod/'+origem;
+                       $.ajax({
+                           url: url,
+                           dataType: 'html',
+                           type: 'GET',
+                           contentType: 'html',
+                           processData: false,
+                           success: function(data) {
+                               $('#MOVC_NR_DESPESA_ORIGEM').after('<p class="description" id="MOVC_NR_DESPESA_ORIGEM_DESCRICAO"></p>');
+                               $('#MOVC_NR_DESPESA_ORIGEM_DESCRICAO').html(data);
+                               var erro = $('#MOVC_NR_DESPESA_ORIGEM_DESCRICAO > fieldset').hasClass('invalida');
+                               if (erro == true) {
+                                   $('#MOVC_NR_DESPESA_ORIGEM').css('border-color', 'red');
+                                   $('#MOVC_NR_DESPESA_ORIGEM').after('<p class="description" id="MOVC_NR_DESPESA_ORIGEM_DESCRICAO" style="color: red">Despesa não encontrada</p>');
+                               }
+                           }
+                       });
+                   }
+        
+         if(destino != ''){
+           url = '<?php echo $this->baseUrl(); ?>/orcamento/movimentacaocred/ajaxretornadespesa/cod/'+destino;
+                       $.ajax({
+                           url: url,
+                           dataType: 'html',
+                           type: 'GET',
+                           contentType: 'html',
+                           processData: false,
+                           success: function(data) {
+                               $('#MOVC_NR_DESPESA_DESTINO').after('<p class="description" id="MOVC_NR_DESPESA_DESTINO_DESCRICAO"></p>');
+                               $('#MOVC_NR_DESPESA_DESTINO_DESCRICAO').html(data);
+                               var erro = $('#MOVC_NR_DESPESA_DESTINO_DESCRICAO > fieldset').hasClass('invalida');
+                               if (erro == true) {
+                                   $('#MOVC_NR_DESPESA_DESTINO').css('border-color', 'red');
+                                    $('#MOVC_NR_DESPESA_DESTINO').after('<p class="description" id="MOVC_NR_DESPESA_DESTINO_DESCRICAO" style="color: red">Despesa não encontrada</p>');
+                               }
+                           }
+                       });
+                   }
+        
+        
+        //Blur movimentação
+        $("#MOVC_NR_DESPESA_ORIGEM").blur(function() {
+           $('#MOVC_NR_DESPESA_ORIGEM').css('border-color', '#ccc');
+           $('#MOVC_NR_DESPESA_ORIGEM_DESCRICAO').remove();
+           $('p[id=MOVC_NR_DESPESA_ORIGEM_DESCRICAO]').remove();
+            var despesa = $("#MOVC_NR_DESPESA_ORIGEM").val();
+            if (!isNaN(despesa)) {
+                if (despesa != '') {
+                    url = '<?php echo $this->baseUrl(); ?>/orcamento/movimentacaocred/ajaxretornadespesa/cod/' + despesa;
+                    $.ajax({
+                        url: url,
+                        dataType: 'html',
+                        type: 'GET',
+                        contentType: 'html',
+                        processData: false,
+                        success: function(data) {
+                     $('#MOVC_NR_DESPESA_ORIGEM').after('<p class="description" id="MOVC_NR_DESPESA_ORIGEM_DESCRICAO"></p>');
+                     $('#MOVC_NR_DESPESA_ORIGEM_DESCRICAO').html(data);
+                     var erro = $('#MOVC_NR_DESPESA_ORIGEM_DESCRICAO > fieldset').hasClass('invalida');
+                      if(erro == true){
+                          $('#MOVC_NR_DESPESA_ORIGEM').css('border-color', 'red');  
+                          $('#MOVC_NR_DESPESA_ORIGEM').after('<p class="description" id="MOVC_NR_DESPESA_ORIGEM_DESCRICAO" style="color: red">Despesa não encontrada.</p>');
+                      }
+                        }
+                    });
+                } else {
+                    $('#MOVC_NR_DESPESA_ORIGEM').css('border-color', 'red');
+                }
+            } else {
+                 $('#MOVC_NR_DESPESA_ORIGEM').css('border-color', 'red');
+                $('#MOVC_NR_DESPESA_ORIGEM').after('<p class="description" id="MOVC_NR_DESPESA_ORIGEM_DESCRICAO" style="color: red">Informe um número de despesa válido.</p>');
+            }
+
+        });
+        /*   Despesa destino               */
+        
+           $("#MOVC_NR_DESPESA_DESTINO").blur(function() {
+           $('#MOVC_NR_DESPESA_DESTINO').css('border-color', '#ccc');
+           $('#MOVC_NR_DESPESA_DESTINO_DESCRICAO').remove();
+           $('p[id=MOVC_NR_DESPESA_DESTINO_DESCRICAO]').remove();
+            var despesa = $("#MOVC_NR_DESPESA_DESTINO").val();
+            if (!isNaN(despesa)) {
+                if (despesa != '') {
+                    url = '<?php echo $this->baseUrl(); ?>/orcamento/movimentacaocred/ajaxretornadespesa/cod/' + despesa;
+                    $.ajax({
+                        url: url,
+                        dataType: 'html',
+                        type: 'GET',
+                        contentType: 'html',
+                        processData: false,
+                        success: function(data) {
+                     $('#MOVC_NR_DESPESA_DESTINO').after('<p class="description" id="MOVC_NR_DESPESA_DESTINO_DESCRICAO"></p>');
+                     $('#MOVC_NR_DESPESA_DESTINO_DESCRICAO').html(data);
+                     var erro = $('#MOVC_NR_DESPESA_DESTINO_DESCRICAO > fieldset').hasClass('invalida');
+                      if(erro == true){
+                          $('#MOVC_NR_DESPESA_DESTINO').css('border-color', 'red');  
+                          $('#MOVC_NR_DESPESA_DESTINO').after('<p class="description" id="MOVC_NR_DESPESA_DESTINO_DESCRICAO" style="color: red">Despesa não encontrada</p>');
+           
+                      }
+                        }
+                    });
+                } else {
+                    $('#MOVC_NR_DESPESA_DESTINO').css('border-color', 'red');
+                }
+            } else {
+                 $('#MOVC_NR_DESPESA_DESTINO').css('border-color', 'red');
+                $('#MOVC_NR_DESPESA_DESTINO').after('<p class="description" id="MOVC_NR_DESPESA_DESTINO_DESCRICAO" style="color: red">Informe um número de despesa válido.</p>');
+            }
+
+        });
+        
+    });
+</script>

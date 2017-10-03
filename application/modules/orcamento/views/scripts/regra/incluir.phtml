@@ -1,0 +1,213 @@
+<style>
+    #regras {
+        margin-left: 15px;
+        margin-bottom: 15px;
+    }
+    #selecionados_partes {
+        margin-top: 20px;
+        width: 99%;
+    }
+
+    #group {
+        border: 1px #ccc solid;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+</style>
+
+<?php
+echo $this->partial('_partials/ajax_responsaveis.phtml');
+echo $this->partial('_partials/ajax_bloqueio.phtml');
+echo $this->partial('_partials/ajuda_informacao.phtml', array(
+    'msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+?>
+
+
+<form id="formregra" name="formregra" action="incluir" method="POST" enctype="">
+
+    <div id="incluir" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+
+        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+            <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
+                <a href="#incluir">Incluir</a>
+            </li>
+        </ul>
+
+        <div id="incluir" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+
+            <?php echo $this->formulario->RGEX_ID_REGRA_EXERCICIO; ?>
+
+            <fieldset>
+                <?php
+                echo $this->formulario->RGEX_AA_ANO;
+                ?>
+            </fieldset>
+
+            <br />
+
+            <fieldset>
+                <table>
+                    <tr>
+                        <td><?php echo $this->formulario->RGEX_DS_REGRA_EXERCICIO; ?></td>
+                        <td><?php echo $this->formulario->RGEX_VL_PERCENTUAL; ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->formulario->RGEX_DS_INCIDENCIA_REGRA; ?></td>
+                    </tr>
+                </table>
+
+
+            </fieldset>
+
+            <br />
+
+            <fieldset>
+                <?php
+                // campos do formulario alternativo
+                echo $this->formulario->DESP_CD_PT_RESUMIDO;
+                echo $this->formulario->DESP_CD_ELEMENTO_DESPESA_SUB;
+                echo $this->formulario->DESP_CD_TIPO_DESPESA;
+                ?>
+
+                <br />
+
+                <input type="button" id="incluircampos" value="Adicionar"> 
+
+            </fieldset>
+
+        </div><!-- fim div incluir -->
+
+        <div id="regras">
+            <div id="dialog_cadastra_parte">
+                <table id="selecionados_partes" class="grid tabela ui-widget ui-widget-content">
+
+                    <thead> 
+                        <tr class="ui-widget-header">
+                            <th colspan="4"> Regras Adicionadas </th>
+                        </tr>
+                        <tr>
+                            <td width="30%">PTRES</td>
+                            <td width="30%">Natureza</td>
+                            <td width="30%">Caráter</td>
+                            <td width="10%">Remover</td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr id="acompanhantes">
+                            <td colspan="4"><a href="#" class="removerTodos" rel="">Remover todos</a></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <?php echo $this->formulario->Enviar; ?>
+
+</form>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var ptresresumido = $("#DESP_CD_PT_RESUMIDO");
+        var naturezadespesa = $("#DESP_CD_ELEMENTO_DESPESA_SUB");
+        var caraterdespesa = $("#DESP_CD_TIPO_DESPESA");
+
+        // Obsoleto - solicitado remoção
+        // limita em 100 o valor maximo do campo percentual
+        // var percentual = $('#RGEX_VL_PERCENTUAL');
+        // percentual.keyup(function() {
+        //     if (percentual.val() > 100) {
+        //      percentual.val("100");
+        //     }
+        // });
+
+        // configura a remoção de dados
+        $(document.body).delegate(".remover-parte", "click", function () {
+            $(this).parent().parent().remove();
+        });
+
+        // configura a remoção de uma lista de dados
+        $(document.body).delegate(".removerTodos", "click", function () {
+            linhas_removidas = $("#selecionados_partes tbody").find("." + "linha_interessado");
+            linhas_removidas.remove();
+        });
+
+        // inabilita o botao incluir
+        $("#incluircampos").prop("disabled", true);
+
+        // limpa o ptres
+        ptresresumido.val("");
+
+        // habilita o botao de incluir em caso de preenchimento de ptres
+        ptresresumido.keyup(function () {
+            if (ptresresumido.val() !== "") {
+                $("#incluircampos").prop("disabled", false);
+                // limpa os outros campos
+                naturezadespesa.val("");
+                caraterdespesa.val("");
+            }
+        });
+
+        // limpa o ptres
+        ptresresumido.click(function () {
+            ptresresumido.val("");
+        });
+
+        // adiciona os valores dos campos na div
+        $("#incluircampos").click(function () {
+
+            // tipos de despesa
+            var tipos = <?php echo json_encode($this->formulario->DESP_CD_TIPO_DESPESA->options); ?>;
+            var ptres = ptresresumido.val().split(" ", 1);
+            if (ptres !== '') {
+                var natureza = naturezadespesa.val().split(" ", 1);
+                var tipo = caraterdespesa.val().split(" ", 1);
+
+                // sem tipo de despesa
+                if (tipo != "") {
+                    tipo = tipos[tipo]
+
+                    // inabilita o botao incluir
+                    $("#incluircampos").prop("disabled", true);
+                }
+
+                // inabilita o botao incluir
+                $("#incluircampos").prop("disabled", true);
+
+                // monta a tr
+                var tr = "";
+                tr += "<tr class='linha_interessado'> ";
+                tr += "<td> " + ptres + " </td> ";
+                tr += "<td> " + natureza + " </td> ";
+                tr += "<td> " + tipo + " </td> ";
+                tr += "<td> <a href='#' class='remover-parte' rel='" + ptres + ";" + natureza + ";" + tipo + "' >Remover</a> </td> ";
+                tr += "</tr>";
+
+                // monta o input hidden com array de valores
+                var registro = "";
+                registro += "<input type='hidden' name='registro[]' value='";
+                registro += ptres + " ";
+                registro += natureza + " ";
+                registro += caraterdespesa.val();
+                registro += "' />";
+            }
+
+            // adiciono a tabela os valores
+            $("table#selecionados_partes").append(tr);
+            $("table#selecionados_partes").append(registro);
+
+            // limpa as combos
+            $("#DESP_CD_PT_RESUMIDO").focus();
+            ptresresumido.val("");
+            naturezadespesa.val("");
+            caraterdespesa.val("");
+        });
+    });
+
+
+
+</script>

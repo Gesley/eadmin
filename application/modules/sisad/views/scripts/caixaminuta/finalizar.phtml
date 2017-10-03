@@ -1,0 +1,192 @@
+<?php
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'));
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MultiFile.js'));
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+<script>
+    $(function(){               
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+        $(function(){ 
+            $('#ANEXOS').MultiFile({
+                STRING: {
+                    file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+                    remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+                }
+            });
+        });
+        
+       $('form[name=cx_finalizar]').submit(
+       function(){
+            var documentoSelecionado = $(".nav_check_boxes:checked").val();
+            //console.log('documentoSelecionado');
+            //console.log(documentoSelecionado);
+            if (documentoSelecionado == undefined){                   
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma versão!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('');
+                flashMessages_by_id.delay(2000).hide('puff');
+                return false;
+            }
+       });
+          
+     $("input[type=radio][name=anexos[]]").click(
+         function(){
+            var parametros = $(this).val();
+            var value = parametros.split('-');
+            var extensao = value[1];
+            
+           console.log(extensao);
+              if(extensao != 4){
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> É necessário gerar a versão em PDF para inserir o documento!</div>";
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show();
+                $(".gerarPDF").show();
+              } else{
+                $(".gerarPDF").hide();
+                flashMessages_by_id.hide();
+                
+              }
+     });   
+  });  
+</script>
+
+<form method="POST" action="finalizar" enctype="multipart/form-data" name="cx_finalizar">
+<?php if (count($this->data)): ?>
+<!--<div class="container_pagination_fixed">-->
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Número</th>
+            <th >Encaminhador</th>
+            <th >Data/Hora Encaminhamento</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php
+            //Zend_Debug::dump($this->data,'data view');
+        foreach($this->data as $data):
+            ?>
+            <tr>
+<!--                    <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                    <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                    <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                    <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+    <!--                <td> <?php //echo $this->escape($data["LOTA_SIGLA_LOTACAO"]) ?></td>-->
+            </tr>
+<!--            <input type="hidden" name="<?php //echo $documentos[$cont] ?>" value="<?php //echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?>">-->
+            <?php ?>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+        </tr>
+<!--        <tr>
+            <td colspan="4"><?php //echo $this->paginationControl($this->data, null, null, null)?></td>
+        </tr>-->
+    </tfoot>
+</table>
+<!--</div>-->
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+    <input type="hidden" value="submitFinalizar" name="acao" />
+<?php 
+    echo $this->formfinalizar->MOFA_DS_COMPLEMENTO; 
+    //echo $this->formfinalizar->getElement('MOFA_DS_COMPLEMENTO'); 
+    //echo $this->formfinalizar->DOCM_ID_TIPO_DOC; 
+    
+    $conta = 0;
+    foreach($this->DocmDocumentoHistorico as $historico){
+      if ($this->tipodoc){
+        if ($historico["NR_RED"]||$historico["DOCM_NR_DOCUMENTO_RED"]){ 
+          $conta = $conta + 1;
+        }       
+      }
+    }
+    
+    if ($conta > 0){ ?>    
+        <div class="span-24" style="padding: 5px 0px;">
+        <label>Arquivos</label>
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th ></th>
+                    <th >  </th>
+                    <th >Fase</th>
+                    <th >Data/Hora</th>
+                    <th >Por</th>
+                    <th >Descrição</th>
+                </tr>
+            </thead>
+            <tbody id="anexosList" class="arquivo">
+                <?php
+                     //Zend_Debug::dump($this->DocmDocumentoHistorico,'view'); //exit;
+                foreach($this->DocmDocumentoHistorico as $historico){
+                    ?>                 
+                    <tr name="rowList">
+                         <?php if ($this->tipodoc){?>
+                          <?php if ($historico["DOCM_NR_DOCUMENTO_RED"] && $historico['FADM_ID_FASE'] == 1010){ /**DOCUMENTO INICIAL*/?>
+                             <td>
+                                 <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($historico["DOCM_ID_DOCUMENTO"]); ?>" name="anexos[]" type="radio" value="<?php echo $historico["DOCM_NR_DOCUMENTO_RED"]."-".$historico["DOCM_ID_TP_EXTENSAO"]; ?>"/>
+                                 <input type="hidden" value="<?php echo $historico["DOCM_ID_TP_EXTENSAO"]; ?>" name="tipoExtensao" />
+                             </td>
+                               <td> <a target="_blank" title="Abrir Documento" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $historico['DOCM_ID_DOCUMENTO']; ?>/dcmto/<?php echo $historico["DOCM_NR_DOCUMENTO_RED"]; ?> /tipo/<?php echo $historico["DOCM_ID_TP_EXTENSAO"]; ?>"><?php if($historico["DOCM_ID_TP_EXTENSAO"]==4){echo 'Versão Editor';}else{echo 'Versão Arquivo';}?></a>&emsp; 
+                               <td> <?php echo str_replace(' SISAD', '',"INICIAL" /*$historico["FADM_DS_FASE"]*/) ?></td>
+                               <td> <?php echo $historico["MOFA_DH_FASE"] ?></td>
+                               <td> <?php echo $historico["MOFA_CD_MATRICULA_NOME"] ?></td>
+                               <td> <?php echo $historico["MOFA_DS_COMPLEMENTO"] ?></td>
+                             </td>
+                           <?php }
+                         } ?>                        
+                    </tr>
+                    <tr name="rowList">
+                     <?php 
+                        if ($historico["NR_RED"] && $historico['FADM_ID_FASE'] == 1048){ /**1048 - VERSÃO*/?>
+                          <td>
+                              <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($historico["DOCM_ID_DOCUMENTO"]); ?>" name="anexos[]" type="radio" value="<?php echo $historico["NR_RED"]."-".$historico["ANEX_ID_TP_EXTENSAO"]; ?>"/>
+                              <input type="hidden" value="<?php echo $historico["ANEX_ID_TP_EXTENSAO"]; ?>" name="tipoExtensao" />
+                          </td>
+                          <td> <a target="_blank" title="Abrir Documento" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $historico['DOCM_ID_DOCUMENTO']; ?>/dcmto/<?php echo $historico["NR_RED"]; ?> /tipo/<?php echo $historico["ANEX_ID_TP_EXTENSAO"]; ?>"> <?php if($historico["ANEX_ID_TP_EXTENSAO"]==4){echo 'Versão Editor';}else{echo 'Versão Arquivo';}?></a>&emsp; 
+                          <td> <?php echo str_replace(' SISAD', '',$historico["FADM_DS_FASE"]) ?></td>
+                          <td> <?php echo $historico["MOFA_DH_FASE"] ?></td>
+                          <td> <?php echo $historico["MOFA_CD_MATRICULA_NOME"] ?></td>
+                          <td> <?php echo $historico["MOFA_DS_COMPLEMENTO"] ?></td>
+                     </td>
+                           <?php }?>
+                    </tr> 
+                <?php } ?>
+            </tbody>
+        </table>
+        </div>
+    <?php } 
+    
+    //echo $this->form->DOCM_DS_HASH_RED;
+    ?>
+    
+    
+<!--    <b>Anexo Versão Final</b></br>
+        <input id="ANEXOS" type="file" name="ANEXOS[]"  class="Multi" accept="pdf" maxlength="20" />
+        Somente serão aceitos arquivos com o formato PDF até 50 Megas.</p>
+        <span class="msg_alerta"> </span>-->
+    </p>
+    <span class="msg_alerta"> </span>
+    <div class="gerarPDF " style="display: none;" >
+      <h3>
+       <?php 
+       if(defined('APPLICATION_ENV')){
+            if (APPLICATION_ENV == 'development') {?>
+               <a target="_blank"  title="Abrir Documento" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/7665/dcmto/1360210100298/tipo/1"> Como Gerar PDF</a>
+            <?php }else if(APPLICATION_ENV == 'production'){?>
+               <a target="_blank"  title="Abrir Documento" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/183363/dcmto/51747550100244/tipo/1"> Como Gerar PDF</a>
+            <?php }
+        }
+       ?>
+      </h3>
+    </div>
+    <input type="submit" name="salvar" value="Salvar Versão Final" />
+</form>

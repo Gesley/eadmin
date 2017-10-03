@@ -1,0 +1,105 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+     $this->headScript()->appendFile($this->baseUrl() . '/js/default/sosti/add.js', 'text/javascript');
+?>
+<script type="text/javascript">
+$(function(){
+        
+        $(function() {
+		$( "select#MODE_CD_SECAO_UNID_DESTINO" ).combobox();
+		$( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).attr('style','width: 500px;');
+                
+                
+		aux_button_style =  $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style');
+		$( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style',aux_button_style+' left: -20px; top: 5px;');
+		aux_button_style =  $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style');
+                
+                
+		$( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).attr('disabled','disabled');
+		$( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).attr('value','Primeiramente escolha o Destino: TRF1/Seção/Subseção');
+		$( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('disabled','disabled');
+                
+//                $( "select#MODE_SG_SECAO_UNID_DESTINO" ).combobox();
+//                $( "#combobox-input-text-MODE_SG_SECAO_UNID_DESTINO" ).attr('style','width: 500px;');
+//                $( "#combobox-input-button-MODE_SG_SECAO_UNID_DESTINO" ).attr('style','width: 500px;');
+                
+	});
+        
+        $("select#MODE_CD_SECAO_UNID_DESTINO").removeAttr('disabled');
+        $("select#SECAO_SUBSECAO").change(
+            function () {
+                    var secao = $(this).val().split('|')[0];
+                    var lotacao = $(this).val().split('|')[1];
+                    var tipolotacao = $(this).val().split('|')[2];
+                $.ajax({
+                    url: base_url + '/sisad/caixaunidade/ajaxunidadebysecao/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                    dataType : 'html',
+                    beforeSend:function() {
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).removeAttr('disabled','disabled');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).attr('value','');
+                        $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).removeAttr('disabled','disabled');
+                
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).removeClass('erroInputSelect');
+                        $('select#MODE_CD_SECAO_UNID_DESTINO').html('');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).addClass('carregandoInputSelect');
+                        $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style',aux_button_style+' z-index: -1000;');
+                    },
+                    success: function(data) {
+                        
+                        $('select#MODE_CD_SECAO_UNID_DESTINO').html(data);
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).removeClass('carregandoInputSelect');
+                        $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style',aux_button_style+' z-index: 0;');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).focus();
+                        init_combobox_app_jquery();
+                    },
+                    error: function(){
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).removeClass('x-form-field');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).val('Erro ao carregar.');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).addClass('erroInputSelect');
+                        $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style',aux_button_style+' z-index: 0;');
+                        $('select#MODE_CD_SECAO_UNID_DESTINO').html('<option>Erro ao carregar</option>');
+                    }
+                });
+            });
+        $("select#MODE_SG_SECAO_UNID_DESTINO").change(
+            function () {
+                    var secao = $(this).val().split('|')[0];
+                    var lotacao = $(this).val().split('|')[1];
+                    var tipolotacao = $(this).val().split('|')[2];
+                $.ajax({
+                    url: base_url + '/sisad/caixaunidade/ajaxsubsecoes/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                    dataType : 'html',
+                    beforeSend:function() {
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).removeAttr('disabled','disabled');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).attr('value','');
+                        $( "#combobox-input-button-SECAO_SUBSECAO" ).removeAttr('disabled','disabled');
+                
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).removeClass('erroInputSelect');
+                        $('select#SECAO_SUBSECAO').html('');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).addClass('carregandoInputSelect');
+                        $( "#combobox-input-button-SECAO_SUBSECAO" ).attr('style',aux_button_style+' z-index: -1000;');
+                    },
+                    success: function(data) {
+                        
+                        $('select#SECAO_SUBSECAO').html(data);
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).removeClass('carregandoInputSelect');
+                        $( "#combobox-input-button-SECAO_SUBSECAO" ).attr('style',aux_button_style+' z-index: 0;');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).focus();
+                        init_combobox_app_jquery();
+                    },
+                    error: function(){
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).removeClass('x-form-field');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).val('Erro ao carregar.');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).addClass('erroInputSelect');
+                        $( "#combobox-input-button-SECAO_SUBSECAO" ).attr('style',aux_button_style+' z-index: 0;');
+                        $('select#SECAO_SUBSECAO').html('<option>Erro ao carregar</option>');
+                    }
+                });
+            });
+            
+
+
+
+    });
+</script>
+<?php echo $this->form; ?>

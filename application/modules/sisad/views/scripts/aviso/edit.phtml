@@ -1,0 +1,74 @@
+<!-- Grid que contem os Componentes de um grupo-->
+<div><a  class="novo" href="<?php echo $this->baseUrl(); ?>/sisad/aviso/addcomponente/grupo/<?php echo $this->idgrupo; ?>">Editar Lista </a>
+<!--     <a  class="novo" href="<?php //echo $this->baseUrl(); ?>/sisad/aviso/addproprietario/grupo/<?php //echo $this->idgrupo; ?>">Editar Proprietário(s)</a>-->
+<!--     <a  class="novo" href="<?php //echo $this->baseUrl(); ?>/sisad/aviso/index">Listas</a>-->
+</div>
+<?php if (count($this->rowsComponentes)): ?>
+<?php $this->inlineScript()->appendFile(($this->baseUrl().'/js/avisoindex.js'));?>
+<div id="container_pagination">
+<br/>
+<table class="grid">
+    <thead>
+        <tr>
+            <th colspan="9">Componentes do Grupo</th>
+        </tr>
+        <tr>
+            <th>Excluir</th>
+            <th>Componente</th>
+        </tr>
+    </thead>
+     
+    <tbody>
+        <?php foreach($this->rowsComponentes as $data): ?>
+    <tr>
+            <td><a href="<?php echo $this->baseUrl(); ?>/sisad/aviso/del/id/<?php echo ($data['COMP_ID_COMPONENTE']) ?>/idgrupo/<?php echo ($data['COMP_ID_GRUPO_DIVULGACAO'])?>"><span class="excluir"></span></a></td>
+            <td><?php echo $this->escape($data["COMPONENTE"]) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="10">Total: <?php echo $this->rowsComponentes->getTotalItemCount() ?></td></tr></tfoot>
+</table>
+<?php echo $this->paginationControl($this->data, null, null, null)?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+</div>
+
+
+<!-- Grid que contem os proprietarios de um grupo-->
+<?php //if (count($this->rowsProprietarios)): ?>
+<?php //$this->inlineScript()->appendFile(($this->baseUrl().'/js/avisoindex.js'));?>
+<!--<div id="container_pagination">
+
+<br/>
+<table class="grid">
+    <thead>
+        <tr>
+            <th colspan="9">Proprietários do Grupo</th>
+        </tr>
+        <tr>
+            <th>Excluir</th>
+            <th>Proprietários</th>
+        </tr>
+    </thead>
+     
+    <tbody>
+        <?php //foreach ($this->rowsProprietarios as $data): ?>
+            <tr>
+                <td><a href="<?php //echo $this->baseUrl(); ?>/sisad/aviso/delproprietario/id/<?php //echo $data["PRGR_ID_GRUPO_DIVULGACAO"]; ?>/sgpropri/<?php //echo $data["PRGR_SG_SECAO_PROPRIET_GR_DIV"];?>/cdpropri/<?php //echo $data["PRGR_CD_LOT_PROPRIET_GR_DIV"];?>"><span class="excluir"></span></a></td>
+                <td><?php //echo $this->escape($data["LOTA_DSC_LOTACAO"]) ?></td>
+            </tr>
+        <?php //endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="5">Total: <?php //echo $this->rowsProprietarios->getTotalItemCount() ?></td></tr></tfoot>
+</table>
+<?php //echo $this->paginationControl($this->data, null, null, null)
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php //else:?>
+    <p>Não existem proprietários registrados</p>
+<?php //endif; ?>
+</div>-->

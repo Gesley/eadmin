@@ -1,0 +1,152 @@
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+        
+        grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmtaviso';
+                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                    var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                    span_id_leitura.removeClass('naolido');
+                    span_id_leitura.addClass('lido');
+                    span_id_leitura.attr('title','Documento lido');
+                    $(this_tr).removeClass('naolidoTr');
+                    $(this_tr).addClass('lidoTr');
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        );
+            
+    $("#dialog-documentos_detalhe").dialog({
+                    title    : 'Detalhe',
+                            autoOpen : false,
+                            modal    : false,
+                            show: 'fold',
+                            hide: 'fold',
+                            resizable: true,
+                            width: 800,
+                            height: 600,
+                            position: [580,140,0,0],
+                            buttons : {
+                                    Ok: function() {
+                                            $(this).dialog("close");
+                                    }
+                            }
+     });
+    });
+</script>
+<form method="POST" action="" name="cx_pess_entrada">
+
+<?php if (count($this->data)): ?>
+    <div class="containerpainel">
+        <div class="painel">
+
+        </div>
+    </div>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Tipo</th>
+                <th>Início da Divulgação</th>
+                <th>Fim da Divulgação</th>
+                <th>Divulgador</th>
+                <th>Solicitar</th>
+            </tr>
+        </thead>
+            <tbody>
+                <?php foreach ($this->data as $data):?>
+                    <tr title="Duplo click para Abrir" name="rowList" >
+                        <td> <input type="hidden" name="input_check_all_grid" id="check_all" value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>"/> </td>
+                        <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                        <td> <?php echo $this->escape($data["LIST_DT_INICIO_DIVULGACAO"]) ?></td>
+                        <td> <?php echo $this->escape($data["LIST_DT_FIM_DIVULGACAO"]) ?></td>
+                        <td> <?php echo $this->escape($data["LIST_CD_MATRICULA_DIVULGADORA"]) ?></td>
+                        <td> <div class="painel"><a href="<?php echo $this->baseUrl(); ?>/sisad/pesquisadcmto/setsolicitardocumento/id/<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" >Solicitar</a></div></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)
+                ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>        
+</form>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

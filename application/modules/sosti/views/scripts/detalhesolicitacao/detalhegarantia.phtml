@@ -1,0 +1,128 @@
+ <!--        GARANTIA SOLICITACAO            -->
+ <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+     <legend style='font-size: 12px;'>Solicitação</legend>
+     <table>
+         <tr style="font-size: 12px; font-weight: bold;">
+             <td>
+                 Solicitante:
+             </td>
+             <td>
+                 Data e Hora:
+             </td>
+         </tr>
+         <tr >
+             <td>
+                 <?php echo $this->NegaNegociaGarantia["NEGA_CD_MATR_SOLIC_NM"] ?>
+             </td>
+
+             <td>
+                 <?php echo $this->NegaNegociaGarantia["NEGA_DH_SOLIC_GARANTIA_CHAR"] ?>
+             </td>
+         </tr>
+         <tr style="font-size: 12px; font-weight: bold;">
+             <td> Justificativa</td>
+         </tr>
+         <tr>
+             <td style="font-size: 12px; padding-left: 20px;" colspan="4">
+                 <?php echo $this->decodehtmlentities($this->NegaNegociaGarantia["NEGA_DS_JUSTIFICATIVA_PEDIDO"]); ?>
+             </td>
+         </tr>
+     </table>
+ </fieldset>
+ <!--     FIM   GARANTIA SOLICITACAO            -->
+
+ <!--     GARANTIA ACEITE         -->
+ <?php if (!is_null($this->NegaNegociaGarantia["NEGA_IC_ACEITE"])) { ?>
+     <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+         <legend style='font-size: 12px;'>Aceite</legend>
+         <table>
+             <tr style="font-size: 12px; font-weight: bold;">
+                 <td>
+                     Aceite:
+                 </td>
+                 <td>
+                     Usuário:
+                 </td>
+                 <td>
+                     Data e Hora:
+                 </td>
+             </tr>
+
+             <tr >
+                 <td>
+                     <?php if ($this->NegaNegociaGarantia["NEGA_IC_ACEITE"] == 'A') {
+                         echo "Aceito";
+                     } else if ($this->NegaNegociaGarantia["NEGA_IC_ACEITE"] == 'R') {
+                         echo "Recusado";
+                     } ?>
+                 </td>
+                 <td>
+                     <?php echo $this->NegaNegociaGarantia["NEGA_CD_MATR_ACEITE_RECUSA_NM"] ?>
+                 </td>
+
+                 <td>
+    <?php echo $this->NegaNegociaGarantia["NEGA_DH_ACEITE_RECUSA"] ?>
+                 </td>
+             </tr>
+
+             <tr style="font-size: 12px; font-weight: bold;">
+                 <td> Justificativa Recusa</td>
+             </tr>
+
+             <tr>
+                 <td style="font-size: 12px; padding-left: 20px;" colspan="4">
+     <?php echo $this->decodehtmlentities($this->NegaNegociaGarantia["NEGA_DS_JUST_ACEITE_RECUSA"]); ?>
+                 </td>
+             </tr>
+         </table>
+     </fieldset>
+ <?php } ?>
+ <!--     FIM GARANTIA ACEITE         -->
+
+ <!--     GARANTIA CONCORDANCIA         -->
+<?php if (!is_null($this->NegaNegociaGarantia["NEGA_IC_CONCORDANCIA"])) { ?>
+     <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+         <legend style='font-size: 12px;'>Concordância</legend>
+         <table>
+             <tr style="font-size: 12px; font-weight: bold;">
+                 <td>
+                     Concordância:
+                 </td>
+                 <td>
+                     Usuário:
+                 </td>
+                 <td>
+                     Data e Hora:
+                 </td>
+             </tr>
+
+             <tr >
+                 <td>
+    <?php if ($this->NegaNegociaGarantia["NEGA_IC_CONCORDANCIA"] == 'C') {
+        echo "Concordo";
+    } else if ($this->NegaNegociaGarantia["NEGA_IC_CONCORDANCIA"] == 'D') {
+        echo "Discordo";
+    } ?>
+                 </td>
+                 <td>
+    <?php echo $this->NegaNegociaGarantia["NEGA_CD_MATR_CONCORDANCIA_NM"] ?>
+                 </td>
+
+                 <td>
+    <?php echo $this->NegaNegociaGarantia["NEGA_DH_CONCORDANCIA"] ?>
+                 </td>
+             </tr>
+
+             <tr style="font-size: 12px; font-weight: bold;">
+                 <td> Justificativa:</td>
+             </tr>
+
+             <tr>
+                 <td style="font-size: 12px; padding-left: 20px;" colspan="4">
+    <?php echo $this->decodehtmlentities($this->NegaNegociaGarantia["NEGA_DS_JUSTIFICATIVA_CONCOR"]); ?>
+                 </td>
+             </tr>
+         </table>
+     </fieldset>
+<?php } ?>
+ <!--     FIM GARANTIA CONCORDANCIA         -->

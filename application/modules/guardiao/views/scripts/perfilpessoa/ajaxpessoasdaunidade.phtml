@@ -1,0 +1,11 @@
+<?php if ($this->pessoasDaUnidade): ?>
+    <option value="" selected="selected" ></option>
+    <?php
+    foreach ($this->pessoasDaUnidade as $value) :
+        
+        ?>
+        <option value="<?php echo $value['PMAT_CD_MATRICULA']; ?>"><?php echo $value['PNAT_NO_PESSOA'] . ' - ' . $value['PMAT_CD_MATRICULA']; ?></option>   
+        <?php endforeach; ?>
+<?php
+endif;
+?>

@@ -1,0 +1,13 @@
+<?php $url = $this->baseUrl("orcamento/informativo/excluidos"); ?>
+
+	<div style="text-align: left;">
+		<a class="cancelar ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="<?= $url ?>" alt="Listar excluidos" title="listar excluidos" role="button"><span class="ui-button-icon-primary ui-icon ui-icon-cancel"></span><span class="ui-button-text">Informátivos Excluídos</span></a>
+
+	</div>
+<?php
+echo	'<br />';
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo	$this->grid;

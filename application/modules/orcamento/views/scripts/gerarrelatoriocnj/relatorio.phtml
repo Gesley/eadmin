@@ -1,0 +1,46 @@
+<?php
+
+$matriz = $this->dadosAnexo;
+
+if (Orcamento_Business_Negocio_Gerarrelatoriocnj::ANEXO_HTML == $this->formato) {
+
+    if (Orcamento_Business_Negocio_Gerarrelatoriocnj::ANEXO_1 == $this->anexo) {
+
+        $array = array(
+            'dadosAnexo' => $matriz,
+            'tituloAnexo' => $this->tituloAnexo
+        );
+
+        echo $this->partial('_partials/relatoriocnj_anexo1.phtml', $array);
+    } elseif (Orcamento_Business_Negocio_Gerarrelatoriocnj::ANEXO_2 == $this->anexo) {
+        
+        $array = array(
+            'dadosAnexo' => $matriz,
+        );
+
+        echo $this->partial('_partials/relatoriocnj_anexo2.phtml', $array);
+    }
+} elseif (Orcamento_Business_Negocio_Gerarrelatoriocnj::ANEXO_EXCEL == $this->formato) {
+
+    $excel = new Orcamento_Business_Negocio_RelatorioCNJ_GerarExcel();
+
+    if (Orcamento_Business_Negocio_Gerarrelatoriocnj::ANEXO_1 == $this->anexo) {
+        
+        if (Orcamento_Business_Negocio_Gerarrelatoriocnj::ANEXOI_IDENTIFICACAO == $this->excel) {
+            
+            $arquivo = $excel->gerarExcelIdentificacaoAnexoI($this->arrayTodos);
+            
+        } elseif (Orcamento_Business_Negocio_Gerarrelatoriocnj::ANEXOI_INCISOS_EXCEL) {
+        
+            $arquivo = $excel->gerarExcelAnexoI($matriz);
+        }
+
+    } elseif (Orcamento_Business_Negocio_Gerarrelatoriocnj::ANEXO_2 == $this->anexo) {
+        
+        $arquivo = $excel->gerarExcelAnexoII($matriz);
+        
+    }
+
+    readfile($arquivo);
+    unlink($arquivo);
+}

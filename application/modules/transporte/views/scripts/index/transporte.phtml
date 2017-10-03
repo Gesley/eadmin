@@ -1,0 +1,34 @@
+<?php if (count($this->data)): ?>
+<div><a href="<?php echo $this->baseUrl(); ?>/transporte/index/form">Novo</a></div>
+<table cellspacing="1" border="1">
+    <thead>
+        <tr>
+            <th width="600px"><a href="<?php echo $this->baseUrl(); ?>/transporte/index/filtro/<?php echo $this->filtro ?>/ordem/VEIC_ID_VEICULO">Descrição<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th width="200px">Fase Ativa<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></th>
+            <th width="200px">Documento da Fase<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></th>
+            <th width="50px">Alterar<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+        <tr>
+            <td><?php echo $this->escape($data->VEIC_ID_VEICULO) ?></td>
+            <td><?php echo $this->escape($data->VEIC_CD_PLACA) ?></td>
+            <td><?php echo $this->escape($data->VEIC_NR_RENAVAM) ?></td>
+            <td><a href="<?php echo $this->baseUrl(); ?>/transporte/index/form/id/<?php echo $data->VEIC_ID_VEICULO ?>" >Editar</a></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<p>Total: <?php echo $this->data->getTotalItemCount()?></p>
+<br />
+<?php echo $this->paginationControl($this->data, null, null, array('filtro'=>$this->filtro,
+                                                                   'ordem'=> $this->ordem))
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif;?>

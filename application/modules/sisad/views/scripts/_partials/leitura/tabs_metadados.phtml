@@ -1,0 +1,95 @@
+<div id="tabs_metadados-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">
+
+    <table style="cursor: default;" class="">
+        <tbody>
+            <tr style="font-size: 12px; font-weight: bold;">
+                <td colspan="1" title="Tipo do documento"><?= $this->documento['DTPD_NO_TIPO'] ?></td>
+                <td nowrap="" title="Número do documento">Nº:&emsp;<?= $this->documento['DOCM_NR_DOCUMENTO'] ?></td>
+                <td nowrap="" title="Data e hora de cadastro">D/H criação:&emsp;<?= $this->documento['DOCM_DH_CADASTRO'] ?></td>
+            </tr>
+            <tr>
+                <th>Nº Documento Usuário:</th>
+                <td title="Número do documento"><?= $this->documento['DOCM_NR_DCMTO_USUARIO'] ?></td>
+            </tr>
+            <tr>
+                <th>Assunto do documento: </th>
+                <td title="Número do documento" colspan="3">
+                    <?= $this->documento['AQVP_CD_PCTT'] ?> - <?= $this->documento['AQAT_DS_ATIVIDADE'] ?>
+                </td>
+            </tr>
+            <?php
+            if (isset($this->documento['PRDI_DS_TEXTO_AUTUACAO'])):
+                ?>
+                <tr>
+                    <th>Objeto do Processo: </th>
+                    <td title="Objeto do Processo" colspan="3"> <?= $this->documento['PRDI_DS_TEXTO_AUTUACAO'] ?></td>
+                </tr>
+                <?php
+            endif;
+            ?>
+            <tr>
+                <th>Situação:</th>
+                <td title="Número do documento"><?= $this->documento['TPSD_DS_TIPO_SITUACAO_DOC'] ?></td>
+                <th>Confidencialidade:</th>
+                <td title="Número do documento"><?= $this->documento['CONF_DS_CONFIDENCIALIDADE'] ?></td>
+            </tr>
+            <tr>
+                <th >Unidade Emissora:</th>
+                <td colspan="3">
+                    <?= $this->documento['LOTA_SIGLA_LOTACAO_EMISSORA'] ?>
+                    - <?= $this->documento['LOTA_DSC_LOTACAO_EMISSORA'] ?>
+                    - <?= $this->documento['LOTA_COD_LOTACAO_EMISSORA'] ?>
+                    - <?= $this->documento['FAMILIA_EMISSORA'] ?>
+                </td>
+            </tr>
+            <tr>
+                <th >Unidade Redatora:</th>
+                <td colspan="3">
+                    <?= $this->documento['LOTA_SIGLA_LOTACAO_REDATORA'] ?>
+                    - <?= $this->documento['LOTA_DSC_LOTACAO_REDATORA'] ?>
+                    - <?= $this->documento['LOTA_COD_LOTACAO_REDATORA'] ?>
+                    - <?= $this->documento['FAMILIA_REDATORA'] ?>
+                </td>
+            </tr>
+            <tr>
+                <th>Cadastrante:</th>
+                <td colspan="1"><?= $this->documento['NOME'] ?></td>
+                <th>Matrícula:</th>
+                <td colspan="1"><?= $this->documento['DOCM_CD_MATRICULA_CADASTRO'] ?></td>
+            </tr>
+            <tr>
+                <th colspan="4">Descrição:</th>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <div style="font-size: 10pt; padding-left: 6px;">
+                        <?= $this->documento['DOCM_DS_ASSUNTO_DOC'] ?> 
+                    </div>
+                </td>
+            </tr>
+            <?php
+            if ($this->documento['DTPD_ID_TIPO_DOC'] != Trf1_Sisad_Definicoes::ID_TIPO_PROCESSO):
+                //é um documento comum para o leitor
+                $this->documento['is_documento_comum'] = true;
+                ?>
+                <tr>
+                    <td colspan="4">
+                        <br/>
+                        <?php
+                        if ($this->documento['DOCM_NR_DOCUMENTO_RED'] != null):
+                            ?>
+                            <button class="botaoComum visualizar_documento_comum" value="<?= $this->escape(Zend_Json::encode($this->documento)) ?>">Visualizar</button>
+                            <?
+                        else:
+                            ?>
+                            <font color="red" ><b>Durante a criação do documento não foi escolhido um arquivo de visualização.</b></font>
+                        <?
+                        endif;
+                        ?>
+                    </td>
+                </tr>
+                <?php
+            endif;
+            ?>
+        </tbody></table>
+</div>

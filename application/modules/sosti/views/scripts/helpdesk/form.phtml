@@ -1,0 +1,58 @@
+ <script type="text/javascript">
+	$(function() {
+            $('#SGRS_ID_GRUPO').change(
+                function(){
+                    $("#SSER_ID_SERVICO").removeAttr('disabled');
+                    $.ajax({
+                      //url: "sosti/solicitacao/ajaxservicos/id/"+this.value,
+                      url: "ajaxservicos/id/"+this.value,
+                      beforeSend:function() {
+                          $("#SSER_ID_SERVICO").removeClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('');
+                          $("#SSER_ID_SERVICO").addClass('carregandoInputSelect');
+                      },
+                      success: function(data) {
+                          $("#SSER_ID_SERVICO").html(data);
+                          $("#SSER_ID_SERVICO").removeClass('carregandoInputSelect');
+                          $("#SSER_ID_SERVICO").focus();
+                      },
+                      error: function(){
+                          $("#SSER_ID_SERVICO").removeClass('x-form-field');
+                          $("#SSER_ID_SERVICO").val('Erro ao carregar.');
+                          $("#SSER_ID_SERVICO").addClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('<option>Erro ao carregar</option>');
+                      }
+                    });  
+                }
+            );
+            $('#SSOL_NR_TOMBO').focusout(
+                function(){
+                    $.ajax({
+                      //url: "sosti/solicitacao/ajaxdesctombo/id/"+this.value,
+                      url: "ajaxdesctombo/id/"+this.value,
+                      beforeSend:function() {
+                          $("#DE_MAT").removeClass('erroInputTextArea');
+                          $("#DE_MAT").val('');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").addClass('carregandoTextArea');
+                      },
+                      success: function(data) {
+                          $("#DE_MAT").val(data);
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").addClass('x-form-field');
+                          $("#DE_MAT").focus();
+                      },
+                      error: function(){
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").val('Erro ao carregar.');
+                          $("#DE_MAT").addClass('erroInputTextArea');
+                      }
+                    });  
+                }
+            );
+	});
+ </script>
+<?php
+echo $this->form;
+?>

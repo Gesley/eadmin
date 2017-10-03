@@ -1,0 +1,41 @@
+<div class="cabecalho">
+        
+        <?php if( isset($this->cabecalho['unidade']) ): ?>
+            <div class="unidade_periodo"> 
+                <h3>Unidade: <?php echo $this->cabecalho['unidade']; ?> </h3>
+            </div>
+        <?php endif ?>
+    
+        <?php if( isset($this->cabecalho['assunto']) ): ?>
+            <div class="assunto"> 
+                <h3> Assunto: <?php echo $this->cabecalho['assunto']; ?> </h3> 
+            </div>
+        <?php endif ?>
+    
+        <?php if (!empty($this->cabecalho['data_inicial']) && !empty($this->cabecalho['data_final'])  ): ?>
+            <h3> Per&iacute;odo: <?php echo $this->cabecalho['data_inicial']; ?> a <?php echo $this->cabecalho['data_final']; ?>  </h3>
+        <?php elseif (!empty($this->cabecalho['data_inicial'])) : ?>
+            <h3> A partir de: <?php echo $this->cabecalho['data_inicial']; ?>  </h3>
+        <?php elseif (!empty($this->cabecalho['data_final'])) : ?>    
+            <h3> At&eacute;: <?php echo $this->cabecalho['data_final']; ?>  </h3>
+        <?php endif; ?>
+   
+        <?php if( isset($this->cabecalho['quantidade_dias']) ): ?>
+            <div class="quantidade_dias"> 
+                <h3> Parado(s) a mais de: <?php echo $this->cabecalho['quantidade_dias']; ?> dias </h3> 
+</div>
+        <?php endif ?>    
+   
+       <?php if( isset($this->cabecalho['orgao_julgador']) ): ?>
+            <div class="orgao_julgador"> 
+                <h3> &Oacute;rg&atilde;o Julgador: <?php echo $this->cabecalho['orgao_julgador']; ?> </h3> 
+</div>
+        <?php endif ?>       
+        <?php if( isset($this->cabecalho['relator']) ): ?>
+            <div class="relator"> 
+                <h3> Relator: <?php echo $this->cabecalho['relator']; ?> </h3> 
+</div>
+        <?php endif ?>     
+   
+   
+</div>

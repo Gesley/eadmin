@@ -1,0 +1,14 @@
+<?php
+if($this->marcas):  
+    echo '<option value="">::Selecione a marca::</option>';  
+    foreach ($this->marcas as $value) : 
+?>
+<option value="<?php echo $value['MARC_ID_MARCA']; ?>"><?php echo strtoupper($value['MARC_DS_MARCA']); ?></option>   
+<?php 
+    endforeach;
+    else: 
+?>
+        <option value="">Não exitem marcas para este grupo.</option>  
+<?php
+endif;
+?>

@@ -1,0 +1,30 @@
+<?php
+$link = $this->url ( array ('module' => 'guardiao', 'controller' => 'log', 'action' => 'index'), 0, true );
+echo	'<br />';
+echo	$this->partial('_partials/ajuda.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda));
+?>
+
+<br />
+<div id="detalheTabs" class="tabs">
+	<ul>
+		<li><a href="#detalhe">Detalhes do registro de acesso</a></li>
+	</ul>
+
+	<div id="detalhe">
+		<p>
+		<?php
+		// Array deve conter apenas 1 registro (fetchRow)
+		foreach ( $this->dados as $campoNome => $campoConteudo ) {
+			echo '<strong>' . $this->escape ( $campoNome ) . ':</strong> ' . $this->escape ( $campoConteudo ) . '<br />';
+		}
+		?>
+		</p>
+	</div>
+</div>
+<br />
+
+<a	class=""
+	alt="Retornar à tela de Listagem de acessos registrados em log"
+	title="Retornar à tela de Listagem de acessos registrados em log"
+	href="<?php echo $link; ?>"> Voltar para listagem </a>

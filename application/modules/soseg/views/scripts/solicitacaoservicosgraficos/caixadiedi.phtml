@@ -1,0 +1,126 @@
+<?php 
+    $this->inlineScript()->appendFile($this->baseUrl() . '/js/soseg/solicitacoesServicosGraficos/index.js', 'text/javascript');
+    $this->inlineScript()->appendFile($this->baseUrl() . '/js/tooltipster-1.2/js/jquery.tooltipster.min.js', 'text/javascript');
+?>
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+
+<fieldset style="display:inline;">
+    <legend>Filtro da Caixa</legend>
+    <div class="painel">
+        <div class="painel" >
+            <input type="button" title="Último Filtro" name="acao" value="Filtro" id="pesquisar">
+            <a title="Novo Filtro" name="acao" value="Filtrar" id="ultimo_filtro" href="<?php echo $this->baseUrl(); ?>/soseg/solicitacaoservicosgraficos/caixadiedi/nova/1" >Limpar Filtro/Retirar Filtro</a>
+            &emsp;&emsp;<span style="color: #2E4557;"><strong><?php if ($this->ultima_pesq == true) echo "Filtro Ativo"; else echo "Filtro Inativo"; ?></strong></span>
+        </div> 
+    </div>
+    <div id="pesq_div"  style="display: none;" >
+		<?php echo $this->form; ?>
+        <span id="botao_ajuda_recolhe" ></span>
+    </div>
+</fieldset>
+
+<form name="servicosgraficos" action="" method="post" >
+    <div class="painel">
+        <a class="" href="<?php echo $this->baseUrl(); ?>/sosti/atendentecaixa/list/">Atendentes</a>
+        <input type="submit" title="Baixar a solicitação" name="acao" value="Baixar"/>
+        <input type="submit" title="Cancelar solicitação" name="acao" value="Cancelar"/>
+        <input type="submit" title="Categorizar" name="acao" value="Categorias"/>
+        <input type="submit" title="Encaminhar a solicitação" name="acao" value="Encaminhar"/>
+        <input type="submit" title="Dar parecer" name="acao" value="Parecer"/>
+        <input type="submit" title="Solicitar Informação" name="acao" value="Solicitar Informação"/>
+        <input type="submit" title="Trocar o serviço da solicitação" name="acao" value="Trocar Serviço"/>
+    </div>
+	<?php if (count($this->data)):  ?>
+	    <div id="container_pagination">
+	        <table class="grid">
+	            <thead>
+	                <tr>
+	                    <th><input type="checkbox" name="input_check_all_grid" id="check_all" /></th>
+	                    <th><a href="<?php echo $this->baseUrl(); ?>/soseg/solicitacaoservicosgraficos/caixadiedi/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">N. da solicitação<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+	                    <th><a href="<?php echo $this->baseUrl(); ?>/soseg/solicitacaoservicosgraficos/caixadiedi/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Tempo total<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+	                    <th><a href="<?php echo $this->baseUrl(); ?>/soseg/solicitacaoservicosgraficos/caixadiedi/ordem/SSER_DS_SERVICO/direcao/<?php echo $this->direcao ?> ">Serviço atual<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+	                    <th><a href="<?php echo $this->baseUrl(); ?>/soseg/solicitacaoservicosgraficos/caixadiedi/ordem/NOME_ATENDENTE/direcao/<?php echo $this->direcao ?> ">Atendente<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                            <th>Categoria</th>
+                        </tr>
+	            </thead>
+	            <tbody>
+                        <?php
+                        
+                        $CateNs = new Zend_Session_Namespace('CateNs');
+                        $identificador = $CateNs->idGrupo;
+                        $tipo = 'GRUPO';
+                        $caso_categoria = new Application_Model_DbTable_SosTbCasoCategoriaSolic();
+
+                        $timeInterval = new App_TimeInterval();
+                        foreach ($this->data as $data):
+                            $tempoTotal = $timeInterval->tempoTotal($data["DOCM_DH_CADASTRO"], date("d/m/Y H:i:s") );
+                            $categoriasGrupo = $caso_categoria->getCategoriasDocumentoGrupo($data["SSOL_ID_DOCUMENTO"], $identificador, $tipo);
+                        ?> 
+                         
+                        <tr name="rowList" value="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" >
+                                <td <?php echo App_View_Helper_CorStatus::corCaixa('solicitacaoservicosgraficos', $data["MOFA_ID_FASE"], null, $data["TEMPO_TOTAL"], $data["ATENDENTE"]); ?> >
+                                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>"/>
+                                </td>
+                                <td><a href="#" class="tooltip" title="<?php echo $data["DOCM_DS_ASSUNTO_DOC"]; ?>"><?php echo $this->escape($data["MASCARA_DOCM"]); ?></td>
+                                <td><?php echo $this->escape($tempoTotal); ?></td>
+                                <td><?php echo $this->escape($data["SSER_DS_SERVICO"]); ?></td>
+                                <td ><?php echo $this->escape($data["NOME_ATENDENTE"]); ?></td>
+                                <td>
+				<?php
+                                    $cont = 0;
+                                    if ($categoriasGrupo != null) : ?> 
+                                            <table> <tr>
+                                                            <?php
+                                                            foreach ($categoriasGrupo as $categorias_p) :
+                                                                    if ($cont % 3 == 0) :  echo '</tr><tr>'; endif; ?>
+                                                                    <td bgcolor="<?php echo $categorias_p['CATE_DS_DESCRICAO_COR'] ?>" title="Nome: <?php echo $categorias_p['CATE_NO_CATEGORIA'] ?> - Descrição: <?php echo $categorias_p['CATE_DS_OBSERVACAO'] ?>" > </td>
+                                                            <?php   $cont++; 
+                                                              endforeach; ?>
+                                            </tr> </table>
+                                <?php endif; ?>
+				</td>			
+                                
+                        </tr>
+                        <?php endforeach; ?>
+	            </tbody>
+	            <tfoot>
+	                <tr>
+	                    <td colspan="10">Total: <?php echo $this->data->getTotalItemCount(); ?> </td>
+	                </tr>
+	                <tr>
+	                    <td colspan="10">
+                                <?php echo $this->paginationControl($this->data, null, null, null); ?>
+	                    </td>
+	                </tr>
+	            </tfoot>
+	        </table> 
+                
+	        <div class="painel">
+				<a class="" href="<?php echo $this->baseUrl(); ?>/sosti/atendentecaixa/list/">Atendentes</a>
+				<input type="submit" title="Baixar a solicitação" name="acao" value="Baixar"/>
+				<input type="submit" title="Cancelar solicitação" name="acao" value="Cancelar"/>
+                                <input type="submit" title="Categorizar" name="acao" value="Categorias"/>
+				<input type="submit" title="Encaminhar a solicitação" name="acao" value="Encaminhar"/>
+				<input type="submit" title="Dar parecer" name="acao" value="Parecer"/>
+                                <input type="submit" title="Solicitar Informação" name="acao" value="Solicitar Informação"/>
+				<input type="submit" title="Trocar o serviço da solicitação" name="acao" value="Trocar Serviço"/> 
+			</div>
+	<?php else: ?>
+	<?php if ($this->ultima_pesq): ?>
+		        <p><br/><strong>Não existem registros para os parametros de filtro informados</strong></p>
+		<?php else: ?>
+				<p><br/>Não existem registros</p>
+	<?php endif; ?>   
+<?php endif; ?>
+    </div>
+<?php echo $this->partial('_partials/caixahiddeninputs.phtml', array('view' => $this)); ?>
+</form>
+<div>
+<?php echo $this->partial('_partials/quadroLegenda.phtml'); ?>
+</div>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>
+
+

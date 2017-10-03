@@ -1,0 +1,10 @@
+<?php 
+    foreach ($this->pessoas as $Pessoas): ?>
+      <?php $value = Zend_Json::encode($Pessoas); 
+      $dadosPessoa = $Pessoas["PNAT_NO_PESSOA"].' - '.$Pessoas["PMAT_CD_MATRICULA"];
+      ?>
+      <option value="<?php echo $Pessoas["LOTA_SIGLA_LOTACAO"].'-'.$Pessoas["LOTA_COD_LOTACAO"].'-'.$Pessoas["LOTA_SIGLA_SECAO"].'-'.$Pessoas["PMAT_CD_MATRICULA"] ?>" > 
+           <?php echo $dadosPessoa ?>
+      </option>
+<?php endforeach; ?> 
+

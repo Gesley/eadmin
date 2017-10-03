@@ -1,0 +1,83 @@
+<?php $this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript'); 
+      $this->inlineScript()->appendFile($this->baseUrl() . '/js/combobox_app_jquery.js' , 'text/javascript');
+      $this->inlineScript()->appendFile($this->baseUrl() . '/js/sisad/relatorioprocesso.js', 'text/javascript'); 
+      $this->inlineScript()->appendFile($this->baseUrl() . '/js/datepicker.js', 'text/javascript');
+      $this->headLink()->prependStylesheet($this->baseUrl() . '/css/relatorioProcesso.css' );
+?>
+<script type="text/javascript">
+ $(function() {
+ $("#pesquisaProcessos").submit( function(){
+   if( $("#TRF1_SECAO").val() === "0"  ){
+                   alert('É necessário escolher TRF ou Seção.');
+       return false;
+   }
+   if( $("#SECAO_SUBSECAO").val() === ""  ){
+                   alert('É necessário escolher uma Seção ou Subseção.');
+       return false;
+   }
+   return true;
+});
+ });
+</script>    
+
+
+<div class="help" id="pesq_div" class="span-23" >
+    <?php echo $this->form; ?>
+</div>
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+
+<?php if (count($this->resultado) > 0): ?>
+
+<div id="container_pagination">
+   
+        <div class="painel" id="">
+            <input type="button" title="Gerar PDF do Relatório" name="acao" value="PDF" id="pdf" onclick="javascript: location.href='<?php echo $this->baseUrl(); ?>/sisad/relatorioprocesso/autuadosunidadepdf/';" >      
+        </div>
+    
+        <div class="cabecalho">
+                <div class="orgao"> 
+                   <h3> <strong> <?php echo $this->title; ?> </strong> </h3>
+                </div>
+                <?php echo $this->partial('_partials/relatorioprocesso/cabecalhoRelatorio.phtml', array(
+                                           'cabecalho' => $this->cabecalho )); ?>
+                </div>
+        
+        <div class="dados-resultado">
+            <table id="dados-resultado">
+                <thead>
+                    <tr>
+                        <th style="font-weight: bold;"> N. Processo </td>
+                        <th style="font-weight: bold;"> Data Autuação </td>
+                        <th style="font-weight: bold;"> Unidade </td>
+                        <th style="font-weight: bold;"> Assunto </td>
+                        <th style="font-weight: bold;"> Partes </td>
+                    </tr>
+                </thead>
+            <tbody>
+            <?php  foreach($this->resultado as $data):  ?>
+                    <tr>
+                        <td title="<?php echo $data['NR_PROCESSO']; ?>"> <?php echo $data['MASC_NR_DOCUMENTO']; ?></td>
+                        <td title="Data da Autuação"> <?php echo $data['DH_AUTUACAO']; ?></td>
+                        <td title="Unidade Autuadora"> <?php echo $data['UNIDADE_AUTUADORA'].$data['SIGLA_FAMILIA']; ?></td>
+                        <td title="Assunto"> <?php echo $data['ASSUNTO']; ?></td>
+                        <td title="Partes" style="width: 25%;"> <?php echo $data['PARTE']; ?></td>
+                    </tr>
+             <?php   endforeach; ?>
+            </tbody>
+            </table>
+        </div>
+        
+        <div class="span-24">
+        <?php echo $this->paginationControl($this->resultado, null, null, null); ?>
+        </div>
+        
+        <div class="totais span-24">
+            <strong> TOTAL DE REGISTROS: <?php echo $this->resultado->getTotalItemCount(); ?> </strong> <br />
+            <?php echo $this->partial('_partials/relatorioprocesso/mostraSomatorioPorUnidade.phtml', array(
+                                         'somatorioUnidades' => $this->somatorioUnidades )); ?>
+        </div>
+</div>
+<?php endif; ?>
+          
+   

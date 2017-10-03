@@ -1,0 +1,62 @@
+<script type="text/javascript">
+$(function() {
+    $('#SOTC_ID_GRUPO').change(
+        function(){
+            $("#SNAT_CD_NIVEL").removeAttr('disabled');
+            $.ajax({
+                url: '<?php echo $this->baseUrl(); ?>/sosti/conformidade/ajaxniveis',
+                dataType: 'html',
+                type: 'POST',
+                data: this.value,
+                contentType: 'application/json',
+                processData: false,
+              beforeSend:function() {
+                  $("#SOTC_ID_INDICADOR").removeClass('erroInputSelect');
+                  
+                  $("#SOTC_ID_INDICADOR").addClass('carregandoInputSelect');
+              },
+              success: function(data) {
+                  $("#SOTC_ID_INDICADOR").html(data);
+                  $("#SOTC_ID_INDICADOR").removeClass('carregandoInputSelect');
+                  $("#SOTC_ID_INDICADOR").focus();
+                  
+              },
+              error: function(){
+                  $("#SOTC_ID_INDICADOR").removeClass('x-form-field');
+                  $("#SOTC_ID_INDICADOR").val('Erro ao carregar.');
+                  $("#SOTC_ID_INDICADOR").addClass('erroInputSelect');
+                  $("#SOTC_ID_INDICADOR").html('<option>Erro ao carregar</option>');
+              }
+            });  
+        }
+    );
+    var dates_cadastro = $( "#SOTC_DH_FIM_CONFORMIDADE" ).datepicker({
+		dateFormat: 'dd/mm/yy',
+		dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+		dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+		dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+		monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+				     'Outubro','Novembro','Dezembro'],
+			monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+			nextText: 'Próximo',
+		        prevText: 'Anterior',
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true,
+		changeYear: true,
+		changeMonth: true,
+		onSelect: function( selectedDate ) {
+			var option = this.id == "DATA_INICIAL_CADASTRO" ? "minDate" : "maxDate",
+				instance = $( this ).data( "datepicker" );
+				date = $.datepicker.parseDate(
+					instance.settings.dateFormat ||
+					$.datepicker._defaults.dateFormat,
+					selectedDate, instance.settings );
+			dates_cadastro.not( this ).datepicker( "option", option, date );
+		}
+	});           
+});
+
+</script>
+<?php 
+echo $this->form;

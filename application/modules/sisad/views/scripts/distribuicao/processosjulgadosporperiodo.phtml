@@ -1,0 +1,130 @@
+<style>
+    #container{
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+        margin: 0 auto;
+        /*background-size: 190mm 170mm;
+        background-image: url(marca_d_agua.gif);
+        background-position: center;
+        background-repeat: no-repeat;*/
+    }
+    table#header{
+        width: 100%;
+        font-size: 12px;
+    }
+    table#header td.brasao{
+        
+        background-image: url(<?= $this->baseUrl(); ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    div#texto{
+        font-weight: bold;
+        text-align: justify;
+    }
+    div.orgao-julgador{
+        padding-top: 10px;
+        padding-bottom: 7px;
+        padding-left: 10px;
+        border: 1px solid black;
+        background-color: #cccccc;
+        font-size: 13px;
+    }
+    div.titulo-tabela{
+        padding-top: 20px;
+        padding-bottom: 10px;
+        padding-left: 25px;
+        font-size: 13px;
+    }
+    table.conteudo{
+        width: 207mm; 
+    }
+    table.conteudo th.titulo{
+        text-align: center;
+        font-weight: bold;
+        background-color: silver;
+        font-size: 13px;
+    }
+    table.conteudo td.dados{
+        font-size: 12px;
+    }
+    .rodape{
+        font-weight: bold;
+        font-size: 13px;
+        padding-left: 100px;
+    }
+    .rodapeTotal{
+        font-weight: bold;
+        font-size: 13px;
+        text-align: right;
+        padding-right: 100px;
+    }
+    .alinha-titulo{
+        font-size: 15px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+
+<div id="container">
+    
+    <watermarkimage src="<?= $this->baseUrl(); ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+
+    <?php
+        $soma = 0;
+        foreach ($this->arrayRelatores as $arrayRelator):
+        ?>
+        <table class="conteudo" border="0" cellspacing="0" cellpadding="3" valign="top">
+            <thead>
+                <tr >
+                    <th nowrap="nowrap" colspan="5" align="left" height="30px" valign="midle">&nbsp;&nbsp;&nbsp;RELATOR: <b><?= $arrayRelator[0]['PNAT_NO_PESSOA']?></b></th>
+                </tr>
+                <tr >
+                    <th nowrap="nowrap" class="titulo">PROCESSO</th>
+                    <th nowrap="nowrap" class="titulo">MODALIDADE DE DISTRIBUIÇÃO</th>
+                    <th nowrap="nowrap" class="titulo">DATA DISTRIBUIÇÃO</th>
+                    <th nowrap="nowrap" class="titulo">DATA JULGAMENTO</th>
+                    <th nowrap="nowrap" width="35%" class="titulo">RESUMO DECISÃO</th>
+                </tr>
+            </thead>
+            <!-- ############################# INICIO DO CONTEUDO-->
+            <tbody>
+                <?php
+
+                foreach ($arrayRelator as $historico):
+                
+                    $soma++;
+                ?>
+                    <tr >
+                        <td align="right" class="dados"><?=$historico['DOCM_NR_DOCUMENTO']?></td>
+                        <td align="center" class="dados"><?=$historico['HDPA_IC_FORMA_DISTRIBUICAO']?></td>
+                        <td align="center" class="dados"><?=$historico['HDPA_TS_DISTRIBUICAO']?></td>
+                        <td align="center" class="dados"><?=$historico['HDPA_DT_JULGAMENTO']?></td>
+                        <td class="dados"><?=$historico['HDPA_DS_RESUMO_DECISAO']?></td>
+                    </tr>
+                <?php
+                endforeach;
+                ?>
+            </tbody>
+            <!-- ############################# FIM DO CONTEUDO-->
+            <tr>
+                <td colspan="5" class="rodape"><br/>
+                    TOTAL DE PROCESSOS POR RELATOR: <?= count($arrayRelator)?>
+                </td>
+            </tr>
+        </table>
+        <hr/>
+    <?php
+        endforeach;
+    ?>
+    <br/>
+    <br/>
+    <center class="rodapeTotal"><b>TOTAL DE PROCESSOS POR ÓRGAO JULGADOR: <?= $soma?></b></center>
+</div><!-- Fim da div Container-->

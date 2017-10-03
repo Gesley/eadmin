@@ -1,0 +1,93 @@
+<?php
+/**
+  $this->documento
+  $this->anexos;
+  $this->formPesquisa;
+ */
+?>
+<div id="tabs_anexos-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="tabs_documentos_juntados">
+    <h3>Documentos Anexados</h3>
+    <fieldset style="display:inline;">
+        <div class="painel" >
+            <input class="expandir_filtro" type="button" title="Exibe o filtro dos documentos" name="acao" value="Expandir Filtro"/>
+            <input class="remover_filtro" type="button" title="Remove o filtro dos documentos" name="acao" value="Remover Filtro"/>
+            <span style="color: #2E4557;">
+                <strong class="label_filtro">
+                    &emsp;&emsp;Filtro Inativo
+                </strong>
+            </span>
+        </div>
+        <div id="pesq_div" style="display: none;">
+            <?= $this->formPesquisa ?>
+        </div>
+
+    </fieldset>
+    <div class="tutorial">
+        <br/>
+        <p>
+            A tabela abaixo lista os documentos/processos que estão anexados ao documento do tipo <?= $this->documento['DTPD_NO_TIPO'] ?>. Caso o filtro esteja ativo a tabela abaixo lista o resultado do filtro. 
+            <br/>
+            <!--Caso tenha dúvidas quanto a funcionalidade existe um menu (ajuda) na barra de menus superior.-->
+        </p>
+    </div>
+    <div class="div_tabela_documentos">
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th >Ordem</th>
+                    <th >Ação</th>
+                    <th >Número</th>
+                    <th >Tipo</th>
+                    <th >Assunto</th>
+                    <th >Data de inserção</th>
+                    <th >Usuário</th>
+                    <th >Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->anexos as $apensos):
+                    $apensos['APARTIR_DE_DOCM_ID_DOCUMENTO'] = $this->documento['DOCM_ID_DOCUMENTO'];
+                    ?>
+                    <tr name="rowList" value="<?= $this->escape(Zend_Json::encode($apensos)) ?>" >
+                        <td class="ordem_leitura"></td>
+                        <td style="width: 65px;"> 
+                            <?php
+                            if (Trf1_Sisad_Negocio_Leitura::isDocumentoComJuntada($apensos) || $apensos['QTD_ANEXOS_SEM_METADADOS'] != 0) {
+                                $isNovaAba = true;
+                                echo '<button class="nova_aba" title="O documento possui outros documentos juntados ou anexos sem metadados. Logo a visualização do documento será aberta em uma nova aba inferior."></button>';
+                            } else {
+                                $isNovaAba = false;
+                                if ($apensos['DOCM_NR_DOCUMENTO_RED'] != null) {
+                                    echo '<button class="nova_dialog" title="Este botão abre a visualização do processo."></button>';
+                                } else {
+                                    echo '<button disabled="false" class="nova_dialog" title="Ao cadastrar o documento não foi escolhido um arquivo para leitura."></button>';
+                                }
+                            }
+                            ?>
+                            <button class="subir" title="Este botão trocará a ordem de leitura com o documento superior."></button>
+                            <button class="remover_tr" title="Este botão removerá o documento da visualização."></button>
+                            <button class="descer" title="Este botão trocará a ordem de leitura com o documento posterior."></button>
+                        </td>
+                        <td><?= $apensos['MASC_NR_DOCUMENTO'] ?></td>
+                        <td><?= $apensos['DTPD_NO_TIPO'] ?></td>
+                        <td><?= $apensos['AQVP_CD_PCTT'] . ' - ' . $apensos['AQAT_DS_ATIVIDADE'] ?></td>
+                        <td><?= $apensos['DH_JUNTADA'] ?></td>
+                        <td><?= $apensos['PMAT_CD_MATRICULA'] . ' - ' . $apensos['PNAT_NO_PESSOA'] ?></td>
+                        <td><?= ($apensos['IC_ORIGINAL'] == 'S' ? 'ORIGINAL' : 'CÓPIA ANEXADA') ?></td>
+                    </tr>
+                    <?php
+                endforeach;
+                ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <!--<td colspan="8">Total: </td>-->
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <br/>
+    <br/>
+
+</div>

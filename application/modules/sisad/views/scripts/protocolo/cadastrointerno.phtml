@@ -1,0 +1,91 @@
+<?php 
+    $tppoTipoDocumento = new Application_Model_DbTable_OcsTbDtpdTipoDoc();
+    $getTipoDocumento = $tppoTipoDocumento->getTipoDocumento();
+    
+    $rhCentralLotacao = new Application_Model_DbTable_RhCentralLotacao();
+    $getLotacoes = $rhCentralLotacao->getLotacao();
+    
+    $ano = date("Y");
+?>
+<html>
+<head>
+<script LANGUAGE="JavaScript">
+    document.onkeypress = keyHit;  
+    function keyHit(event) {  
+      if (event.keyCode == event.DOM_VK_F4) {  
+        tbl = document.getElementById("tabela")
+
+        var novaLinha = tbl.insertRow(-1);
+        var novaCelula;
+
+        novaCelula = novaLinha.insertCell(0);
+        novaCelula.innerHTML = <select name='ID_TIPO_DOCUMENTO[]'>
+                                <?php foreach ($getTipoDocumento as $tiposDocumento) { ?>
+                                        <option value='<?php echo $tiposDocumento["DTPD_ID_TIPO_DOC"]; ?>'><?php echo $tiposDocumento["DTPD_NO_TIPO"]; ?></option>
+                                    <?php } ?>
+                                </select>;
+
+        novaCelula = novaLinha.insertCell(1);
+        novaCelula.align = "left";
+        novaCelula.innerHTML = "<input type='text' title='Ano' name='ANO[]' value='<?php echo $ano; ?>' style='width: 30px'/>";
+
+        novaCelula = novaLinha.insertCell(2);
+        novaCelula.align = "left";
+        novaCelula.innerHTML = "<input type='text' title='Numero do Documento' name='NUMERO[]' style='width: 80px'/>";
+
+        novaCelula = novaLinha.insertCell(3);
+        novaCelula.align = "left";
+        novaCelula.innerHTML = "<input type='text' title='Quantidade de Documentos' name='QTD[]' style='width: 20px'/>";
+
+        novaCelula = novaLinha.insertCell(4);
+        novaCelula.align = "left";
+        novaCelula.innerHTML = "<input type='text' title='Descrição do Documento' name='DESC[]' style='width: 120px'/>";
+        
+        novaCelula = novaLinha.insertCell(5);
+        novaCelula.align = "left";
+        novaCelula.innerHTML = "<input type='text' title='Lotação de Destino do Documento' id='DESTINO[]' name='DESTINO[]' style='width: 120px'/>";
+        
+        novaCelula = novaLinha.insertCell(6);
+        novaCelula.align = "left";
+        novaCelula.innerHTML = "<input type='text' title='Observação Para Destino' name='OBS[]' style='width: 150px'/>";
+       
+       $("input[name=DESTINO]").autocomplete({
+        source: "ajaxunidade",
+        minLength: 3,
+        delay: 100 
+       });
+       }  
+    }
+    $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_unid_ranscunho = $('form[name=protocolo]');
+            if(acao == 'Inserir'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/protocolo/cadastrointerno');
+            }else if(acao == 'Confirmar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/protocolo/receber');
+            }
+        }
+    );
+
+    
+</script>
+</head>
+<body >
+    <form method="POST" action="" name="protocolo">
+        <table id='tabela' border='0' width='100%' onKeyDown="keyHit()">
+            <tr>
+                <th>Tipo de Documento</th>
+                <th>Ano</th>
+                <th>Número</th>
+                <th>Qtd.</th>
+                <th>Descrição</th>
+                <th>Lotação de Destino</th>
+                <th>Obs</th>
+            </tr>
+        </table>
+        <br />
+        <input type='submit' title="Inserir Documentos" name="acao" value='Inserir'/>
+    </form>
+</body>
+</html>

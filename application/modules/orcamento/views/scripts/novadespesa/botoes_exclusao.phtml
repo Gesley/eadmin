@@ -1,0 +1,24 @@
+<?php
+/**
+ * @category	TRF1
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Anderson Sathler M. Ribeiro [asathler@gmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que gera botões de Sim ou Não para uso nas telas de exclusão de registros
+ * 
+ * @deprecated	string		codigo				Código da chave primária a ser excluída
+ * 
+ * @example		echo $this->partial ( '_partials/botoes_exclusao.phtml', array ('codigo' => $this->codigo ) );
+ */
+?>
+
+<form action="<?php echo $this->url(array('action' => 'excluir')) ?>" method="post">
+	<div>
+		<input type="hidden" name="cod" value="<?php echo $this->escape($this->codigo); ?>" />
+		<button type="submit" name="cmdExcluir" title="Confirma a exclusão" value="Sim" class="ceo_confirmar">Sim</button>
+		<button type="submit" name="cmdExcluir" title="Cancela a exclusão" value="Não" class="ceo_negar">Não</button>
+	</div>
+</form>

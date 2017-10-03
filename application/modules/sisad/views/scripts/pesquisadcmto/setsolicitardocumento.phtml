@@ -1,0 +1,27 @@
+<form method="POST" action="setsolicitardocumento" name="solicitarDocumento">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Número</th>
+                <th >Autor</th>
+                <th >Tipo</th>
+                <th >Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?php echo $this->escape($this->dadosDocm["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td><?php echo $this->escape($this->dadosDocm["ENCAMINHADOR"]) ?></td>
+                <td><?php echo $this->escape($this->dadosDocm["DTPD_NO_TIPO"]) ?></td>
+                <td><?php echo $this->escape($this->dadosDocm["DOCM_DH_CADASTRO"]) ?></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php //echo $this->dadosDocm->getTotalItemCount()  ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    <br/>
+    <?php echo $this->form; ?>
+</form>

@@ -1,0 +1,71 @@
+<?php 
+
+echo $this->partial('_partials/ajax_despesa.phtml', array('campo' => 'SOLD_NR_DESPESA'));
+
+?>
+<script type="text/javascript">
+	$(function() {
+		$("#SOLD_NR_DESPESA").blur( function () {
+			var despesa = $("#SOLD_NR_DESPESA").val();
+			$('#SOLD_NR_DESPESA_DESCRICAO').empty();
+
+			if (!isNaN(despesa)) {
+				if (despesa != '') {
+					url = '<?php echo $this->baseUrl(); ?>/orcamento/novadespesa/ajaxnovadespesa/despesa/'+despesa;
+
+					$.ajax({
+						url: url,
+						dataType: 'html',
+						type: 'GET',
+						contentType: 'application/json',
+						processData: false,
+						success: function(data) {
+							var dados = jQuery.parseJSON(data);
+
+							if (dados != false) {
+								$('#SOLD_NR_DESPESA_DESCRICAO').empty();
+								$('#SOLD_NR_DESPESA').css('border-color','#ccc');
+								$('#SOLD_CD_UG').val(dados.DESP_CD_UG);
+								$('#SOLD_CD_RESPONSAVEL').val(dados.SG_DS_FAMILIA_RESPONSAVEL);
+								$('#RESP_CD_LOTACAO').val(dados.DESP_CD_RESPONSAVEL);
+								$('#SOLD_CD_ELEMENTO_DESPESA_SUB').val(dados.DESP_CD_ELEMENTO_DESPESA_SUB);
+								$('#SOLD_CD_PT_RESUMIDO').val(dados.DESP_CD_PT_RESUMIDO);
+								$('#SOLD_CD_TIPO_DESPESA').val(dados.DESP_CD_TIPO_DESPESA);
+								//$('#SOLD_VL_SOLICITADO').val(dados.VL_DESPESA_RESPONSAVEL);
+							} else {
+								$('#SOLD_NR_DESPESA_DESCRICAO').empty();
+								$('#SOLD_NR_DESPESA').val('');
+								$('#SOLD_CD_UG').val('');
+								$('#SOLD_CD_RESPONSAVEL').val('');
+								$('#RESP_CD_LOTACAO').val('');
+								$('#SOLD_CD_ELEMENTO_DESPESA_SUB').val('');
+								$('#SOLD_CD_PT_RESUMIDO').val('');
+								$('#SOLD_CD_TIPO_DESPESA').val('');
+								//$('#SOLD_VL_SOLICITADO').val('');
+								$('#SOLD_DS_JUSTIFICATIVA_SECOR').val('');
+								$('#SOLD_IC_REC_DESCENTRALIZADO').val(1);
+								$('#SOLD_NR_PRIORIDADE').val(0);
+								$('#SOLD_NR_DESPESA').css('border-color', 'red');
+								$('#SOLD_NR_DESPESA').after('<p class="description" id="SOLD_NR_DESPESA_DESCRICAO" style="color: red">Despesa não encontrada</p>');
+							}
+						},
+						complete: function() {
+
+						},
+						error: function() {
+							$('#SOLD_NR_DESPESA').css('border-color', 'red');
+							$('#SOLD_NR_DESPESA').after('<p class="description" id="SOLD_NR_DESPESA_DESCRICAO" style="color: red">Ocorreu um erro durante a requisição</p>');
+						}
+					});
+				} else {
+					$('#SOLD_NR_DESPESA').css('border-color','#ccc');
+				}
+			} else {
+				$('#SOLD_NR_DESPESA_DESCRICAO').empty();
+				$('#SOLD_NR_DESPESA').val('');
+				$('#SOLD_NR_DESPESA').css('border-color', 'red');
+				$('#SOLD_NR_DESPESA').after('<p class="description" id="SOLD_NR_DESPESA_DESCRICAO" style="color: red">Informe um número de despesa válido.</p>');
+			}
+		});
+	});
+</script>

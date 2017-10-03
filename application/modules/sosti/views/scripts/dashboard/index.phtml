@@ -1,0 +1,247 @@
+<?php 
+     
+     $this->inlineScript()->appendFile($this->baseUrl() . '/js/RGraph/RGraph.common.core.js', 'text/javascript');
+     $this->inlineScript()->appendFile($this->baseUrl() . '/js/RGraph/RGraph.pie.js', 'text/javascript');
+     $this->inlineScript()->appendFile($this->baseUrl() . '/js/RGraph/RGraph.line.js', 'text/javascript');
+     $this->inlineScript()->appendFile($this->baseUrl() . '/js/RGraph/RGraph.common.effects.js', 'text/javascript');
+     $this->inlineScript()->appendFile($this->baseUrl() . '/js/RGraph/RGraph.common.tooltips.js', 'text/javascript');
+     $this->inlineScript()->appendFile($this->baseUrl() . '/js/RGraph/RGraph.common.key.js', 'text/javascript');
+     
+     
+     $this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript');
+?>
+
+
+<h2>Seja Bem-Vindo ao Sistema e-Sosti!</h2>
+<h3>Selecione uma opção no menu acima.</h3>
+
+<script>
+    
+$(function() {
+    $('#DATA_INICIAL').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK',
+        onClose: function(dateText, inst) {
+            var endDateTextBox = $('#DATA_FINAL');
+            if (endDateTextBox.val() != '') {
+                var testStartDate = new Date(dateText);
+                var testEndDate = new Date(endDateTextBox.val());
+                if (testStartDate > testEndDate)
+                    endDateTextBox.val(dateText);
+            }
+            else {
+                endDateTextBox.val(dateText);
+            }
+        },
+        onSelect: function (selectedDateTime){
+            var start = $(this).datetimepicker('getDate');
+            $('#DATA_FINAL').datetimepicker('option', 'minDate', new Date(start.getTime()));
+        }
+    });
+    $('#DATA_FINAL').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK',
+        onClose: function(dateText, inst) {
+            var startDateTextBox = $('#DATA_INICIAL');
+            if (startDateTextBox.val() != '') {
+                var testStartDate = new Date(startDateTextBox.val());
+                var testEndDate = new Date(dateText);
+                if (testStartDate > testEndDate)
+                    startDateTextBox.val(dateText);
+            }
+            else {
+                startDateTextBox.val(dateText);
+            }
+        },
+        onSelect: function (selectedDateTime){
+            var end = $(this).datetimepicker('getDate');
+            $('#DATA_INICIAL').datetimepicker('option', 'maxDate', new Date(end.getTime()) );
+        }
+    });
+});
+    
+</script>
+
+
+<script>
+//    window.onload = function ()
+//    {
+//        // The data to be shown on the Pie chart
+//        var data = [564,155,499,611,322,564,155,499,611,322,658,56];
+//    
+//        // Create the Pie chart. The arguments are the canvas ID and the data to be shown.
+//        var pie = new RGraph.Line('myPie', data);
+//
+//        // Configure the chart to look as you want.
+//        pie.Set('chart.labels', ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']);
+//        pie.Set('chart.linewidth', 1);
+//        pie.Set('chart.stroke', 'white');
+//        pie.Set('chart.colors', ['#123456', '#654321', '#fff', '#bbb', '#ddd']);
+//        
+//        
+//                    pie.Set('chart.gutter.left', 40);
+//            pie.Set('chart.gutter.top', 35);
+//            pie.Set('chart.gutter.right', 15);
+//            pie.Set('chart.gutter.bottom', 20);
+//            pie.Set('chart.colors', ['#34495C', 'black']);
+////            pie.Set('chart.units.post', '%');
+//            pie.Set('chart.linewidth', 7);
+//            pie.Set('chart.hmargin', 10);
+//            pie.Set('chart.title', 'Quantidade total de chamados por mês');
+//            pie.Set('chart.title.vpos', 0.5);
+//            pie.Set('chart.text.color', '#333');
+//            pie.Set('chart.text.font', 'Arial');
+//            pie.Set('chart.key', ['Solicitações']);
+//            pie.Set('chart.key.colors', ['#34495C', 'black']);
+//            pie.Set('chart.key.background', 'white');
+//            pie.Set('chart.key.position.x', pie.Get('chart.gutter.left') + 10);
+//            pie.Set('chart.shadow', true);
+//            pie.Set('chart.shadow.offsetx', 0);
+//            pie.Set('chart.shadow.offsety', 0);
+//            pie.Set('chart.shadow.blur', 25);
+//            pie.Set('chart.background.grid.autofit', true);
+//            pie.Set('chart.background.grid.autofit.numvlines', 11);
+//        
+// /**
+//            * Use the Trace animation to show the chart
+//            */
+//            if (RGraph.isOld()) {
+//                pie.Draw();
+//            } else {
+//                //pie.Set('chart.tooltips.effect', 'snap');
+//                pie.Set('chart.tooltips', [
+//                                              '<b>Janeiro</b><br />Started off the year quite averagely',
+//                                              '<b>Fevereiro</b><br />Better than Jan, rising quite nicely',
+//                                              '<b>Março</b><br />Mar was quite a spike',
+//                                              '<b>Abril</b><br />Rising very impressively',
+//                                              '<b>Maio</b><br />Dropping after the last two month spike',
+//                                              '<b>Junho</b><br />Still dropping',
+//                                              '<b>Julho</b><br />The fall is beginning to subside, but still dropping',
+//                                              '<b>Agosto</b><br />A good rise after the fall',
+//                                              '<b>Setembro</b><br />A very good peak',
+//                                              '<b>Outubro</b><br />The peak is now subsiding',
+//                                              '<b>Novembro</b><br />Still subsiding',
+//                                              '<b>Dezembro</b><br />Rising again after the last fall',
+//                                             ]);
+//                RGraph.Effects.Line.jQuery.Trace(pie);
+//            }
+//        
+//        
+//        
+//        // Call the .Draw() chart to draw the Pie chart.
+//        pie.Draw();
+//    }
+</script>
+
+<script>
+    window.onload = function ()
+    {
+        // The data to be shown on the Pie chart
+        //var data = [564,155,499,611,322,564,155,499,611,322,658,56];
+        var data = <?php echo Zend_Json::encode($this->total_chamados); ?>;
+    
+        // Create the Pie chart. The arguments are the canvas ID and the data to be shown.
+        var pie = new RGraph.Line('myPie', data);
+
+        // Configure the chart to look as you want.
+        //pie.Set('chart.labels', ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']);
+        pie.Set('chart.labels', <?php echo Zend_Json::encode($this->dias_chamados); ?> );
+        
+        
+        pie.Set('chart.linewidth', 1);
+        pie.Set('chart.stroke', 'white');
+        pie.Set('chart.colors', ['#123456', '#654321', '#fff', '#bbb', '#ddd']);
+        
+        
+                    pie.Set('chart.gutter.left', 40);
+            pie.Set('chart.gutter.top', 35);
+            pie.Set('chart.gutter.right', 15);
+            pie.Set('chart.gutter.bottom', 20);
+            pie.Set('chart.colors', ['#34495C', 'black']);
+//            pie.Set('chart.units.post', '%');
+            pie.Set('chart.linewidth', 4);
+            pie.Set('chart.hmargin', 30);
+            pie.Set('chart.title', '<?php echo $this->titulo_grafico; ?>' );
+            pie.Set('chart.title.vpos', 0.5);
+            pie.Set('chart.text.color', '#333');
+            pie.Set('chart.text.font', 'Arial');
+            pie.Set('chart.key', ['Solicitações Total:'+'<?php echo $this->total_geral; ?>']);
+            pie.Set('chart.key.colors', ['#34495C', 'black']);
+            pie.Set('chart.key.background', 'white');
+            pie.Set('chart.key.position.x', pie.Get('chart.gutter.left') + 10);
+            pie.Set('chart.shadow', true);
+            pie.Set('chart.shadow.offsetx', 0);
+            pie.Set('chart.shadow.offsety', 0);
+            pie.Set('chart.shadow.blur', 25);
+            
+            pie.Set('chart.background.grid.autofit', true);
+            pie.Set('chart.background.grid.autofit.numvlines', 11);
+        
+ /**
+            * Use the Trace animation to show the chart
+            */
+            if (RGraph.isOld()) {
+                pie.Draw();
+            } else {
+                //pie.Set('chart.tooltips.effect', 'snap');
+                pie.Set('chart.tooltips', <?php echo Zend_Json::encode($this->total_chamados); ?>);
+                RGraph.Effects.Line.jQuery.Trace(pie);
+            }
+        
+        
+        
+        // Call the .Draw() chart to draw the Pie chart.
+        pie.Draw();
+    }
+</script>
+
+
+<?php
+echo $this->form;
+
+?>
+
+
+<!-- <input type="text" value="" id="DATA_INICIAL" name="DATA_INICIAL" >
+<input type="text" value="" id="DATA_FINAL" name="DATA_FINAL" >-->
+ <canvas id="myPie" width="700" height="250"></canvas>
+
+ <?php echo $this->total_chamados ?>

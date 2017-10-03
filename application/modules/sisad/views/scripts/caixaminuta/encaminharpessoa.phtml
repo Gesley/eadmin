@@ -1,0 +1,88 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MultiFile.js'));
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+
+<script type="text/javascript">
+    
+    $(function() {
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var encaminharpessoa = $('form[name=encaminharpessoa]');
+            if(acao == 'Encaminhar'){
+                encaminharpessoa.attr('action','<?php echo $this->baseUrl(); ?>/sisad/formulariominuta/encaminharpessoa');
+               }
+         });                     
+//                $('#MODE_CD_MATR_RECEBEDOR').show();
+//                $('#MODE_CD_MATR_RECEBEDOR-label').show();
+//                $('#MODE_CD_MATR_RECEBEDOR').removeAttr('disabled');             
+
+        $(function(){ 
+            $('#ANEXOS').MultiFile({
+                STRING: {
+                    file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+                    remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+                }
+            });
+         });
+     });    
+</script>
+
+<form method="POST" action="encaminharpessoa" enctype="multipart/form-data" >
+    <?php if (count($this->data)): ?>
+        <div class="">
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th >Tipo</th>
+                        <th >Número</th>
+                        <th >Encaminhador</th>
+                        <th >Data/Hora Encaminhamento</th>
+                    </tr>
+                </thead>
+                <tbody id="documentosList">
+                    <?php
+                    foreach ($this->data as $data):
+                        ?>
+                        <tr>
+                            <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+<!--                            <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                            <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                            <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                            <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                        </tr>
+                        <?php ?>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    <?php else: ?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+        <input type="hidden" name="acao" value="EncaminharPessoaForm" />
+    <?php
+    echo $this->formInterno->getElement('MODE_CD_SECAO_UNID_DESTINO');
+    echo $this->formInterno->getElement('MOFA_DS_COMPLEMENTO');
+    echo $this->formInterno->getElement('MODE_CD_MATR_RECEBEDOR');
+    ?>
+    <b>Anexos</b></br>
+    <input id="ANEXOS" type="file" name="ANEXOS[]"  class="Multi" maxlength="20" />
+<!--    <input id="ANEXOS" type="file" name="ANEXOS[]"  class="Multi" accept="doc|docx|rtf|odt|pdf" maxlength="20" />-->
+    Até 20 Anexos. </br>
+    <!--Somente serão aceitos arquivos com o formato DOC, DOCX, ODT, RTF e PDF. -->
+    </br>
+    Soma dos arquivos até 50 Megas.</p>
+    <span class="msg_alerta"> </span>
+</p>
+<span class="msg_alerta"> </span>
+<input type="submit" name="salvar" value="Salvar" />
+</form>

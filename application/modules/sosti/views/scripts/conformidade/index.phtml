@@ -1,0 +1,51 @@
+
+<div>
+    <a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/conformidade/addtipo">Novo</a>
+</div>
+<?php if (count($this->data)): ?>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Ações</th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/conformidade/index/ordem/SOTC_DS_CONFORMIDADE/direcao/<?php echo $this->direcao ?> ">Conformidade<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/conformidade/index/ordem/SOTC_CD_MATRICULA_INCLUSAO/direcao/<?php echo $this->direcao ?> ">Matrícula do cadastrante<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/conformidade/index/ordem/SOTC_DH_INICIO_CONFORMIDADE/direcao/<?php echo $this->direcao ?> ">Data Inicio<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/conformidade/index/ordem/SOTC_DH_FIM_CONFORMIDADE/direcao/<?php echo $this->direcao ?> ">Data Fim<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/conformidade/index/ordem/SGRS_SG_SECAO_LOTACAO/direcao/<?php echo $this->direcao ?> ">Seção<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): ?>
+                <tr>
+                	<td  width="5%"><a title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/sosti/conformidade/editconformidade/id/<?php echo $data["SOTC_ID_NAO_CONFORMIDADE"]?>/nivel/<?php echo $data["SOTC_ID_INDICADOR"]?>/grupo/<?php echo $data["SINS_ID_GRUPO"]?>" >Editar</a></td>
+                    <td><?php echo $this->escape($data["SOTC_DS_CONFORMIDADE"]); ?></td>
+                    <td><?php echo $this->escape($data["SOTC_CD_MATRICULA_INCLUSAO"]); ?></td>
+                    <td><?php echo $this->escape($data["SOTC_DH_INICIO_CONFORMIDADE"]); ?></td>
+                    <td><?php echo $this->escape($data["SOTC_DH_FIM_CONFORMIDADE"]); ?></td>
+                    <td><?php echo $this->escape($data["SGRS_SG_SECAO_LOTACAO"]); ?></td>
+               </tr>
+            <?php endforeach; ?>
+        </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">Total: <?php echo $this->data->getTotalItemCount()     
+                                            ////-- pagination
+                                            //-- style
+                                            //-- partial
+                                            //-- data
+                                            ?>
+                   </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+    </table>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+</div>

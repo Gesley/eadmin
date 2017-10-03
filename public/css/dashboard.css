@@ -1,0 +1,206 @@
+div.caixa {
+    margin:0 0 1.5em 0;
+    display:block;
+    overflow:hidden;
+}
+
+div#content div.caixa {
+    margin-right:10px;
+}
+
+div.caixa h3 {
+    font:bold 1em Verdana, Arial, Helvetica, sans-serif;
+    margin:0;
+    padding:10px;
+    text-align:left;
+    background:transparent;
+    color:#000;
+    text-transform:none;
+    display:block;
+}
+
+div.caixa .content {
+    padding:10px;
+}
+
+/*XXXXXXXXXX AZUL XXXXXXXXXX*/
+.caixa-azul {
+    background:#DDEBF8;
+    border:1px solid #BDD9E1;
+    border-bottom:4px solid #BDD9E1;
+}
+
+.caixa-azul h3 {
+    color:#313f59;
+}
+
+/*XXXXXXXXXX BRANCO XXXXXXXXXX*/
+.caixa-branco {
+    background:#fff;
+    border:1px solid #f7f7f7;
+    border-bottom:4px solid #f7f7f7;
+}
+
+.caixa-branco h3 {
+    color:#000;
+}
+
+/*XXXXXXXXXX VERDE XXXXXXXXXX*/
+.caixa-verde {
+    background:#e7f0d1;
+    border:1px solid #cad2b7;
+    border-bottom:4px solid #cad2b7;
+}
+
+.caixa-verde h3 {
+    color:#343434;
+}
+
+/*XXXXXXXXXX CINZA XXXXXXXXXX*/
+.caixa-cinza {
+    background:#f7f7f7;
+    border:1px solid #ccc;
+    border-bottom:4px solid #ccc;
+}
+
+.caixa-cinza h3 {
+    color:#000;
+}
+
+/*XXXXXXXXXX LARANJA XXXXXXXXXX*/
+div.caixa-laranja {
+    background:#FFFDC5;
+    border:1px solid #FFE473;
+    border-bottom:4px solid #FFE473;
+}
+
+div.caixa-laranja h3 {
+    color:#000;
+}
+
+
+/*XXXXXXXXXX PORTLETS XXXXXXXXXX*/
+div.portlet {
+    /*margin:0 0  1.5em 0;*/
+    display:block;
+    overflow:hidden;
+    color:#000;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+div.portlet h3 {
+    font:bold 1em Verdana, Arial, Helvetica, sans-serif;
+    margin:0;
+    padding:10px;
+    text-align:left;
+    background:transparent;
+    color:#000;
+    text-transform:none;
+    width:100%;
+    display:block;
+}
+
+div.portlet .content {
+    padding:10px;
+}
+
+div.portlet .footer {
+    background:#f7f7f7;
+    padding:4px 8px;
+}
+
+/*XXXXXXXXXX AZUL ESCURO XXXXXXXXXX*/
+div.portlet-azulescuro {
+    background:#13191f;
+    border:1px solid #36495a;
+    border-bottom:4px solid #36495a;
+}
+
+div.portlet-azulescuro .content {
+    background:#f7f7f7;
+    color:#000;
+}
+
+div.portlet-azulescuro h3 {
+    background:#36495a;
+    color:#fff;
+    width:100%;
+}
+
+/*XXXXXXXXXX AZUL XXXXXXXXXX*/
+div.portlet-azul {
+    border:1px solid #BDD9E1;
+    border-bottom:4px solid #BDD9E1;
+}
+
+div.portlet-azul h3 {
+    color:#313f59;
+    background:#DDEBF8;
+}
+
+/*XXXXXXXXXX CINZA XXXXXXXXXX*/
+div.portlet-cinza {
+    border:1px solid #ccc;
+    border-bottom:4px solid #ccc;
+}
+
+div.portlet-cinza h3 {
+    color:#000;
+    background:#f7f7f7;
+}
+
+/*XXXXXXXXXX VERDE XXXXXXXXXX*/
+div.portlet-verde {
+    background:#fff;
+    border:1px solid #cad2b7;
+    border-bottom:4px solid #cad2b7;
+}
+
+div.portlet-verde h3 {
+    color:#343434;
+    background:#e7f0d1;
+    /* background:#cad2b7;*/
+}
+
+/*XXXXXXXXXX LARANJA XXXXXXXXXX*/
+div.portlet-laranja {
+    background:#fff;
+    border:1px solid #FFE473;
+    border-bottom:4px solid #FFE473;
+}
+
+div.portlet-laranja h3 {
+    color:#000;
+    background:#FFE473;
+}
+
+a.dgbl {
+    cursor: move;
+}
+a.remover {
+    z-index: 100;
+    position: absolute;
+    right: 5px;
+    top:5px;
+    padding: 1px;
+    /*border: 1px solid red;*/
+}
+div.linha-g {
+    /*margin-bottom: 10px;*/
+}
+div.g-tools {
+    padding: 4px 8px;
+    background: #f7f7f7;
+    background: #ffffff;
+    /*border:1px solid #e1e2e3;*/
+    margin-bottom: 10px;
+}
+div.g {
+    width: 300px;
+    border: 1px solid #f7f7f7;
+}
+
+.ativo {
+    background: #f7f7f7;
+}

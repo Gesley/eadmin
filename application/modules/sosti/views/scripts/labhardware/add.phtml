@@ -1,0 +1,115 @@
+<script type="text/javascript">
+    $(function() {
+        var LHDW_CD_MARCA;
+    
+        $("#LHDW_DS_MARCA").autocomplete({
+            source: base_url + '/sosti/labhardware/ajaxmarca',
+            minLength: 2,
+            delay: 100,
+            select: function( event, ui ) {
+                $("#LHDW_CD_MARCA").val(ui.item.id);
+                LHDW_CD_MARCA = ui.item.id;
+                var modelos = LHDW_CD_MARCA;
+                $.ajax({
+                    url: "<?php echo $this->baseUrl(); ?>/sosti/labhardware/ajaxmodelo/id/"+modelos,
+                    beforeSend:function() {
+                        $("#LHDW_CD_MODELO").removeClass('erroInputSelect');
+                        $("#LHDW_CD_MODELO").html('');
+                        $("#LHDW_CD_MODELO").addClass('carregandoInputSelect');
+                    },
+                    success: function(data) {
+                        $("#LHDW_CD_MODELO").html(data);
+                        $("#LHDW_CD_MODELO").removeClass('carregandoInputSelect');
+                    },
+                    error: function(){
+                        $("#LHDW_CD_MODELO").removeClass('x-form-field');
+                        $("#LHDW_CD_MODELO").val('Erro ao carregar.');
+                        $("#LHDW_CD_MODELO").addClass('erroInputSelect');
+                        $("#LHDW_CD_MODELO").html('<option>Erro ao carregar</option>');
+                    }
+                });      
+            },
+            change: function( event, ui ) {
+                $("#LHDW_DS_MARCA").val(ui.item.label);   
+            }
+        });
+        
+        $("select#TRF1_SECAO").change(
+        function () {
+            var secao = $(this).val().split('|')[0];
+            var lotacao = $(this).val().split('|')[1];
+            var tipolotacao = $(this).val().split('|')[2];
+            $.ajax({
+                url: base_url + '/sosti/labhardware/ajaxsubsecoes/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                dataType : 'html',
+                delay: 100,
+                beforeSend:function() {
+                    $('select#SECAO_SUBSECAO').removeAttr('disabled','disabled');
+                    $( "#combobox-input-text-SECAO_SUBSECAO" ).removeAttr('disabled','disabled');
+                    $( "#combobox-input-text-SECAO_SUBSECAO" ).attr('value','');
+                    $( "#combobox-input-button-SECAO_SUBSECAO" ).removeAttr('disabled','disabled');
+                    
+                    $( "#combobox-input-text-SECAO_SUBSECAO" ).removeClass('erroInputSelect');
+                    $('select#SECAO_SUBSECAO').html('');
+                    $( "#combobox-input-text-SECAO_SUBSECAO" ).addClass('carregandoInputSelect');
+                },
+                success: function(data) {
+                            
+                    $('select#SECAO_SUBSECAO').html(data);
+                    $( "#combobox-input-text-SECAO_SUBSECAO" ).removeClass('carregandoInputSelect');
+                    $( "#combobox-input-text-SECAO_SUBSECAO" ).focus();
+                },
+                error: function(){
+                    $( "#combobox-input-text-SECAO_SUBSECAO" ).removeClass('x-form-field');
+                    $( "#combobox-input-text-SECAO_SUBSECAO" ).val('Erro ao carregar.');
+                    $( "#combobox-input-text-SECAO_SUBSECAO" ).addClass('erroInputSelect');
+                    //$( "#combobox-input-button-SECAO_SUBSECAO" ).attr('style',aux_button_style+' z-index: 0;');
+                    $('select#SECAO_SUBSECAO').html('<option>Erro ao carregar</option>');
+                }
+            });
+        });
+                
+        $("#LHDW_CD_MATERIAL").autocomplete({
+            source: base_url + '/sosti/labhardware/ajaxcdmaterial',
+            minLength: 5,
+            delay: 100,
+            select: function( event, ui ) {
+                if(ui.item == null){
+                    $("#LHDW_DS_HARDWARE").val('');
+                    $('#LHDW_CD_MATERIAL_H').val('');
+                    $(this).val('');
+                }else{
+                    var arrayDesc = ui.item.label.split('- ');
+                    var descricao = arrayDesc[1];
+                    var cod = arrayDesc[0];
+                    $("#LHDW_DS_HARDWARE").val(descricao);
+                    $('#LHDW_CD_MATERIAL_H').val(cod);
+                }
+            },
+            change: function( event, ui ) {
+                if(ui.item == null){
+                    $("#LHDW_DS_HARDWARE").val('');
+                    $('#LHDW_CD_MATERIAL_H').val('');
+                    $(this).val('');
+                }else{
+                    var arrayDesc = ui.item.label.split('- ');
+                    var descricao = arrayDesc[1];
+                    var cod = arrayDesc[0];
+                    $("#LHDW_DS_HARDWARE").val(descricao);
+                    $('#LHDW_CD_MATERIAL_H').val(cod);
+                }
+            } 
+        });
+        $("#LHDW_CD_MATERIAL").css('text-transform','uppercase');
+        
+    });
+   
+</script>
+<?php if (isset($this->msg_error)) { ?>
+    <div id="flashMessages">
+        <div class="notice">
+            <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+        </div>
+    </div>
+<?php } ?>
+<?php echo $this->form; ?>

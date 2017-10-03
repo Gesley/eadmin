@@ -1,0 +1,20 @@
+<?php
+$despesa = $this->despesa [ 'DESP_NR_DESPESA' ];
+
+$ano = $this->despesa [ 'DESP_AA_DESPESA' ];
+$fase = $this->despesa [ 'FASE_NM_FASE_EXERCICIO' ];
+
+$anoFase = $ano;
+$anoFase .= ( trim ( $fase ) == '' ? '' : ", $fase" );
+?>
+<p>
+	<strong>Código da despesa:</strong> <?php echo $this->escape ( $despesa ); ?>
+</p>
+
+<p>
+	<strong>Ano:</strong> <?php echo $this->escape ( $anoFase ); ?>
+</p>
+
+<p>
+	<strong>Descrição adicional:</strong> <?php echo $this->escape($this->despesa[EDSB_DS_ELEMENTO_DESPESA_SUB]) . ' - ' . $this->escape($this->despesa[DESP_DS_ADICIONAL]); ?>
+</p>

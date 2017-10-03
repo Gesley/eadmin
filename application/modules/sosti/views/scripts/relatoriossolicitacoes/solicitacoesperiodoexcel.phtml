@@ -1,0 +1,31 @@
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<div style="padding-left: 20px; padding-top: 10px;">
+<table>
+    <tr><td colspan="5" style="border: 1px solid #C3C3C3;">PODER JUDICIÁRIO</td></tr>
+    <tr><td colspan="5" style="border: 1px solid #C3C3C3;">TRIBUNAL REGIONAL FEDERAL DA 1ª REGIÃO</td></tr>
+    <tr><td colspan="5" style="border: 1px solid #C3C3C3;"><?php echo $this->cabecalho['DESCRICAO_LOTACAO']; ?></td></tr>
+    <tr><td colspan="5" style="border: 1px solid #C3C3C3;"><?php echo 'Relatório de Solicitações por Período: '.$this->cabecalho["DATA_INICIAL"].' a '.$this->cabecalho["DATA_FINAL"]; ?></td></tr>
+    <tr><td colspan="5" style="border: 1px solid #C3C3C3;">Data e Hora da Emissão: <?php echo date("d/m/Y H:i:s"); ?></td></tr>
+</table>
+<br />
+    Total de Solicitações: <?php echo count($this->rows); ?>
+    
+    <?php if($this->exibicao == "C"): 
+            echo $this->partial('_partials/relatoriossosti/relatorioCompletoexcel.phtml', array(
+                                        'data' => $this->rows )); 
+         endif; ?>
+       
+    <?php if($this->exibicao == "S"):
+            echo $this->partial('_partials/relatoriossosti/relatorioSimplificadopdf.phtml', array(
+                                        'data' => $this->rows )); 
+         endif; ?>
+    <br/>   
+    <?php echo $this->partial('_partials/relatoriossosti/mostraSomatorioSostiPorSituacaopdf.phtml', array(
+                              'somatorioSituacao' => $this->somatorioSituacao )); ?>
+   
+    <br/>
+    
+    <?php echo $this->partial('_partials/relatoriossosti/mostraSomatorioSostiPorMespdf.phtml', array(
+                              'somatorioMensal' => $this->somatorioMensal )); ?>
+   
+</div>

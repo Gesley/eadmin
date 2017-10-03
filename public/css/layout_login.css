@@ -1,0 +1,25 @@
+#geralLogin { width:350px; opacity:0.80;-moz-opacity: 0.80;
+              filter: alpha(opacity=80); margin:0 auto;	}
+
+#geralLogin form label { display:block;}
+
+#geralLogin form input { display:block;}
+
+#conteudoLogin { margin:0px; padding-left: 126px; padding-top:130px; }
+
+#conteudo { margin:15px 0 0 0; background:url("../img/MarcaDaguaLogin.png") no-repeat center; }
+
+html { background:#fff;}
+
+#rodape {/*position:fixed;*/ bottom:0; right:0;}
+
+input[type="text"]{
+    width: 100px;
+}
+input[type="password"]{
+    width: 100px;
+}
+
+html {
+   background: #0F1D29;
+}

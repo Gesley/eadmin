@@ -1,0 +1,176 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+?>
+<script type="text/javascript" src="<?Php echo $this->baseUrl('/js/tinymce/jscripts/tiny_mce/tiny_mce.js')?>"></script>
+<script type="text/javascript">
+	$(function() {
+            $("#DOCM_NR_PROCESSO").hide();
+            $("#DOCM_NR_PROCESSO-label").hide();
+
+            $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+                source: "ajaxunidade",
+                minLength: 3,
+                delay: 100,
+                select: function( event, ui ) {
+                            $("#DOCM_CD_LOTACAO_REDATORA").val(ui.item.label);
+			}
+            });
+            $("#DOCM_CD_LOTACAO_REDATORA").autocomplete({
+                source: "ajaxunidade",
+                minLength: 3,
+                delay: 100
+            });
+
+             $("#DOCM_CD_DESTINO").autocomplete({
+                source: "ajaxunidade",
+                minLength: 3,
+                delay: 100
+            });
+            
+            $("#DOCM_CD_MATRICULA_CADASTRO").autocomplete({
+                source: base_url+"/sisad/formulariooficio/ajaxnomematriculasolicitante",
+                minLength: 3,
+                delay: 300
+            });
+
+            $("#DOCM_FLAG_NR_PROCESSO-S").click(
+                    function(){
+                        if (this.value == 'S'){
+                            $("#DOCM_NR_PROCESSO").show();
+                            $("#DOCM_NR_PROCESSO-label").show();
+                        }
+             });
+
+             $("#DOCM_FLAG_NR_PROCESSO-N").click(
+                    function(){
+                        if (this.value == 'N'){
+                            $("#DOCM_NR_PROCESSO").hide();
+                            $("#DOCM_NR_PROCESSO-label").hide();
+                        }
+             });
+	});
+
+	$(function() {
+                $( "#PréVisualizar").click(
+                    function(){
+                        $( "#Formulariooficio").attr('action','visualizar');
+                        $( "#Formulariooficio").submit();
+                    }
+                );
+
+                $( "#Salvar").click(
+                    function(){
+                        $( "#Formulariooficio").attr('action','save');
+                        $( "#Formulariooficio").submit();
+                    }
+                );
+
+
+	});     
+        $(function() {
+        /**
+         * Para transformar o select em um combo de autocomplete via somente java-script
+         **/
+        $( "#DOCM_ID_PCTT" ).combobox();
+        $( "#combobox-input-text-DOCM_ID_PCTT" ).attr('style','width: 700px;');
+        $( "#combobox-input-button-DOCM_ID_PCTT" ).attr('style','display: none;');
+
+        /**
+         * Para apresentar a Lista completa de ASSUNTOS
+         */
+        var botao_detalhe_pctt = $("<input type='button' name='LST_CPT_PCTT' value='Lista completa de Assuntos' />");
+        botao_detalhe_pctt.css('position','relative');
+        botao_detalhe_pctt.css('display','inline');
+        botao_detalhe_pctt.css('float','right');
+        botao_detalhe_pctt.css('top','-58px');
+        botao_detalhe_pctt.css('left','-70px');
+        botao_detalhe_pctt.button();
+        $( "#DOCM_ID_PCTT-element").append(botao_detalhe_pctt);
+        botao_detalhe_pctt.click(
+            function(){
+                if($('#detalhe_pctt').attr('id') == undefined){
+                    var detalhe_pctt = $("<div id='detalhe_pctt'></div>");
+                    var select = $( "#DOCM_ID_PCTT" );
+                    select.css('display','block');
+                    select.css('width','680px');
+                    select.css('height','480px');
+                    select.attr('size','20');
+                    detalhe_pctt.append(select);
+                    $('body').append(detalhe_pctt);
+                    detalhe_pctt.dialog({
+                                title: 'Lista completa de Assuntos',
+                                modal: true,
+                                width: 700,
+                                height: 600,
+                                buttons: {
+                                        OK: function() {
+                                          $("#DOCM_ID_PCTT").css('display','none');
+                                          selected = $("#DOCM_ID_PCTT").children( ":selected" );
+                                          $( "#combobox-input-text-DOCM_ID_PCTT" ).val(selected.text());
+                                          $( "#DOCM_ID_PCTT-element" ).append(select);
+                                          $(this).dialog('close');  
+                                          $( "#combobox-input-text-DOCM_ID_PCTT" ).focus();
+                                        }
+                                }
+                                });
+                    detalhe_pctt.dialog('open');
+                }else{
+                    $("#DOCM_ID_PCTT" ).css('display','block');
+                    $('#detalhe_pctt').append($("#DOCM_ID_PCTT" ));
+                    $('#detalhe_pctt').dialog('open');
+                }
+            }
+        );
+	});
+        
+        tinyMCE.init({
+		// General options
+                mode : "exact",
+                elements : "textArea1",
+                theme : "advanced",
+                theme_advanced_toolbar_location : "top",
+                theme_advanced_statusbar_location : "bottom",
+                theme_advanced_resizing : true,
+		plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave",
+		//plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave",
+
+		// Theme options
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+		//theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+		//theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+		//theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak,restoredraft",
+		theme_advanced_toolbar_align : "left",
+
+		// Example content CSS (should be your site CSS)
+		content_css : "css/content.css",
+
+		// Drop lists for link/image/media/template dialogs
+		//template_external_list_url : "lists/template_list.js",
+		//external_link_list_url : "lists/link_list.js",
+		//external_image_list_url : "lists/image_list.js",
+		//media_external_list_url : "lists/media_list.js",
+
+		// Style formats
+		style_formats : [
+			{title : 'Bold text', inline : 'b'},
+			{title : 'Red text', inline : 'span', styles : {color : '#ff0000'}},
+			{title : 'Red header', block : 'h1', styles : {color : '#ff0000'}},
+			{title : 'Example 1', inline : 'span', classes : 'example1'},
+			{title : 'Example 2', inline : 'span', classes : 'example2'},
+			{title : 'Table styles'},
+			{title : 'Table row 1', selector : 'tr', classes : 'tablerow1'}
+		],
+
+		// Replace values for the template plugin
+		template_replace_values : {
+			username : "Some User",
+			staffid : "991234"
+		}
+                
+                
+	});
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+<?php echo $this->partial('_partials/informacao.phtml', array('msgInformacao' => $this->msgInformacao)); ?>
+<?php echo $this->form;?>

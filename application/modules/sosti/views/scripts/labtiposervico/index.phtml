@@ -1,0 +1,42 @@
+
+<div id="container_pagination">
+    <div style="margin-bottom: 5px;">
+        <a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/labtiposervico/add">Novo</a>
+    </div>
+    <?php if (count($this->data)): ?>
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th style="width: 70px;"><a  href="<?php echo $this->baseUrl(); ?>/sosti/labtiposervico/index/ordem/TPSE_ID_TP_SERVICO/direcao/<?php echo $this->direcao ?> ">Editar<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th style="width: 40px;"><a  href="<?php echo $this->baseUrl(); ?>/sosti/labtiposervico/index/ordem/TPSE_ID_TP_SERVICO/direcao/<?php echo $this->direcao ?> ">Código<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labtiposervico/index/ordem/TPSE_DS_TP_SERVICO/direcao/<?php echo $this->direcao ?> ">Descrição<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labtiposervico/index/ordem/TPSE_IC_ATIVO/direcao/<?php echo $this->direcao ?> ">Ativo<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->data as $data): ?>
+                    <tr>
+                        <td class="painel"><a style="margin-top: 6px;" title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/sosti/labtiposervico/edit/id/<?php echo $this->escape($data["TPSE_ID_TP_SERVICO"]); ?>" >Editar</a></td>
+                        <td><?php echo $this->escape($data["TPSE_ID_TP_SERVICO"]); ?></td>
+                        <td><?php echo $this->escape($data["TPSE_DS_TP_SERVICO"]); ?></td>
+                        <td><?php echo $this->escape($data["TPSE_IC_ATIVO"]); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">
+                        Total: <?php echo $this->data->getTotalItemCount() ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    <?php else: ?>
+        <p>Não existem registros.</p>
+    <?php endif; ?>
+</div>

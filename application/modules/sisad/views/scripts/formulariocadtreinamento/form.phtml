@@ -1,0 +1,21 @@
+<script type="text/javascript">
+	$(function() {
+            $("#CTRE_DESC_CURSO").autocomplete({
+                source: base_url+"/sisad/formulariocadtreinamento/ajaxdesccurso",
+                minLength: 3,
+                delay: 100,
+                select: function(){
+                      $.ajax({
+                      url: base_url+"/sisad/formulariocadtreinamento/ajaxcargahoraria/term/"+this.value,
+                      success: function(data) {
+                            $.each(data, function(key, val) {
+                                $('#CTRE_CARGA_HORARIA').val(val.ATCR_CARGA_HORARIA);
+                            });
+                      }
+                    }); 
+                }
+            });
+	});
+</script>
+
+<?php echo $this->form; ?>

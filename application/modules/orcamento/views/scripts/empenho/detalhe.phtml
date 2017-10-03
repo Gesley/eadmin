@@ -1,0 +1,20 @@
+<?php
+
+echo	$this->partial('_partials/empenho_detalhe.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo,
+				'dados'		=> $this->dados));
+echo '<br />';
+
+echo $this->partial ( '_partials/execucao.phtml', array ( 'execucao' => $this->execucao ) );
+
+echo '<br />';
+
+echo	'<br />';
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'exercicio',
+				'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+				'textoBotao'		=> 'Voltar para listagem',
+				'textoAlternativo'	=> 'Retornar à tela de Pesquisar Exercício Orçamentário'));
+?>

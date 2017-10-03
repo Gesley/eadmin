@@ -1,0 +1,16 @@
+<?php
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo	$this->formulario;
+?>
+
+<script>
+    
+    $( document ).ready(function() {
+        $('#MACRO_ID_MACRODESAFIO-label').hide();
+        $('#MACRO_ID_MACRODESAFIO-element').hide();
+    });
+
+</script>

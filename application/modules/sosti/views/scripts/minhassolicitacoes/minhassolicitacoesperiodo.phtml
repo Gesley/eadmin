@@ -1,0 +1,553 @@
+<?php $this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript'); ?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<script>
+$(function() {
+    $('#DATA_INICIAL').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: 'hh:mm:ss',
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK',
+       onClose: function(dateText, inst) {
+            var endDateTextBox = $('#DATA_FINAL');
+            if (endDateTextBox.val() != '') {
+                var testStartDate = new Date(dateText);
+                var testEndDate = new Date(endDateTextBox.val());
+                if (testStartDate > testEndDate)
+                    endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+                }
+                else {
+                    endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+                }
+        },
+        onSelect: function (selectedDateTime){
+            var start = $(this).datetimepicker('getDate');
+            //$('#DATA_FINAL').datetimepicker('option', 'minDate', new Date(start.getTime()));
+        }
+    });
+    $('#DATA_FINAL').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: 'hh:mm:ss',
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK'
+        
+    });
+    $('#DATA_INICIAL_CADASTRO').datetimepicker({
+    dateFormat: 'dd/mm/yy',
+    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                            'Outubro','Novembro','Dezembro'],
+    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+    nextText: 'Próximo',
+    prevText: 'Anterior',
+    changeMonth: true,
+    numberOfMonths: 1,
+    changeMonth: true,
+    changeYear: true,
+    changeMonth: true,
+    showSecond: true,
+    timeFormat: 'hh:mm:ss',
+    timeOnlyTitle: 'Escolha o intervalo de tempo',
+    timeText: 'Tempo',
+    hourText: 'Hora',
+    minuteText: 'Minutos',
+    secondText: 'Segundos',
+    currentText: 'Agora',
+    closeText: 'OK',
+    onClose: function(dateText, inst) {
+        var endDateTextBox = $('#DATA_FINAL_CADASTRO');
+        if (endDateTextBox.val() != '') {
+            var testStartDate = new Date(dateText);
+            var testEndDate = new Date(endDateTextBox.val());
+            if (testStartDate > testEndDate)
+                endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+            }
+            else {
+                endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+            }
+    },
+    onSelect: function (selectedDateTime){
+        var start = $(this).datetimepicker('getDate');
+        //$('#DATA_FINAL').datetimepicker('option', 'minDate', new Date(start.getTime()));
+    }
+    });
+    $('#DATA_FINAL_CADASTRO').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: 'hh:mm:ss',
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK'
+        
+    });
+     $('#DATA_INICIAL_ENCAMINHAMENTO').datetimepicker({
+    dateFormat: 'dd/mm/yy',
+    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                            'Outubro','Novembro','Dezembro'],
+    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+    nextText: 'Próximo',
+    prevText: 'Anterior',
+    changeMonth: true,
+    numberOfMonths: 1,
+    changeMonth: true,
+    changeYear: true,
+    changeMonth: true,
+    showSecond: true,
+    timeFormat: 'hh:mm:ss',
+    timeOnlyTitle: 'Escolha o intervalo de tempo',
+    timeText: 'Tempo',
+    hourText: 'Hora',
+    minuteText: 'Minutos',
+    secondText: 'Segundos',
+    currentText: 'Agora',
+    closeText: 'OK',
+    onClose: function(dateText, inst) {
+        var endDateTextBox = $('#DATA_FINAL_ENCAMINHAMENTO');
+        if (endDateTextBox.val() != '') {
+            var testStartDate = new Date(dateText);
+            var testEndDate = new Date(endDateTextBox.val());
+            if (testStartDate > testEndDate)
+                endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+            }
+            else {
+                endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+            }
+    },
+    onSelect: function (selectedDateTime){
+        var start = $(this).datetimepicker('getDate');
+        //$('#DATA_FINAL').datetimepicker('option', 'minDate', new Date(start.getTime()));
+    }
+    });
+    $('#DATA_FINAL_ENCAMINHAMENTO').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: 'hh:mm:ss',
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK'
+        
+    });
+});
+</script>
+<script type="text/javascript">
+	$(function() {
+
+            $("#DOCM_CD_MATRICULA_CADASTRO").autocomplete({
+                source: base_url+"/sosti/solicitacao/ajaxnomesolicitante",
+                minLength: 3,
+                delay: 300
+            });
+            $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+                source: base_url+"/sosti/solicitacao/ajaxunidade",
+                minLength: 3,
+                delay: 500 
+            });
+            $("#pesquisar")
+                .click(function() {
+                    $("#pesq_div").show();
+            });
+            $("#botao_ajuda_recolhe")
+                .click(function(){
+                    $("#pesq_div").hide();
+                    $("#pesquisar").show();
+            });
+	});
+</script>
+<script type="text/javascript">
+$(function() {
+            $('#SGRS_ID_GRUPO').change(
+                function(){
+                    $("#SNAT_CD_NIVEL").removeAttr('disabled');
+                    $.ajax({
+                        url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxniveis',
+                        dataType: 'html',
+                        type: 'POST',
+                        data: this.value,
+                        contentType: 'application/json',
+                        processData: false,
+                      beforeSend:function() {
+                          $("#SNAT_CD_NIVEL").removeClass('erroInputSelect');
+                          $("#SNAT_CD_NIVEL").html('');
+                          $("#SNAT_CD_NIVEL").addClass('carregandoInputSelect');
+                      },
+                      success: function(data) {
+                          $("#SNAT_CD_NIVEL").html(data);
+                          $("#SNAT_CD_NIVEL").removeClass('carregandoInputSelect');
+                          $("#SNAT_CD_NIVEL").focus();
+                      },
+                      error: function(){
+                          $("#SNAT_CD_NIVEL").removeClass('x-form-field');
+                          $("#SNAT_CD_NIVEL").val('Erro ao carregar.');
+                          $("#SNAT_CD_NIVEL").addClass('erroInputSelect');
+                          $("#SNAT_CD_NIVEL").html('<option>Erro ao carregar</option>');
+                      }
+                    });  
+                }
+            );
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            
+            
+            $('#SSER_ID_SERVICO').change(
+                function(){
+                    var unidade = $(this).val().split('|')[1];
+                    if(unidade == 'S'){
+                        $("#SSOL_NR_TOMBO-label").show();
+                        $("#SSOL_NR_TOMBO-element").show();
+                        $("#DE_MAT-label").show();
+                        $("#DE_MAT-element").show();
+                    }else{
+                        $("#SSOL_NR_TOMBO-label").hide();
+                        $("#SSOL_NR_TOMBO-element").hide();
+                        $("#DE_MAT-label").hide();
+                        $("#DE_MAT-element").hide();
+                    }
+                }
+            );
+            $('#SSOL_NR_TOMBO').focusout(
+                function(){
+                    $.ajax({
+                      url: "ajaxdesctombo/id/"+this.value,
+                      beforeSend:function() {
+                          $("#DE_MAT").removeClass('erroInputTextArea');
+                          $("#DE_MAT").val('');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").addClass('carregandoTextArea');
+                      },
+                      success: function(data) {
+                          $("#DE_MAT").val(data);
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").addClass('x-form-field');
+                          $("#DE_MAT").focus();
+                      },
+                      error: function(){
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").val('Erro ao carregar.');
+                          $("#DE_MAT").addClass('erroInputTextArea');
+                      }
+                    });  
+                }
+            );
+            $(".historico").hide('');
+            <?php if($this->primeira != true): ?>
+            $('#DATA_INICIAL').val('<?php echo $this->sysdateFirstDay; ?>');
+            $('#DATA_FINAL').val('<?php echo $this->sysdate; ?> 23:59:59');
+            <?php endif;?>
+	});
+
+var GLOBAL_indice_abas =  0;
+var xhr_abrir_documento; 
+      
+var grid_tbody_tr;
+$(function(){
+
+    grid_tbody_tr = $("table.grid > tbody > tr");
+    grid_tbody_tr.click(
+        function(){
+            grid_tbody_tr.removeClass('hover_nav');
+                
+            var this_tr = $(this);
+            var is_checked_tr = $(this).attr('marcado');
+                
+            var input_check_box = $(this).find('input[type=checkbox]');
+            var is_checked_input = input_check_box.attr('checked');
+                
+            if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                input_check_box.attr('checked','checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+            }else{
+                input_check_box.removeAttr('checked');
+                this_tr.removeAttr('marcado');
+                this_tr.removeClass('hover');
+            }
+            input_check_box.focus();
+        }
+        );
+    grid_tbody_tr.dblclick(
+        function(){
+            var this_tr = $(this);
+            var input_check_box = $(this).find('input');
+                
+            grid_tbody_tr.each(
+                function(){
+                    var this_tr = $(this);
+                    
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                );
+                
+            var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            this_tr.attr('marcado','marcado');
+            this_tr.addClass('hover');
+                
+            if (xhr_abrir_documento) {
+                xhr_abrir_documento.abort();
+            }
+                
+            url = base_url + '/sosti/detalhesolicitacao/detalhesol';
+            xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    if(! div_dialog_by_id.dialog( "isOpen" )){
+                        div_dialog_by_id.dialog("open");
+                    }
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+            });
+        }
+        );
+    $("input[type=checkbox][name=input_check_all_grid]").click(
+        function(){
+            if($(this).attr('checked')){
+                $(".nav_check_boxes").attr('checked','checked');
+                $("tr[name=rowList]").addClass('hover');
+            }else{
+                $(".nav_check_boxes").removeAttr('checked');
+                $("tr[name=rowList]").removeClass('hover');
+            }
+        }
+        );
+    var form_valido = false;
+    $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var formhelpdesk = $('form[name=helpdesk]');
+            if(acao == 'Excel'){
+                formhelpdesk.attr('action',base_url + '/sosti/detalhesolicitacao/detalhesolexportacao/param/detalhexls');
+            }else if(acao == 'PDF'){
+                formhelpdesk.attr('action',base_url + '/sosti/detalhesolicitacao/detalhesolexportacao/param/detalhepdf');
+            }
+        }
+        );
+        
+    $("#Filtrar").click( 
+        function(){
+            form_valido = true;
+        }
+        );
+        
+    $('form[name=helpdesk]').submit(
+        function(){          
+                
+            if(form_valido){
+                return true;
+            }
+               
+            var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+            if (solictacaoSelecionada == undefined){ 
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                $('#flashMessages').html(mensagem);
+                return false;
+            }else{
+                return true;
+            }
+                
+        }
+        );
+    $("#dialog-documentos_detalhe").dialog({
+        title    : 'Detalhe',
+        autoOpen : false,
+        modal    : false,
+        show: 'fold',
+        hide: 'fold',
+        resizable: true,
+        width: 800,
+        position: [580,140,0,0],
+        buttons : {
+            Ok: function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+});
+ </script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<fieldset>
+    <legend>Filtro da Caixa</legend>
+    <h3><?= $this->nomeCaixa ?></h3>
+    <div class="painel">
+        <div class="painel" >
+            <input type="button" title="Último Filtro" name="acao" value="Filtro" id="pesquisar">
+<!--            <a title="Novo Filtro" name="acao" value="Filtrar" id="ultimo_filtro" href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/minhassolicitacoesperiodo/nova/1" >Limpar Filtro/Retirar Filtro</a>
+            &emsp;&emsp;<span style="color: #2E4557;"><strong><?php if( $this->ultima_pesq == true) echo "Filtro Ativo"; else echo "Filtro Inativo"; ?></strong></span>-->
+        </div> 
+
+
+    </div>
+    <div id="pesq_div"  style="display: none;" >
+        <?php echo $this->form; ?>
+        <span id="botao_ajuda_recolhe" ></span>
+    </div>
+</fieldset>
+<form name="helpdesk" action="" method="post" >
+    <?php if (count($this->data)): ?>
+        <div class="painel">
+            <input type="submit" title="Gerar PDF" name="acao" value="PDF"/>
+            <input type="submit" title="Gerar Excel" name="acao" value="Excel"/>
+        </div>
+    <?php endif; ?>
+    <?php if (count($this->data)): ?>
+    <div id="container_pagination">
+        <table class="grid">
+            <thead>
+                  <tr>
+                    <th rowspan="2">
+                        <input type="checkbox" name="input_check_all_grid" id="check_all" /> 
+                    </th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/minhassolicitacoesperiodo/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">N. da solicitação<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/minhassolicitacoesperiodo/ordem/SSER_DS_SERVICO/direcao/<?php echo $this->direcao ?> ">Serviço atual<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/minhassolicitacoesperiodo/ordem/DOCM_DH_CADASTRO/direcao/<?php echo $this->direcao ?> ">Data início<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/minhassolicitacoesperiodo/ordem/MOFA_DH_FASE/direcao/<?php echo $this->direcao ?> ">Data da baixa<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                    <th><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/minhassolicitacoesperiodo/ordem/MOFA_ID_FASE/direcao/<?php echo $this->direcao ?> ">Avaliação<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                 </tr>
+            </thead>
+            <tbody>
+                <?php $descricaoSatisfacao = new Application_Model_DbTable_SosTbSsolSolicitacao(); ?>
+                <?php foreach($this->data as $data): ?>                                                                                                     
+                    <tr name="rowList" value="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" >
+                        <td><input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/></td>
+                        <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?></td>
+                        <td><?php echo $this->escape($data["SSER_DS_SERVICO"]); ?></td>
+                        <td><?php echo $this->escape($data["DH_CADASTRO"]); ?></td>
+                        <td><?php echo $this->escape($data["DH_FASE"]); ?></td>
+                        <td><?php echo $this->escape($data["STSA_DS_TIPO_SAT"]); ?></td>
+                        
+<!--                        <td><?php /*echo $this->escape((!$descricaoSatisfacao->getTipoSatisfacao($data["SSOL_ID_DOCUMENTO"]))?('NÃO AVALIADA'):
+                                                     ($descricaoSatisfacao->getTipoSatisfacao($data["SSOL_ID_DOCUMENTO"])));*/ 
+                            ?>
+                        </td>-->
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">Total: <?php echo $this->data->getTotalItemCount(); ?>
+                   </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="painel">
+            <input type="submit" title="Gerar PDF" name="acao" value="PDF"/>
+            <input type="submit" title="Gerar Excel" name="acao" value="Excel"/>
+        </div>
+    <?php else:?>
+       
+    <?php if($this->ultima_pesq): ?>
+        <p><br/><strong>Não existem registros para os parametros de filtro informados</strong></p>
+    <?php else: ?>
+        <!--<p><br/>Não existem registros</p>-->
+    <?php endif; ?>
+                    
+                    
+    <?php endif; ?>
+    </div>
+
+    <?php echo $this->partial('_partials/caixahiddeninputs.phtml',array('view'=> $this));?>
+    
+</form>
+<div id="dialog-documentos_detalhe">
+    <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+ <div id="dialog-documentos_conteudo"></div>
+</div>

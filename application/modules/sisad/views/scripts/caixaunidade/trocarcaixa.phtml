@@ -1,0 +1,41 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+
+<script>
+        $(function(){
+            $("#UNIDADE").change(
+                function(){
+                    $(".containerpainel").hide('');
+                }
+            );
+            if($("#UNIDADE").val() == "" ){
+                $("#UNIDADE").hide('')
+            }
+            
+        })
+</script>
+
+
+<div class="container_escolhe_caixa">
+    <fieldset id="fieldset_escolhe_caixa">
+        <legend>Escolher Caixa</legend>    
+        <?php echo $this->form; ?>
+
+         <div class="containerpainel">
+             
+                <div class="painel">
+                    <fieldset>
+                        <legend>Ir para</legend>
+                        <div class="painel">
+                            <a href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada">Entrada</a>
+                            <a href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/encaminhados">Encaminhados</a>
+                            <a href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/protocolar">Protocolar Documentos</a>
+                            <a href="<?php echo $this->baseUrl(); ?>/sisad/etiqueta/criar">Criar Etiqueta</a>
+                            <a href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivadosunidade">Arquivados</a>
+                        </div>
+                    </fieldset>
+                </div>
+        </div>
+
+    </fieldset>
+</div>

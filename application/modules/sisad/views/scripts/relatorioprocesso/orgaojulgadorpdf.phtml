@@ -1,0 +1,37 @@
+<style> thead th { background-color: #C3D9FF;  } </style>
+<div >
+Total de Registros: <?php echo count($this->resultado); ?>
+    
+       <div>
+            <table id="principal" style="border: 1px solid #ccc; margin-top: 10px;" >
+                <thead>
+                    <tr style="background-color: gainsboro;">
+                        <th style="font-weight: bold;"> N. Processo </td>
+                        <th style="font-weight: bold;"> Assunto </td>
+                        <th style="font-weight: bold;"> &Oacute;rg&atilde;o Julgador </td>
+                        <th style="font-weight: bold;"> Data Distribui&ccedil;&atilde;o </td>
+                        <th style="font-weight: bold;"> Modalidade Distribui&ccedil;&atilde;o </td>
+                        <th style="font-weight: bold;"> Relator </td>
+                        <th style="font-weight: bold;"> Partes </td>
+                    </tr>
+                </thead>
+            <tbody>
+            <?php  foreach($this->resultado as $data): ?>
+                    <tr style="border: 1px solid #C3C3C3;">
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['MASC_NR_DOCUMENTO']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['ASSUNTO']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['ORGAO_JULGADOR']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['DH_DISTRIBUICAO']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['MODALIDADE_DISTRIBUICAO']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['RELATOR']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['PARTE']; ?></td>
+                    </tr>
+             <?php   endforeach; ?>
+            </tbody>
+            </table>
+       </div>
+    <br/>
+</div>    
+   
+
+   

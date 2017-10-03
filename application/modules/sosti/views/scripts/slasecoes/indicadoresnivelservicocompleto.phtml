@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+      <head>
+          <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+      </head>
+    <body>
+        <div style="padding-left: 20px; padding-top: 10px;">
+            <table>
+                <tr>
+                    <?php if ($this->param == 'pdf'): ?>
+                        <th>
+                            <img width="80" height="76" src="<?php echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" />
+                        </th>
+                    <?php endif; ?>
+                    <td>PODER JUDICIÁRIO
+                        <br />
+                        TRIBUNAL REGIONAL FEDERAL DA PRIMEIRA REGIÃO
+                        <br />
+                        <?php echo $this->titulo; ?>
+                        <br />
+                        <?php echo $this->periodo; ?>
+                    </td>
+                    <td>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td style="text-align: left;">
+                        DATA E HORA DA EMISSÃO: <?php echo $this->horaAtual; ?>
+                        <br />
+                        EMITIDO POR: <?php echo $this->emissor; ?>
+                    </td>
+                </tr>
+                <?php if ($this->fuso != ""): ?>
+
+                        <td><?php echo $this->secao; ?></td>
+
+
+                        <td><?php echo $this->fuso; ?></td>
+
+                <?php endif; ?>
+
+
+                </tr>
+            </table>
+            <br />
+            <table width="100%">
+                <tr bgcolor="#CCCCCC">
+                    <th colspan="2" align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Indicadores de Nível Mínimo de Serviço</th>
+                    <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Meta Exigida</th>
+                    <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Meta Alcançada</th>
+                    <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Glosa</th>
+                </tr>
+                <tbody>
+                    <?php foreach ($this->slaIndices as $im): ?>
+                        <tr>
+                            <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["SINS_CD_INDICADOR"]; ?></td>
+                            <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["SINS_DS_INDICADOR"]; ?></td>
+                            <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["SINS_DS_SINAL_META"] . " " . $im["SINS_NR_META"]; ?></td>
+                            <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["META_ALCANCADA"]; ?></td>
+                            <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["GLOSA"]; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <tr>
+                        <td colspan="5">
+                            <br />
+                        </td>
+                    </tr>
+
+                    <!-- IIA - Índice de Inicio de Atendimento no Prazo -->
+                    <tr>
+                        <th colspan="5" style="border: 1px solid #CCCCCC; padding: 3px; text-align: center;">ÍNDICE DE INÍCIO DE ATENDIMENTO NO PRAZO</th>
+                    </tr>
+                    <?php if ($this->documentoIia != NULL): ?>
+                        <?php foreach ($this->documentoIia as $iia): ?>
+                            <?php echo App_View_Helper_DetalheSolicitacao::detalhe(1, $iia); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #CCCCCC; padding: 3px;">Não existem registros</td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <td colspan="5">
+                            <br />
+                        </td>
+                    </tr>
+
+                    <!-- ISS - Índice de soluções das solicitações no prazo -->
+                    <tr>
+                        <th colspan="5" style="border: 1px solid #CCCCCC; padding: 3px; text-align: center;">ÍNDICE DE SOLUÇÕES DAS SOLICITAÇÕES NO PRAZO</th>
+                    </tr>
+                    <?php if ($this->documentoIss != NULL): ?>
+                        <?php foreach ($this->documentoIss as $iss): ?>
+                            <?php echo App_View_Helper_DetalheSolicitacao::detalhe(1, $iss); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #CCCCCC; padding: 3px;">Não existem registros</td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <td colspan="5">
+                            <br />
+                        </td>
+                    </tr>
+
+                    <!-- ISD - Índice de chamados solucionados no mesmo dia -->
+                    <tr>
+                        <th colspan="5" style="border: 1px solid #CCCCCC; padding: 3px; text-align: center;">ÍNDICE DE CHAMADOS SOLUCIONADOS NO MESMO DIA</th>
+                    </tr>
+                    <?php if ($this->documentoIsd != NULL): ?>
+                        <?php foreach ($this->documentoIsd as $isd): ?>
+                            <?php echo App_View_Helper_DetalheSolicitacao::detalhe(1, $isd); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #CCCCCC; padding: 3px;">Não existem registros</td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <td colspan="5">
+                            <br />
+                        </td>
+                    </tr>
+
+                    <!-- ILP - Índice de Ligações Telefônicas Perdidas -->
+                    <tr>
+                        <th colspan="5" style="border: 1px solid #CCCCCC; padding: 3px; text-align: center;">ÍNDICE DE LIGAÇÕES TELEFÔNICAS PERDIDAS</th>
+                    </tr>
+                    <?php if ($this->documentoLtp != NULL): ?>
+                        <?php foreach ($this->documentoLtp as $ltp): ?>
+                            <?php echo App_View_Helper_DetalheSolicitacao::detalhe(1, $ltp); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #CCCCCC; padding: 3px;">Não existem registros</td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <td colspan="5">
+                            <br />
+                        </td>
+                    </tr>
+
+                    <!-- IAP - Índice de Ausência de Prazo -->
+                    <tr>
+                        <th colspan="5" style="border: 1px solid #CCCCCC; padding: 3px; text-align: center;">ÍNDICE DE AUSÊNCIA DE PRAZO</th>
+                    </tr>
+                    <?php if ($this->documentoIap != NULL): ?>
+                        <?php foreach ($this->documentoIap as $iap): ?>
+                            <?php echo App_View_Helper_DetalheSolicitacao::detalhe(1, $iap); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #CCCCCC; padding: 3px;">Não existem registros</td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <td colspan="5">
+                            <br />
+                        </td>
+                    </tr>
+
+                    <!-- INC - Índice de chamados com Não Conformidade  -->
+                    <tr>
+                        <th colspan="5" style="border: 1px solid #CCCCCC; padding: 3px; text-align: center;">ÍNDICE DE CHAMADOS COM NÃO CONFORMIDADE</th>
+                    </tr>
+                    <?php if ($this->documentoIss != NULL): ?>
+                        <?php foreach ($this->documentoIss as $inc): ?>
+                            <?php echo App_View_Helper_DetalheSolicitacao::detalhe(1, $inc); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #CCCCCC; padding: 3px;">Não existem registros</td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <td colspan="5">
+                            <br />
+                        </td>
+                    </tr>
+
+                    <!-- ICR - Índice de chamados reabertos  -->
+                    <tr>
+                        <th colspan="5" style="border: 1px solid #CCCCCC; padding: 3px; text-align: center;">ÍNDICE DE CHAMADOS REABERTOS</th>
+                    </tr>
+                    <?php if ($this->documentoIcr != NULL): ?>
+                        <?php foreach ($this->documentoIcr as $icr): ?>
+                            <?php echo App_View_Helper_DetalheSolicitacao::detalhe(1, $icr); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #CCCCCC; padding: 3px;">Não existem registros</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

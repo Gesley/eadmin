@@ -1,0 +1,130 @@
+<?php
+/**
+ * @category	SISAD
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Leidison Siqueira Barbosa [leidison_14@hotmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que exibe os dados do documento escolhido.
+ * 
+ * @param		array		dados_documento
+ * @param		array		dados_processo
+ * @param		array		apenso
+ * @param		array		historico_documento
+ * 
+ * @example		echo $this->partial('_partials/detalhedocumento/processos_apensados.phtml', array());
+ * 
+ */
+?>
+<!--
+MOSTRA OS DADOS DO DOCUMENTO SELECIONADO
+
+Variaveis
+$this->dados_processo
+$this->dados_documento
+$this->apenso
+$this->historico_documento
+-->
+<?
+// Começa a captura da página.
+ob_start();
+$qtdVinculos = 0;
+$contFieldSet = 0;
+$tp_juntada = Trf1_Sisad_Definicoes::ID_VINCULACAO_APENSAR;
+$rn_juntadaProcProc = new Trf1_Sisad_Negocio_JuntadaProcessoProcesso();
+foreach ($this->apenso['processo_processo'] as $processo_vinculado):
+    $contFieldSet++;
+    ?>
+    <fieldset <?= ($processo_vinculado['PMAT_CD_MATRICULA_EXCLUIDOR'] == '' && $processo_vinculado['VIPD_ID_TP_VINCULACAO'] == $tp_juntada ? 'class="processo_apenso_ativo"' : '') ?> id="fieldSet_<?= $contFieldSet ?>" style="border: 1px solid #A6C9E2; margin-right: 15px; <?= ($processo_vinculado['PMAT_CD_MATRICULA_EXCLUIDOR'] != '' ? 'background: #ff9' : $qtdVinculos++) ?>">
+        <div class="carregaAjax" style="display: none;">
+            <div style="margin: 1px 0 0 30px;" class="span-1 last">
+                <img src="<?php echo $this->baseUrl() ?>/img/ajax-loader_1.gif"/>
+            </div>
+            <div class="span-2">
+                <strong>Aguarde...</strong>
+            </div>
+            <br/>
+        </div>
+        <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+            <div style="margin-left: 10px; font-size: 12px; ">
+                <p>
+                    <?php
+                    if ($processo_vinculado['PMAT_CD_MATRICULA_EXCLUIDOR'] != '') {
+                        echo '<br/><b style="color: red">Apenso removido</b>';
+                        echo '<br/><b>Desapensado por: </b>' . $processo_vinculado['PMAT_CD_MATRICULA_EXCLUIDOR'] . ' - ' . $processo_vinculado['PNAT_NO_PESSOA_EXCLUIDOR'];
+                        echo '<br/><b>Data da desapensação: </b>' . $processo_vinculado['VPPF_DH_FASE'];
+                        echo '<br/>';
+                    }
+                    ?>
+                    <br/><b>Número:</b>
+                    <?= $processo_vinculado['MASC_NR_DOCUMENTO'] ?>
+                    <br/><b>Assunto:</b>
+                    <?= $processo_vinculado['AQVP_CD_PCTT'] . ' - ' . $processo_vinculado['AQAT_DS_ATIVIDADE'] ?>
+                    <br/><b>Objeto do processo:</b>
+                    <?= $processo_vinculado['PRDI_DS_TEXTO_AUTUACAO'] ?>
+                    <br/><b>Unidade Emissora:</b>
+                    <?= $processo_vinculado['LOTA_SIGLA_LOTACAO_EMISSORA'] ?>
+                    - <?= $processo_vinculado['LOTA_DSC_LOTACAO_EMISSORA'] ?>
+                    - <?= $processo_vinculado['LOTA_COD_LOTACAO_EMISSORA'] ?>
+                    <?php
+                    echo $processo_vinculado['FAMILIA_EMISSORA'];
+
+                    if ($processo_vinculado['PMAT_CD_MATRICULA_EXCLUIDOR'] == '' && $processo_vinculado['VIPD_ID_TP_VINCULACAO'] == $tp_juntada) {
+
+                        foreach ($this->historico_documento as $historico) {
+
+                            if ($processo_vinculado['VIPD_DH_VINCULACAO'] == $historico['MOFA_DH_FASE']) {
+                                echo '<br/><b>Status: </b>' . $processo_vinculado['STATUS_JUNTADA'];
+                                echo '<br/><b>Apensado por: </b>' . $historico['MOFA_CD_MATRICULA'] . ' - ' . $historico['MOFA_CD_MATRICULA_NOME'];
+                                echo '<br/><b>Data da apensação: </b>' . $historico['MOFA_DH_FASE'];
+                                break;
+                            }
+                        }
+                    } else {
+                        $dadosJuntada = $rn_juntadaProcProc->getJuntadaPorFase($this->dados_processo, $processo_vinculado, null, Trf1_Sisad_Definicoes::FASE_APENSAR_PROCESSO_PROCESSO);
+
+                        $dadosJuntada = $dadosJuntada[0];
+                        echo '<br/><b>Apensado por: </b>' . $dadosJuntada['PMAT_CD_MATRICULA'] . ' - ' . $dadosJuntada['PNAT_NO_PESSOA'];
+                        echo '<br/><b>Data da apensação: </b>' . $dadosJuntada['MOFA_DH_FASE'];
+                    }
+                    ?>
+                </p>
+                <a href="#" class="docs_pro proc_docs_icon_closed" value="<?= $this->escape(Zend_Json::encode($processo_vinculado)); ?>"> Detalhe </a>
+                <?php
+                if ($processo_vinculado['PMAT_CD_MATRICULA_EXCLUIDOR'] == '' && $processo_vinculado['VIPD_ID_TP_VINCULACAO'] == $tp_juntada):
+                    $dadosExcluir['ID_PROCESSO_PAI'] = $this->dados_processo['PRDI_ID_PROCESSO_DIGITAL'];
+                    $dadosExcluir['ID_PROCESSO_FILHO'] = $processo_vinculado['PRDI_ID_PROCESSO_DIGITAL'];
+                    $dadosExcluir['codigo_apenso_detalhe'] = $contFieldSet;
+                    //strtotime(), convertendo a data completa (YYYY-MM-DD HH:MM:SS) em inteiro, depois faz a comparação. 
+                    $ultimaMovi = explode(' ', $this->dados_documento['MOVI_DH_ENCAMINHAMENTO']);
+                    $data = explode('/', $ultimaMovi[0]);
+                    $ultimaMovi = $data[2] . '-' . $data[1] . '-' . $data[0] . ' ' . $ultimaMovi[1];
+                    $ultimaMovi = strtotime($ultimaMovi);
+                    $dhJuntada = explode(' ', $processo_vinculado['VIPD_DH_VINCULACAO']);
+                    $data = explode('/', $dhJuntada[0]);
+                    $dhJuntada = $data[2] . '-' . $data[1] . '-' . $data[0] . ' ' . $dhJuntada[1];
+                    $dhJuntada = strtotime($dhJuntada);
+                    if (isset($this->dados_documento['CAIXA_REQUISICAO']) && $this->dados_documento['CAIXA_REQUISICAO'] == 'entrada' && $this->dados_documento['controller'] == 'caixaunidade'):
+                        ?>
+                        <a href="#" class="removerProcApenso proc_docs_icon_closed" onclick="javascript: return false;" id="excluirdocspro_<?= $contFieldSet; ?>" title="Remover Apenso" codigo="<?= $this->escape(Zend_Json::encode($dadosExcluir)) ?>">
+                            Remover Apenso
+                        </a>
+                        <?php
+                    endif;
+                endif;
+                ?>
+            </div>
+        </div>
+    </fieldset>
+    <?php
+endforeach;
+$conteudo = ob_get_contents();
+
+// Limpa o buffer.
+ob_end_clean();
+
+echo 'Quantidade de Processos Apensados: <span id="qtd_processos_apensos">' . $qtdVinculos . '</span>';
+echo $conteudo;
+?>

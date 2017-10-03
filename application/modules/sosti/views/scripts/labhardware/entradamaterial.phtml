@@ -1,0 +1,56 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/sosti/entradaMaterial.js'));
+?>
+
+<script>
+    $(document).ready(function(){
+        /*
+         * Funcao usada para manter ultima pesquisa
+         */
+        carregaValores({
+            "flag":"<?php echo $this->dadosPopulate['flag'] ?>",
+            "modelo":"<?php echo $this->dadosPopulate['modelo'] ?>",
+            "descricao":'<?php echo $this->dadosPopulate['descricao_hardware'] ?>'
+        });
+    });
+</script>
+
+<?php if (isset($this->msg_error)) { ?>
+    <div id="flashMessages">
+        <div class="notice ">
+            <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+        </div>
+    </div>
+<?php } ?>
+
+<form name="<?php echo $this->form->getName() ?>" action="<?php echo $this->form->getAction() ?>" 
+      method="<?php echo $this->form->getMethod() ?>">
+    <!-- Filtro usado para buscas o hardware -->
+    <fieldset>
+        <legend>Filtro</legend>
+        <?php
+        echo $this->form->LHDW_DS_HARDWARE_AUX;
+        echo $this->form->TRF1_SECAO;
+        echo $this->form->SECAO_SUBSECAO;
+        echo $this->form->MTEN_CD_MARCA;
+        echo $this->form->MTEN_DS_MARCA;
+        echo $this->form->MTEN_CD_MODELO;
+        echo $this->form->MTEN_ID_HARDWARE;
+        echo $this->form->LHDW_DS_HARDWARE;
+        ?>
+        <br><br>
+    </fieldset>
+
+    <!-- Após selecionar o hardware, fazer a entrada de material -->
+    <div id="complemento-form">
+        <?php
+        echo $this->form->LHDW_DS_OBSERVACAO;
+        echo $this->form->MTEN_QT_ENTRADA_MATERIAL;
+        echo $this->form->MTEN_NR_REQUISICAO_MATERIAL;
+        echo $this->form->MTEN_DS_OBSERVACAO;
+        echo $this->form->Salvar;
+        echo $this->form->OBRIGATORIO;
+        ?>
+    </div>
+</form>

@@ -1,0 +1,42 @@
+<?php
+/**
+  $this->documento;
+ */
+?>
+<div style="height : 569px;" id="leitura_tabs-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="leitura_tabs">
+    <div id="visualizador_tabs-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">
+        <div class="navegacao_documento">
+            <button id="esquerda_pular-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="esquerda_pular" title="Volta para a visualização do documento anterior." value=""></button>
+            <button id="direita_pular-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="direita_pular" title="Avança para a visualização do documento posterior." value=""></button>
+            <button class="fecha_dialog" title="Fecha a visualização do documento." value="<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>"></button>
+            <center>
+                <h2 id="label_leitura_tabs-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>"></h2>
+            </center>
+        </div>
+        <div id="tabs_visualizador-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">
+            <ul>
+                <li><a href="#tabs_visualizador_leitura-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">Leitura</a></li>
+                <li><a href="#tabs_visualizador_metadados-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">Metadados</a></li>
+                <li><a href="#tabs_visualizador_historico-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">Histórico</a></li>
+                <li><a href="#tabs_visualizador_parecer-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">Parecer</a></li>
+                <li><a href="#tabs_visualizador_despacho-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">Despacho</a></li>
+            </ul>
+
+            <div id="tabs_visualizador_leitura-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="conteudo_visualizador">
+                <?= $this->partial('_partials/leitura/visualizador/tabs_leitura.phtml', array('documento' => $this->documento)); ?>
+            </div>
+            <div id="tabs_visualizador_metadados-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="conteudo_visualizador pode_limpar">
+                <?= $this->partial('_partials/leitura/visualizador/tabs_metadados.phtml', array()); ?>
+            </div>
+            <div id="tabs_visualizador_historico-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="conteudo_visualizador com_overflow pode_limpar">
+                <?= $this->partial('_partials/leitura/visualizador/tabs_historico.phtml', array()); ?>
+            </div>
+            <div id="tabs_visualizador_parecer-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="conteudo_visualizador com_overflow pode_limpar">
+                <?= $this->partial('_partials/leitura/tabs_parecer.phtml', array('documento' => $this->documento)); ?>
+            </div>
+            <div id="tabs_visualizador_despacho-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="conteudo_visualizador com_overflow pode_limpar">
+                <?= $this->partial('_partials/leitura/tabs_despacho.phtml', array('documento' => $this->documento)); ?>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,611 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>Após encaminhar para <b>Outro nível de atendimento</b>, as solicitações são gravadas na caixa de atendimento do 2º nível e os dados do encaminhamento são gravados no histórico.</p>
+    <p>No <b>Grupo de Atendimento </b>contém os grupos: Atendimento ao Usuário, Desenvolvimento / Sustentação, Banco de Dados / Administração de Dados / Rede, Escritório de Projetos / NOC.</p>
+    <p>A <b>Caixa Pessoal</b> permite o encaminhamento para um servidor cadastrado como Atendente da caixa, quer seja prestador ou servidor . Caso o atendente não esteja na lista, o cadastro pode ser feito por um servidor com permissão nessa caixa, no botão 'Atendentes'.</p>
+    <ul>
+        <li>Ao clicar em Encaminhar, o sistema envia as solicitações para a caixa Desenvolvimento / Sustentação, que será atendida pelo preposto da empresa que ganhar a licitação para a área de desenvolvimento.</li>
+    </ul>
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>Após encaminhar para <b>Outro nível de atendimento</b>, as solicitações são gravadas na caixa de atendimento do 1º, 3º ou 4º nível e os dados do encaminhamento são gravados no histórico.</li>
+        <li>No <b>Grupo de Atendimento</b> contém os grupos: Atendimento ao Usuário, Desenvolvimento / Sustentação, Banco de Dados / Administração de Dados / Rede, Escritório de Projetos / NOC.</li>
+        <li>A <b>Caixa Pessoal</b> permite o encaminhamento para um servidor lotado na Diatu, quer seja prestador ou servidor. Para os demais grupos, o encaminhamento é sempre pelo grupo.</li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+ <script type="text/javascript">
+        var optionsGruposTRF = null;
+	$(function() {
+            optionsGruposTRF = $('select#SGRS_ID_GRUPO').html();
+            $("select#TRF1_SECAO").change(
+                function () {
+                        var secao = $(this).val().split('|')[0];
+                        var lotacao = $(this).val().split('|')[1];
+                        var tipolotacao = $(this).val().split('|')[2];
+                        $("select#SSER_ID_SERVICO").html("");
+                    $.ajax({
+                        url: base_url + '/sosti/solicitacaousertisecoes/ajaxgruposervicosecoes/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                        dataType : 'html',
+                        beforeSend:function() {
+                        },
+                        success: function(data) {
+                            $('select#SGRS_ID_GRUPO').html(data);
+                        },
+                        error: function(){
+                        }
+                    });
+                });
+            
+            $('#SGRS_ID_GRUPO').change(
+                function(){
+                    $("#SSER_ID_SERVICO").removeAttr('disabled');
+                    $.ajax({
+                        url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos',
+                        dataType: 'html',
+                        type: 'POST',
+                        data: this.value,
+                        contentType: 'application/json',
+                        processData: false,
+                      beforeSend:function() {
+                          $("#SSER_ID_SERVICO").removeClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('');
+                          $("#SSER_ID_SERVICO").addClass('carregandoInputSelect');
+                      },
+                      success: function(data) {
+                          $("#SSER_ID_SERVICO").html(data);
+                          $("#SSER_ID_SERVICO").removeClass('carregandoInputSelect');
+                          $("#SSER_ID_SERVICO").focus();
+                      },
+                      error: function(){
+                          $("#SSER_ID_SERVICO").removeClass('x-form-field');
+                          $("#SSER_ID_SERVICO").val('Erro ao carregar.');
+                          $("#SSER_ID_SERVICO").addClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('<option>Erro ao carregar</option>');
+                      }
+                    });  
+                }
+            );
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            
+            
+            $('#SSER_ID_SERVICO').change(
+                function(){
+                    var unidade = $(this).val().split('|')[1];
+                    if(unidade == 'S'){
+                        $("#SSOL_NR_TOMBO-label").show();
+                        $("#SSOL_NR_TOMBO-element").show();
+                        $("#SSOL_NR_TOMBO").show();
+                        $('#SSOL_NR_TOMBO').removeAttr('disabled');
+                        
+                        $("#DE_MAT-label").show();
+                        $("#DE_MAT-element").show();
+                        $("#DE_MAT").show();
+                        $('#DE_MAT').removeAttr('disabled');
+                    }else{
+                        $("#SSOL_NR_TOMBO-label").hide();
+                        $("#SSOL_NR_TOMBO-element").hide();
+                        $("#SSOL_NR_TOMBO").hide();
+                        $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                        
+                        $("#DE_MAT-label").hide();
+                        $("#DE_MAT-element").hide();
+                        $("#DE_MAT").hide();
+                        $('#DE_MAT').attr('disabled', 'disabled');
+                        
+                        
+                        
+                    }
+                }
+            );
+            $('#SSOL_NR_TOMBO').focusout(
+                function(){
+                    $.ajax({
+                      url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxdesctombo/id/'+this.value,
+                      beforeSend:function() {
+                          $("#DE_MAT").removeClass('erroInputTextArea');
+                          $("#DE_MAT").val('');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").addClass('carregandoTextArea');
+                      },
+                      success: function(data) {
+                          $("#DE_MAT").val(data);
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").addClass('x-form-field');
+                          $("#DE_MAT").focus();
+                      },
+                      error: function(){
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").val('Erro ao carregar.');
+                          $("#DE_MAT").addClass('erroInputTextArea');
+                      }
+                    });  
+                }
+            );
+	});
+ </script>
+<script type="text/javascript">
+	$(function() {
+            /**
+             * Nível
+             */
+            $('#ENCAMINHAMENTO-nivel').focus();
+            $('#SNAS_ID_NIVEL').hide();
+            $('#SNAS_ID_NIVEL-label').hide();
+            $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+            
+            /**
+             *  Grupo
+             */
+            $('#SGRS_ID_GRUPO').hide();
+            $('#SGRS_ID_GRUPO-label').hide();
+            $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+            
+            $('#SSER_ID_SERVICO').hide();
+            $('#SSER_ID_SERVICO-label').hide();
+            $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+            
+            $('#SSOL_NR_TOMBO').hide();
+            $('#SSOL_NR_TOMBO-label').hide();
+            $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+
+            $('#DE_MAT').hide();
+            $('#DE_MAT-label').hide();
+            $('#DE_MAT').attr('disabled', 'disabled');
+            
+            /**
+             * Pessoa
+             */
+            $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+            $('#APSP_ID_PESSOA').hide();
+            $('#APSP_ID_PESSOA-label').hide();
+            $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+//            $('#LOTA_COD_LOTACAO').hide();
+//            $('#LOTA_COD_LOTACAO-label').hide();
+//            $('#LOTA_COD_LOTACAO').attr('disabled', 'disabled');
+            /*
+             * Secoes
+             */
+            $('#TRF1_SECAO').hide();
+            $('#TRF1_SECAO-label').hide();
+            $('#TRF1_SECAO').attr('disabled', 'disabled');
+            
+            if( $('#ENCAMINHAMENTO-trf').attr('checked') == true){
+                
+                $('#SGRS_ID_GRUPO').show();
+                $('#SGRS_ID_GRUPO-label').show();
+                $('#SGRS_ID_GRUPO').removeAttr('disabled');
+                
+                $('#SSER_ID_SERVICO').show();
+                $('#SSER_ID_SERVICO-label').show();
+                $('#SSER_ID_SERVICO').removeAttr('disabled');
+                
+                $('#SSOL_NR_TOMBO').show();
+                $('#SSOL_NR_TOMBO-label').show();
+                $('#SSOL_NR_TOMBO').removeAttr('disabled');
+                
+                $('#DE_MAT').show();
+                $('#DE_MAT-label').show();
+                $('#DE_MAT').removeAttr('disabled');
+                
+                
+            }else if ( $('#ENCAMINHAMENTO-nivel').attr('checked') == true) {
+                $('#SNAS_ID_NIVEL').show();
+                $('#SNAS_ID_NIVEL-label').show();
+                $('#SNAS_ID_NIVEL').removeAttr('disabled');
+            }else if ( $('#ENCAMINHAMENTO-unidade').attr('checked') == true) {
+                $('#MODE_CD_SECAO_UNID_DESTINO').show();
+                $('#MODE_CD_SECAO_UNID_DESTINO-label').show();
+                $('#MODE_CD_SECAO_UNID_DESTINO').removeAttr('disabled');
+            }else if ( $('#ENCAMINHAMENTO-pessoal').attr('checked') == true) {
+                $('#APSP_ID_PESSOA').show();
+                $('#APSP_ID_PESSOA-label').show();
+                $('#APSP_ID_PESSOA').removeAttr('disabled');
+//                $('#LOTA_COD_LOTACAO').show();
+//                $('#LOTA_COD_LOTACAO-label').show();
+//                $('#LOTA_COD_LOTACAO').removeAttr('disabled');
+            } else if ( $('#ENCAMINHAMENTO-secoes').attr('checked') == true) {
+                $('#TRF1_SECAO').show();
+                $('#TRF1_SECAO-label').show();
+                $('#TRF1_SECAO').removeAttr('disabled');
+            }     
+            
+            $('input[type=radio][name=ENCAMINHAMENTO]').click(
+                function(){
+                if(this.value == 'trf'){
+                    $('select#SGRS_ID_GRUPO').html(optionsGruposTRF);
+//                    $.ajax({
+//                        url: base_url + '/sosti/solicitacao/ajaxgruposervico/secao/'+'TR'+ '/lotacao/'+2+'/tipo/'+1+'/retiraCaixa1/'+1+'/retiraCaixa2/'+2,
+//                        dataType : 'html',
+//                        beforeSend:function() {
+//                        },
+//                        success: function(data) {
+//                            $('select#SGRS_ID_GRUPO').html(data);
+//                        },
+//                        error: function(){
+//                        }
+//                    });
+                    $('#TRF1_SECAO').hide();
+                    $('#TRF1_SECAO-label').hide();
+                    $('#TRF1_SECAO').attr('disabled', 'disabled');
+                    
+                    $('#SNAS_ID_NIVEL').hide();
+                    $('#SNAS_ID_NIVEL-label').hide();
+                    $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+                    $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                    $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                    $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+                    
+                    $('#SGRS_ID_GRUPO').show();
+                    $('#SGRS_ID_GRUPO-label').show();
+                    $('#SGRS_ID_GRUPO').removeAttr('disabled');
+                    
+                    $('#SSER_ID_SERVICO').show();
+                    $('#SSER_ID_SERVICO-label').show();
+                    $('#SSER_ID_SERVICO').removeAttr('disabled');
+                    $('#SSER_ID_SERVICO').html("");
+                    
+                    $('#APSP_ID_PESSOA').hide();
+                    $('#APSP_ID_PESSOA-label').hide();
+                    $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+//                    $('#LOTA_COD_LOTACAO').hide();
+//                    $('#LOTA_COD_LOTACAO-label').hide();
+//                    $('#LOTA_COD_LOTACAO').attr('disabled', 'disabled');
+                }else if (this.value == 'nivel'){
+                    $('#SNAS_ID_NIVEL').show();
+                    $('#SNAS_ID_NIVEL-label').show();
+                    $('#SNAS_ID_NIVEL').removeAttr('disabled');
+                    $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                    $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                    
+                    $('#TRF1_SECAO').hide();
+                    $('#TRF1_SECAO-label').hide();
+                    $('#TRF1_SECAO').attr('disabled', 'disabled');
+                    
+                    $('#SGRS_ID_GRUPO').hide();
+                    $('#SGRS_ID_GRUPO-label').hide();
+                    $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+                    
+                    $('#SSER_ID_SERVICO').hide();
+                    $('#SSER_ID_SERVICO-label').hide();
+                    $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+                    
+                    $('#SSOL_NR_TOMBO').hide();
+                    $('#SSOL_NR_TOMBO-label').hide();
+                    $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                    
+                    $('#DE_MAT').hide();
+                    $('#DE_MAT-label').hide();
+                    $('#DE_MAT').attr('disabled', 'disabled');
+                    
+                    $('#APSP_ID_PESSOA').hide();
+                    $('#APSP_ID_PESSOA-label').hide();
+                    $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+//                    $('#LOTA_COD_LOTACAO').hide();
+//                    $('#LOTA_COD_LOTACAO-label').hide();
+//                    $('#LOTA_COD_LOTACAO').attr('disabled', 'disabled');
+                }else if (this.value == 'unidade'){
+                    $('#SNAS_ID_NIVEL').hide();
+                    $('#SNAS_ID_NIVEL-label').hide();
+                    $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+                    $('#MODE_CD_SECAO_UNID_DESTINO').show();
+                    $('#MODE_CD_SECAO_UNID_DESTINO-label').show();
+                    $('#MODE_CD_SECAO_UNID_DESTINO').removeAttr('disabled');
+                    
+                    $('#TRF1_SECAO').hide();
+                    $('#TRF1_SECAO-label').hide();
+                    $('#TRF1_SECAO').attr('disabled', 'disabled');
+                    
+                    $('#SGRS_ID_GRUPO').hide();
+                    $('#SGRS_ID_GRUPO-label').hide();
+                    $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+                    
+                    $('#SSER_ID_SERVICO').hide();
+                    $('#SSER_ID_SERVICO-label').hide();
+                    $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+                    
+                    $('#SSOL_NR_TOMBO').hide();
+                    $('#SSOL_NR_TOMBO-label').hide();
+                    $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                    
+                    $('#DE_MAT').hide();
+                    $('#DE_MAT-label').hide();
+                    $('#DE_MAT').attr('disabled', 'disabled');
+                    
+                    
+                    $('#APSP_ID_PESSOA').hide();
+                    $('#APSP_ID_PESSOA-label').hide();
+                    $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+//                    $('#LOTA_COD_LOTACAO').hide();
+//                    $('#LOTA_COD_LOTACAO-label').hide();
+//                    $('#LOTA_COD_LOTACAO').attr('disabled', 'disabled');
+              }else if (this.value == 'pessoal'){
+                    $('#SNAS_ID_NIVEL').hide();
+                    $('#SNAS_ID_NIVEL-label').hide();
+                    $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+                    $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                    $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                    $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+                    
+                    $('#TRF1_SECAO').hide();
+                    $('#TRF1_SECAO-label').hide();
+                    $('#TRF1_SECAO').attr('disabled', 'disabled');
+                    
+                    $('#SGRS_ID_GRUPO').hide();
+                    $('#SGRS_ID_GRUPO-label').hide();
+                    $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+                    
+                    $('#SSER_ID_SERVICO').hide();
+                    $('#SSER_ID_SERVICO-label').hide();
+                    $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+                    
+                    $('#SSOL_NR_TOMBO').hide();
+                    $('#SSOL_NR_TOMBO-label').hide();
+                    $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                    
+                    $('#DE_MAT').hide();
+                    $('#DE_MAT-label').hide();
+                    $('#DE_MAT').attr('disabled', 'disabled');
+                    
+                    $('#APSP_ID_PESSOA').show();
+                    $('#APSP_ID_PESSOA-label').show();
+                    $('#APSP_ID_PESSOA').removeAttr('disabled');
+//                    $('#LOTA_COD_LOTACAO').show();
+//                    $('#LOTA_COD_LOTACAO-label').show();
+//                    $('#LOTA_COD_LOTACAO').removeAttr('disabled');
+              }else if (this.value == 'secoes'){
+                    $('#TRF1_SECAO').show();
+                    $('#TRF1_SECAO-label').show();
+                    $('#TRF1_SECAO').removeAttr('disabled');
+                   
+                    $('#SGRS_ID_GRUPO').show();
+                    $('#SGRS_ID_GRUPO-label').show();
+                    $('#SGRS_ID_GRUPO').removeAttr('disabled');
+                    $('#SGRS_ID_GRUPO').html("");
+                    
+                    $('#SSER_ID_SERVICO').show();
+                    $('#SSER_ID_SERVICO-label').show();
+                    $('#SSER_ID_SERVICO').removeAttr('disabled');
+                    $('#SSER_ID_SERVICO').html("::SELECIONE::");
+                    
+                    $('#SNAS_ID_NIVEL').hide();
+                    $('#SNAS_ID_NIVEL-label').hide();
+                    $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+                    $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                    $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                    $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+                    
+                    $('#SSOL_NR_TOMBO').hide();
+                    $('#SSOL_NR_TOMBO-label').hide();
+                    $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                    
+                    $('#DE_MAT').hide();
+                    $('#DE_MAT-label').hide();
+                    $('#DE_MAT').attr('disabled', 'disabled');
+                    
+                    $('#APSP_ID_PESSOA').hide();
+                    $('#APSP_ID_PESSOA-label').hide();
+                    $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+//                    $('#LOTA_COD_LOTACAO').hide();
+//                    $('#LOTA_COD_LOTACAO-label').hide();
+//                    $('#LOTA_COD_LOTACAO').attr('disabled', 'disabled');
+              }
+            });
+                    
+            });
+ </script>
+<script type="text/javascript">
+//    $(function() {
+//        $("#LOTA_COD_LOTACAO").autocomplete({
+//                    source: "<?php echo $this->baseUrl(); ?>/sosti/suporteespecializado/ajaxunidade",
+//                    minLength: 3,
+//                    delay: 500 
+//         });
+//        $("#APSP_ID_PESSOA").removeAttr('disabled');
+//        
+//        $("#APSP_ID_PESSOA").focus(
+//            function(){
+//                var unidade = $("#LOTA_COD_LOTACAO").val().split(' - ')[2];
+//                $.ajax({
+//                  url: "<?php echo $this->baseUrl(); ?>/sosti/suporteespecializado/ajaxpessoa/id/"+unidade,
+//                  beforeSend:function() {
+//                      $("#APSP_ID_PESSOA").removeClass('erroInputSelect');
+//                      $("#APSP_ID_PESSOA").html('');
+//                      $("#APSP_ID_PESSOA").addClass('carregandoInputSelect');
+//                  },
+//                  success: function(data) {
+//                      $("#APSP_ID_PESSOA").html(data);
+//                      $("#APSP_ID_PESSOA").removeClass('carregandoInputSelect');
+//                  },
+//                  error: function(){
+//                      $("#APSP_ID_PESSOA").removeClass('x-form-field');
+//                      $("#APSP_ID_PESSOA").val('Erro ao carregar.');
+//                      $("#APSP_ID_PESSOA").addClass('erroInputSelect');
+//                      $("#APSP_ID_PESSOA").html('<option>Erro ao carregar</option>');
+//                  }
+//                });      
+//            }
+//        );
+//                
+//     });
+</script>
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input[type=checkbox]');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+                grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        $('input[name=acao]').click(
+            function(){
+                var acao = this.value;
+                var formhelpdesk = $('form[name=helpdesk]');
+                if(acao == 'Encaminhar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/suporteespecializado/encaminhar');
+                }else if(acao == 'Baixar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/suporteespecializado/baixarcaixa');
+                }else if(acao == 'Espera'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/suporteespecializado/esperacaixa');
+                }
+            }
+        );
+        $('form[name=helpdesk]').submit(
+           function(){          
+                var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                if (solictacaoSelecionada == undefined){ 
+                    var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                    $('#flashMessages').html(mensagem);
+                    return false;
+                }
+           }
+        );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+       });
+       $(".historico").hide('');
+    });
+</script>
+ <table class="grid">
+    <thead>
+        <tr>
+            <th><a href="<?php echo $this->baseUrl(); ?>/sosti/atendimentotecnico/segundonivel/ordem/SSOL_ID_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">N. da solicitação<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th>Nome do Solicitante</th>
+            <th>Tempo total</th>
+            <th>Serviço atual</th>
+            <th>Vinculada</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php foreach ($this->data as $data): ?>
+             <tr name="rowList" value="<?php echo $this->escape($d["SSOL_ID_DOCUMENTO"]); ?>"  style="<?php if($d["ESPERA_FLAG"] >= 0 && !is_null($d["ESPERA_FLAG"])) echo "color: #008000;"?>">
+                <?php $d = Zend_Json::decode($data); ?> 
+                 <td class="historico" <?php echo ($data["TEMPO_TOTAL"] > 120)?('style="background-color:#EE4115;" title="Solicitação com o tempo de atendimento ultrapassado!"'):('');  
+                          echo ($data["MOFA_ID_FASE"] == 1019)?('style="background-color:#E88400;" title="Solicitação recusada!"'):('');
+                          echo ($data["ESPERA_FLAG"] >= 0 && !is_null($data["ESPERA_FLAG"]))?('style="background-color:#0099FF;" title="Solicitação colocada em espera!"'):(''); ?> >
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data); ?>"/>
+                 </td>
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td><?php if(isset($d["NOME"])){echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME']);}else{echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME_USARIO_CADASTRO']);;} ?></td>
+                <td> <?php echo $this->escape($d["TEMPO_TRANSCORRIDO"]); ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"] ) ?></td>
+                <td><?php if(isset ($d["VINCULADA"])&&($d["VINCULADA"]==1)){echo "SIM";}else{echo "";}?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<?php echo $this->form; ?>
+<div id="dialog-documentos_detalhe">
+    <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+ <div id="dialog-documentos_conteudo"></div>
+</div>

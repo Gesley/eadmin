@@ -1,0 +1,242 @@
+<?php
+//Utilizando a Combobox
+echo $this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/sosti/respostaPadrao.js'));
+?>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>A devolução permite devolver uma solicitação que foi encaminhada de forma errada.</li>
+        <li>A devolução poderá ser feita apenas para a Caixa de Atendimento aos Usuários - HELPDESK ou para uma Caixa de Atendimento aos Usuários da Seccional.</li>
+        <li>A devolução da caixa HELPDESK - Primeiro Nível, ocorrerá quando forem encaminhadas solicitações vindas das seccionais.</li>
+        <li>Ao fazer a devolução, a solicitação retornará para a Caixa de Atendimento aos Usuários - HELPDESK com o mesmo Grupo de Serviço e Serviço cadastrados inicialmente.</li>
+        <li>Para realizar a devolução, será necessário que a solicitação tenha passado pela Caixa de Atendimento aos Usuários - HELPDESK.</li>
+        <li>No caso de solicitações com vinculações, as solicitações vinculadas devem possuir a mesma caixa de destino, pois não é possível devolver solicitações vinculadas para caixas diferentes.</li>
+        <li>Se uma das solicitações vinculadas tiver uma caixa de destino diferente, será necessário desvincular a solicitação para completar a devolução. </li>
+    </ul>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<script type="text/javascript">
+    var optionsGruposTRF = null;
+	$(function() {
+            optionsGruposTRF = $('select#SGRS_ID_GRUPO').html();
+            $("select#TRF1_SECAO").change(
+                function () {
+                        var secao = $(this).val().split('|')[0];
+                        var lotacao = $(this).val().split('|')[1];
+                        var tipolotacao = $(this).val().split('|')[2];
+                        //var retiraCaixa1 = 118; /* caixa gestao de demandas de TI */
+                        $("select#SSER_ID_SERVICO").html("");
+                    $.ajax({
+                        url: base_url + '/sosti/solicitacaousertisecoes/ajaxgruposervicosecoes/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                        dataType : 'html',
+                        beforeSend:function() {
+                        },
+                        success: function(data) {
+                            $('select#SGRS_ID_GRUPO').html(data);
+                        },
+                        error: function(){
+                        }
+                    });
+                });          
+	});
+</script>
+<script type="text/javascript">
+    $(function() {
+
+        //Escondendo campos nao utilizados do form
+        $('#SNAS_ID_NIVEL').hide();
+        $('#SNAS_ID_NIVEL-label').hide();
+        $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+        $('#TRF1_SECAO').hide();
+        $('#TRF1_SECAO-label').hide();
+        $('#TRF1_SECAO').attr('disabled', 'disabled');
+        $('#DE_MAT').hide();
+        $('#DE_MAT-label').hide();
+        $('#DE_MAT').attr('disabled', 'disabled');
+
+        //monta a combobox do campo servico
+        $('#SSER_ID_SERVICO').combobox();
+        //seta o tamanho do campo servico-combobox para 500px
+        $('#combobox-input-text-SSER_ID_SERVICO').css('width','500px')
+    });
+</script>
+
+<script type="text/javascript">
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    
+    var grid_tbody_tr;
+    $(function(){
+        
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+        function(){
+            grid_tbody_tr.removeClass('hover_nav');
+            
+            var this_tr = $(this);
+            var is_checked_tr = $(this).attr('marcado');
+            
+            var input_check_box = $(this).find('input[type=checkbox]');
+            var is_checked_input = input_check_box.attr('checked');
+            
+            if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                input_check_box.attr('checked','checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+            }else{
+                input_check_box.removeAttr('checked');
+                this_tr.removeAttr('marcado');
+                this_tr.removeClass('hover');
+            }
+            input_check_box.focus();
+        }
+    );
+        grid_tbody_tr.dblclick(
+        function(){
+            var this_tr = $(this);
+            var input_check_box = $(this).find('input');
+            
+            var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            this_tr.attr('marcado','marcado');
+            this_tr.addClass('hover');
+            
+            if (xhr_abrir_documento) {
+                xhr_abrir_documento.abort();
+            }
+            
+            url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+            xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+            });
+        }
+    ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+        function(){
+            if($(this).attr('checked')){
+                $(".nav_check_boxes").attr('checked','checked');
+                $("tr[name=rowList]").addClass('hover');
+            }else{
+                $(".nav_check_boxes").removeAttr('checked');
+                $("tr[name=rowList]").removeClass('hover');
+            }
+        }
+    );
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var formhelpdesk = $('form[name=helpdesk]');
+            if(acao == 'Encaminhar'){
+                formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/encaminhar');
+            }else if(acao == 'Baixar'){
+                formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/baixarcaixa');
+            }else if(acao == 'Espera'){
+                formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/esperacaixa');
+            }
+        }
+    );
+        $('form[name=helpdesk]').submit(
+        function(){          
+            var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+            if (solictacaoSelecionada == undefined){ 
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                $('#flashMessages').html(mensagem);
+                return false;
+            }
+        }
+    );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+            autoOpen : false,
+            modal    : false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580,140,0,0],
+            buttons : {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $(".historico").hide('');
+    });
+</script>
+ <table class="grid">
+    <thead>
+        <tr>
+            <th>N. da solicitação</th>
+            <th>Nome do Solicitante</th>
+            <th>Serviço atual</th>
+            <th>Vinculada</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php foreach ($this->data as $data): ?>
+             <tr name="rowList" value="<?php echo $this->escape($d["SSOL_ID_DOCUMENTO"]); ?>"  style="<?php if($d["ESPERA_FLAG"] >= 0 && !is_null($d["ESPERA_FLAG"])) echo "color: #008000;"?>">
+                <?php $d = Zend_Json::decode($data); ?> 
+                 <td class="historico" <?php echo ($data["TEMPO_TOTAL"] > 120)?('style="background-color:#EE4115;" title="Solicitação com o tempo de atendimento ultrapassado!"'):('');  
+                          echo ($data["MOFA_ID_FASE"] == 1019)?('style="background-color:#E88400;" title="Solicitação recusada!"'):('');
+                          echo ($data["ESPERA_FLAG"] >= 0 && !is_null($data["ESPERA_FLAG"]))?('style="background-color:#0099FF;" title="Solicitação colocada em espera!"'):(''); ?> >
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data); ?>"/>
+                 </td>
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td><?php if(isset($d["NOME"])){echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME']);}else{echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME_USARIO_CADASTRO']);;} ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"] ) ?></td>
+                <td><?php if(isset ($d["VINCULADA"])&&($d["VINCULADA"]==1)){echo "SIM";}else{echo "";}?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<br><br>
+
+<fieldset>
+    <dt id="SGRS_DESC_GRUPO-label">
+        <label class="optional" for="SSER_ID_SERVICO">Grupo de Serviço:</label>
+    </dt>
+    <dd id="SGRS_DESC_GRUPO-element">
+        Atendimento aos Usuários
+    </dd>
+    <?= $this->form; ?>
+</fieldset>
+<div id="dialog_escolha_resposta">
+    <fieldset>
+        <?= $this->formResposta; ?>
+    </fieldset>
+    <fieldset>
+        <legend> Resultados </legend>
+        <div id="resultados_resposta">
+           
+        </div>
+    </fieldset>
+</div>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

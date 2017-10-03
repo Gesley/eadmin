@@ -1,0 +1,11 @@
+<?php
+
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+
+echo $this->formulario;
+?>
+
+<script type="text/javascript">
+    $("#FANE_ID_FASE_EXERCICIO").attr("disabled", true);
+</script>

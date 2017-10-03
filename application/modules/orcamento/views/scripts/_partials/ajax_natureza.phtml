@@ -1,0 +1,20 @@
+<?php
+$nomeCampoNatureza = $this->campo;
+?>
+<script type="text/javascript">
+    $(function() {
+        $("#<?php echo $nomeCampoNatureza; ?>").keypress( function () {
+            $("#<?php echo $nomeCampoNatureza; ?>").autocomplete( {
+                source: base_url+'/orcamento/elemento/ajaxelemento/',
+                minLength: 3,
+                delay: 100,
+                select: function (event, ui) {
+                    $("#<?php echo $nomeCampoNatureza; ?>").text(ui.item.label);
+                },
+                change: function (event, ui) {
+                    $("#<?php echo $nomeCampoNatureza; ?>").val(ui.item.label);
+                }
+            });
+        });
+    });
+</script>

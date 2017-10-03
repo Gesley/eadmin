@@ -1,0 +1,176 @@
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<div style="float: left; width: 320px; height: auto;">
+    <table class="grid"  border="1">
+        <thead>
+            <tr>
+                <th colspan="4" style="text-align: center;" bgcolor="#CCCCCC">Desenvolvimento</th>
+            </tr>
+            <tr bgcolor="#DDDDDD">
+                <th>Status</th>
+                <th>Qtd</th>
+                <th>PF</th>
+                <th>PL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $qtd = 0;
+            foreach ($this->total["DSV"] as $statusDsv) {
+                $qtd += $statusDsv["QTD"];
+                ?>
+                <tr>
+                    <td> <?php echo $statusDsv["NOME"]; ?></td>
+                    <td> <?php echo $statusDsv["QTD"]; ?></td>
+                    <td> <?php echo number_format($statusDsv["PF_BRUTO"],2,",","."); ?></td>
+                    <td> <?php echo number_format($statusDsv["PF_LIQUIDO"],2,",","."); ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td> Total</td>
+                <td> <?php
+            $total = count($this->dados) - $qtd;
+            echo $total;
+            ?></td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+        </tfoot>
+    </table>
+    <br/>
+<!--</div>
+<div style="float: left; width: 320px;  height: auto;">-->
+    <table class="grid" border="1" >
+        <thead>
+            <tr>
+                <th colspan="4" style="text-align: center;" bgcolor="#CCCCCC">Aferição</th>
+            </tr>
+            <tr bgcolor="#DDDDDD">
+                <th>Status</th>
+                <th>Qtd</th>
+                <th>PF</th>
+                <th>PL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $qtd = 0;
+            foreach ($this->total["AFE"] as $statusAfe) {
+                $qtd += $statusAfe["QTD"];
+                ?>
+                <tr>
+                    <td> <?php echo $statusAfe["NOME"]; ?></td>
+                    <td> <?php echo $statusAfe["QTD"]; ?></td>
+                    <td><?php echo number_format($statusAfe["PF_BRUTO"], 2, ",", "."); ?></td>
+                    <td><?php echo number_format($statusAfe["PF_LIQUIDO"],2,",","."); ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td> Sem Status</td>
+                <td> <?php
+            $total = count($this->dados) - $qtd;
+            echo $total;
+            ?></td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+        </tfoot>
+    </table>
+<br/>
+<!--</div>
+<div style="width: 320px;  height: auto;">-->
+    <table class="grid" border="1">
+        <thead>
+            <tr style="text-align: center;" bgcolor="#CCCCCC">
+                <th colspan="2">Tribunal</th>
+            </tr>
+            <tr bgcolor="#DDDDDD">
+                <th>Status</th>
+                <th>Qtd</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $qtd = 0;
+            foreach ($this->total["TRF"] as $statusTrf) {
+                $qtd += $statusTrf["QTD"];
+                ?>
+                <tr>
+                    <td> <?php echo $statusTrf["NOME"]; ?></td>
+                    <td> <?php echo $statusTrf["QTD"]; ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td> Sem Status</td>
+                <td> <?php
+            $total = count($this->dados) - $qtd;
+            echo $total;
+            ?></td>
+        </tfoot>
+    </table>
+<br/>
+<!--</div>-->
+<table class="grid"  border="1">
+    <thead>
+        <tr>
+            <th colspan="12" style="text-align: center;" bgcolor="#CCCCCC">Relatórios de Solicitações</th> 
+        </tr>
+        <tr bgcolor="#DDDDDD">
+            <th>Nr do E-Sosti</th> 
+            <th>Status</th> 
+            <th>DH Entrada Caixa</th> 
+            <th>Atendente</th> 
+            <th>DH Baixa</th> 
+            <th>Status DSV</th> 
+            <th>PF Bruto DSV</th> 
+            <th>PF Liquido DSV</th> 
+            <th>Status AFE</th> 
+            <th>PF Bruto AFE</th> 
+            <th>PF Liquido AFE</th> 
+            <th>Status TRF</th> 
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        foreach ($this->dados as $dados) { 
+            
+           
+            ?>
+        
+        
+            <tr name="rowList" value="<?php echo $this->escape($dados["SSOL_ID_DOCUMENTO"]); ?>" >
+               <td style="mso-number-format:'\@';"><?php echo $dados["DOCM_NR_DOCUMENTO"]; ?></td>
+                <td><?php
+                        if ($dados["STSA_ID_TIPO_SAT"] == NULL) {
+                            echo 'Baixada';
+                        } else if ($dados["STSA_ID_TIPO_SAT"] != 6) {
+                            echo 'Avaliada';
+                        } else if ($dados["STSA_ID_TIPO_SAT"] == 6) {
+                            echo 'Recusada';
+                        }
+                    ?>
+                </td>
+                <td><?php echo $dados["ENTRADA_CAIXA"]; ?></td>
+                <td><?php echo $dados["ATENDENTE"]; ?></td>
+                <td><?php echo $dados["DATA_HORA_BAIXA"]; ?></td>
+                <td><?php echo $dados["SCTA_DS_STATUS_DSV"]; ?></td>
+                <td><?php echo $dados["PFDS_QT_PF_BRUTO"]; ?></td>
+                <td><?php echo $dados["PFDS_QT_PF_LIQUIDO"]; ?></td>
+                <td><?php echo $dados["SCTA_DS_STATUS_AFE"]; ?></td>
+                <td><?php echo $dados["PFAF_QT_PF_BRUTO"]; ?></td>
+                <td><?php echo $dados["PFAF_QT_PF_LIQUIDO"]; ?></td>
+                <td><?php echo $dados["SCTA_DS_STATUS_TRF"]; ?></td>
+            </tr>
+        <?php }  ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="11">Total: <?php echo count($this->dados) ?> </td>
+        </tr>
+    </tfoot>
+</table>

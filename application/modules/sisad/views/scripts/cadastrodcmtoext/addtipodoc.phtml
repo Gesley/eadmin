@@ -1,0 +1,47 @@
+<script type="text/javascript">
+    $(function() {
+        $( ".novo" ).button({
+            icons: {
+                primary: ""
+            }
+        });
+        
+        $("#DTPD_ID_PCTT").autocomplete({
+            source: "ajaxassuntodocm",
+            minLength: 3,
+            delay: 100
+        });
+        
+        $("#DTPD_NO_TIPO").autocomplete({
+            source: "ajaxnometipodocumento",
+            minLength: 1,
+            delay: 100
+        });
+            
+        $("#DTPD_CD_TP_DOC_NIVEL_1").focusout(
+            function(){
+            var unidade = $("#DTPD_CD_TP_DOC_NIVEL_1");
+            $.ajax({
+              url: "ajaxcontrolenivel/id/"+this.value,
+              beforeSend:function() {
+                  $("#DTPD_CD_TP_DOC_NIVEL_2").removeClass('erroInputSelect');
+                  $("#DTPD_CD_TP_DOC_NIVEL_2").val("");
+                  $("#DTPD_CD_TP_DOC_NIVEL_2").addClass('carregandoInputSelect');
+              },
+              success: function(data) {
+                  $("#DTPD_CD_TP_DOC_NIVEL_2").html(data);
+                  $("#DTPD_CD_TP_DOC_NIVEL_2").removeClass('carregandoInputSelect');
+              },
+              error: function(){
+                  $("#DTPD_CD_TP_DOC_NIVEL_2").removeClass('x-form-field');
+                  $("#DTPD_CD_TP_DOC_NIVEL_2").val('Erro ao carregar.');
+                  $("#DTPD_CD_TP_DOC_NIVEL_2").addClass('erroInputSelect');
+                  $("#DTPD_CD_TP_DOC_NIVEL_2").html('<option>Erro ao carregar</option>');
+              }
+            });      
+        }
+        );    
+     });
+</script> 
+<?php echo $this->form;?>
+<div class="painel" style="margin-left: 100px; margin-top: -43px;"><a title="Novo" class="novo" href="<?php echo $this->baseUrl(); ?>/sisad/cadastrodcmtoext/cadastrotipodoc">Voltar</a></div>

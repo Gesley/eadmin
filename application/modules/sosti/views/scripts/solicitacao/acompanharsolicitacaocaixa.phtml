@@ -1,0 +1,206 @@
+
+<script type="text/javascript">
+    /* Partes/interessados dos documentos e dos processos */
+    $(function() {
+        $('.optional').text($('#labelText').val());
+        $(document.body).delegate(".remover-parte","click", function(){
+            $(this).parent().parent().remove();
+        });
+        
+        $(document.body).delegate(".removerTodos","click", function(){
+            var config = $.data(document.body,'config'),
+            linhas_removidas = $(config.tabela.find("."+config.descParte)); 
+            //console.log(linhas_removidas);
+            linhas_removidas.remove();
+        });        
+        $(document.body).delegate(".removerPartesDocs","click", function(){
+            var config = $.data(document.body,'config'),
+            linhas_removidas = $(config.containerPartesDocumentos.find("."+config.descParte)); 
+            linhas_removidas.remove();
+        });
+        
+        $.data(document.body,'config',
+        {
+            containerPartes: $("#partes_adicionadas"),
+            tabela: $("#selecionados_partes tbody"),
+            descParte: 'linha_interessado'
+        }
+    );
+        $("#selecionados_partes").show();
+        $("#selecionados_vistas").hide();
+        $("#dialog_cadastra_parte_doc").dialog('option', 'title','Cadastro de Partes');
+        $("#dialog_cadastra_parte_doc").dialog('open');
+        
+        // inicializacoes
+        $(".li_parte").hide();
+        $("#UNIDADE_PESSOA").attr("disabled", true);
+        $(".pessTRF").show();
+        
+        $("#TIPO_PESSOA").change( function (){
+            $(".li_parte").hide();
+            var $value = $(this).val(),
+            classes = {
+                'P': ".pessTRF",
+                'U': ".unidade",
+                'F': ".pessExterna",
+                'J': ".pessJuridica"
+            };
+            $( classes[$value] ).show();
+        });
+        
+        
+        $("#PAPD_CD_MATRICULA_INTERESSADO").autocomplete({
+            source: base_url+'/sosti/solicitacao/ajaxpessoasacompanhamento',
+            minLength: 3,
+            delay: 100,
+            /* focus: function( event, ui ) {
+                    $(this).val( ui.item.label );
+                    return false;
+                },*/
+            select: function(event, ui){
+                var config = $.data(document.body,'config');
+                
+                existe_na_lista = config.containerPartes.find("input[value="+ui.item.value+"-"+ui.item.id+"]");  
+                encontrou = existe_na_lista.attr('value')
+                if(encontrou != undefined){
+                    alert('A pessoa já existe na lista');
+                    return;
+                }else{ 
+                    var tr = "<tr class='linha_interessado'>";
+                    tr += "<td style='width: 5%'><a href='#' class='remover-parte' rel='"+ui.item.value+"-"+ui.item.id+"' >Remover</a></td>";
+                    tr += "<td>"+ ui.item.label +" </td>";
+                    tr += "<input type='hidden' value='"+ui.item.value+"-"+ui.item.id+"' name='acompanhante_sosti[]' />";
+                    tr += "</tr>",
+                    config.tabela.append(tr);
+                    $(this).val("");
+                    return false;
+                }
+            }
+        });
+    }); 
+</script>
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input[type=radio]');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+                grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        );   
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+       });
+       $(".historico").hide('');
+    });
+</script>
+<form name="acompanharsolicitacaocaixa" action="acompanharsolicitacaocaixa" method="POST" enctype="multipart/form-data">
+    <table class="grid">
+        <thead>
+        <tr>
+            <th >Número</th>
+            <th >Autor</th>
+            <th >Serviço atual</th>
+        </tr>
+        </thead>    
+        <tbody id="documentosList">
+            <?php $i=0; foreach ($this->data["solicitacao"] as $data): ?>
+                  <?$d = Zend_Json::decode($data);?> 
+                    <tr>
+                        <td class="historico">
+                            <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($d["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="hidden" value="<?php echo $this->escape($data); ?>"/>
+                        </td>
+                        <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                        <td> <?php if(isset($d["NOME"])){echo $this->escape($d["NOME"]);}else{echo $this->escape($d["NOME_USARIO_CADASTRO"]);} ?></td>
+                        <td> <?php echo $this->escape($d["SSER_DS_SERVICO"] ) ?></td>
+                    </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot><tr><td colspan="7">Total: <?php echo count($this->data['solicitacao']); ?></td></tr></tfoot>
+    </table>
+    <?php 
+        echo $this->form->PAPD_CD_MATRICULA_INTERESSADO;
+        echo $this->partial('solicitacaousertisecoes/cadastraracompanhante.phtml', array('form' => $this->form->PAPD_CD_MATRICULA_INTERESSADO));
+        echo $this->form->Salvar;
+    ?>
+    <input type="hidden" name="controller" value="<?php echo $this->data["controller"]; ?>">
+    <input type="hidden" name="action" value="<?php echo $this->data["action"]; ?>">
+    <input type="hidden" name="labelText" id="labelText" value="<?php echo $this->labelText; ?>">
+    <div id="partes_adicionadas"> </div>
+</form>
+<div id="dialog-documentos_detalhe">
+ <div id="dialog-documentos_conteudo"></div>
+</div>

@@ -1,0 +1,37 @@
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+<?php if (count($this->data)): ?>
+<?php
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/avisoindex.js'));
+?>
+<div id="container_pagination">
+<div><a  class="novo" href="<?php echo $this->baseUrl(); ?>/sisad/aviso/addgrupo">Nova Lista</a> </div>
+<table class="grid">
+    <thead>
+        <tr>
+            <th>Editar</th>
+            <th>Excluir</th>
+            <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixa/index/ordem/GRDV_DS_GRUPO_DIVULGACAO/direcao/<?php //echo $this->direcao ?> ">Descrição Grupo Divulgação</a></th>
+        </tr>
+    </thead>
+     
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+    <tr>
+            <td><a href="<?php echo $this->baseUrl(); ?>/sisad/aviso/edit/id/<?php echo ($data['GRDV_ID_GRUPO_DIVULGACAO']) ?>/descgrupo/<?php echo $data["GRDV_DS_GRUPO_DIVULGACAO"]?>"><span class="editar"></span></a</td>
+            <td><a href="<?php echo $this->baseUrl(); ?>/sisad/aviso/delgrupo/id/<?php echo ($data['GRDV_ID_GRUPO_DIVULGACAO']) ?>"><span class="excluir"></span></a></td>
+            <td><?php echo $this->escape($data["GRDV_DS_GRUPO_DIVULGACAO"]) ?></td>
+    </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="7">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+</table>
+<?php echo $this->paginationControl($this->data, null, null, null)
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+</div>

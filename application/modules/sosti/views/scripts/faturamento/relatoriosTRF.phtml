@@ -1,0 +1,69 @@
+<table class="grid" id="sosti">
+    <thead>
+        <tr>
+            <th rowspan="2"><input type="checkbox" name="input_check_all_grid" id="check_all" /></th> 
+            <th rowspan="2">Nr do E-Sosti</th> 
+            <th rowspan="2">Status</th> 
+            <th rowspan="2">DH Entrada Caixa</th> 
+            
+            <th rowspan="2">DH Baixa</th> 
+            <th colspan="3">Desenvolvimento</th> 
+            <th colspan="3">Aferição</th> 
+            <th colspan="3">TRF</th> 
+        </tr>
+        <tr>
+            <th>Status</th> 
+            <th>PF Bruto</th> 
+            <th>PF Liquido</th> 
+            <th>Status</th> 
+            <th>PF Bruto</th> 
+            <th>PF Liquido</th> 
+            <th>Status</th> 
+            <th>PF Bruto</th> 
+            <th>PF Liquido</th> 
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        foreach ($this->dados as $dados) {
+            $dados["CONTROLLER"] = 'faturamento';
+            $dados["ACTION"] = 'relatorios';
+            $dados['DADOS_INPUT'] = Zend_Json::encode($dados);
+            ?>
+            <tr name="rowList" value="<?php echo $this->escape($dados["SSOL_ID_DOCUMENTO"]); ?>" >
+                <td>
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($dados["SSOL_ID_DOCUMENTO"]); ?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($dados["DADOS_INPUT"]); ?>"/>
+                </td> 
+                <td><?php echo $dados["DOCM_NR_DOCUMENTO"]; ?></td>
+                <td><?php
+                    if ($dados["STSA_ID_TIPO_SAT"] == NULL) {
+                        echo 'Baixada';
+                    } else if ($dados["STSA_ID_TIPO_SAT"] != 6) {
+                        echo 'Avalida';
+                    } else if ($dados["STSA_ID_TIPO_SAT"] == 6) {
+                        echo 'Recusada';
+                    }
+                    ?>
+                </td>
+                <td><?php echo $dados["ENTRADA_CAIXA"]; ?></td>
+                <!--<td><?php echo $dados["ATENDENTE"]; ?></td>-->
+                <td><?php echo $dados["DATA_HORA_BAIXA"]; ?></td>
+                <td><?php echo $dados["SCTA_DS_STATUS_DSV"]; ?></td>
+                <td><?php echo floatval(str_replace(',', '.', $dados["PFDS_QT_PF_BRUTO"])); ?></td>
+                <td><?php echo floatval(str_replace(',', '.', $dados["PFDS_QT_PF_LIQUIDO"])); ?></td>
+                <td><?php echo $dados["SCTA_DS_STATUS_AFE"]; ?></td>
+                <td><?php echo floatval(str_replace(',', '.', $dados["PFAF_QT_PF_BRUTO"])); ?></td>
+                <td><?php echo floatval(str_replace(',', '.', $dados["PFAF_QT_PF_LIQUIDO"])); ?></td>
+                <td><?php echo $dados["SCTA_DS_STATUS_TRF"]; ?></td>
+                <td><?php echo floatval(str_replace(',', '.', $dados["PFTR_QT_PF_BRUTO"])); ?></td>
+                <td><?php echo floatval(str_replace(',', '.', $dados["PFTR_QT_PF_LIQUIDO"])); ?></td>
+            </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="15">Total: <?php echo count($this->dados) ?>
+            </td>
+        </tr>
+    </tfoot>
+</table>

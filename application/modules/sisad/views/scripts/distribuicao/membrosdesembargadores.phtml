@@ -1,0 +1,73 @@
+<script type="text/javascript">
+    $(function() {
+        $(".membros" ).button();
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_unid_ranscunho = $('form[name=distribuicao]');
+            if(acao == 'Salvar'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/distribuicao/membrosdesembargadores/orgao/<?=$this->orgao; ?>/ordem/<?= $this->ordem;?>/direcao/<?= $this->direcaoSalvar; ?>/page/<?=$this->page;?>/');
+            }
+            else if(acao == 'Ir para a lista de orgãos'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/distribuicao/list');
+            }
+        }
+    );
+        
+    });
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<form method="post" name="distribuicao">
+    <div class="painel">
+        <input type="submit" name="acao" value="Salvar" class="salvar" /> 
+        <input type="submit" name="acao" value="Ir para a lista de orgãos" class="voltar" /> 
+    </div>
+    <?php if (count($this->data)): ?>
+        <div id="container_pagination">
+            <table class="grid">
+                <thead>
+                    <tr>
+
+        <!--                <th >Excluir</th>-->
+                        <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/membrosdesembargadores/orgao/<?=$this->orgao; ?>/ordem/PMAT_CD_MATRICULA/direcao/<?php echo $this->direcao ?> ">Matrícula<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                        <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/membrosdesembargadores/orgao/<?=$this->orgao; ?>/ordem/PNAT_NO_PESSOA/direcao/<?php echo $this->direcao ?> ">Nome do Desembardador Federal<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                        <th ><a  href="#">Cargo do Desembargador<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                        <!--th >Promo&ccedil;&atilde;o?</th-->
+                        <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/membrosdesembargadores/orgao/<?=$this->orgao; ?>/ordem/CDPA_IC_ATIVO/direcao/<?php echo $this->direcao ?> ">Incluir?<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                        <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/membrosdesembargadores/orgao/<?=$this->orgao; ?>/ordem/CDPA_IC_PLENARIO/direcao/<?php echo $this->direcao ?> ">Promoção?<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->data as $data): ?>
+                        <tr>
+                            <td><?php echo $this->escape($data["PMAT_CD_MATRICULA"]); ?></td>
+                            <td><?php echo $this->escape($data["PNAT_NO_PESSOA"]); ?></td>
+                            <td><?php echo ''; //Colocar o Cargo aqui ?></td>
+                            <td><input type="checkbox"  name="<?php echo $this->escape($data["PMAT_CD_MATRICULA"]) ?>" <?php echo($this->escape($data["CDPA_IC_ATIVO"]) == "S" ) ? ('checked = "checked"') : (""); ?> value="S"/> </td>
+                            <td><input type="checkbox"  name="promo-<?php echo $this->escape($data["PMAT_CD_MATRICULA"]) ?>" <?php echo($this->escape($data["CDPA_IC_PLENARIO"]) == "S" ) ? ('checked = "checked"') : (""); ?> /> </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6">Total: <?php
+                echo $this->data->getTotalItemCount()
+                ////-- pagination
+                //-- style
+                //-- partial
+                //-- data
+                    ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        <?php else: ?>
+            <p>Não existem registros</p>
+        <?php endif; ?>
+    </div>
+</form>

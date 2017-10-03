@@ -1,0 +1,341 @@
+<script type="text/javascript"><!--
+	
+	var docsSelected = '';
+	var docsSelectedPost = '';
+	var tipoDoc = '';
+	var docIDsPost = '';
+	var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    var grid_tbody_tr;
+    
+$(function(){
+    grid_tbody_tr = $("table.grid > tbody > tr");
+   
+    $("#dialog-documentos_detalhe").dialog({
+        title    : 'Detalhe',
+                autoOpen : false,
+                modal    : false,
+                show: 'fold',
+                hide: 'fold',
+                resizable: true,
+                width: 800,
+                height: 600,
+                position: [580,140,0,0],
+                buttons : {
+                        Ok: function() {
+                                $(this).dialog("close");
+                        }
+                }
+});
+
+$("#dialog-carrinho_detalhe").dialog({
+        title    : 'Carrinho de Documentos e Processos',
+                  autoOpen : false,
+                  modal    : false,
+                  show: 'fold',
+                  hide: 'fold',
+                  //resizable: true,
+                  width: 800,
+                  height: 600,
+//                //maxHeight: 200,
+                maxWidth: 600,
+                position: [580,140,0,0],
+                buttons : {
+                        Ok: function() {
+                                $(this).dialog("close");
+                        }
+                }
+});
+
+    grid_tbody_tr.dblclick(
+            function(){
+                
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+               if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+
+                
+                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: input_check_box.val(),
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                    div_dialog_by_id.html('');
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                    var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                    span_id_leitura.removeClass('naolido');
+                    span_id_leitura.addClass('lido');
+                    span_id_leitura.attr('title','Documento lido');
+                    $(this_tr).removeClass('naolidoTr');
+                    $(this_tr).addClass('lidoTr');
+                    
+                    //console.log(value_input_check_box);
+                    
+                    datainput = jQuery.parseJSON(value_input_check_box);
+                    
+                    datainput.CLASS_LIDO = 'lido';
+                    datainput.CLASS_LIDO_TR = 'lidoTr';
+                    datainput.MSG_LIDO = 'Documento lido';
+                    
+                    datainput_atualizado = JSON.stringify(datainput, null, null);
+                    input_check_box.val(datainput_atualizado)
+                    
+                },
+                complete: function(){
+                    
+                },
+                error : function(data){
+                    alert('erro');
+                }
+                });
+            }
+        );
+		$("input[type=checkbox][name=input_check_all_grid]").click(
+        function(){
+        
+            if($(this).attr('checked')){
+                $(".nav_check_boxes").attr('checked','checked');
+                $("tr[name=rowList]").addClass('hover');
+            }else{
+                $(".nav_check_boxes").removeAttr('checked');
+                 $("tr[name=rowList]").removeClass('hover');
+            }
+        })
+        $("#AssinarDoc").click(function(){
+            var documentoSelecionado = $(".nav_check_boxes:checked").val();
+            if (documentoSelecionado == undefined){                   
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('drop');
+                flashMessages_by_id.delay(2000).hide('drop');
+                return false;
+            }
+			docsSelected = '';
+			docsSelectedPost = '';
+            getselectedDocs();
+			$('#assinarporsenha').dialog({
+				
+				title:"Assinar documentos selecionados.",
+				width:500,
+				close:function(event,ui){
+				    $('#flashMessage').html('');
+					$('#flashMessage').removeClass('error');
+					}
+			});
+            })
+            grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+        
+        grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                
+            }
+        );
+
+});
+
+function submitVerificar(){
+    
+  //$('#Assinar').click(function(){
+      url = '<?php echo $this->baseUrl(); ?>/sisad/assinardocs/verificaassinante';
+		
+       $.ajax(
+				{
+					// The link we are accessing.
+					url: url,
+					
+					// The type of request.
+					type: 'POST',
+					
+					// The type of data that is getting returned.
+					dataType: 'html',
+					data:'COU_COD_MATRICULA='+ $('#COU_COD_MATRICULA').val()+'&COU_COD_PASSWORD='+$('#COU_COD_PASSWORD').val(),
+					error: function(){
+						
+						
+						// Load the content in to the page.
+						alert( "<p>Page Not Found!!</p>" );
+					},
+					success: function( strData ){
+                                           //Se a senha for invalida mostrar msg
+					   if(strData === '0'){
+					       $('#flashMessage').show();
+							$('#flashMessage').html('Login ou Senha invalidos.');
+							$('#flashMessage').addClass('error');
+						   }else if(strData === '1'){
+                                                       //Se a senha for valida assinar
+						       $('#login').submit();
+						   }else{
+                                                       //Se for um erro qualquer, mostrar mensagem
+                                                        $('#flashMessage').show();
+							$('#flashMessage').html('Login ou Senha inválidos. A Sessão foi perdida.');
+							$('#flashMessage').addClass('error');
+    						   }
+					}
+				}							
+				);
+      
+		
+	//});
+  }
+function getselectedDocs()
+{
+    
+    					$('input:checked').each(
+        				 function() 
+        				 {
+        				     if($(this).is(':checked')){
+								if($(this).attr('id')!= 'check_all')
+								{
+								    var obj = $.parseJSON($(this).val());
+								    docmrs = obj.DOCM_NR_DOCUMENTO;
+								    docIDs = obj.DOCM_ID_DOCUMENTO;
+                                    desc = obj.DTPD_NO_TIPO;
+                                    confidencialidade = obj.CONF_ID_CONFIDENCIALIDADE;
+                                   tipoDoc = obj.DTPD_ID_TIPO_DOC;
+            						docsSelected += desc +' - '+ docmrs + "<br>";
+               						docsSelectedPost += docmrs.toString() + ",";
+               						docIDsPost += docIDs +":"+ tipoDoc + ":"+docmrs+ ":"+confidencialidade+ ",";
+               						
+								}
+								
+        				     }
+        				 });
+    					$('#documentosSelecionados').val(docsSelectedPost);
+						$('#docsSelecionados').html(docsSelected);
+						$('#documentosIDs').val(docIDsPost);
+}
+
+  $('*').keyup(function(e)
+    {
+         if (e.keyCode == 13 && ($('#assinarporsenha:visible').length > 0))
+          {
+             e.stopImmediatePropagation();
+             submitVerificar();   
+          }
+            
+        //);
+    });
+  
+
+--></script>
+<fieldset>
+                <legend>Carrinho de Documentos e Processos</legend>
+                <div class="painel">
+                
+                <input type="button" title="Assinar documentos selecionados abaixo" id="AssinarDoc" name="AssinarDoc" value="Assinar"/>
+                </div>
+</fieldset>
+                Documentos para o processo:<strong><?php echo $this->processonr; ?></strong>
+<?php if (count($this->DocumentosProcesso)): ?>
+<div id="container_pagination">
+    <table class="grid" id="grid">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" name="input_check_all_grid" id="check_all" /> 
+                </th>
+                <th></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">Número do Documento<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Tipo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/LOTA_SIGLA_LOTACAO/direcao/<?php echo $this->direcao ?> ">Lotação Emissora<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/ENCAMINHADOR/direcao/<?php echo $this->direcao ?> ">Seção Emissora<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/entrada/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Data Vinculação<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+<!--                <th ><a  href="<?php //echo $this->baseUrl(); ?>/sisad/caixaunidade/novos/ordem/DOCM_NR_DOCUMENTO_RED/direcao/<?php //echo $this->direcao ?> ">visualizar</a></th>-->
+            </tr>
+        </thead>
+                <tbody>
+                <?php
+                foreach ($this->DocumentosProcesso as $data):
+                    ?>
+                    <tr title="Duplo click para Abrir" class="grid_rows <?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="rowList" value="<?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?>" > 
+                        <td>
+                            <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?>" name="<?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?>" type="checkbox" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                        </td>
+                        <td>
+                           
+                        </td>
+                        <!--                        <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                        <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                        <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                        <td> <?php echo $this->escape($data["LOTA_SIGLA_LOTACAO_EMISSORA"]) ?></td>
+                        <td> <?php echo $this->escape($data["LOTA_SIGLA_SECAO_EMISSORA"]) ?></td>
+                        <td> <?php echo $this->escape($data["DCPR_DH_VINCULACAO_DOC"]) ?></td>
+<!--                        <td><a class="<?php //echo $this->escape($data["CLASS_ARQUIVO"]); ?>" target="_blank" title="<?php //echo $this->escape($data["MSG_ARQUIVO"]); ?>" href="<?php //echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/<?php //echo $this->escape($data["DOCM_NR_DOCUMENTO_RED"]) ?> "></a></td>-->
+                    </tr>
+    <?php endforeach; ?>
+            </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->DocumentosProcesso->getTotalItemCount() ?></td>
+            </tr>
+            
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+<div id="assinarporsenha" style="display:none">
+<div id="flashMessage"></div>
+<div class="info">
+    Favor informar a senha para o banco: <b><?php echo $this->banco; ?> </b>
+</div>
+<fieldset>
+<legend style='font-weight:normal'>Documentos Selecionados</legend>
+<div id="docsSelecionados"></div>
+</fieldset>
+<?php echo $this->formVerificar; ?>
+</div>
+</div>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

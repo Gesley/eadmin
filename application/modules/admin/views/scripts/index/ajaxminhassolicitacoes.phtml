@@ -1,0 +1,50 @@
+<table id="ajaxMinhasSolicitacaoes">
+    <tr>
+        <td bgcolor="#dedede">Solicitações</td>
+        <td bgcolor="#dedede" align="right"><div align="right">Quantidade</div></td>
+    </tr>
+    <tr>
+        <td><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/avaliacao">Para Avaliação</a></td>
+        <td ><div align="right"><?php echo $this->solicitacoesparaavaliar; ?></div></td>
+    </tr>
+    <tr>
+        <td><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/pedidoinformacao">Com Solicitação de Informação</a></td>
+        <td ><div align="right"><?php echo $this->solicitacoescompedidodeinformacao; ?></div></td>
+    </tr>
+    <?php if ($this->gestaoDemandas === true): ?>
+    <tr>
+        <td><a href="<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/solicitinformacaocaixa/filtro/1">Na caixa com Solicitação de Informação pelo Desenvolvedor</a></td>
+        <td><div align="right"><?php echo $this->nacaixasolicdesenv; ?></div></td>
+    </tr>
+    <?php endif; ?>
+    <?php
+    if ($this->solicitacoescompedidodeinformacao_aoencaminhador > 0) {
+    ?>
+        <tr>
+            <td><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/pedidoinformacaodsv">Encaminhadas com Solicitação de Informação pelo Desenvolvedor</a></td>
+            <td ><div align="right"><?php echo $this->solicitacoescompedidodeinformacao_aoencaminhador; ?></div></td>
+        </tr>
+    <?php
+    }
+    ?>
+    <tr>
+        <td><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/pedidoinformacaorespondido">Com Solicitação de Informação Respondida</a></td>
+        <td ><div align="right"><?php echo $this->solicitacoescompedidodeinformacaorespondido; ?></div></td>
+    </tr>
+    <tr>
+        <td><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/atendimento">Em Atendimento</a></td>
+        <td><div align="right"><?php echo $this->solicitacoesematendimento; ?></div></td>
+    </tr>
+    <tr>
+        <td><a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/emacompanhamento">Acompanhamento de Solicitações</a></td>
+        <td><div align="right"><?php echo $this->solicitacoesacompanhamento; ?></div></td>
+    </tr>
+<!--    <tr <?=$displaynone?>>
+        <td><a href="<?php // echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/pendenteavaliacao">Sostis Pendentes de Avaliação</a></td>
+        <td><div align="right"><?php // echo $this->pendenteavaliacao; ?></div></td>
+    </tr>
+    <tr <?=$displaynone?>>
+        <td><a href="<?php // echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/homologacao">Para Homologação</a></td>
+        <td><div align="right"><?php // echo $this->parahomologacao; ?></div></td>
+    </tr>-->
+</table>

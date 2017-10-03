@@ -1,0 +1,226 @@
+<?php
+$valor = new Trf1_Orcamento_Valor();
+
+echo $this->partial('_partials/ajax_responsaveis.phtml');
+echo $this->partial('_partials/ajax_bloqueio.phtml');
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+?>
+
+<form id="frmDespesa" enctype="application/x-www-form-urlencoded" method="post" action=""><dl class="zend_form">
+        <dl class="zend_form">
+
+            <br />
+            <div id="incluir" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+                <ul>
+                    <li><a href="#resumo">Resumo</a></li>
+                    <li><a href="#gestor">Gestor</a></li>
+                    <li><a href="#orcamento">Célula Orçamentária</a></li>
+                    <li><a href="#financeiro">Identificação Financeira</a></li>
+                    <li><a href="#planejamento">Planejamento Estratégico</a></li>
+                    <li><a href="#contrato">Contrato</a></li>
+                    <li><a href="#valor">Valores</a></li>
+                </ul>
+
+                <div id="resumo">
+                    <?php
+// Código
+// echo $this->formulario->DESP_NR_DESPESA . '<br />';
+// Descrição
+                    echo $this->formulario->DESP_DS_ADICIONAL . '<br />';
+
+// Ano
+                    echo $this->formulario->DESP_AA_DESPESA . '<br />';
+
+// Reflete despesa no ano seguinte
+                    echo $this->formulario->DESP_IC_REFLEXO_EXERCICIO . '<br />';
+                    ?>
+                </div>
+
+                <div id="gestor">
+                    <?php
+// Unidade Gestora
+                    echo $this->formulario->DESP_CD_UG . '<br />';
+// Responsável
+                    echo $this->formulario->SG_DS_FAMILIA_RESPONSAVEL . '<br />';
+                    echo $this->formulario->LOTACAO . '<br />';
+                    ?>
+                </div>
+
+                <div id="orcamento">
+                    <?php
+// Esfera
+                    echo $this->formulario->DESP_CD_ESFERA;
+
+// PTRes
+                    echo $this->formulario->DESP_CD_PT_RESUMIDO;
+
+// Unidade orçamentária.
+                    echo $this->formulario->PTRS_CD_UNID_ORCAMENTARIA;
+
+// Elemento
+                    echo $this->formulario->DESP_CD_ELEMENTO_DESPESA_SUB;
+
+// Tipo de Despesa
+                    echo $this->formulario->DESP_CD_TIPO_DESPESA;
+                    ?>
+                </div>
+
+                <div id="financeiro">
+                    <?php
+// Fonte
+                    echo $this->formulario->DESP_CD_FONTE . '<br />';
+// Categoria
+                    echo $this->formulario->DESP_CD_CATEGORIA . '<br />';
+// Vinculação
+                    echo $this->formulario->DESP_CD_VINCULACAO . '<br />';
+// Tipo de Recurso
+                    echo $this->formulario->DESP_CD_TIPO_RECURSO . '<br />';
+                    ?>
+                </div>
+
+                <div id="planejamento">
+                    <?php
+// Tipo de Orçamento
+                    echo $this->formulario->DESP_CD_TIPO_ORCAMENTO . '<br />';
+// Tipo de Perspectiva
+                    echo $this->formulario->DESP_CD_PERS_PERSPECTIVA . '<br />';
+// Tipo de Macrodesafio
+                    echo $this->formulario->DESP_CD_MACRO_MACRODESAFIO . '<br />';
+// Objetivo
+                    echo $this->formulario->DESP_CD_OBJETIVO . '<br />';
+// Programa
+                    echo $this->formulario->DESP_CD_PROGRAMA . '<br />';
+// Tipo Operacional
+                    echo $this->formulario->DESP_CD_TIPO_OPERACIONAL . '<br />';
+                    ?>
+                </div>
+
+
+                <div id="contrato">
+                    <?php
+// Número do contrato
+                    echo $this->formContrato->CTRD_NR_CONTRATO . '<br />';
+// Nome da empresa contratada
+                    echo $this->formContrato->CTRD_NM_EMPRESA_CONTRATADA . '<br />';
+// CPF/CNPJ da empresa contratada
+                    echo $this->formContrato->CTRD_CPFCNPJ_DESPESA . '<br />';
+// Data de início da vigência
+                    echo $this->formContrato->CTRD_DT_INICIO_VIGENCIA . '<br />';
+// Data de término da vigência
+                    echo $this->formContrato->CTRD_DT_TERMINO_VIGENCIA . '<br />';
+// Valor do contrato
+                    echo $this->formContrato->CTRD_VL_DESPESA . '<br />';
+                    ?>
+                </div>
+
+                <div id="valor">
+                    <p>
+                        <strong> Dotação autorizada do exercício anterior: </strong><br />
+                        <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->formValorDespesa->VL_DESPESA_ANTERIOR)); ?></span>
+                    </p>
+
+                    <p>
+                        <strong> Base do exercício anterior: </strong><br />
+                        <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->formValorDespesa->VL_DESPESA_BASE_EXERC_ANTERIOR)); ?></span>
+                    </p>
+
+                    <p>
+                        <strong> Reajuste (%): </strong><br />
+                        <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->formValorDespesa->VL_DESPESA_BASE_PERCENTUAL)); ?></span>
+                    </p>
+
+                    <p>
+                        <strong> Reajuste aplicado: </strong><br />
+                        <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->formValorDespesa->VL_DESPESA_BASE_DIFERENCA)); ?></span>
+                    </p>
+
+                    <p>
+                        <strong> Base exercício atual: </strong><br />
+                        <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->formValorDespesa->VL_DESPESA_BASE_EXERC_ATUAL)); ?></span>
+                        <input type="hidden" value="<?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->formValorDespesa->VL_DESPESA_BASE_EXERC_ATUAL)); ?>" id="vlde6" />
+                    </p>
+
+                    <?php
+// Valor Ajuste setorial
+                    echo $this->formValorDespesa->VL_DESPESA_AJUSTE_DIPLA . '<br />';
+// Valor Proposta inicial
+                    echo $this->formValorDespesa->VL_DESPESA_RESPONSAVEL . '<br />';
+// Valor Solicitado pelo Responsável
+                    echo $this->formValorDespesa->VL_DESPESA_SOLIC_RESPONSAVEL . '<br />';
+// Ajuste setorial
+                    echo $this->formValorDespesa->VL_DESPESA_DIPLA . '<br />';
+// Ajuste ao limite
+                    echo $this->formValorDespesa->VL_DESPESA_CONGRESSO . '<br />';
+// Orçamento aprovado
+                    echo $this->formValorDespesa->VL_DESPESA_SECOR . '<br />';
+// Valor mensal máximo autorizado
+                    echo $this->formulario->DESP_VL_MAX_MENSAL_AUTORIZADO . '<br />';
+// Valor mensal máximo autorizado
+                    echo $this->formulario->DESP_IC_CONFERIDO . '<br />';
+// Valor mensal máximo autorizado
+                    echo $this->formulario->DESP_IC_FINALIZADO . '<br />';
+                    ?>
+                </div>
+
+            </div>
+
+            <?php
+            echo $this->formulario->Salvar;
+            echo $this->formulario->DESP_CD_RESPONSAVEL . '<br />';
+            ?>
+        </dl>
+</form>
+<?php
+echo $this->partial('despesa/js_soma.phtml');
+?>
+
+<script type="text/javascript">
+
+    // esconde os campos conferido e finalizado
+    $('#DESP_IC_CONFERIDO').hide();
+    $('#DESP_IC_CONFERIDO-label').hide();
+
+    $('#DESP_IC_FINALIZADO').hide();
+    $('#DESP_IC_FINALIZADO-label').hide();
+
+    // exercicio atual
+    var anoVigente = <?php echo date('Y') ?>;
+    // proximo exercicio
+    var prxExercicio = anoVigente + 1;
+
+    $("#DESP_AA_DESPESA").change(function () {
+        if ($(this).val() == prxExercicio) {
+            // Libera ou não campos da aba valores
+            $('#DESP_IC_CONFERIDO').show();
+            $('#DESP_IC_CONFERIDO-label').show();
+
+            $('#DESP_IC_FINALIZADO').show();
+            $('#DESP_IC_FINALIZADO-label').show();
+
+            // ajuste dipla
+            $('#VL_DESPESA_AJUSTE_DIPLA').removeAttr("readonly");
+            $('#VL_DESPESA_AJUSTE_DIPLA').removeAttr("style");
+            // ajuste setorial
+            $('#VL_DESPESA_DIPLA').removeAttr("readonly");
+            $('#VL_DESPESA_DIPLA').removeAttr("style");
+            // ajuste ao limite
+            $('#VL_DESPESA_CONGRESSO').removeAttr("readonly");
+            $('#VL_DESPESA_CONGRESSO').removeAttr("style");
+            // valor mensal maximo autorizado
+            $('#DESP_VL_MAX_MENSAL_AUTORIZADO').removeAttr("readonly");
+            $('#DESP_VL_MAX_MENSAL_AUTORIZADO').removeAttr("style");
+        } else {
+            // ajuste dipla
+            $('#VL_DESPESA_AJUSTE_DIPLA').attr("readonly");
+            $('#VL_DESPESA_AJUSTE_DIPLA').attr("style", "background: none repeat scroll 0% 0% rgb(222, 222, 222); border-color: rgb(204, 204, 204);");
+            // ajuste setorial
+            $('#VL_DESPESA_DIPLA').attr("readonly");
+            $('#VL_DESPESA_DIPLA').attr("style", "background: none repeat scroll 0% 0% rgb(222, 222, 222); border-color: rgb(204, 204, 204);");
+            // ajuste ao limite
+            $('#VL_DESPESA_CONGRESSO').attr("readonly");
+            $('#VL_DESPESA_CONGRESSO').attr("style", "background: none repeat scroll 0% 0% rgb(222, 222, 222); border-color: rgb(204, 204, 204);");
+        }
+    });
+
+</script>

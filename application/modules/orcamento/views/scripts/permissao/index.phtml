@@ -1,0 +1,12 @@
+<?php
+echo '<br />';
+
+// Define array de ajuda
+$ajuda [ 'msgAjuda' ] = $this->msgAjuda;
+$ajuda [ 'msgInfo' ] = $this->msgInfo;
+
+// Chama a partial para exibição da ajuda e informação da tela
+echo $this->partial ( '_partials/ajuda_informacao.phtml', $ajuda );
+
+// Exibe o grid
+echo $this->grid;

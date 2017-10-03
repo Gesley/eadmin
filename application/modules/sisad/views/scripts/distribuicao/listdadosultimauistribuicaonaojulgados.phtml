@@ -1,0 +1,162 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.maskedinput-1.3.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MultiFile.js'));
+?>
+<script type="text/javascript">
+
+    $(function() {
+        
+        $(".membros" ).button();
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            if(acao == 'Inserir Dados do Julgamento'){
+                var url = '<?php echo $this->baseUrl(); ?>/sisad/distribuicao/formdadosjulgamento/';
+                var $form = $('form#processo');
+                
+                $.ajax({
+                    url: url,
+                    
+                    data: $form.serialize(),
+                    success: function(data){
+                        
+                        
+                        $('#dialog-dadosjulgamento').html('');
+                        $('#dialog-dadosjulgamento').html(data);
+                        $('#dialog-dadosjulgamento').dialog({
+                            height:500,
+                            width:900,
+                            title:'Cadastro de dados do Julgamento Processual',
+                            buttons: {
+                                "Salvar": function() {
+                                    var $formJulgamento = $('form#dadosJulgamento');
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '<?php echo $this->baseUrl(); ?>/sisad/distribuicao/formdadosjulgamento/',
+                                        data: $formJulgamento.serialize(),
+                                        success: function(data){
+                                            if(data.success){
+                                                $.each(data.arrayIdProcesso,function(index, value) { 
+                                                    $('tr#'+value).html('');
+                                                    qtd = parseInt($('#qtdRegistros').html());
+                                                    $('#qtdRegistros').html(qtd-1)
+                                                });
+                                                $( '#dialog-dadosjulgamento' ).dialog( "close" );
+                                                $( '#flashMessagesView' ).html( '<div class="success"><strong>Sucesso:</strong> Cadastro de dados de julgamento realizado com sucesso. Para conferir os dados acesse (<a href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaojulgados/">Dados de Julgamento Processual</a>).</div>');
+                                            }else{
+                                                $( '#dialog-dadosjulgamento' ).html( data );
+                                            }
+                                        }// FIM success:
+                                        ,error : function(){
+                                            alert('Erro: Não foi possivel alterar os dados.');
+                                        }
+                                    });// FIM $.ajax({
+                                }, //FIM "Salvar":
+                                "Fechar": function() {
+                                    $( '#dialog-dadosjulgamento' ).dialog( "close" );
+                                }//FIM "Fechar":
+                            }// FIM buttons: {
+
+                        });// FIM $('#dialog-dadosjulgamento').dialog(
+                    },
+                    error : function(){
+                        alert('Erro: Não foi possivel montar o formulário.');
+                    }
+                });
+//                $('#dialog-dadosjulgamento').html('');                   
+//                $('#dialog-dadosjulgamento').html(data);
+//                $('#dialog-dadosjulgamento').dialog('open');
+//                $('#dialog-dadosjulgamento').attr('css','overflow:auto;');
+            }//fim if(acao == 'Inserir Dados do Julgamento'){
+        }
+    );
+        
+    });
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php if (count($this->data)): ?>
+<div class="painel">
+    <input type="submit" name="acao" value="Inserir Dados do Julgamento" class="Inserir Dados do Julgamento" /> 
+</div>
+<form method="POST" id="processo" name="processos" action="processos" enctype="multipart/form-data" >
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr> 
+                <th ></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaonaojulgados/ordem/HDPA_CD_PROC_ADMINISTRATIVO/direcao/<?php echo $this->direcao ?> ">
+                        Processo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaonaojulgados/ordem/PNAT_NO_PESSOA/direcao/<?php echo $this->direcao ?> ">
+                        Relator<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaonaojulgados/ordem/ORGJ_DS_ORGAO_JULGADOR/direcao/<?php echo $this->direcao ?> ">
+                        Orgão<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/distribuicao/listdadosultimauistribuicaonaojulgados/ordem/HDPA_TS_DISTRIBUICAO/direcao/<?php echo $this->direcao ?> ">
+                        Data Distribuição<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a>
+                </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): 
+                $dadosJSon = Zend_Json::encode($data)
+            ?>
+<!--                <tr title="Duplo click para Abrir">-->
+                <tr id='<?=$this->escape($data["HDPA_CD_PROC_ADMINISTRATIVO"]); ?>'>
+                    <td><input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["HDPA_CD_PROC_ADMINISTRATIVO"]); ?>" name="processo[]" type="checkbox" value="<?php echo $this->escape($dadosJSon); ?>"/></td>
+                    <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?></td>
+                    <td><?php echo $this->escape($data["PNAT_NO_PESSOA"]); ?></td>
+                    <td><?php echo $this->escape($data["ORGJ_DS_ORGAO_JULGADOR"]); ?></td>
+                    <td><?php echo $this->escape($data["HDPA_TS_DISTRIBUICAO"]); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" >Total: <span id="qtdRegistros"><?php echo $this->data->getTotalItemCount()     
+                                            ////-- pagination
+                                            //-- style
+                                            //-- partial
+                                            //-- data?></span>
+                   </td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+    </div>
+
+<div id="dialog-dadosjulgamento"></div>

@@ -1,0 +1,308 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+        function(){
+            grid_tbody_tr.removeClass('hover_nav');
+                
+            var this_tr = $(this);
+            var is_checked_tr = $(this).attr('marcado');
+                
+            var input_check_box = $(this).find('input');
+            var is_checked_input = input_check_box.attr('checked');
+                
+            if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                input_check_box.attr('checked','checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+            }else{
+                input_check_box.removeAttr('checked');
+                this_tr.removeAttr('marcado');
+                this_tr.removeClass('hover');
+            }
+            input_check_box.focus();
+        }
+    );
+        
+        grid_tbody_tr.dblclick(
+        function(){
+            var this_tr = $(this);
+            var input_check_box = $(this).find('input');
+                
+            var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            this_tr.attr('marcado','marcado');
+            this_tr.addClass('hover');
+                
+            if (xhr_abrir_documento) {
+                xhr_abrir_documento.abort();
+            }
+                
+            url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmtocorrespondencia';
+            xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                    var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                    span_id_leitura.removeClass('naolido');
+                    span_id_leitura.addClass('lido');
+                    span_id_leitura.attr('title','Documento lido');
+                    $(this_tr).removeClass('naolidoTr');
+                    $(this_tr).addClass('lidoTr');
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+            });
+        }
+    );
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+        function(){
+            if($(this).attr('checked')){
+                $(".nav_check_boxes").attr('checked','checked');
+                $("tr[name=rowList]").addClass('hover');
+            }else{
+                $(".nav_check_boxes").removeAttr('checked');
+                $("tr[name=rowList]").removeClass('hover');
+            }
+        }
+    );
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_unid_correspondencia = $('form[name=cx_unid_entrada]');
+            if(acao == 'Enderecados'){
+                cx_unid_correspondencia.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/enderecados');
+            } else if(acao == 'Devolvidas'){
+                cx_unid_correspondencia.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/devolvidas');
+            } else if(acao == 'Protocolados'){
+                cx_unid_correspondencia.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/protocolados');
+            } else if(acao == 'Postados'){
+                cx_unid_correspondencia.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/postados');
+            } else if(acao == 'Protocolar' || acao == 'Protocloar' || acao == 'Cancelar'){
+                cx_unid_correspondencia.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias');
+            } 
+        }
+    );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+            autoOpen : false,
+            modal    : false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580,140,0,0],
+            buttons : {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+</script>
+<form method="POST" name="cx_unid_entrada">
+    <div class="painel">
+        <fieldset>
+            <legend>Caixas</legend>
+            <?php if ($this->tipo == 'devolvidas') { ?>
+                <input type="submit" title="Documentos com endereçamento"                        name="acao"  value="Enderecados" />
+                <input type="submit" title="Documentos protocolados, não estregues ao protocolo" name="acao"  value="Protocolados"/>
+                <input type="submit" title="Documentos já recebidos pelo protocolo"              name="acao"  value="Postados"/>
+                <input type="hidden"                                                             name="caixa" value="devolvidas" />
+            <?php }else if ($this->tipo == 'enderecados') { ?>
+                <input type="submit" title="Documentos devolvidos pelo protocolo"                name="acao"  value="Devolvidas"/>
+                <input type="submit" title="Documentos protocolados, não estregues ao protocolo" name="acao"  value="Protocolados"/>
+                <input type="submit" title="Documentos já recebidos pelo protocolo"              name="acao"  value="Postados"/>
+                <input type="hidden"                                                             name="caixa" value="enderecados" />
+            <?php } else if ($this->tipo == 'protocolados') { ?>
+                <input type="submit" title="Documentos devolvidos pelo protocolo"                name="acao"  value="Devolvidas"/>
+                <input type="submit" title="Documentos com endereçamento"                        name="acao"  value="Enderecados" />
+                <input type="submit" title="Documentos já recebidos pelo protocolo"              name="acao"  value="Postados"/>
+                <input type="hidden"                                                             name="caixa" value="protocolados" />
+            <?php } else if ($this->tipo == 'postados') { ?>
+                <input type="submit" title="Documentos devolvidos pelo protocolo"                name="acao"  value="Devolvidas"/>
+                <input type="submit" title="Documentos com endereçamento"                        name="acao"  value="Enderecados" />
+                <input type="submit" title="Documentos protocolados, não estregues ao protocolo" name="acao"  value="Protocolados"/>
+                <input type="hidden"                                                             name="caixa" value="postados" />
+            <?php } ?>
+        </fieldset>
+    </div>
+    <?php if (count($this->data)) { ?>
+        <?php if ($this->tipo == 'enderecados') { ?>
+            <div class="painel">
+                <input type="submit" title="Excluir endereço de postagem" name="acao" value="Excluir"/>
+                <input type="submit" title="Enviar Documento/Processo Fisico Para o Protocolo" name="acao" value="Protocolar"/>
+            </div>        
+            <div id="container_pagination">
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" name="input_check_all_grid" id="check_all" /> 
+                            </th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/enderecados/ordem/QTD/direcao/<?php echo $this->direcao ?> ">Documentos<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/enderecados/ordem/TPPO_DS_TIPO_POSTAGEM/direcao/<?php echo $this->direcao ?> ">Preferencia de Postagem<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/enderecados/ordem/POST_NM_DESTINATARIO_EXTERNO/direcao/<?php echo $this->direcao ?> ">Destino<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/enderecados/ordem/PJUR_NO_FANTASIA/direcao/<?php echo $this->direcao ?> ">Destinatário<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $cont = 0;
+                        foreach ($this->data as $dados):
+                            $dados['TIPO'] = $this->tipo;
+                            $dados_input = Zend_Json::encode($dados);
+                            ?>
+                            <tr title="Duplo click para Abrir"  name="rowList" > 
+                                <td>
+                                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($dados_input); ?>" name="idpostagem[]" type="checkbox" value="<?php echo $this->escape($dados_input); ?>"/>
+                                </td>
+                                <td> <?php echo $this->escape($dados["QTD"]) ?></td>
+                                <td> <?php echo $this->escape($dados["TPPO_DS_TIPO_POSTAGEM"]) ?></td>
+                                <td> <?php echo $this->escape($dados["PJUR_NO_FANTASIA"]) ?></td>
+                                <td> <?php echo $this->escape($dados["POST_NM_DESTINATARIO_EXTERNO"]) ?></td>
+                            </tr>
+                            <?php
+                            $cont++;
+                        endforeach;
+                        ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null) ?>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        <?php } else if ($this->tipo == 'protocolados') { ?>
+            <div class="painel">
+                <input type="submit" title="Cancelar Postagem de Documento/Processo Fisico Para o Protocolo" name="acao" value="Cancelar"/>
+            </div>
+            <div id="container_pagination">
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" name="input_check_all_grid" id="check_all" /> 
+                            </th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/protocolados/ordem/PRDC_ID_PROTOCOLO/direcao/<?php echo $this->direcao ?> ">Protocolo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/protocolados/ordem/QTD/direcao/<?php echo $this->direcao ?> ">Documentos<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/protocolados/ordem/PRDC_DH_PROTOCOLO_DOC_PROC/direcao/<?php echo $this->direcao ?> ">Data e Hora Protocolo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $cont = 0;
+                        foreach ($this->data as $dados):
+                            $dados['TIPO'] = $this->tipo;
+                            $dados_input = Zend_Json::encode($dados);
+                            ?>
+                            <tr title="Duplo click para Abrir" class="grid_rows <?php echo $this->escape($dados_input["CLASS_LIDO_TR"]); ?>" name="rowList" value="<?php echo $this->escape($dados["PRDC_ID_POSTAGEM_PROC_DOC"]); ?>" > 
+                                <td>
+                                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($dados_input); ?>" name="idpostagem[]" type="checkbox" value="<?php echo $this->escape($dados_input); ?>"/>
+                                </td>
+                                <td> <?php echo $this->escape($dados["PRDC_ID_PROTOCOLO"]) ?></td>
+                                <td> <?php echo $this->escape($dados["QTD"]) ?></td>
+                                <td> <?php echo $this->escape($dados["PRDC_DH_PROTOCOLO_DOC_PROC"]) ?></td>
+                            </tr>
+                            <?php
+                            $cont++;
+                        endforeach;
+                        ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null) ?>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        <?php } else if ($this->tipo == 'postados' || $this->tipo == 'devolvidas') { ?>
+            <div id="container_pagination">
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>
+                            </th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/postados/ordem/PRDC_ID_PROTOCOLO/direcao/<?php echo $this->direcao ?> ">Protocolo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/postados/ordem/QTD/direcao/<?php echo $this->direcao ?> ">Documentos<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/postados/ordem/TPPO_DS_TIPO_POSTAGEM/direcao/<?php echo $this->direcao ?> ">Preferencia de Postagem<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/postados/ordem/POST_NM_DESTINATARIO_EXTERNO/direcao/<?php echo $this->direcao ?> ">Destino<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                            <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/correspondencias/tipo/postados/ordem/PJUR_NO_FANTASIA/direcao/<?php echo $this->direcao ?> ">Destinatário<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $cont = 0;
+                        
+               
+                        foreach ($this->data as $dados):
+                          $dados['TIPO'] = $this->tipo;
+                          $dados_input = Zend_Json::encode($dados);
+                            ?>
+                            <tr title="Duplo click para Abrir" class="grid_rows <?php echo $this->escape($dados_input["CLASS_LIDO_TR"]); ?>" name="rowList" value="<?php echo $this->escape($dados["PRDC_ID_POSTAGEM_PROC_DOC"]); ?>" > 
+                                <td>
+                                    <input class="nav_grid_check_box nav_check_boxes" hidden="hidden" id="<?php echo $this->escape($dados_input); ?>" name="idpostagem[]" type="checkbox" value="<?php echo $this->escape($dados_input); ?>"/>
+                                </td>
+                                <td> <?php echo $this->escape($dados["PRDC_ID_PROTOCOLO"]) ?></td>
+                                <td> <?php echo $this->escape($dados["QTD"]) ?></td>
+                                <td> <?php echo $this->escape($dados["TPPO_DS_TIPO_POSTAGEM"]) ?></td>
+                                <td> <?php echo $this->escape($dados["PJUR_NO_FANTASIA"]) ?></td>
+                                <td> <?php echo $this->escape($dados["POST_NM_DESTINATARIO_EXTERNO"]) ?></td>
+                            </tr>
+                            <?php
+                            $cont++;
+                        endforeach;
+                        ?>
+                    </tbody>    
+                    <tfoot>
+                        <tr>
+                            <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null) ?> </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>  
+        <?php } ?>
+
+    <?php } else { ?>
+        <p> Não existem registros </p>
+    <?php } ?>
+</form>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>
+

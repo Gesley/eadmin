@@ -1,0 +1,37 @@
+<script>
+
+    $(document).ready(function(){
+        
+        $('form').submit(function(){
+            if(!confirm('Deseja realmente excluir?')){
+                return false;
+            }
+        });
+       
+    });
+
+</script>
+
+<fieldset> 
+    <legend>
+        Detalhes da Resposta Padrão
+    </legend>
+    
+    <b>Nome: </b>
+    <?=$this->resposta['REPD_NM_RESPOSTA_PADRAO'] ?><br>
+    <b>Matrícula do Cadastro: </b>
+    <?=$this->resposta['REPD_CD_MATRICULA_CADASTRO'] ?><br>
+    <b>Serviço: </b>
+    <?=$this->resposta['SETP_DS_SERVICO'] ?><br>
+    <b>Data/Hora do cadastro: </b>
+    <?=$this->resposta['REPD_DH_CADASTRO'] ?><br>
+    
+    <fieldset>
+        <legend>
+            Descrição
+        </legend>
+        <?=$this->resposta['REPD_DS_RESPOSTA_PADRAO'] ?><br>
+    </fieldset>
+    <?=$this->form ?>
+</fieldset>
+

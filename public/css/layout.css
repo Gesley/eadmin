@@ -1,0 +1,388 @@
+html {background:/*#0F1D29; */#fff; /*url(imagens/fundogeral.jpg) no-repeat center;*/  }
+
+body {  background:#fff/* #162e41*/ url(../img/fundo2.png) repeat-x; font-size:11px; font-family:Verdana, Geneva, sans-serif; color:#333; line-height:1.5;   }
+
+#geral { position: relative; width:960px; margin: 0 auto;  float:none; min-height: 100%; padding: 0; }
+
+h2 { font-size:14px; font-weight: bold; color:#172e40; }
+
+h3 { font-size:12px; font-weight: bold; color:#172e40; }
+
+h4 { font-size:10px; font-weight: bold; color:#172e40; }
+
+h5 { font-size:8px; font-weight: bold; color:#172e40; }
+
+a, a:link, a:visited, a:active {
+    color: #2E6E9E;
+    text-decoration: none;
+}
+a:hover {
+    color: #F02027;
+    text-decoration: underline;
+}
+
+/*xxxxxxxxxxxxxxxxxxxxxxx  topo xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*/
+#topo { margin:0; padding:0; height:50px; /*background:#162e41 url(fundo.png) repeat-x;*/ overflow:hidden; }
+
+#topo h1 { padding:12px; text-indent:180px; color:#f6f9fd;  background:url(../img/logo.png) no-repeat; font:bold 14px Helvetica; float:left;}
+
+/*#logo { width:630px; height:50px; background:url(logo.png) no-repeat; float:left;}*/
+
+#tools { width:400px; padding: 0; font-size:10px; color:#ccc; overflow:hidden; float:right; }
+
+#tools a:link { color:#666; text-decoration:none;}
+
+#tools a:hover { text-decoration:underline;}
+
+/*#user { float:left;}*/
+
+#username { padding:15px 0 0 0; float:none;}
+
+#userperfil, #sair, #ajuda { margin:4px 0 0 0; padding: 0 4px 0 0; float:left;}
+
+#sair, #ajuda { padding:0 4px 0 4px; border-left:1px solid #506371;}
+
+
+a.icoAdminlink { width:20px; height:15px; margin:5px 0 0 5px; outline: 0; background:url(../img/tool20.png) no-repeat center; padding:10px; display:block; float:right; }
+
+a.icoAdminlink:hover { background: url(../img/tool20Over.png) no-repeat center; }
+a.icoAdminlink_click {
+    width:40px;
+    height:35px;
+    padding:0;
+    background: #ffffff url(../img/tool20.png) no-repeat center;
+    z-index: 7;
+    border: 1px solid #C3D9FF;
+    border-bottom: 1px solid #ffffff;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+}
+a.icoAdminlink_click:hover { background-color: #ffffff; }
+
+
+/*xxxxxxxxxxxxxxxxxxxxxxx  menu xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*/
+
+#menu { height:30px;/* background:#e9e9e9; border:1px solid red;*/}
+
+/*xxxxxxxxxxxxxxxxxxxxxxx  container xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*/
+
+#container { clear: both; text-align: left;}
+
+#menuEsquerdo { width:160px; height:100%; padding:10px; background:#fff; float:left;}
+
+#conteudo { width:auto;  min-height: 450px !important; padding:10px 0; background:#fff;}
+
+#filtro { width:160px; height:100%; padding:10px; background:#fff; float:left;}
+
+.conteudo1Coluna { width:760px;}
+
+.conteudo2Coluna { width:580px;}
+
+
+/*xxxxxxxxxxxxxxxxxxxxxxx  rodapé xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*/
+
+#rodape { border-top:2px solid #f3f3f3; width:100%; margin:50px 0 0 0; background:#f7f7f7 url(../img/fundoRodape2.png) repeat-x; overflow:hidden; position:relative; text-align: left; color: #6a6a6a;}
+
+#rodapeDados { min-height:100px; width:940px; margin:10px  auto 0; padding:10px; color: #333;}
+
+#rodapeinfo { background:#0F1D29; padding:10px 0 10px 150px;}
+/*xxxxxxxxxxxxxxxxxxxxxxx tabelas xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*/
+
+#user-name {
+    display: block;
+    overflow: hidden;
+}
+
+#nome {
+    float:left;
+    margin-top: 6px;
+    overflow: hidden;
+    position: absolute;
+    max-width: 800px;
+    min-width: 200px;
+    right: 40px;
+}
+
+#icoAdmin {
+    float:right;
+    display: block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+#mudarUsuario {
+    margin:0;
+    padding:0;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    border:1px solid #C3D9FF;
+    border-top: 1px solid #ffffff;
+    text-align: left;
+    background-color: #fff;
+    padding: 10px;
+    z-index: 6;
+    display: none;
+
+
+
+}
+
+#mudarUsuario ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#mudarUsuario ul li a {
+    display: block;
+    padding: 4px;
+    margin: 0;
+    border-bottom: 1px solid #DEEDF7;
+}
+
+#mudarUsuario ul li a:hover {
+    background: #DEEDF7;
+    color: #000;
+    text-decoration: none;
+}
+
+#mudarUsuario ul li a.sair {
+    display: block;
+    padding: 0;
+    margin: 0;
+    border-bottom: 0;
+}
+
+a.sair {
+    width: 100%;
+}
+
+a.ui-state-hover, a.ui-state-focus {
+    color:#ffffff;
+}
+
+.paginationControl a {
+    color:#333;
+}
+.paginationControl a:hover {
+    color:#ffffff;
+}
+
+.grid {
+    background: url("../img/ui-bg_highlight-hard_100_ffffff_1x100.png") repeat-x scroll 50% top #FFFFFF;
+    border: 1px solid #769DC0;
+    color: #000000;
+    font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
+    font-size: 11px;
+/*    margin-bottom: 1.4em;*/
+    width: 100%;
+    /*border-collapse: collapse;*/
+}
+
+.grid thead tr, .grid thead tr th, .grid tbody tr td {
+    border: 0;
+    margin: 0;
+}
+
+.grid thead tr th {
+    background-color: transparent;
+    background: url("../img/ui-bg_highlight-soft_80_cfe5fa_1x100.png") repeat-x scroll 50% 50% #CFE5FA;
+    border: 0;
+    border-bottom: 1px solid #769DC0;
+    color: #000000;
+    font-weight: bold;
+    margin: 0;
+}
+
+.grid tbody tr td {
+/*    border-bottom: 1px solid #EEEEEE;*/
+    /*background: #ffffff;*/
+}
+/*.grid tbody tr:nth-child(even) td, tbody tr.even td {background:#ffffff;}*/
+.grid tfoot {
+    background: #f7f7f7;
+    border-collapse: collapse;
+}
+.grid tfoot tr td {
+    border-top: 1px solid #EEEEEE;
+    background: #f7f7f7;
+}
+/*
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+    color: #4A4A4A;
+    text-decoration: none;
+}
+*/
+
+.container_pagination_fixed{
+    overflow: scroll;
+    max-height: 400px;
+}
+
+
+a.ui-state-active, a.ui-state-hover {
+    color:#ffffff;
+}
+
+/* documentos ou processos nao lidos */
+.naolido{
+    font-weight: bold;
+}
+
+/*css do painel*/
+.containerpainel{
+    margin-bottom: 2px;
+}
+.painel {
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: inline; 
+}
+.painel input{
+    color: #2E6E9E;
+}
+.painel input:hover{
+    color: #FFF;
+}
+
+.painel fieldset{
+    border: solid #D8E9FA 1px; 
+    display: inline; 
+    margin: 0; 
+    padding: 2px 2px 2px 6px; 
+    margin-left: 4px;
+}
+
+.painel fieldset legend{
+    margin: 0; 
+    padding: 0 0 0 0; 
+    font-size: 8pt;
+}
+
+
+.grid tr:hover {
+    background-color: transparent;
+    background: url("../img/ui-bg_highlight-soft_80_cfe5fa_1x100.png") repeat-x scroll 50% 50% #CFE5FA;
+    cursor: pointer;
+}
+
+.hover {
+    background-color: transparent;
+    background: url("../img/ui-bg_highlight-soft_80_fbfbfb_1x100.png") repeat-x scroll 50% 50% #CFE5FA;
+}
+.hover_nav {
+    background-color: transparent;
+    background: url("../img/ui-bg_highlight-soft_80_cfe5fa_1x100.png") repeat-x scroll 100% 100% #CFE5FA;
+    color: #212121;
+/*    font-size: 10px;*/
+    
+}
+/**
+ * Cores dos status das caixas de atendimento do e-Sosti
+ */
+.pedidoInformacao {
+    background:#666666;
+}
+.pedidoCancelamento {
+    background:#F02027;
+}
+
+.respostaPedidoInformacao {
+    background:#CCCCCC;
+}
+.espera {
+    background-color:#0099FF;
+}
+.tempoUltrapassado {
+    background-color:#EE4115; 
+}
+.recusada {
+    background-color:#FFCC33;
+}
+
+.videorealizada{
+	background-color:#008800;
+}
+.videoconferenciaamanha{
+    background-color: #c0f;
+}
+.extensaoprazoamanha{
+   background-color: #970;      
+}
+
+.emhomologacao{
+   background-color: #CC9900;      
+}
+
+.homologada{
+   background-color: #66CC99;      
+}
+
+.naohomologada{
+   background-color: #CC0066;      
+}
+
+/*xxxxxxxxxxxxxxxxxxxxx grid2 xxxxxxxxxxxxxxxxxxxxx*/
+
+
+.grid2 {
+    background: url("../img/ui-bg_highlight-hard_100_ffffff_1x100.png") repeat-x scroll 50% top #FFFFFF;
+    border: 1px solid #769DC0;
+    color: #000000;
+    font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
+    font-size: 11px;
+/*    margin-bottom: 1.4em;*/
+    width: 100%;
+    /*border-collapse: collapse;*/
+}
+
+.grid2 thead tr, .grid thead tr th, .grid tbody tr td {
+    border: 0;
+    margin: 0;
+}
+
+.grid2 thead tr th {
+    background-color: transparent;
+    background: url("../img/ui-bg_highlight-soft_80_cfe5fa_1x100.png") repeat-x scroll 50% 50% #CFE5FA;
+    border: 0;
+    border-bottom: 1px solid #769DC0;
+    color: #000000;
+    font-weight: bold;
+    margin: 0;
+}
+
+.grid2 tbody tr td {
+/*    border-bottom: 1px solid #EEEEEE;*/
+    /*background: #ffffff;*/
+}
+/*.grid tbody tr:nth-child(even) td, tbody tr.even td {background:#ffffff;}*/
+.grid2 tfoot {
+    background: #f7f7f7;
+    border-collapse: collapse;
+}
+.grid2 tfoot tr td {
+    border-top: 1px solid #EEEEEE;
+    background: #f7f7f7;
+}
+
+.grid2 tr:hover {
+    background-color: transparent;
+    cursor: pointer;
+}
+
+/* xxxxxxxxxxxx e-Sosti - Pesquisar Solicitações xxxxxxxxxxxx */
+.nao_pode_atender {
+    background-color: #EEE;
+}
+
+a.plus-vinc {
+
+}
+
+tr.vinculados {
+    background: #ddd;
+}

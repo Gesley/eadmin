@@ -1,0 +1,37 @@
+<?php
+echo	'<br />';
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+?>
+<form id="frmDespesaPergunta" enctype="application/x-www-form-urlencoded" method="post" action="">
+<dl class="zend_form">
+
+<?php echo $this->formulario->DESP_NR_DESPESA; ?>
+<br />
+
+<button type="submit" name="cmdProjecaoAcao" id="cmdEditar" title="Edita, conforme permissão, a projeção da despesa informada" value="Editar" class="ceo_editar">Editar</button>
+<button type="submit" name="cmdProjecaoAcao" id="cmdConsultar" title="Consulta a projeção da despesa informada" value="Consultar" class="ceo_consultar">Consultar</button>
+
+</dl>
+</form>
+
+<?php
+echo '<br />';
+echo '<h2>Relatórios</h2>';
+
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'projecao',
+				'nomeAction'		=> 'listagem',
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_RELATORIO,
+				'textoBotao'		=> 'Listagem de projeção orçamentária',
+				'textoAlternativo'	=> 'Exibir listagem de projeção orçamentária'));
+echo "&nbsp; &nbsp;";
+
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'projecao',
+				'nomeAction'		=> 'execucaomensal',
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_RELATORIO,
+				'textoBotao'		=> 'Listagem de execução mensal',
+				'textoAlternativo'	=> 'Exibir listagem de execução mensal'));

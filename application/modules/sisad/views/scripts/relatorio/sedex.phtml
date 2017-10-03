@@ -1,0 +1,151 @@
+<?php
+$datas = json_decode($this->data, false);
+$userNs = new Zend_Session_Namespace('userNs');
+?>
+<style>
+    #container{
+        margin: 0 auto;
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+
+    }
+    table#header{
+        width: 100%;
+    }
+    table#header td.orgao{
+        font-size: 13px;
+    }
+    table#header td.brasao{
+
+        background-image: url(<?= $this->baseUrl(); ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    table.titulo-tabela{
+     font-size: 14px;
+    }
+    
+    
+    table.titulo-tabela td.col1{
+        text-align: center;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    table.titulo-tabela td.col2{
+        font-weight: bold;
+    }
+    table.titulo-tabela td.col3{
+        font-weight: bold;
+        padding-top: 30px;
+        padding-left: 250px;
+    }
+
+   table.titulo-dados{
+     font-size: 14px;
+     margin-left: 30px;
+    }
+   
+    table.titulo-dados .titulo{
+    background-color: #A4B0B9;
+    }
+    
+    table.titulo-dados .negrito{
+        font-size: 17px;
+        font-weight: bold;
+        font-style: italic;
+    }
+     table.titulo-dados .border{
+        font-style: italic;
+        background-color: #adadad;
+    }
+    
+ 
+    
+    
+
+</style>
+
+<watermarkimage src="<?= $this->baseUrl(); ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+
+<body>
+
+    <table class="titulo-tabela" border="0">
+        <tr>
+            <td  class="col2">Período Informado: <?php echo $datas->DATA_INICIAL . " a " . $datas->DATA_FINAL; ?></bold></td>    
+        </tr>
+
+        <tr>
+            <td  class="col2">Seção/Subseção: <?php echo $userNs->codSec . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $userNs->descrisaosecsubsec; ?></td> 
+        </tr>
+        <tr>
+            <td class="col3"> <?php echo $this->titulo; ?></td>
+        </tr>
+    </table>
+
+    <br/>
+    <table class="titulo-dados" border="0" cellspacing="0">
+      
+<?php foreach ($this->dados as $dados) { ?>
+        
+        <tr>
+                <td  class="negrito">Unidade : </td>
+                <td  class="negrito" style="padding-left: 490px;" colspan="2"> </td>
+        </tr>
+        
+        <tr class="border">
+                <td>Postagem:</td>
+                <td style="padding-left: 490px;" colspan="2">Total:</td>
+        </tr>
+         
+        <tr style="font-size: 16px;">
+                <td> </td>
+                <td style="padding-left: 200px;"> </td>
+                <td>1</td>
+        </tr>
+        
+        <tr style="font-size: 16px;">
+            <td style=" font-style: italic;">Total da Unidade</td>
+                <td colspan="2" style="font-weight: bold; padding-left: 528px; "> </td>
+       </tr>
+        
+        
+
+<?php } ?>
+
+      <!-- TESTE -->
+      <tr>
+                <td  class="negrito">Unidade : 17</td>
+                <td  class="negrito" style="padding-left: 490px;" colspan="2"> PRESI</td>
+        </tr>
+        
+        <tr class="border">
+                <td>Postagem:</td>
+                <td style="padding-left: 490px;" colspan="2">Total:</td>
+        </tr>
+         
+        <tr style="font-size: 16px;">
+                <td>9 SEDEX</td>
+                <td style="padding-left: 200px;">SETDIC</td>
+                <td>1</td>
+        </tr>
+        
+        <tr style="font-size: 16px;">
+            <td style=" font-style: italic;">Total da Unidade</td>
+                <td colspan="2" style="font-weight: bold; padding-left: 528px; ">1</td>
+       </tr>
+        
+      
+      <!-- FIM TESTE -->
+           
+           
+           
+    </table>
+
+</body>

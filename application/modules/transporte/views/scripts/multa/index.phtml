@@ -1,0 +1,61 @@
+<?php //var_dump($this->data); exit;?>
+<?php if (count($this->data)): ?>
+<div class="painel"><a title="Novo" class="novo" href="<?php echo $this->baseUrl(); ?>/transporte/multa/add">Novo</a></div>
+<table class="grid">
+    <thead>
+        <tr>
+            <th>Alterar</th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_ID_MULTA/direcao/<?php echo $this->direcao ?> ">Id<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_NR_PROC_ADM/direcao/<?php echo $this->direcao ?> ">Nr Processo Adm<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_NR_MULTA/direcao/<?php echo $this->direcao ?> ">Nr Multa<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_DS_LOCAL_MULTA/direcao/<?php echo $this->direcao ?> ">Local<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_DH_MULTA/direcao/<?php echo $this->direcao ?> ">Dt-Hr<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_VL_INTEGRAL_MULTA/direcao/<?php echo $this->direcao ?> ">Valor Integral<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_VL_DESCONTO_MULTA/direcao/<?php echo $this->direcao ?> ">Valor Desconto<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_DT_VENCIMENTO/direcao/<?php echo $this->direcao ?> ">Data Venc<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_DT_PAGAMENTO/direcao/<?php echo $this->direcao ?> ">Data Pagt<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_ID_MOTORISTA/direcao/<?php echo $this->direcao ?> ">Id Motoris<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_ID_VEICULO/direcao/<?php echo $this->direcao ?> ">Id Veic<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_IC_PG_MOTORISTA/direcao/<?php echo $this->direcao ?> ">IC PG<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_CD_MATR_CADASTRANTE/direcao/<?php echo $this->direcao ?> ">Cadastrado Por<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_ID_PROC_FSPR/direcao/<?php echo $this->direcao ?> ">Proc<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_DH_CADASTRAMENTO/direcao/<?php echo $this->direcao ?> ">Dt-hr Cad<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            <th><a href="<?php echo $this->baseUrl(); ?>/transporte/multa/index/ordem/MULT_DS_OBSERVACAO/direcao/<?php echo $this->direcao ?> ">Observação<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+        <tr>
+            <td class="painel"><a title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/transporte/multa/edit/id/<?php echo $data->MULT_ID_MULTA ?>" >Editar</a></td>
+            <td><?php echo $this->escape($data->MULT_ID_MULTA) ?></td>
+            <td><?php echo $this->escape($data->MULT_NR_PROC_ADM) ?></td>
+            <td><?php echo $this->escape($data->MULT_NR_MULTA) ?></td>
+            <td><?php echo $this->escape($data->MULT_DS_LOCAL_MULTA) ?></td>
+            <td><?php echo $this->escape($data->MULT_DH_MULTA) ?></td>
+            <td><?php echo $this->escape($data->MULT_VL_INTEGRAL_MULTA) ?></td>
+            <td><?php echo $this->escape($data->MULT_VL_DESCONTO_MULTA) ?></td>
+            <td><?php echo $this->escape($data->MULT_DT_VENCIMENTO) ?></td>
+            <td><?php echo $this->escape($data->MULT_DT_PAGAMENTO) ?></td>
+            <td><?php echo $this->escape($data->MULT_ID_MOTORISTA) ?></td>
+            <td><?php echo $this->escape($data->MULT_ID_VEICULO) ?></td>
+            <td><?php echo $this->escape($data->MULT_IC_PG_MOTORISTA) ?></td>
+            <td><?php echo $this->escape($data->MULT_CD_MATR_CADASTRANTE) ?></td>
+            <td><?php echo $this->escape($data->MULT_ID_PROC_FSPR) ?></td>
+            <td><?php echo $this->escape($data->MULT_DH_CADASTRAMENTO) ?></td>
+            <td><?php echo $this->escape($data->MULT_DS_OBSERVACAO) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="14">Total: <?php echo $this->data->getTotalItemCount()?></td></tr></tfoot>
+</table>
+<br />
+<?php echo $this->paginationControl($this->data, null, null, array('filtro'=>$this->filtro,
+                                                                   'ordem'=> $this->ordem))
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif;?>

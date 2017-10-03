@@ -1,0 +1,85 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+?>
+<script type="text/javascript">
+                
+    $(function() {
+        $( ".novo" ).button({
+                    icons: {
+                        primary: ""
+                    }
+        });
+     });
+    
+    $(function() {
+        $("select#TRF1_SECAO").change(
+            function () {
+                    var secao = $(this).val().split('|')[0];
+                    var lotacao = $(this).val().split('|')[1];
+                    var tipolotacao = $(this).val().split('|')[2];
+                $.ajax({
+                    url: base_url + '/guardiao/unidadeperfil/ajaxsubsecoes/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                    dataType : 'html',
+                    beforeSend:function() {
+
+                    },
+                    success: function(data) {
+                        
+                        $('select#SECAO_SUBSECAO').html(data);
+                    },
+                    error: function(){
+                    }
+                });
+            });
+    });
+</script>  
+<div class="painel">
+        <a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/gruposervico/add">Novo</a>
+    </div>
+<?php echo $this->form; ?>
+<?php if (count($this->data)): ?>
+<div id="container_pagination">
+
+    <table class="grid">
+        <thead>
+            <tr>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/gruposervico/index/ordem/SGRS_ID_GRUPO/direcao/<?php echo $this->direcao ?> ">Editar<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/gruposervico/index/ordem/SGRS_DS_GRUPO/direcao/<?php echo $this->direcao ?> ">Grupo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/gruposervico/index/ordem/LOTACAO/direcao/<?php echo $this->direcao ?> ">Seção/Subseção Pai<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/gruposervico/index/ordem/LOTA_DSC_LOTACAO/direcao/<?php echo $this->direcao ?> ">Descrição do Grupo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/gruposervico/index/ordem/VISIBILIDADE/direcao/<?php echo $this->direcao ?> ">Indicador de visibilidade de usuário fora da TI<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): ?>
+                <tr>
+                    <td class="painel"><a title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/sosti/gruposervico/edit/id/<?php echo $this->escape($data["SGRS_ID_GRUPO"]); ?>" >Editar</a></td>
+                    <td><?php echo $this->escape($data["SGRS_DS_GRUPO"]); ?></td>
+                    <td><?php echo $this->escape($data["LOTACAO"]); ?></td>
+                    <td><?php echo $this->escape($data["LOTA_DSC_LOTACAO"]); ?></td>
+                    <td><?php echo $this->escape($data["VISIBILIDADE"]); ?></td>
+               </tr>
+            <?php endforeach; ?>
+        </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">Total: <?php echo $this->data->getTotalItemCount()     
+                                            ////-- pagination
+                                            //-- style
+                                            //-- partial
+                                            //-- data
+                                            ?>
+                   </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+    </div>
+</form>

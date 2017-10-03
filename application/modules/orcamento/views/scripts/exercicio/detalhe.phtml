@@ -1,0 +1,33 @@
+<?php
+echo	$this->partial('_partials/exercicio_detalhe.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo,
+				'dados'		=> $this->dados));
+
+echo	'<br />';
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'exercicio',
+				'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+				'textoBotao'		=> 'Voltar para listagem',
+				'textoAlternativo'	=> 'Retornar à tela de Pesquisar Exercício Orçamentário'));
+
+$desp = $this->url(
+                array(	'module'	=> Trf1_Orcamento_Definicoes::NOME_MODULO,
+					'controller'	=> 'exercicio',
+					'action'	=> 'copiardespesas',
+					'cod'		=> $this->dados['ANOE_AA_ANO']
+        ), 0, true);
+
+?>
+
+<?php
+	$arrPermitidos = array('1', '2', '3');
+	if (in_array( $this->dados['FASE_ID_FASE_EXERCICIO'], $arrPermitidos )):
+?>
+<a	class="ceo_detalhar"
+	alt="Copiar as despesas do Exercício Orçamentário"
+	title="Copiar as despesas do Exercício Orçamentário"
+	href="<?php echo $desp; ?>">Copiar Despesa</a>&nbsp;
+
+<?php endif; ?>

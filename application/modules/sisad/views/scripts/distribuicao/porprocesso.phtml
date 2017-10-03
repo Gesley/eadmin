@@ -1,0 +1,140 @@
+<style>
+    div#container{
+        margin: 0 auto;
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+    }
+    div#container .total{
+        font-weight: bold;
+    }
+    
+    div#rodape{
+        margin-top: 20px;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+    }
+    /* ################################# INICIO CABECALHO*/
+    table#header{
+        width: 100%;
+    }
+    table#header td.orgao{
+        font-size: 13px;
+    }
+    table#header td.brasao{
+        
+        background-image: url(<?= $this->baseUrl(); ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    /* ################################# FIM CABECALHO*/
+    /* ################################# INICIO CORPO*/
+    div#corpo{
+    }
+    div#corpo span.descricao{
+        margin-left: 30px;
+    }
+    div#corpo table.rel-corpo{
+        font-size: 14px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    div#corpo table.rel-corpo th.titulo{
+        font-weight: bold;
+        text-align: left;
+        vertical-align: top;
+        height: 50px;
+    }
+    div#corpo table.rel-corpo tbody{
+        vertical-align: top;
+    }
+    div#corpo table.rel-corpo tr td.segunda-linha{
+        padding-bottom: 10px;
+        border-bottom: 1px solid black;
+    }
+    .alinha-titulo{
+        font-size: 15px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    /* ################################# FIM CORPO*/
+</style>
+<div id="container">
+    <!-- ################       CABECALHO                 #################  -->
+    <watermarkimage src="<?= $this->baseUrl(); ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+
+    <!-- ################      FIM CABECALHO                 #################  -->
+    <!-- ################       CORPO                 #################  -->
+    <div id="corpo">
+        <table border="0" class="rel-corpo" cellspacing="0" >
+            <thead>
+                <tr >
+                    <th align="center" class="titulo">PROCESSO&nbsp;&nbsp;</th>
+                    <th align='left' class="titulo">
+                        JUIZ RELATOR/
+                        <br/>FORMA DE DISTRIBUIÇÃO
+                    </th>
+                    <th class="titulo">DATA DISTRIBUIÇÃO</th>
+                    <th width='180px' class="titulo">
+                        ORGÃO JULGADOR/
+                        <br/>DATA DO JULGAMENTO
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $numProc = '';
+                foreach ($this->arrayDados as $dados):
+                ?>
+                <tr>
+                    <td align='center'>
+                        <?php
+                        if($numProc !=$dados['DOCM_NR_DOCUMENTO']){
+                            echo $dados['DOCM_NR_DOCUMENTO'];
+                            $numProc = $dados['DOCM_NR_DOCUMENTO'];
+                        }
+                        ?>
+                    </td>
+                    <td colspan="2"><?=$dados['PNAT_NO_PESSOA'];?></td>
+                    <td align="right"><?=$dados['ORGJ_NM_ORGAO_JULGADOR'];?></td>
+                </tr>
+                <tr>
+                    <td >
+                        
+                    </td>
+                    <td class="segunda-linha">
+                        <?php
+                        if($dados['HDPA_IC_FORMA_DISTRIBUICAO']=='DA'){
+                            echo 'DISTRIBUIÇÃO AUTOMÁTICA EM';
+                        }else if($dados['HDPA_IC_FORMA_DISTRIBUICAO']=='DM'){
+                            echo 'DISTRIBUIÇÃO MANUAL EM';
+                        }else if($dados['HDPA_IC_FORMA_DISTRIBUICAO']=='RA'){
+                            echo 'DISTRIBUIÇÃO MANUAL EM';
+                        }
+                        ?>
+                        
+                    </td>
+                    <td align="center" class="segunda-linha"><?php
+                        $data = explode(',', $dados['HDPA_TS_DISTRIBUICAO']);
+                        echo $data[0];
+                        ?>&nbsp;</td>
+                    <td align="right" class="segunda-linha"><?= $dados['HDPA_DT_JULGAMENTO'] != null ? 'JULGADO EM ' . $dados['HDPA_DT_JULGAMENTO'] : '&nbsp;'; ?></td>
+                </tr>
+                <?php
+                endforeach;
+                ?>
+            </tbody>
+        </table><!-- FIM TABLE rel-corpo-->
+
+    </div><!-- FIM DIV corpo-->
+
+    <!-- ################       FIM CORPO                 #################  -->
+</div><!-- FIM DIV CONTAINER-->

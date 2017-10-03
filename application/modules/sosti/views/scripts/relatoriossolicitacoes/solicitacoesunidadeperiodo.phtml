@@ -1,0 +1,97 @@
+<?php $this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript'); 
+      $this->inlineScript()->appendFile($this->baseUrl() . '/js/combobox_app_jquery.js' , 'text/javascript');
+      $this->inlineScript()->appendFile($this->baseUrl() . '/js/relatoriossolicitacoes.js', 'text/javascript'); 
+      $this->inlineScript()->appendFile($this->baseUrl() . '/js/datepicker.js', 'text/javascript'); 
+      
+      $mostraConteudo = false;
+      $display = "none";
+      
+      if (count($this->data) > 0) {
+        $mostraConteudo = true;
+        $display = "block";
+      }
+?>
+
+<style>
+    .cabecalho{ font-size: 12px; color: #172E40; font-weight: bold; }
+    .orgao_unidade{ padding: 3px 0px; }
+    .unidade_periodo{ margin: 5px 0px; }
+    h3{ margin: 0px; padding: 3px 0px; font-weight: normal;} 
+    .totais{  font-size: 11px; color: #172E40;}
+    
+</style>
+
+<div class="help" id="pesq_div" class="span-23" >
+    
+    <form name="pesquisarsolicitacoes" action="" method="post" >
+            <?php echo $this->form->TRF1_SECAO; ?>
+            <?php echo $this->form->SECAO_SUBSECAO; ?>
+            <?php echo $this->form->DOCM_CD_LOTACAO_GERADORA; ?>
+            <?php echo $this->form->DATA_INICIAL; ?>
+            <?php echo $this->form->DATA_FINAL; ?>
+            <?php echo $this->form->ORDER; ?>
+            <?php echo $this->form->EXIBICAO; ?>
+            <?php echo $this->form->Pesquisar; ?>
+    </form>
+</div>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php if ($mostraConteudo): ?>
+
+<div id="container_pagination" style="display: <?php echo $display ?>;">
+    <div id="resultado">
+        <div class="painel" id="">
+        
+            <input type="button" title="Gerar PDF do Relatório" name="acao" value="PDF" id="pdf" onclick="javascript: location.href='<?php echo $this->baseUrl(); ?>/sosti/relatoriossolicitacoes/solicitacoesunidadeperiodopdf/';" >      
+            <input type="button" title="Gerar Excel do Relatório" name="acao" value="Excel" id="excel" onclick="javascript: location.href='<?php echo $this->baseUrl(); ?>/sosti/relatoriossolicitacoes/solicitacoesunidadeperiodoexcel/';" >      
+
+            <div class="cabecalho">
+                    <div class="orgao"> 
+                        TRIBUNAL REGIONAL FEDERAL DA 1&ordf; REGI&Atilde;O <br/>
+                        SECRETARIA DE TECNOLOGIA DA INFORMAÇÃO <br/>
+                        e-Admin - SOSTI - Data: <?php echo date("d/m/Y H:i:s"); ?> <br/>
+                    </div>
+                    <div class="unidade_periodo"> 
+                        <h3>Unidade Solicitante: 
+                            <?php echo $this->cabecalho['unidadeSolicitante'] ;?> 
+                        </h3>
+                        <?php if (!empty($this->cabecalho['DATA_INICIAL']) && !empty($this->cabecalho['DATA_FINAL'])  ): ?>
+                        <h3> Per&iacute;odo: <?php echo $this->cabecalho['DATA_INICIAL']; ?> a <?php echo $this->cabecalho['DATA_FINAL']; ?>  </h3>
+                        <?php endif; ?>
+                    </div>
+                </div>
+        </div>
+        
+        <?php if ($this->exibicao == "C"): ?>
+            <strong> TOTAL DE REGISTROS: <?php echo $this->data->getTotalItemCount(); ?> </strong> <br />
+            <?php 
+                  echo $this->partial('_partials/relatoriossosti/relatorioCompleto.phtml', array(
+                                        'data' => $this->data )); 
+                  echo $this->paginationControl($this->data, null, null, null); 
+            ?>
+            <br />
+        <?php endif; ?>
+            
+        <?php if ($this->exibicao == "S"): ?>  
+             <?php 
+                  echo $this->partial('_partials/relatoriossosti/relatorioSimplificado.phtml', array(
+                                        'data' => $this->data )); 
+                  echo $this->paginationControl($this->data, null, null, null); 
+            ?>
+        <?php endif; ?>
+            
+        <div class="totais">
+               <br /><strong> TOTAL DE REGISTROS: <?php echo array_sum($this->somatorioMensal); ?> </strong> 
+               <?php echo $this->partial('_partials/relatoriossosti/mostraSomatorioSostiPorSituacao.phtml', array(
+                                         'somatorioSituacao' => $this->somatorioSituacao )); ?>
+               <br />
+               <?php echo $this->partial('_partials/relatoriossosti/mostraSomatorioSostiPorMes.phtml', array(
+                                         'somatorioMensal' => $this->somatorioMensal )); ?>
+        </div>  
+       
+    </div>
+<?php else: ?>
+      <?php if ($this->ultima_pesq): ?>
+            <p><span style="font-weight: bold;">N&atilde;o existem registros para os par&acirc;metros de pesquisa informados</span></p>
+     <?php endif; ?>
+<?php endif; ?>
+</div>

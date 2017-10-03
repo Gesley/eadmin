@@ -1,0 +1,14 @@
+<?php
+if($this->niveis):  
+    echo '<option value="">Todos os níveis de atendimento</option>';  
+    foreach ($this->niveis as $value) : 
+?>
+<option value="<?php echo $value['SNAT_CD_NIVEL']; ?>"><?php echo $value['SNAT_DS_NIVEL']; ?></option>   
+<?php 
+    endforeach;
+    else: 
+?>
+        <option value="">Não exitem níveis para este grupo.</option>  
+<?php
+endif;
+?>

@@ -1,0 +1,75 @@
+<!--
+FORMULÁRIO DE PARECER A SER MANIPULADO PELO JQUERY AO CARREGAR UM DOCUMENTO
+-->
+<script>
+    $(function() {
+        $('#ANEXOS').MultiFile({
+            STRING: {
+                file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+                remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+            }
+        });
+    });
+</script>
+
+<?php
+if (isset($this->mensagem)) {
+    echo '<div id="mensagem">';
+    echo $this->mensagem;
+    echo '</div>';
+} else {
+    $motivo = '';
+    if ($this->documentos_alvo['motivo'] != null) {
+        $motivo = '<font color="red"><b>' . $this->documentos_alvo['motivo'] . '.</b></font><br/>';
+        unset($this->documentos_alvo['motivo']);
+    }
+    if (isset($this->documentos_alvo[0])) {
+        $documentos = '';
+        foreach ($this->documentos_alvo as $aux) {
+            $documentos .= $aux['MASC_NR_DOCUMENTO'] . ', ';
+        }
+        $texto = '<br/><b>Números:</b> ' . substr($documentos, 0, -2);
+    } else {
+        $texto = '<br/><b>Número:</b> ' . $this->documentos_alvo['MASC_NR_DOCUMENTO']
+                . '<br/><b>Tipo Documento:</b> ' . $this->documentos_alvo['DTPD_NO_TIPO']
+                . '<br/><b>Assunto:</b> ' . $this->documentos_alvo['AQVP_CD_PCTT'] . ' - ' . $this->documentos_alvo['AQAT_DS_ATIVIDADE'];
+    }
+    ?>
+    <div id="div-parecer_ajax">
+        <br/><?= ($motivo != '' ? '<b>Observações:</b> ' . $motivo . '</br>' : '') ?><b>Parecer em </b><?= $texto ?>
+        <br/>
+        <br/>
+        <form class="form_parecer" id="form-parecer<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" enctype="multipart/form-data">
+            <input name="documento_leitura" type="hidden" value="<?= $this->escape(Zend_Json::encode($this->documento)) ?>" />
+            <input name="documentos_alvo" type="hidden" value="<?= $this->escape(Zend_Json::encode($this->documentos_alvo)) ?>" />
+            <?= $this->formParecer->getElement('MOFA_DS_COMPLEMENTO') ?>
+<!--            <b>Anexos</b><br/>
+            <input id="ANEXOS" type="file" name="ANEXOS[]" class="Multi" accept="pdf" maxlength="20" />
+            Até 20 Anexos. <br/>
+            Somente serão aceitos arquivos com o formato PDF. <br/>
+            Soma dos arquivos até 50 Megas.-->
+            <?= $this->formParecer->getElement('Salvar') ?>
+        </form>
+    </div>
+
+    <!--
+    FORMULÁRIO DE DESPACHO A SER MANIPULADO PELO JQUERY AO CARREGAR UM DOCUMENTO
+    -->
+    <div id="div-despacho_ajax">
+        <br/><?= ($motivo != '' ? '<b>Observações:</b> ' . $motivo . '</br>' : '') ?><b>Despacho em </b><?= $texto ?>
+        <br/>
+        <br/>
+        <form class="form_despacho" id="form-despacho_<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" enctype="multipart/form-data">
+            <input name="documento_leitura" type="hidden" value="<?= $this->escape(Zend_Json::encode($this->documento)) ?>" />
+            <input name="documentos_alvo" type="hidden" value="<?= $this->escape(Zend_Json::encode($this->documentos_alvo)) ?>" />
+            <?= $this->formDespacho->getElement('MOFA_DS_COMPLEMENTO') ?>
+<!--            <b>Anexos</b><br/>
+            <input id="ANEXOS" type="file" name="ANEXOS[]" class="Multi" accept="pdf" maxlength="20" />
+            Até 20 Anexos. <br/>
+            Somente serão aceitos arquivos com o formato PDF. <br/>
+            Soma dos arquivos até 50 Megas.-->
+            <?= $this->formDespacho->getElement('Salvar') ?>
+        </form>
+    </div>
+    <?php
+}

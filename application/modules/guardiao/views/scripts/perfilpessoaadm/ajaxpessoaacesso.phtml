@@ -1,0 +1,17 @@
+<?php
+if($this->PapSistUnidPess_array):  ?>
+    <option value="" selected="selected" ></option>
+<?php 
+        foreach ($this->PapSistUnidPess_array as $value) :
+?>
+    <option value="<?php echo $value['PMAT_CD_MATRICULA']; ?>" <?=$this->pupe_cd_matricula == $value["PMAT_CD_MATRICULA"] . '|' . $value['LOTA_COD_LOTACAO']?'selected=selected':'' ?>>
+        <?php echo $value['PNAT_NO_PESSOA'].' - '.$value['PMAT_CD_MATRICULA']; ?>
+    </option>   
+    <?php 
+    endforeach; ?>
+    <?php else: 
+?>
+        <option value="">INFORME PRIMEIRO A UNIDADE ADMINISTRATIVA</option>  
+<?php
+endif;
+?>

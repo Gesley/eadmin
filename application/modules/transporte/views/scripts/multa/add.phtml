@@ -1,0 +1,24 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>Selecionar o <b>Grupo de Serviços</b> desejado.</li>
+        <li>Descrever o novo serviço.</li>
+    </ul>
+    <p>Marcar Flag:</p>
+    <p><b>Ativo</b> para que o novo serviço possa ser visualizado.</p>
+    <p><b>Visível</b> apenas se o serviço puder ser visualizado pelo usuário final, deixar em branco quando for um serviço de uso exclusivo das equipes de TI.</p>
+    <p><b>Tombo</b> se for obrigatório o número do tombo para o atendimento do serviço.</p>
+    <p><b>Anexo</b> quando for obrigatória a anexação de uma imagem do erro ou do serviço a ser executado.</p>
+    <br />
+    <p>Atenção: <b>Salvar</b> as alterações realizadas.</p>
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<?php echo $this->form; ?>

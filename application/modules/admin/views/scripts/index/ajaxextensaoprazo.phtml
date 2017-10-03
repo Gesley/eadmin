@@ -1,0 +1,23 @@
+<?php if($this->caixasQuantidade > 0):?>
+<script type="text/javascript">
+    $('#extensaoPrazo').show();
+</script>
+<table>
+    <tr>
+        <td bgcolor="#dedede">Caixas</td>
+        <td bgcolor="#dedede" align="right"><div align="right">Quantidade</div></td>
+    </tr>
+    <?php foreach ($this->caixasQuantidadeDados as $caixasExtensoes): ?>
+    <tr>
+        <td>
+            <a href="sosti/sla/autorizaextensaoprazo/<?=($caixasExtensoes['MODE_ID_CAIXA_ENTRADA']  > 4 ? 'caixa/secao' : 'idcaixa/'.$caixasExtensoes['MODE_ID_CAIXA_ENTRADA']) ?>"><?php echo $caixasExtensoes['CXEN_DS_CAIXA_ENTRADA'] ?></a>
+        </td>
+        <td>
+            <div align="right"><?php echo $caixasExtensoes['QTD'] ?></div>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+<?php else: ?>
+    <p>Não existem solicitações com extensão de prazo.</p>
+<?php endif; ?>

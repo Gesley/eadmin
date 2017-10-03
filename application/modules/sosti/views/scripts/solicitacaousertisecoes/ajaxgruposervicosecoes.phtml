@@ -1,0 +1,18 @@
+<?php
+if($this->contarGrupos > 1):
+?> 
+ <option value="">::SELECIONE::</option> 
+<?php 
+endif;
+
+    foreach ($this->gruposServicosSecoes as $value) : 
+        if($value['SGRS_ID_GRUPO'] != 2 ){
+        
+?>
+ <option value='<?php echo $this->escape(Zend_Json::encode($value)); ?>'><?php echo $value['SGRS_DS_GRUPO']; ?></option>   
+<?php 
+        }
+    endforeach; 
+?>
+  
+    

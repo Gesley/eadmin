@@ -1,0 +1,84 @@
+<?php
+/**
+  $this->documento
+  $this->apensos;
+  $this->formPesquisa;
+ */
+?>
+<div id="tabs_vinculos-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="tabs_documentos_juntados">
+    <h3>Processos Administrativos Vinculados</h3>
+    <fieldset style="display:inline;">
+        <div class="painel">
+            <input class="expandir_filtro" type="button" title="Exibe o filtro dos processos" name="acao" value="Expandir Filtro"/>
+            <input class="remover_filtro" type="button" title="Remove o filtro dos processos" name="acao" value="Remover Filtro"/>
+            <span style="color: #2E4557;">
+                <strong class="label_filtro">
+                    &emsp;&emsp;Filtro Inativo
+                </strong>
+            </span>
+        </div>
+        <div id="pesq_div" style="display: none;">
+            <?= $this->formPesquisa ?>
+        </div>
+
+    </fieldset>
+    <div class="tutorial">
+        <br/>
+        <p>
+            A tabela abaixo lista os processos administrativos que estão vinculados. Caso o filtro esteja ativo a tabela abaixo listará o resultado do filtro. 
+            <br/>
+            <!--Caso tenha dúvidas quanto a funcionalidade existe um menu (ajuda) na barra de menus superior.-->
+        </p>
+    </div>
+    <div class="div_tabela_documentos">
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th >Ordem</th>
+                    <th >Ação</th>
+                    <th >Número</th>
+                    <th >Tipo</th>
+                    <th >Assunto</th>
+                    <th >Data de inserção</th>
+                    <th >Usuário</th>
+                    <th >Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->vinculos as $vinculos):
+                    $vinculos['APARTIR_DE_DOCM_ID_DOCUMENTO'] = $this->documento['DOCM_ID_DOCUMENTO'];
+                    ?>
+                    <tr name="rowList" value="<?= $this->escape(Zend_Json::encode($vinculos)) ?>" >
+                        <td class="ordem_leitura"></td>
+                        <td style="width: 65px;"> 
+                            <button class="nova_aba" title="Este botão abrirá uma nova aba para a leitura do processo administrativo."></button>
+                            <button class="subir" title="Este botão trocará a ordem de leitura com o processo superior."></button>
+                            <button class="remover_tr" title="Este botão removerá o processo da visualização."></button>
+                            <button class="descer" title="Este botão trocará a ordem de leitura com o processo posterior."></button>
+                        </td>
+                        <td><?= $vinculos['MASC_NR_DOCUMENTO'] ?></td>
+                        <td><?= $vinculos['DTPD_NO_TIPO'] ?></td>
+                        <td><?= $vinculos['AQVP_CD_PCTT'] . ' - ' . $vinculos['AQAT_DS_ATIVIDADE'] ?></td>
+                        <td><?= $vinculos['VIPD_DH_VINCULACAO'] ?></td>
+                        <td><?= $vinculos['PMAT_CD_MATRICULA'] . ' - ' . $vinculos['PNAT_NO_PESSOA'] ?></td>
+                        <td><?= $vinculos['STATUS_JUNTADA'] ?></td>
+                    </tr>
+                    <?php
+                endforeach;
+                ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <!--<td colspan="8">Total: </td>-->
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <br/>
+    <br/>
+</div>
+
+
+
+

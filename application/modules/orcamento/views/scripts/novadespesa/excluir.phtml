@@ -1,0 +1,29 @@
+<?php
+if (($this->perfil != Trf1_Orcamento_Definicoes::PERMISSAO_DESENVOLVEDOR) && ($this->perfil != Trf1_Orcamento_Definicoes::PERMISSAO_DIPOR)) {
+	$diretorio = 'novadespesa/tela_exclusao.phtml';
+} else {
+	$diretorio = '_partials/tela_exclusao.phtml';
+}
+
+/* TESTES ASmR
+$dadosCodigosAExcluir = array();
+$dadosCodigosExclusaoNegada = array();
+
+foreach ( $this->dados as $registro) {
+	if ($registro['Tipo'] == Trf1_Orcamento_Dados::TIPO_SOLICITACAO_SOLICITADA) {
+		array_push($dadosCodigosAExcluir, $registro['SOLD_NR_SOLICITACAO']);
+	} else {
+		array_push($dadosCodigosExclusaoNegada, $registro['SOLD_NR_SOLICITACAO']);
+	}
+}
+*/
+
+echo	$this->partial($diretorio,
+		array(	'msgAjuda'		=> $this->msgAjuda,
+				'msgInfo'		=> $this->msgInfo,
+				'codigo'		=> $this->codigo,
+				'dados'			=> $this->dados,
+				'semexclusao'   => $this->naoexcluir, /* $dadosCodigosExclusaoNegada, */
+				'excluir'       => $this->excluir /* $dadosCodigosAExcluir */
+		));
+

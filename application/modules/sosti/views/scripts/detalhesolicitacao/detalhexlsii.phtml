@@ -1,0 +1,79 @@
+<!--<meta http-equiv="content-type" content="text/html;charset=utf-8" />-->
+<?php 
+    $idDocumentoPrincipal = $this->DocmDocumento["SSOL_ID_DOCUMENTO"] ;
+    $AnexAnexo      = new Application_Model_DbTable_SadTbAnexAnexo();
+    $anx = $AnexAnexo->fetchAll("ANEX_ID_DOCUMENTO = $idDocumentoPrincipal");
+    if(!is_null($anx)){
+        $anxSemMetadado = $anx->toArray();
+    }
+    $caso_categoria = new Application_Model_DbTable_SosTbCasoCategoriaSolic();
+    $categoriasPessoal = $caso_categoria->getCategoriasDocumentoPessoal($idDocumentoPrincipal);
+    if($this->DocmDocumento["SNAS_ID_NIVEL"] != NULL){
+        $tipo = 'NIVEL';
+        $identificador = $this->DocmDocumento["SNAS_ID_NIVEL"];
+    }else{
+        $tipo = 'GRUPO';
+        $identificador = $this->DocmDocumento["SGRS_ID_GRUPO"];
+    }
+    $categoriasGrupo = $caso_categoria->getCategoriasDocumentoGrupo($idDocumentoPrincipal,$identificador,$tipo);
+?>
+            <!-- Início do documento -->
+            <?php if($this->idCaixa == 2): ?>A
+                <?php if($this->DocmDocumento["ASSO_IC_ATENDIMENTO_EMERGENCIA"] == 'S'){ ?>
+                    <tr style="font-size: 12px; font-weight: bold;">
+                            <td>
+                                    <img src="<?php echo $this->baseUrl(); ?>/img/sosti/emergencial.png" title="Demanda de Carater Emergencial" /> 
+                            </td>   
+                            <td colspan="2">
+                                    DEMANDA EMERGÊNCIAL
+                            </td>   
+                    
+                <?php } ?>
+                <tr style="font-size: 12px; font-weight: bold;">
+                        <td colspan="2">
+    <!--			<img src="<?php echo $this->baseUrl(); ?>/img/sosti/<?php echo $this->DocmDocumento["CTSS_ID_CATEGORIA_SERVICO"]?>.png" title="<?php echo $this->DocmDocumento["CTSS_NM_CATEGORIA_SERVICO"]?>" /> -->
+                                <?php echo $this->DocmDocumento["CTSS_NM_CATEGORIA_SERVICO"]." - "; ?>
+                                <?php echo $this->DocmDocumento["OSIS_NM_OCORRENCIA"] ?>
+                        </td>    
+                        <td >
+                                <?php echo "Nível de Criticidade: ".$this->DocmDocumento["ASIS_IC_NIVEL_CRITICIDADE"]; ?>
+                        </td>    
+                
+            <?php endif; ?>
+            
+                <td><?php echo $this->DocmDocumento['DOCM_NR_DOCUMENTO'].'.'?>
+                </td>
+                <td><?php echo $this->DocmDocumento['SSER_DS_SERVICO']?></td>
+                <td><?php echo $this->DocmDocumento['ATENDENTE']?></td>
+                <!--<td><?php // echo $this->DocmDocumento['FADM_DS_FASE']?></td>-->
+                
+<!--                <td>
+                    <?php // echo 'teste'.$this->decodehtmlentities($this->DocmDocumento['DOCM_DS_ASSUNTO_DOC']); ?>
+                </td>-->
+                <!-- Último encaminhamento para caixa do Desenvolvimento e Sustentaçao --> 
+                <td><?php echo $this->DocmDocumento["MOVIMENTACAO"];?></td>
+                
+                
+<!--                <td>
+                    <?php echo $this->DocmDocumento['DOCM_DH_CADASTRO']?>
+                </td>-->
+                <td>
+                    <?php echo $this->DocmDocumento['FADM_DS_FASE']?>
+                </td>             
+            </tr>
+            <?php if(strcmp($this->DocmDocumentoVinculacao["DOCM_NR_DOCUMENTO"], $this->DocmDocumento['DOCM_NR_DOCUMENTO'])&&$this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO']!=NULL){ ?>
+           
+                <td colspan="4"> 
+                    <strong>Solicitação Vinculada:</strong>
+                    ESTA SOLICITAÇÃO ESTÁ VINCULADA A UMA PRINCIPAL: <?php echo $this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO']?>
+                </td>
+            <?php }elseif(!(strcmp($this->DocmDocumentoVinculacao["DOCM_NR_DOCUMENTO"], $this->DocmDocumento['DOCM_NR_DOCUMENTO']))&&$this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO']!=NULL){?>
+             <tr>
+                <td colspan="4">
+                    <strong>Solicitação Vinculada:</strong> 
+                    ESTA SOLICITAÇÃO É A PRINCIPAL DE UMA VINCULAÇÃO
+                </td>
+            </tr>
+
+            <?php }?>
+

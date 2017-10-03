@@ -1,0 +1,191 @@
+<?php
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/tooltipster-1.2/js/jquery.tooltipster.min.js', 'text/javascript');
+?>
+<!--<script type="text/javascript">
+    $(document).ready(function () {
+        $('.tooltip').tooltipster({
+            fixedWidth: 650,
+            position: 'bottom-left'
+        });
+        $(function () {
+            $(".tooltip").each(function () {
+                $(this).attr("data-oldhref", $(this).attr("href"));
+                $(this).removeAttr("href");
+            });
+        })
+    });
+</script>-->
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input[type=checkbox]');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+                grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+//                url = '/app/e-Admin/sosti/detalhesolicitacao/detalhesol';
+                                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+       });
+       $(".historico").hide('');
+       
+    $("#grid-draggable").sortable({
+      revert: true
+    });
+    $("#draggable").draggable({
+      connectToSortable: "#grid-draggable",
+      helper: "clone",
+      revert: "invalid"
+    });
+    $("tbody, tr").disableSelection();
+    });
+</script> 
+<!--<script type="text/css">
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:active {
+    text-decoration: underline;
+}
+    </script>-->
+<?php if ($this->qtdeData > 0): ?>
+<?php // $this->JqueryDraggableSortable('grid-draggable'); ?>
+<form name="order-grid" id="order-grid" method="POST" action="<?php echo $this->baseUrl(); ?>/sosti/gestaodemandas/salvarpriorizacao">
+    <div id="container_pagination">
+    <table class="grid ui-widget ui-widget-content" id="grid-draggable">
+        <thead>
+            <tr>
+                <th colspan="2">Prioridade</th>
+                <th>Número da solicitação</th>
+                <th>Solicitante</th>
+                <th>Data da solicitação</th>
+                <th>Última fase</th>
+            </tr>
+        </thead>
+        <tbody id="grid-draggable">
+            <?php $k = 1; ?>
+            <?php foreach ($this->data as $d): ?>
+                <?php $d['DADOS_INPUT'] = json_encode($d); ?>
+                <tr class="ui-state-default" name="rowList">
+                    <td>
+                        <span class="ui-icon ui-icon-carat-2-n-s">
+                            <input class="nav_grid_check_box nav_check_boxes" name="solicitacao[]" type="hidden"
+                               id="<?php echo $this->escape($d["SSOL_ID_DOCUMENTO"]); ?>" value="<?php echo $this->escape($d["DADOS_INPUT"]); ?>"/>
+                        </span>
+                    </td>
+                    <td><?php echo $k; ?></td>
+                    <td><a href="#" class="newlink" id="newlink" title="<?php echo $d['DOCM_DS_ASSUNTO_DOC']; ?>"><?php echo $this->escape($d["MASCARA_DOCM"]); ?></td>
+                    <td><?php echo $d["NOME_USARIO_CADASTRO"]; ?></td>
+                    <td><?php echo $d["DOCM_DH_CADASTRO"]; ?></td>
+                    <td><?php echo $d["FADM_DS_FASE"]; ?></td>
+                    <input type="hidden" name="idDocumento[]" value="<?php echo $d["SSOL_ID_DOCUMENTO"].'|'.$this->grupo.'|'.$this->servico; ?>" />
+                </tr>
+                <?php $k++; ?>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+    <br />
+    <input type="submit" name="Salvar" value="Salvar" />
+    </div>
+    </form>
+<?php else: ?>
+    <p>Não existem registros.</p>
+<?php endif; ?>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

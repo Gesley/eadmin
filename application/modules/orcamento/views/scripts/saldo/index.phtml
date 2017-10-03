@@ -1,0 +1,24 @@
+<?php
+echo	'<br />';
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo $this->formulario;
+
+echo '<br />';
+echo '<h2>Relatórios</h2>';
+
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'saldo',
+				'nomeAction'		=> 'listagem',
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_RELATORIO,
+				'textoBotao'		=> 'Listagem de saldos',
+				'textoAlternativo'	=> 'Exibir listagem de saldo'));
+
+echo	$this->partial('_partials/botao.phtml',
+        array(	'nomeController'	=> 'saldo',
+                'nomeAction'		=> 'planejamento',
+                'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_RELATORIO,
+                'textoBotao'		=> 'Listagem de saldos planejamento estratégico',
+                'textoAlternativo'	=> 'Exibir listagem de saldo planejamento estratégico'));

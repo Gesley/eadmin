@@ -1,0 +1,200 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>Todos os documentos criados ou digitalizados pelo servidor, são direcionados inicialmente para a <b>Caixa de Rascunhos</b>, onde o responsável pela criação do documento irá ver o documento e tomar duas ações:</p>
+    <ul>
+        <li><b>Encaminhar</b> - o documento será encaminhado automaticamente para a Caixa de Entrada de documentos do servidor.</li>
+        <li><b>Excluir</b> - poderá excluir o documento e os metadados ou somente o documento, mantendo os metadados para nova inclusão do documento excluído.</li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+        
+    $(function(){
+        $("tr[name=rowList]").click(
+            function(){
+                var solic = $(this).attr('value');               
+                var ischecked_solic = $('#'+solic).attr('checked');
+                var ischecked_solic_tr = $(this).attr('marcado');
+                if( (ischecked_solic == undefined && ischecked_solic_tr == undefined) || (ischecked_solic != undefined && ischecked_solic_tr == undefined) ){
+                    $('#'+solic).attr('checked','checked');
+                    $(this).attr('marcado','marcado');
+                    $(this).addClass('over');
+                }else{
+                    $('#'+solic).removeAttr('checked');
+                    $(this).removeAttr('marcado');
+                    $(this).removeClass('over');
+                }
+                $('#'+solic).focus();
+            }
+        );
+            
+    $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_pess_ranscunho = $('form[name=cx_pess_ranscunho]');
+            if(acao == 'Encaminhar'){
+                cx_pess_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/encaminhar');
+            }else if(acao == 'Parecer'){
+                cx_pess_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/parecer');
+            }else if(acao == 'Assinar por senha'){
+                cx_pess_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixapessoal/assinar');
+            }else if(acao == 'Arquivar'){
+                cx_pess_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivar');
+            }else if(acao == 'Pesquisa'){
+                cx_pess_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/pesquisa');
+            }else if(acao == 'Excluir'){
+                cx_pess_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixapessoal/cancelar');
+            }
+        }
+    );
+    var xhr;    
+    $("tr[name=rowList]").dblclick(
+        function(){
+            var input_check_box = $(this).find('input');
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            $(this).attr('marcado','marcado');
+            $(this).addClass('hover');
+            /*var obj = jQuery.parseJSON(value_input)*/;
+
+            if (xhr) {
+                xhr.abort();
+            }
+
+            url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+            xhr = $.ajax({
+            url: url,
+            dataType: 'html',
+            type: 'POST',
+            data: value_input_check_box,
+            contentType: 'application/json',
+            processData: false, 
+            beforeSend:function() {
+                $("#dialog-manifestacoes_detalhe").dialog("open");
+            },
+            success: function(data) {
+                $("#dialog-manifestacoes_detalhe").html(data);
+
+            },
+            complete: function(){
+
+            },
+            error : function(){
+
+            }
+            });
+        }
+    );
+//    $('form[name=cx_pess_ranscunho]').submit(
+//       function(){
+//            var documentoSelecionado = $(".nav_check_boxes:checked").val();
+//            if (documentoSelecionado == undefined){                   
+//                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+//                flashMessages_by_id.hide();
+//                flashMessages_by_id.html(mensagem);
+//                flashMessages_by_id.show('pulsate');
+//                flashMessages_by_id.delay(2000).hide('puff');
+//                return false;
+//            }
+//       }
+//    );
+    
+    $("input[type=checkbox][name=input_check_all_grid]").click(
+        function(){
+            if($(this).attr('checked')){
+                $(".nav_check_boxes").attr('checked','checked');
+                $("tr[name=rowList]").addClass('hover');
+            }else{
+                $(".nav_check_boxes").removeAttr('checked');
+                 $("tr[name=rowList]").removeClass('hover');
+            }
+        }
+    );
+    
+     $("#dialog-manifestacoes_detalhe").dialog({
+                title    : 'Detalhe',
+                        autoOpen : false,
+                        modal    : false,
+                        show: 'fold',
+                        hide: 'fold',
+                        resizable: true,
+                        width: 800,
+                        position: [580,140,0,0],
+                        buttons : {
+                                Ok: function() {
+                                        $(this).dialog("close");
+                                }
+                        }
+    });
+    });
+</script>
+
+<?php if (count($this->data)): ?>
+<form method="POST" action="assinar" name="cx_pess_ranscunho">
+    <div class="painel">
+    <input type="submit" title="Encaminha Documento/Processo"      disabled="disabled"   name="acao" value="Encaminhar" />
+    <input type="submit" title="Assina por senha Documento/Processo"     disabled="disabled"    name="acao" value="Assinar por senha" />
+<!--    <input type="submit" title="Dar um parecer no Documento/Processo" name="acao" value="Parecer"/>-->
+    <input type="submit" title="Arquivar um Documento/Processo"  disabled="disabled"      name="acao" value="Arquivar"/>
+    <input type="submit" title="Pesquisa Documento/Processo"     disabled="disabled"      name="acao" value="Pesquisa"/>
+    <input type="submit" title="Excluir Documento/Processo"     disabled="disabled"      name="acao" value="Excluir"/>
+    </div>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Número</th>
+                <th >Autor</th>
+                <th >Tipo</th>
+                <th >Data</th>
+            </tr>
+        </thead>
+       <tbody>
+            <?php foreach ($this->data as $dado): ?>
+                <?php foreach ($dado as $data): ?>
+                    <tr>
+                        <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+                        <td><?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                        <td><?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                        <td><?php echo $this->escape($data["DOCM_DH_CADASTRO"]) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)
+                //-- pagination
+                //-- style
+                //-- partial
+                //-- data
+                ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>   
+<?php echo $this->form; ?>
+</form>
+<div id="dialog-manifestacoes_detalhe">
+    <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+ <div id="dialog-manifestacoes_conteudo"></div>
+</div>

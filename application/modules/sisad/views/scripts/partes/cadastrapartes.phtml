@@ -1,0 +1,86 @@
+<?php
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/partesInteressadosDocumentos.js'));
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/partesInteressados.js'));
+?>
+<script type="text/javascript">
+  $(function() {  
+      
+                var tipoCadastro = <?php echo $this->tipoCadastro; ?>;
+                if (tipoCadastro == '1') {
+                    $("#selecionados_partes").show();
+                    $.data(document.body,'config',
+                        {
+                            containerPartes: $("#partes_adicionadas"),
+                            tabela: $("#selecionados_partes tbody"),
+                            descParte: 'linha_parte',
+                            tipoParte: '1'
+                        }
+                    );
+                }else if(tipoCadastro == '3'){
+                    $("#selecionados_vistas").show();
+                    $.data(document.body,'config',
+                        {
+                            containerPartes: $("#vistas_adicionadas"),
+                            tabela: $("#selecionados_vistas tbody"),
+                            descParte: 'linha_vista',
+                            tipoParte: '3'
+                        }
+                    );     
+                }
+                    
+  });
+</script>
+<div id="flashMessagesView">
+    <div class="<?php echo  $this->flashmessage['status']; ?>">
+            <strong><?php echo  $this->flashmessage['label']; ?></strong><?php echo $this->flashmessage['message']; ?>
+    </div>
+</div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+<?php if (count($this->data)): ?>
+<div class="container_pagination_fixed">
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Tipo</th>
+            <th >Número</th>
+            <th >Encaminhador</th>
+            <th >Data/Hora Encaminhamento</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php
+            //Zend_Debug::dump($this->data);
+        foreach($this->data as $data):
+            ?>
+            <tr>
+                    <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+<!--                    <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                    <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                    <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                    <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                    <input type="hidden" name="idDcmto" class="idDcmto" value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]) ?>" />
+                    <input type="hidden" name="confidencialidade" class="" rel="<?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?>" value="<?php echo $this->escape($data["DOCM_ID_CONFIDENCIALIDADE"]) ?>" />
+            </tr>
+            <?php ?>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+        </tr>
+    </tfoot>
+</table>
+</div>
+<?php endif; ?>
+
+<form id="formPartes" method="post" action="<?php echo $this->baseUrl()?>/sisad/partes/save" enctype="multipart/form-data">
+    
+    <?php echo $this->partial('_partials/cadastrapartesinteressados.phtml',            
+                    array( 'form' => $this->formParte));   ?>
+    
+    <div id="partes_adicionadas"> </div>
+    <div id="vistas_adicionadas"> </div>
+    
+    <input type="submit" value="Salvar" style="margin-top: 15px;"/> 
+    
+</form>

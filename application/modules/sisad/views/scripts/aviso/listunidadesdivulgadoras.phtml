@@ -1,0 +1,37 @@
+<?php if (count($this->data)): ?>
+<?php
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/avisoindex.js'));
+?>
+<div id="container_pagination">
+    <table class="grid">
+            <thead>
+                <tr>
+                    <th>Editar</th>
+                    <th ><a  href="<?php //echo $this->baseUrl();  ?>/sisad/caixa/index/ordem/GRDV_ID_GRUPO_DIVULGACAO/direcao/<?php //echo $this->direcao  ?> ">SG Seção</a></th>
+                    <th ><a  href="<?php //echo $this->baseUrl();  ?>/sisad/caixa/index/ordem/GRDV_DS_GRUPO_DIVULGACAO/direcao/<?php //echo $this->direcao  ?> ">CD Seção</a></th>
+                    <th ><a  href="<?php //echo $this->baseUrl();  ?>/sisad/caixa/index/ordem/GRDV_IC_ATIVO/direcao/<?php //echo $this->direcao  ?> ">DS Unidades/Seção</a></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php foreach ($this->data as $data): ?>
+                    <tr>
+                        <td><a href="<?php echo $this->baseUrl(); ?>/sisad/aviso/editpermissaotipodoc/siglasecao/<?php echo ($data['UNPE_SG_SECAO']) ?>/codlotacao/<?php echo $data['UNPE_CD_LOTACAO'] ?>"><span class="editar"></span></a</td>
+                        <td><?php echo $this->escape($data["UNPE_SG_SECAO"]) ?></td>
+                        <td><?php echo $this->escape($data["UNPE_CD_LOTACAO"]) ?></td>
+                        <td><?php echo $this->escape($data["LOTA_DSC_LOTACAO"]) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot><tr><td colspan="7">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+        </table>
+<?php echo $this->paginationControl($this->data, null, null, null)
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+</div>

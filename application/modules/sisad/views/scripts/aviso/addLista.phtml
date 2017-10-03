@@ -1,0 +1,25 @@
+
+<div id="dialog_cadastra_parte">
+    <ul style="list-style: none; padding: 0px 0px 2px 0px;" >
+
+        <li class="li_parte idComp"> 
+            <span class=" inputParte"> <?php echo $this->form->LIST_ID_COMPONENTE; ?> </span>
+        </li>
+        <li class="li_parte idGrupo">
+            <span class=" inputParte"> <?php echo $this->form->LIST_ID_GRUPO_DIVULGACAO; ?> </span>
+        </li> 
+    </ul>
+    <table id="selecionados_partes"  style="margin-top: 20px; width: 80%; display: none;" class="grid tabela">
+
+        <thead> 
+            <tr>
+                <th colspan="2"> Divulgar Para: </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="2"><a href='#' class='removerTodos' rel='' >Remover todos</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div> 

@@ -1,0 +1,283 @@
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<div style="padding-left: 20px; padding-top: 10px;">
+<table>
+    <tr><td colspan="5" style="border: 1px solid #C3C3C3; padding: 3px;">DATA E HORA DA EMISSÃO: <?php echo $this->horaAtual; ?></td></tr>
+    <tr><td colspan="5" style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $this->titulo; ?></td></tr>
+    <tr><td colspan="5" style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $this->periodo; ?></td></tr>
+    <?php if ($this->fuso != ""): ?>
+        <tr><td colspan="5" style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $this->secao; ?></td></tr>
+        <tr><td colspan="5" style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $this->fuso; ?></td></tr>
+    <?php endif; ?>
+        <tr><td colspan="5" style="border: 1px solid #C3C3C3; padding: 3px;">EMITIDO POR: <?php echo $this->emissor; ?></td></tr>
+</table>
+<br />
+<table class="legenda ui-widget-content" >
+    <thead>
+        <tr>
+            <th colspan="2" align="left" style="border: 1px solid #C3C3C3; padding: 3px;">Indicadores de Nível Mínimo de Serviço</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">Meta Exigida</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">Meta Alcançada</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">Glosa</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->slaIndices as $im): ?>
+        <tr>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["SINS_CD_INDICADOR"]; ?></td>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["SINS_DS_INDICADOR"]; ?></td>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["SINS_DS_SINAL_META"]." ".$im["SINS_NR_META"]; ?></td>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["META_ALCANCADA"]; ?></td>
+            <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $im["GLOSA"]; ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr></tr>
+    </tfoot>
+</table>
+
+
+
+    <!--Início Tempo médio para atendimento às solicitações por parte da equipe de monitoria-->
+    <div style="padding-left: 20px; padding-top: 10px;">
+
+    <div>
+        <br />
+        <?php $qtdeSolicitacoesTma = count($this->solicitacoesTma); ?>
+        <table>
+            <thead>
+                <tr bgcolor="#CCCCCC">
+                    <th  colspan="6" style="border: 1px solid #C3C3C3; padding: 3px;">Tempo médio para atendimento às solicitações por parte da equipe de monitoria</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="6" style="border: 1px solid #C3C3C3; padding: 3px;">Índice de Inicio de Atendimento no Prazo</td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados Atendidos: <?php echo $this->totalTmaSolicitacoes; ?></td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados considerados: <?php echo $this->totalParcial ?></td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados desconsiderados: <?php echo $this->totalDesconsideradas ?></td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="border: 1px solid #C3C3C3; padding: 3px;">Tempo médio para atendimento em minutos: <?php echo  $this->tempoMedioTMA; ?></td>
+                </tr>
+                <tr>
+                    <th colspan="6" style="border: 1px solid #C3C3C3; padding: 3px;">
+                        <center>Lista de Chamados</center>
+                    </th>
+                </tr>
+                <tr>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Nº do Documento</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Descrição</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Data do Chamado</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Data do Primeiro Atendimento</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Tempo de atemdimento(Min)</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Considerado</th>
+                </tr>
+               <?php if ($qtdeSolicitacoesTma > 0): ?>
+               <?php foreach ($this->solicitacoesTma as $tma): ?>
+                <tr>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tma["DOCM_NR_DOCUMENTO"].'.'; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tma["MOFA_DS_COMPLEMENTO"]; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tma["DATA_CHAMADO"]; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tma["DATA_PRIMEIRO_ATENDIMENTO"]; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tma["TEMPO_ATENDIMENTO_MINUTOS"]; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php if(is_null($tma["CONSIDERADO_TMA"])){echo 'N';}else{echo $tma["CONSIDERADO_TMA"];} ?></td>
+                </tr>
+                <?php endforeach; ?>
+                <?php else: ?>
+                <tr><td colspan="6">Não existem registros.</td></tr>
+                <?php endif; ?>
+            </tbody>
+            <tfoot>
+                <tr></tr>
+            </tfoot>
+        </table>
+    </div>
+    <!--Fim Tempo médio para atendimento às solicitações por parte da equipe de monitoria-->
+
+    <!--Tempo médio para cadastramento de novos serviços ou ativos-->
+    <div>
+        <br />
+        <table>
+            <thead>
+                <tr bgcolor="#CCCCCC">
+                    <th colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Tempo médio para cadastramento de novos serviços ou ativos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $qtdesolicitacoesTmcsa = count($this->solicitacoesTmcsa); ?>
+                <tr>
+                    <td colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Índice de Inicio de Atendimento no Prazo</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados Atendidos: <?php echo $this->totalTmcsaSolicitacoes; ?></td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados considerados: <?php echo $this->total_considerados_Tmcsa ?></td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados desconsiderados: <?php echo $this->total_desconsiderados_Tmcsa ?></td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Tempo médio para atendimento em dias úteis: <?php echo  $this->tempoMedioTMCSA; ?></td>
+                </tr>
+                <tr><th colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;"><center>Lista de Chamados</center></th></tr>
+                <tr>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Nº do Documento</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Descrição</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Data do Chamado</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Data da baixa/encaminhamento</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Prazo acordado</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Tempo de atemdimento(Dias)</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Considerado</th>
+                </tr>
+               <?php if ($qtdesolicitacoesTmcsa > 0): ?>
+               <?php foreach ($this->solicitacoesTmcsa as $tmcsa): ?>
+               <tr name="rowList" value="<?php echo $this->escape($tmcsa["SSOL_ID_DOCUMENTO"]); ?>" >
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tmcsa["DOCM_NR_DOCUMENTO"].'.'; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tmcsa["MOFA_DS_COMPLEMENTO"]; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tmcsa["DATA_CHAMADO"]; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tmcsa["DATA_FIM_CHAMADO"]; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tmcsa["SSPA_DT_PRAZO"]; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $tmcsa["TEMPO_ATENDIMENTO_DIAS"]; ?></td>
+                    <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php if(is_null($tmcsa["CONSIDERADO_TMCSA"])){echo 'N';}else{echo $tmcsa["CONSIDERADO_TMCSA"];} ?></td>
+                </tr>
+                <?php endforeach; ?>
+                <?php else: ?>
+                <tr><td colspan="7">Não existem registros.</td></tr>
+                <?php endif; ?>
+            </tbody>
+            <tfoot>
+                <tr></tr>
+            </tfoot>
+            </table>
+    </div>
+    <!--Fim Tempo médio para cadastramento de novos serviços ou ativos-->
+
+    <!--Inicio Média de dias de atraso injustificado no cumprimento dos prazos acordados-->
+    <div>
+        <br />
+        <table>
+            <thead>
+                <tr bgcolor="#CCCCCC">
+                    <th colspan="8" style="border: 1px solid #C3C3C3; padding: 3px;">Média de dias de atraso injustificado no cumprimento dos prazos acordados</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php $qtdesolicitacoesMaicpa= count($this->solicitacoesMaicpa); ?>
+            <tr>
+                <td colspan="8" style="border: 1px solid #C3C3C3; padding: 3px;">Índice de Inicio de Atendimento no Prazo</td>
+            </tr>
+            <tr>
+                <td colspan="8" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados Atendidos: <?php echo $this->totalTmcsaSolicitacoes; ?></td>
+            </tr>
+            <tr>
+                <td colspan="8" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados considerados: <?php echo $this->total_considerados_Maicpa?></td>
+            </tr>
+            <tr>
+                <td colspan="8" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados desconsiderados: <?php echo $this->total_desconsiderados_Maicpa?></td>
+            </tr>
+            <tr>
+                <td colspan="8" style="border: 1px solid #C3C3C3; padding: 3px;">Média de dias de atraso(dias úteis): <?php echo  $this->tempoMedioMAICPA; ?></td>
+            </tr>
+            <tr>
+                <td colspan="8" style="border: 1px solid #C3C3C3; padding: 3px;"><center>Lista de Chamados</center></td>
+            </tr>
+            <tr>
+                <th style="border: 1px solid #C3C3C3; padding: 3px;">Nº do Documento</th>
+                <th style="border: 1px solid #C3C3C3; padding: 3px;">Descrição</th>
+                <th style="border: 1px solid #C3C3C3; padding: 3px;">Data do Chamado</th>
+                <th style="border: 1px solid #C3C3C3; padding: 3px;">Data baixa / encaminhamento</th>
+                <th style="border: 1px solid #C3C3C3; padding: 3px;">Prz real útil</th>
+                <th style="border: 1px solid #C3C3C3; padding: 3px;">Prz acordado útil / Dt Prz</th>
+    <!--            <th>Data Prazo acordado</th>-->
+                <th style="border: 1px solid #C3C3C3; padding: 3px;">(Prz real - Prz acordado)(dias úteis)</th>
+                <th style="border: 1px solid #C3C3C3; padding: 3px;">Consi.</th>
+                <th></th>
+            </tr>
+           <?php if ($qtdesolicitacoesMaicpa> 0): ?>
+           <?php foreach ($this->solicitacoesMaicpa as $maicpa): ?>
+           <tr name="rowList" value="<?php echo $this->escape($tmcsa["SSOL_ID_DOCUMENTO"]); ?>" >
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $maicpa["DOCM_NR_DOCUMENTO"].'.'; ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $maicpa["MOFA_DS_COMPLEMENTO"]; ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $maicpa["DATA_CHAMADO"]; ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $maicpa["DATA_FIM_CHAMADO"]; ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $maicpa["TEMPO_ATENDIMENTO_DIAS"]; ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $maicpa["ACORDADO"]." ".$maicpa["SSPA_DT_PRAZO"]; ?></td>
+    <!--            <td><?php echo $maicpa["SSPA_DT_PRAZO"]; ?></td>-->
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $maicpa["TEMPO_ATRASO"]; ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php if(is_null($maicpa["CONSIDERADO_MAICPA"])){echo 'N';}else{echo $maicpa["CONSIDERADO_MAICPA"];} ?></td>
+            </tr>
+            <?php endforeach; ?>
+            <?php else: ?>
+            <tr><td colspan="9">Não existem registros.</td></tr>
+            <?php endif; ?>
+                </tbody>
+                <tfoot>
+                    <tr></tr>
+                </tfoot>
+            </table>
+    </div>
+    <!--Fim Média de dias de atraso injustificado no cumprimento dos prazos acordados-->
+
+    <!-- Início Número de Videoconferências não realizadas com agendamento prévio de 1 dia-->
+    <div>
+        <br />
+        <table>
+            <thead>
+                <tr bgcolor="#CCCCCC">
+                    <th colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Número de Videoconferências não realizadas com agendamento prévio de 1 dia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Total de Chamados: <?php echo $this->totalNvnrSolicitacoes; ?></td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Número de video conferências realizadas: <?php echo $this->total_videos_realizadas_Nvnr ?></td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;">Número de video conferências não realizadas: <?php echo $this->total_videos_nao_realizadas_Nvnr ?></td>
+                </tr>
+                <tr>
+                    <th colspan="7" style="border: 1px solid #C3C3C3; padding: 3px;"><center>Número de Videoconferências não realizadas com agendamento prévio de 1 dia</center></th>
+                </tr>
+                <tr>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Nº do Documento</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Dt. Chamado</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Dt. Baixa</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Dt. marcada</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Realizada</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Agendamento prévio</th>
+                    <th style="border: 1px solid #C3C3C3; padding: 3px;">Considerado</th>
+                </tr>
+                <?php if ($this->totalNvnrSolicitacoes > 0): ?>
+                <?php foreach ($this->solicitacoesNvnr as $nvnr): ?>
+                    <tr>
+                        <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $nvnr["DOCM_NR_DOCUMENTO"].'.'; ?></td>
+                        <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $nvnr["DATA_CHAMADO"]; ?></td>
+                        <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $nvnr["DATA_FIM_CHAMADO"]; ?></td>
+                        <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $nvnr["SSES_DT_INICIO_VIDEO"]; ?></td>
+                        <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $nvnr["SSES_IC_VIDEO_REALIZADA"]; ?></td>
+                        <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $nvnr["TEMPO_AGENDAMENTO"]; ?></td>
+                        <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $nvnr["CONSIDERADO_NVNR"]; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <?php else: ?>
+                <tr><td colspan="7">Não existem registros.</td></tr>
+                <?php endif; ?>
+            </tbody>
+            <tfoot>
+                <tr></tr>
+            </tfoot>
+        </table>
+    </div>
+    <!--Fim Número de Videoconferências não realizadas com agendamento prévio de 1 dia-->
+
+</div>

@@ -1,0 +1,39 @@
+<script type="text/javascript">
+
+
+$(function() {
+    $('#SOTC_ID_GRUPO').change(
+        function(){
+            $("#SNAT_CD_NIVEL").removeAttr('disabled');
+            $.ajax({
+                url: '<?php echo $this->baseUrl(); ?>/sosti/conformidade/ajaxniveis',
+                dataType: 'html',
+                type: 'POST',
+                data: this.value,
+                contentType: 'html',
+                processData: false,
+              beforeSend:function() {
+                  $("#SOTC_ID_INDICADOR").removeClass('erroInputSelect');
+                  
+                  $("#SOTC_ID_INDICADOR").addClass('carregandoInputSelect');
+              },
+              success: function(data) {
+                  $("#SOTC_ID_INDICADOR").html(data);
+                  $("#SOTC_ID_INDICADOR").removeClass('carregandoInputSelect');
+                  $("#SOTC_ID_INDICADOR").focus();
+              },
+              error: function(){
+                  $("#SOTC_ID_INDICADOR").removeClass('x-form-field');
+                  $("#SOTC_ID_INDICADOR").val('Erro ao carregar.');
+                  $("#SOTC_ID_INDICADOR").addClass('erroInputSelect');
+                  $("#SOTC_ID_INDICADOR").html('<option>Erro ao carregar</option>');
+              }
+            });  
+        }
+    );
+            
+});
+</script>
+<?php 
+echo $this->form;
+?>

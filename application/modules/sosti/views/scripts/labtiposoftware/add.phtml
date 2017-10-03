@@ -1,0 +1,34 @@
+<script>
+    $(function() {
+        $("#LTPS_DS_TP_SOFTWARE").autocomplete({
+            source: base_url + '/sosti/labtiposoftware/ajaxcadastrotiposoftware/',
+            minLength: 2,
+        
+            dataType: 'json',       
+            change: function( event, ui ) {
+                console.log(ui);
+                $("#LTPS_DS_TP_SOFTWARE").val(ui.item.label);   
+            }
+        });
+        $("input:checkbox").click(function(){$(this).parent("label").toggleClass("hover")});
+        $("#LTPS_DS_TP_SOFTWARE").css('text-transform','uppercase');
+    });
+
+</script>
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+</div>
+<?php if (isset($this->msg_error)) { ?>
+    <div id="flashMessages">
+        <div class="notice">
+            <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+        </div>
+    </div>
+<?php } ?>
+<?php echo $this->form; ?>

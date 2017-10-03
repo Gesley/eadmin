@@ -1,0 +1,337 @@
+<?php
+    $this->inlineScript()->appendFile($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js')
+                         ->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript')
+                         ->appendFile($this->baseUrl() . '/js/multiUpload/multiFile.js')
+                         ->appendFile($this->baseUrl() . '/js/sosti/respostaPadrao.js');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p><b>Trocar serviço</b>.</p>
+    <ul>
+        <li>faça uma nova descrição ou gere informações que justifiquem o motivo da troca do serviço.</li>
+        <li>clique no botão Salvar e será gerada uma mensagem de sucesso.</li>
+        <li>Feita a troca, a solicitação permanecerá na mesma caixa, com um serviço diferente.</li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+<!--    <ul>
+        <li>Após encaminhar para <b>Outro nível de atendimento</b>, as solicitações são gravadas na caixa de atendimento do 1º, 3º ou 4º nível e os dados do encaminhamento são gravados no histórico.</li>
+        <li>No <b>Grupo de Atendimento</b> contém os grupos: Atendimento ao Usuário, Desenvolvimento / Sustentação, Banco de Dados / Administração de Dados / Rede, Escritório de Projetos / NOC.</li>
+        <li>A <b>Caixa Pessoal</b> permite o encaminhamento para um servidor lotado na Diatu, quer seja prestador ou servidor. Para os demais grupos, o encaminhamento é sempre pelo grupo.</li>
+    </ul>-->
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+ <script type="text/javascript">
+	$(function() {
+
+        $("#DOCM_DS_HASH_RED").hide();
+        $("#DOCM_DS_HASH_RED-label").hide();
+        $(".description").hide();   
+
+        $("#SSOL_NR_TOMBO-label").hide();
+        $("#SSOL_NR_TOMBO-element").hide();
+        $("#DE_MAT-label").hide();
+        $("#DE_MAT-element").hide();
+        $("#SSES_DT_INICIO_VIDEO-label").hide();
+        $("#SSES_DT_INICIO_VIDEO-element").hide();
+            
+        $('#SSER_ID_SERVICO').change(
+        function(){
+                var tombo = $(this).attr('value').split('|')[1];
+                if(tombo == 'S'){
+                $("#SSOL_NR_TOMBO-label").show();
+                $("#SSOL_NR_TOMBO-element").show();
+                        $("#SSOL_NR_TOMBO").show();
+                        $('#SSOL_NR_TOMBO').removeAttr('disabled');
+                        
+                $("#DE_MAT-label").show();
+                $("#DE_MAT-element").show();
+                        $("#DE_MAT").show();
+                        $('#DE_MAT').removeAttr('disabled');
+            }else{
+                $("#SSOL_NR_TOMBO-label").hide();
+                $("#SSOL_NR_TOMBO-element").hide();
+                        $("#SSOL_NR_TOMBO").hide();
+                        $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                        
+                $("#DE_MAT-label").hide();
+                $("#DE_MAT-element").hide();
+                        $("#DE_MAT").hide();
+                        $('#DE_MAT').attr('disabled', 'disabled');
+            }
+            var videoconferencia = $(this).attr('value').split('|')[2];
+            if(videoconferencia == 'S'){
+                $("#SSES_DT_INICIO_VIDEO-label").show();
+                $("#SSES_DT_INICIO_VIDEO-element").show();
+            }else{
+                $("#SSES_DT_INICIO_VIDEO-label").hide();
+                $("#SSES_DT_INICIO_VIDEO-element").hide();
+            }
+        });
+        var videoconferencia = $('#SSER_ID_SERVICO').attr('value').split('|')[2];
+        if(videoconferencia == 'S'){
+            $("#SSES_DT_INICIO_VIDEO-label").show();
+            $("#SSES_DT_INICIO_VIDEO-element").show();
+        }else{
+            $("#SSES_DT_INICIO_VIDEO-label").hide();
+            $("#SSES_DT_INICIO_VIDEO-element").hide();
+        }
+        
+        var tombo = $('#SSER_ID_SERVICO').attr('value').split('|')[1];
+        if(tombo == 'S'){
+            $("#SSOL_NR_TOMBO-label").show();
+            $("#SSOL_NR_TOMBO-element").show();
+            $("#DE_MAT-label").show();
+            $("#DE_MAT-element").show();
+        }else{
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+        }
+        
+        $('#SSOL_NR_TOMBO').focusout(
+            function(){
+                $.ajax({
+                    url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxdesctombo/id/'+this.value,
+                    beforeSend:function() {
+                        $("#DE_MAT").removeClass('erroInputTextArea');
+                        $("#DE_MAT").val('');
+                        $("#DE_MAT").removeClass('x-form-field');
+                        $("#DE_MAT").addClass('carregandoTextArea');
+                    },
+                    success: function(data) {
+                        $("#DE_MAT").val(data);
+                        $("#DE_MAT").removeClass('carregandoInputTextArea');
+                        $("#DE_MAT").addClass('x-form-field');
+                        $("#DE_MAT").focus();
+                    },
+                    error: function(){
+                        $("#DE_MAT").removeClass('carregandoInputTextArea');
+                        $("#DE_MAT").removeClass('x-form-field');
+                        $("#DE_MAT").val('Erro ao carregar.');
+                        $("#DE_MAT").addClass('erroInputTextArea');
+                    }
+                });  
+            }
+        );
+            
+        <?php $date = explode("/",$this->sysdate); ?>
+        $(function() {
+            $('#SSES_DT_INICIO_VIDEO').datetimepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+                dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+                dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+                monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                'Outubro','Novembro','Dezembro'],
+                monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+                nextText: 'Próximo',
+                prevText: 'Anterior',
+                changeMonth: true,
+                numberOfMonths: 1,
+                changeMonth: true,
+                changeYear: true,
+                changeMonth: true,
+                showSecond: true,
+                timeFormat: 'hh:mm:ss',
+                timeOnlyTitle: 'Escolha a data e hora de início da videoconferência',
+                timeText: 'Tempo',
+                hourText: 'Hora',
+                minuteText: 'Minutos',
+                secondText: 'Segundos',
+                currentText: 'Agora',
+                closeText: 'OK',
+                minDate: new Date(<?php echo $date[2]; ?>, <?php echo $date[1]; ?> - 1, <?php echo $date[0]; ?>),
+                onClose: function(dateText, inst) {
+                }
+            });
+        });
+ });
+ </script>
+
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input[type=checkbox]');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+                grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        $('input[name=acao]').click(
+            function(){
+                var acao = this.value;
+                var formhelpdesk = $('form[name=helpdesk]');
+                if(acao == 'Encaminhar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/desenvolvimentosustentacao/encaminhar');
+                }else if(acao == 'Baixar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/desenvolvimentosustentacao/baixarcaixa');
+                }else if(acao == 'Espera'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/desenvolvimentosustentacao/esperacaixa');
+                }
+            }
+        );
+        $('form[name=helpdesk]').submit(
+           function(){          
+                var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                if (solictacaoSelecionada == undefined){ 
+                    var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                    $('#flashMessages').html(mensagem);
+                    return false;
+                }
+           }
+        );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+       });
+       $(".historico").hide('');
+    });
+</script>
+ <table class="grid">
+    <thead>
+        <tr>
+            <th><?php echo $this->tituloSolicit; ?></th>
+            <th>Nome do Solicitante</th>
+            <th>Tempo total</th>
+            <th>Serviço atual</th>
+            <th>Vinculada</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php foreach ($this->data as $data): ?>
+             <tr name="rowList" value="<?php echo $this->escape($d["SSOL_ID_DOCUMENTO"]); ?>"  style="<?php if($d["ESPERA_FLAG"] >= 0 && !is_null($d["ESPERA_FLAG"])) echo "color: #008000;"?>">
+                <?php $d = Zend_Json::decode($data); ?> 
+                 <td class="historico" <?php echo ($data["TEMPO_TOTAL"] > 120)?('style="background-color:#EE4115;" title="Solicitação com o tempo de atendimento ultrapassado!"'):('');  
+                          echo ($data["MOFA_ID_FASE"] == 1019)?('style="background-color:#E88400;" title="Solicitação recusada!"'):('');
+                          echo ($data["ESPERA_FLAG"] >= 0 && !is_null($data["ESPERA_FLAG"]))?('style="background-color:#0099FF;" title="Solicitação colocada em espera!"'):(''); ?> >
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data); ?>"/>
+                 </td>
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td><?php if(isset($d["NOME"])){echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME']);}else{echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME_USARIO_CADASTRO']);;} ?></td>
+                <td> <?php echo $this->escape($d["TEMPO_TRANSCORRIDO"]); ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"] ) ?></td>
+                <td><?php if(isset ($d["VINCULADA"])&&($d["VINCULADA"]==1)){echo "SIM";}else{echo "";}?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<?php echo $this->form; ?>
+<div id="dialog_escolha_resposta">
+    <fieldset>
+        <?= $this->formResposta; ?>
+    </fieldset>
+    <fieldset>
+        <legend> Resultados </legend>
+        <div id="resultados_resposta">
+           
+        </div>
+    </fieldset>
+</div>
+<div id="dialog-documentos_detalhe">
+ <div id="dialog-documentos_conteudo"></div>
+</div>

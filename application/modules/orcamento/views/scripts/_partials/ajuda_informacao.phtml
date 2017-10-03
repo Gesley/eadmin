@@ -1,0 +1,34 @@
+<?php
+/**
+ * @category	TRF1
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Anderson Sathler M. Ribeiro [asathler@gmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que gera botões de ajuda e informação no canto superior direiro da tela
+ * 
+ * @param		string		msgAjuda			Texto da ajuda (pode utilizar HTML)
+ * @param		string		msgInfo				Texto da informação (pode utilizar HTML)
+ * 
+ * @example		echo $this->partial('_partials/ajuda_informacao.phtml', array(	'msgAjuda'	=> $this->msgAjuda,
+ * 																				'msgInfo'	=> $this->msgInfo));
+ */
+?>
+
+<div class="help" id="msg_ajuda" style="display: none;">
+	<script>$(function(){botao_ajuda_by_id.show();})</script>
+	<strong>Ajuda:</strong>
+	<ul>
+		<?php echo $this->msgAjuda; ?>
+	</ul>
+</div>
+
+<div class="info" id="msg_informacao" style="display: none;">
+	<script>$(function(){botao_informacao_by_id.show();})</script>
+	<strong>Informações:</strong>
+	<ul>
+		<?php echo $this->msgInfo; ?>
+	</ul>
+</div>

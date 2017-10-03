@@ -1,0 +1,14 @@
+<?php
+
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.maskedinput-1.3.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MultiFile.js'));
+?>
+<script>
+    $(function() {
+        $("#Buscar").button();
+        $("#data_inicial").mask("99/99/9999");
+        $("#data_final").mask("99/99/9999");
+    });
+</script>
+<?= $this->form; ?>

@@ -1,0 +1,42 @@
+<script src='<?php echo $this->baseUrl(); ?>/js/sosti/detalheSolicitacao.js'></script>
+<?php $total = count($this->arrayData); ?>
+<?php if (count($total) > 0): ?> 
+<h3>TRIBUNAL REGIONAL FEDERAL DA 1ª REGIÃO</h3>
+<h3>SECRETARIA DE TECNOLOGIA DA INFORMAÇÃO</h3>
+<h3>DATA: <?php echo $this->dataHora; ?></h3>
+<?php echo $this->unidade != "" ? "<h4>UNIDADE: ".$this->unidade."</h4>" : ""; ?>
+<?php echo $this->grupo != "" ? "<h4>GRUPO DE SERVIÇO: ".$this->grupo."</h4>" : ""; ?>
+<?php echo $this->dataInicial != "" ? "<h4>PERÍODO: ".$this->dataInicial." A ".$this->dataFinal."</h4>" : ""; ?>
+<?php echo $this->partial('_partials/painelbotoes.phtml', array('arrayPainelBotoes' => $this->arrayPainelBotoes)); ?>
+    <table class="grid">
+        <thead>
+            <tr>
+                <th>Número da Solicitação</th>
+                <th>Data da Solicitação</th>
+                <th>Nome do Solicitante</th>
+                <th>Serviço Atual</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->arrayData as $d): ?>
+                <tr>
+                    <td class='historico' style='display: none;' >
+                        <input class='nav_grid_check_box nav_check_boxes'  name='solicitacao[]' type='checkbox' value='<?php echo Zend_Json::encode($d); ?>' />
+                    </td>
+                    <td><?php echo $d["DOCM_NR_DOCUMENTO"]; ?></td>
+                    <td><?php echo $d["DOCM_DH_CADASTRO"]; ?></td>
+                    <td><?php echo $d["NOME_USARIO_CADASTRO"]; ?></td>
+                    <td><?php echo $d["SSER_DS_SERVICO"]; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">Total de registros: <?php echo $total; ?></td>
+            </tr>
+        </tfoot>
+    </table>
+<?php endif; ?>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

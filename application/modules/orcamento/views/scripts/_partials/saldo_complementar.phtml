@@ -1,0 +1,43 @@
+<?php
+$valor = new Trf1_Orcamento_Valor();
+$sinalMoeda = true;
+?>
+
+<table>
+    <tbody>
+        <tr>
+            <td width="80%">Requisição efetivada:</td>
+            <td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_RDO']), $sinalMoeda); ?></td>
+        </tr>
+        <tr>
+            <td class="total"><abbr title="Campo calculado: Dotação descentralizada no exercício – Requisição efetivada">Saldo orçamentário sem requisição:</abbr></td>
+            <td class="total"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_A_AUTORIZAR']), $sinalMoeda); ?></td>
+        </tr>
+        <tr>
+            <td>Requisição empenhada:</td>
+            <td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_EMPENHADO']), $sinalMoeda); ?></td>
+        </tr>
+        <tr>
+            <td class="total"><abbr title="Campo calculado: Requisição efetivada – Requisição empenhada">Requisição a empenhar:</abbr></td>
+            <td class="total"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_A_EMPENHAR']), $sinalMoeda); ?></td>
+        </tr>
+        <!--
+        <tr>
+                <td class="total"><abbr title="Campo calculado: Proposta recebida - Valor empenhado">Saldo de empenho:</td>
+                <td class="total"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_SALDO_EMPENHO']), $sinalMoeda); ?></td>
+        </tr>
+        -->
+        <tr>
+            <td>Requisição executada:</td>
+            <td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_EXECUTADO']), $sinalMoeda); ?></td>
+        </tr>
+        <tr>
+
+            <td class="total"><abbr title="Campo calculado: Requisição empenhada – Requisição executada">Requisição a executar:
+                    <a href="<?php echo $this->baseUrl() ?>/orcamento/empenho/index/order/NOEM_NR_DESPESA_ASC/NOEM_NR_DESPESA/<?php echo $this->saldo['NR_DESPESA']; ?>" class="ui-button ui-widget ui-state-default ui-corner-all">Saldo de empenho</a></abbr>
+            </td>
+
+            <td class="total"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_A_EXECUTAR']), $sinalMoeda); ?></td>
+        </tr>
+    </tbody>
+</table>

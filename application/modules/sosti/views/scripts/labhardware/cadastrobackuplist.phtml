@@ -1,0 +1,81 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#confirm").dialog({
+            autoOpen: false,
+            modal: true,
+            title: "Confirmar remoção?"
+        });
+
+        $(".excluir").click(function(e) {
+    
+            e.preventDefault();
+            var targetUrl = $(this).attr("href");
+            var tomboNr = targetUrl.split("/");
+            $("#tomboNr").html("<strong>"+tomboNr[5]+"</strong> ");
+
+            $("#confirm").dialog({
+                buttons : {
+                    "Confirmar" : function() {
+                        window.location.href = targetUrl;
+                    },
+                    "Cancelar" : function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#confirm").dialog("open");
+        });
+    });
+</script>
+<div id="container_pagination">
+    <div style="margin-bottom: 5px;">
+        <a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackupadd">Novo</a>
+    </div>
+    <?php if (count($this->data) > 0): ?>
+        <table class="grid" cellspacing="12">
+            <thead>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackuplist/ordem/TTC.NU_TOMBO/direcao/<?php echo $this->direcao ?> ">Editar<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackuplist/ordem/TTC.NU_TOMBO/direcao/<?php echo $this->direcao ?> ">Número do Tombo<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackuplist/ordem/MAT.DE_MAT/direcao/<?php echo $this->direcao ?> ">Descrição<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackuplist/ordem/TTC.TI_TOMBO/direcao/<?php echo $this->direcao ?> ">Tipo do Tombo<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackuplist/ordem/BKP.LBKP_CD_MATRICULA_CAD/direcao/<?php echo $this->direcao ?> ">Matrícula Cadastrante<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackuplist/ordem/BKP.LBKP_DH_CADASTRO/direcao/<?php echo $this->direcao ?> ">Data do Cadastro<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackuplist/ordem/RH.LOTA_SIGLA_SECAO/direcao/<?php echo $this->direcao ?> ">Seção<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackuplist/ordem/RH.LOTA_SIGLA_LOTACAO/direcao/<?php echo $this->direcao ?> ">Lotação<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+                    <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/cadastrobackuplist/ordem/BKP.LBKP_IC_ATIVO/direcao/<?php echo $this->direcao ?> ">Ativo?<span class="<?php echo ($this->direcao == 'ASC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span></a></th>
+            </thead>
+            <tbody>
+                <?php foreach ($this->data as $data): ?>
+                    <tr name="rowlist">
+                        <td ><a title="Editar" class="editar"  href="<?php echo $this->baseUrl(); ?>/sosti/labhardware/edittombobackup/tomboNr/<?php echo $this->escape($data["NU_TOMBO"]); ?>/tomboTp/<?php echo $this->escape($data["TI_TOMBO"]); ?>" >Editar</a></td>
+                        <td><?php echo $this->escape($data["NU_TOMBO"]); ?></td>
+                        <td title="<?php echo $this->escape($data["DE_MAT"]); ?>"><?php echo substr($data["DE_MAT"], 0, 30); ?>...</td>
+                        <td><?php echo $this->escape($data["TI_TOMBO"]); ?></td>
+                        <td><?php echo $this->escape($data["LBKP_CD_MATRICULA_CAD"]); ?></td>
+                        <td><?php echo $this->escape($data["LBKP_DH_CADASTRO"]); ?></td>
+                        <td><?php echo $this->escape($data["LOTA_SIGLA_SECAO"]); ?></td>
+                        <td><?php echo $this->escape($data["LOTA_SIGLA_LOTACAO"]); ?></td>
+                        <td><?php echo ($data["LBKP_IC_ATIVO"] == 'S') ? 'SIM' : 'NÃO'; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9">
+                        Total: 
+                        <?php echo $this->data->getTotalItemCount() ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    <?php else: ?>
+        <p>Não existem registros.</p>
+    <?php endif; ?>
+</div>
+<div id="confirm" style="display:none"> Remover o tombo backup número <span id="tomboNr"></span> ?</div>

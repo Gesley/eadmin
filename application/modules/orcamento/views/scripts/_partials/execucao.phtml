@@ -1,0 +1,58 @@
+<?php
+$valor = new Trf1_Orcamento_Valor ();
+?>
+<div id="execucaoTabs" class="tabs">
+    <ul>
+        <li> <a href="#execucao">Execução</a> </li>
+    </ul>
+    
+    <div id="execucao">
+    <table>
+        <tbody>
+            <tr>
+                <td> <strong>Janeiro:</strong><br />
+                <span class="execucao" id="EXEC_VL_JANEIRO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_JANEIRO' ] ) ); ?></span> </td>
+                
+                <td> <strong>Fevereiro:</strong><br />
+                <span class="execucao" id="EXEC_VL_FEVEREIRO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_FEVEREIRO' ] ) ); ?></span> </td>
+                
+                <td> <strong>Março:</strong><br />
+                <span class="execucao" id="EXEC_VL_MARCO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_MARCO' ] ) ); ?></span> </td>
+                
+                <td> <strong>Abril:</strong><br />
+                <span class="execucao" id="EXEC_VL_ABRIL"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_ABRIL' ] ) ); ?></span> </td>
+                
+                <td> <strong>Maio:</strong><br />
+                <span class="execucao" id="EXEC_VL_MAIO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_MAIO' ] ) ); ?></span> </td>
+                
+                <td> <strong>Junho:</strong><br />
+                <span class="execucao" id="EXEC_VL_JUNHO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_JUNHO' ] ) ); ?></span> </td>
+            </tr>
+            <tr>
+                <td> <strong>Julho:</strong><br />
+                <span class="execucao" id="EXEC_VL_JULHO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_JULHO' ] ) ); ?></span> </td>
+                
+                <td> <strong>Agosto:</strong><br />
+                <span class="execucao" id="EXEC_VL_AGOSTO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_AGOSTO' ] ) ); ?></span> </td>
+                
+                <td> <strong>Setembro:</strong><br />
+                <span class="execucao" id="EXEC_VL_SETEMBRO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_SETEMBRO' ] ) ); ?></span> </td>
+                
+                <td> <strong>Outubro:</strong><br />
+                <span class="execucao" id="EXEC_VL_OUTUBRO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_OUTUBRO' ] ) ); ?></span> </td>
+                
+                <td> <strong>Novembro:</strong><br />
+                <span class="execucao" id="EXEC_VL_NOVEMBRO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_NOVEMBRO' ] ) ); ?></span> </td>
+                
+                <td> <strong>Dezembro:</strong><br />
+                <span class="execucao" id="EXEC_VL_DEZEMBRO"> <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'EXEC_VL_DEZEMBRO' ] ) ); ?></span> </td>
+            </tr>
+            <tr>
+                <td colspan="5"> &nbsp; </td>
+                <td> <strong>Total:</strong><br />
+                <?php echo $valor->retornaNumeroFormatadoValor ( $this->escape ( $this->execucao [ 'VR_EXEC_TOTAL' ] ) ); ?> </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</div>

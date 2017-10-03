@@ -1,0 +1,198 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover');
+                
+                $(this).attr('marcado','marcado');
+                $(this).addClass('hover')
+  
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+            }
+        );
+            
+        grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);       
+                    
+                    var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                    span_id_leitura.removeClass('naolido');
+                    span_id_leitura.addClass('lido');
+                    span_id_leitura.attr('title','Documento lido');
+                    $(this_tr).removeClass('naolidoTr');
+                    $(this_tr).addClass('lidoTr');
+                    
+                    //console.log(value_input_check_box);
+                    
+                    datainput = jQuery.parseJSON(value_input_check_box);
+                    
+                    datainput.CLASS_LIDO = 'lido';
+                    datainput.CLASS_LIDO_TR = 'lidoTr';
+                    datainput.MSG_LIDO = 'Documento lido';
+                    
+                    datainput_atualizado = JSON.stringify(datainput, null, null);
+                    input_check_box.val(datainput_atualizado)
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        );
+
+    $("input[type=checkbox][name=input_check_all_grid]").click(
+        function(){
+            if($(this).attr('checked')){
+                $(".nav_check_boxes").attr('checked','checked');
+                $("tr[name=rowList]").addClass('hover');
+            }else{
+                $(".nav_check_boxes").removeAttr('checked');
+                 $("tr[name=rowList]").removeClass('hover');
+            }
+        }
+    );
+            
+    $('form[name=cx_pess_encaminhados]').submit(
+       function(){
+            var documentoSelecionado = $(".nav_check_boxes:checked").val();
+            if (documentoSelecionado == undefined){                   
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('pulsate');
+                flashMessages_by_id.delay(2000).hide('puff');
+                return false;
+            }
+       }
+    );
+    $("#dialog-documentos_detalhe").dialog({
+                    title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+     });
+     
+     $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_unid_ranscunho = $('form[name=cx_pess_encaminhados]');
+            
+            if(acao == 'Reutilizar Versão'){
+                cx_unid_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaminuta/reutilizarversao');
+            }
+        });
+    });
+</script>
+<?php if (count($this->data)): ?>
+<form method="POST" action="" name="cx_pess_encaminhados">
+  <div class="containerpainel">
+     <div class="painel">
+        <input type="submit" title="Reutilizar Versão" name="acao" value="Reutilizar Versão" />
+     </div>
+    </div>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixapessoal/minutas/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">Número<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixapessoal/minutas/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Data<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixapessoal/minutas/ordem/AQAT_DS_ATIVIDADE/direcao/<?php echo $this->direcao ?> ">Assunto<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixapessoal/minutas/ordem/MOVI_DH_ENCAMINHAMENTO/direcao/<?php echo $this->direcao ?> ">Tempo<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            </tr>
+        </thead>
+                <tbody>
+                <?php
+                foreach ($this->data as $data):
+                    ?>
+                    <tr title="Duplo click para Abrir" class="grid_rows <?php echo $this->escape($data["CLASS_LIDO_TR"]); ?>" name="rowList" value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" > 
+                        <td>
+                            <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="radio" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                        </td>
+                        <td>
+                            <span id="leitura" class="<?php echo $this->escape($data["CLASS_LIDO"]); ?>" title="<?php echo $this->escape($data["MSG_LIDO"]); ?>"></span>
+                        </td>
+<!--                        <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                        <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                        <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                        <td> <?php echo $this->escape($data["AQAT_DS_ATIVIDADE"]) ?></td>
+                        <td> <?php echo $this->escape($data["TEMPO_TRANSCORRIDO"]) ?></td>
+                    </tr>
+    <?php endforeach; ?>
+            </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)?></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>        
+</form>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

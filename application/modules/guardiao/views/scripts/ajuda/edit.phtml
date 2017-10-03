@@ -1,0 +1,7 @@
+<?php $this->HeadScript()->appendFile($this->baseUrl() . '/js/nicedit.js');?>
+                    
+<script type="text/javascript">
+	bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+</script>
+<?php echo $this->form; ?>
+

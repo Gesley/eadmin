@@ -1,0 +1,141 @@
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+//        $( "#tabs" ).tabs("select",GLOBAL_indice_abas);
+//        $( "#tabs" ).tabs({
+//            select: function(event, ui) {
+//                GLOBAL_indice_abas = ui.index;
+//            }
+//        });
+        $("#buttonsetmanifestacao").buttonset();
+        $(".abrirAnexo").button({
+            icons: {
+                primary: "ui-icon-folder-open"
+            }
+        }).attr('style', 'width: 40px; height: 16px;');
+        $(".alertaButton").button({
+            icons: {
+                primary: "ui-icon-alert"
+            }
+        }).attr('style', 'width: 40px; height: 16px;');
+        $(".botao_icon_bolinha").button({
+            icons: {
+                primary: "ui-icon-radio-on"
+            }
+        });
+
+        /* ABRIR DETALHE DE ALGUMA SOLICITAÇÃO */
+        var xhr_abrir_detalhe_solicitacao;
+        var dialog_detalhe_solicitacao = '';
+
+        $(".detalhe_solicitacao").click(function () {
+            var this_a = this;
+            if (dialog_detalhe_solicitacao != '') {
+                //dialog_detalhe_solicitacao.html(' ');
+                dialog_detalhe_solicitacao.remove();
+            }
+
+            $("#dialog_solicitacao_container").html("<div id='dialog_detalhe_solicitacao'></div>");
+
+            dialog_detalhe_solicitacao = $("#dialog_detalhe_solicitacao");
+            dialog_detalhe_solicitacao.dialog({
+                title: 'Detalhe Solicitação',
+                autoOpen: false,
+                modal: false,
+                show: 'fold',
+                hide: 'fold',
+                resizable: true,
+                width: 800,
+                height: 600,
+                position: [300, 140, 0, 0],
+                buttons: {
+                    Ok: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            abrir = true;
+            if (xhr_abrir_detalhe_solicitacao) {
+                xhr_abrir_detalhe_solicitacao.abort();
+                abrir = false;
+            }
+            if (abrir) {
+                url = base_url + '/sosti/detalhesolicitacao/detalhesol';
+                xhr_abrir_detalhe_solicitacao = $.ajax({
+                    url: url,
+                    dataType: 'html',
+                    type: 'POST',
+                    data: $(this).attr('value'),
+                    contentType: 'application/json',
+                    processData: false,
+                    beforeSend: function () {
+                        dialog_detalhe_solicitacao.html('');
+                    },
+                    success: function (data) {
+                        dialog_detalhe_solicitacao.html(data);
+                        obj = dialog_detalhe_solicitacao.find("div#tabs")
+                        $(obj).addClass('pro_docs_tabs');
+                        $(".pro_docs_tabs").tabs();
+//                        $('#associar<?php // echo $solicAssociadas['DOCM_ID_DOCUMENTO']; ?>').hide();
+                        dialog_detalhe_solicitacao.dialog("open");
+
+                        $(this_a).addClass("ui-state-highlight");
+                        $(this_a).button({
+                            icons: {
+                                primary: "ui-icon-check"
+                            }
+                        });
+
+                    },
+                    complete: function () {
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        });
+    });
+</script>
+<fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+    <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+        <div id="div_content_form" style="margin-left: 10px; font-size: 12px; ">
+            <br />
+            <?php foreach ($this->associacaoSosti as $solicAssociadas): ?>
+                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                    <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                        <div style="margin-left: 10px; font-size: 12px; ">
+                            <p>
+                                <br/><b>Número:</b>
+                                <?= $solicAssociadas['DOCM_NR_DOCUMENTO'] ?>
+                                    <br />
+                                    <b>Data:</b>
+                                    <?php echo $solicAssociadas['ASSC_DH_ASSOCIACAO']; ?>
+                                <br/><b>Por:</b>
+                                <?= $solicAssociadas['ASSC_CD_MATR_ASSOCIACAO'] . ' - ' . $solicAssociadas['PNAT_NO_PESSOA'] ?>
+                                <br/>
+                            </p>
+                            <form name="detalhe_excluir<?php echo $solicAssociadas['DOCM_ID_DOCUMENTO']; ?>" class="detalhe_excluir" id="detalhe_excluir<?php echo $solicAssociadas['DOCM_ID_DOCUMENTO']; ?>">
+                                <input type="button" class="detalhe_remover botao_icon_bolinha" id="<?php echo $solicAssociadas['DOCM_ID_DOCUMENTO']; ?>" name="Remover" value="Remover"/>
+                                  <?php $arrayDetalhe = array(
+                                    'SSOL_ID_DOCUMENTO' => $solicAssociadas['DOCM_ID_DOCUMENTO']
+                                    , 'MOFA_ID_MOVIMENTACAO' => $solicAssociadas["DOCM_ID_MOVIMENTACAO"]
+                                ); ?>
+                                <a href="#" id='odetalhe' class="detalhe_solicitacao botao_icon_bolinha" value=" <?php echo $this->escape(Zend_Json::encode($arrayDetalhe)) ?> " > Detalhe </a>
+                                <br />
+                                <div id="descAssoc<?php echo $solicAssociadas['DOCM_ID_DOCUMENTO']; ?>" style="display: none;">
+                                    <textarea id="descricaoVinculacao<?php echo $solicAssociadas['DOCM_ID_DOCUMENTO']; ?>" name="descricaoExclusao"></textarea>
+                                    <div id="msgError<?php echo $solicAssociadas['DOCM_ID_DOCUMENTO']; ?>"></div>
+                                    <br />
+                                    <input type="hidden" name="idAssociacao" id="idAssociacao" value="<?php echo $solicAssociadas['ASSC_ID_ASSOCIACAO']; ?>" />
+                                    <input type="submit" id="<?php echo $solicAssociadas['DOCM_ID_DOCUMENTO']; ?>" class="detalhe botao_icon_bolinha" name="Salvar" value="Salvar" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </fieldset>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</fieldset>

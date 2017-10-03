@@ -1,0 +1,22 @@
+<script type="text/javascript">
+    $(function() {
+        $("#DESP_NR_DESPESA").keypress(function() {
+            var ano = $('#DESP_ANO').val();
+            var ptres = $('#DESP_PTRES_ATUAL').val().split(" ", 1);
+
+
+            $("#DESP_NR_DESPESA").autocomplete({
+                source: base_url + '/orcamento/despesa/ajaxdespesa/ano/' + ano + '/ptres/' + ptres,
+                minLength: 3,
+                delay: 100,
+                select: function(event, ui) {
+                    $("#DESP_NR_DESPESA").val(ui.item.label);
+                },
+                change: function(event, ui) {
+                    $("#DESP_NR_DESPESA").val(ui.item.label);
+                }
+            });
+            
+        });
+    });
+</script>

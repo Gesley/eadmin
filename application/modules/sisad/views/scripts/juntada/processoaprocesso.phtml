@@ -1,0 +1,119 @@
+<?php
+echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda));
+echo '<script src="' . $this->baseUrl() . '/js/sisad/juntada/processoaprocesso.js"></script>';
+?>
+<script type="text/javascript">
+    // "juntada_sem_volta" => array(numeros) ou numero
+    // "tipo_relacao" => documentoaprocesso ou documentoadocumento ou processoaprocesso
+    configurarMensagens({
+        "juntada_sem_volta": <?= Trf1_Sisad_Definicoes::ID_VINCULACAO_ANEXAR ?>
+        , "juntada_anexar": <?= Trf1_Sisad_Definicoes::ID_VINCULACAO_ANEXAR ?>
+    });
+</script>
+
+<h3>Caixa atual: <?= $this->familiaLotacao ?></h3>
+<div id="flashMessagesView"><?= $this->flashMessagesView; ?></div>
+<form id="form_processoaprocesso" method="post" action="processoaprocesso">
+    <div id="container_documentos">
+        <h3>Documentos para juntada:</h3>
+        <input id="recarregar_documentos" class="submitComum" type="button" value="Recarregar Documentos"  title="Recarregar os documentos escolhidos na tela anterior." />
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th >Tipo de Documento</th>
+                    <th >Número</th>
+                    <th >Unidade Encaminhadora</th>
+                    <th >Data/Hora Encaminhamento</th>
+                    <th >Status do processo</th>
+                </tr>
+            </thead>
+            <tbody id="documentosList">
+
+                <?php
+                $contLinhas = count($this->jsonDocumentosParaJuntada);
+                $vinculados = array();
+                foreach ($this->jsonDocumentosParaJuntada as $arrayDocumentos):
+                    if ($arrayDocumentos['STATUS_VINCULO']) {
+                        $vinculados[] = $arrayDocumentos;
+                    }
+                    ?> 
+
+                    <tr title="Duplo click para Abrir" value="<?= $this->escape(Zend_Json::encode($arrayDocumentos)) ?>" > 
+                        <td>
+                            <input style="display: none;" checked="checked" class="nav_grid_check_box nav_check_boxes" id="<?= $this->escape($arrayDocumentos["DOCM_ID_DOCUMENTO"]); ?>" name="documentoVinculacao[]" type="checkbox" value="<?= $this->escape(Zend_Json::encode($arrayDocumentos)) ?>"/>
+                            <?= ($contLinhas > 1 ? '<span value="" class="remover" title="Remover documento do esquema de juntada"></span>' : '') ?>
+                        </td>
+                        <td> <?= $this->escape($arrayDocumentos["DTPD_NO_TIPO"]) ?></td>
+                        <td> <?= $this->escape($arrayDocumentos["MASC_NR_DOCUMENTO"]) ?></td>
+                        <td> <?= $this->escape($arrayDocumentos['LOTA_COD_LOTACAO'] . ' - ' . $arrayDocumentos["FAMILIA_EMISSORA"]) ?></td>
+                        <td> <?= $this->escape($arrayDocumentos["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                        <td> <?= $this->escape($arrayDocumentos["STATUS_ANEXO"]) ?></td>
+                    </tr>
+                <?php endforeach; ?> 
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td id="total_documentos" colspan="6">Total: <?= count($this->jsonDocumentosParaJuntada) ?></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div id="container_processos">   
+        <br />
+        <h3>Processos Administrativos Principais (Apenas os processo administrativo aos quais possui vistas):</h3>
+        <p style="margin:0; margin-left: 15px; font-size: 8pt; font-weight: bold;">Escolha os processos:</p>
+        <div id="container_pagination">
+            <table class="grid"> 
+                <thead>
+                    <tr>
+                        <th> </th>
+                        <th>Número</th>
+                        <th>Objeto do processo</th>
+                        <th>Unidade encaminhadora</th>
+                        <th>Data/Hora Encaminhamento</th>
+                        <th>Apensos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($this->arrayProcessosPrincipais as $arrayProcesso):
+                        $arrayJuntados = (isset($this->processosJuntados[$arrayProcesso['PRDI_ID_PROCESSO_DIGITAL']]) ? $this->processosJuntados[$arrayProcesso['PRDI_ID_PROCESSO_DIGITAL']] : array());
+                        $arrayProcesso['is_apensos'] = (count($arrayJuntados) == 0 ? 'NÃO' : 'SIM');
+                        ?>
+                        <tr title="Duplo click para Abrir" value="<?= $this->escape(Zend_Json::encode($arrayProcesso)); ?>" >
+                            <td>
+                                <input class="nav_grid_check_box nav_check_boxes" id="<?= $this->escape($arrayProcesso["DOCM_ID_DOCUMENTO"]); ?>" name="documentoPrincipal" type="radio" value="<?php echo $this->escape(Zend_Json::encode($arrayProcesso)); ?>"/>
+                            </td>
+                            <td> <?= $this->escape($arrayProcesso["MASC_NR_DOCUMENTO"]) ?></td>
+                            <td> <?= $this->escape($arrayProcesso["PRDI_DS_TEXTO_AUTUACAO"]) ?></td>
+                            <td> <?= $this->escape($arrayProcesso['MOVI_CD_SECAO_UNID_ORIGEM'] . ' - ' . $arrayProcesso["FAMILIA_EMISSORA"]) ?></td>
+                            <td> <?= $this->escape($arrayProcesso["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                            <td> <?= $arrayProcesso['is_apensos'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9">Total: <?= count($this->arrayProcessosPrincipais) ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>  
+    </div>
+    <?= $this->formJuntada; ?>
+
+    <div id="dialog-documentos_detalhe">
+        <div id="dialog-documentos_conteudo"></div>
+    </div>
+    <div id="dialog-confirm"></div>
+
+    <input type="hidden" id="informacoes_vinculados" value="<?= $this->escape(Zend_Json::encode($vinculados)) ?>"/>
+    <?php
+    $objeto->action = $this->actionDocumentos;
+    $objeto->controller = $this->controllerDocumentos;
+    $objeto->module = $this->moduleDocumentos;
+    $objeto->title = $this->titleDocumentos;
+    echo $this->partial('_partials/caixahiddeninputs.phtml', array('view' => $objeto));
+    ?>
+</form>

@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+<style>
+    #container{
+        margin: 0 auto;
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+        /*background-size: 190mm 170mm;
+        background-image: url(marca_d_agua.gif);
+        background-position: center;
+        background-repeat: no-repeat;*/
+    }
+    table#header{
+        width: 100%;
+    }
+    table#header td.brasao{
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    div#texto{
+        font-weight: bold;
+        text-align: justify;
+    }
+    .alinha-centro{
+        font-weight: bold;
+        text-align: center;
+    }
+    div.titulo-tabela{
+        padding-top: 10px;
+        padding-bottom: 7px;
+    }
+    table.conteudo{
+        width: 207mm;;
+        margin-left: 3mm;
+        
+    }
+    table.conteudo tr.titulo{
+        text-align: center;
+        font-weight: bold;
+        background-color: silver;
+        font-size: 13px;
+    }
+    table.conteudo tr.dados{
+        font-size: 13px;
+    }
+    .rodape{
+        font-weight: bold;
+        font-size: 13px;
+    }
+    .rodape-total{
+        font-weight: bold;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+    </head>
+    <body>
+        <?php             
+            $data = new Zend_Date();
+            $hora = $data->get(Zend_Date::HOUR);
+            $minuto = $data->get(Zend_Date::MINUTE);
+            $segundo = $data->get(Zend_Date::SECOND);
+            $dia = $data->get(Zend_Date::DAY);
+            $mes = $data->get(Zend_Date::MONTH);
+            $ano = $data->get(Zend_Date::YEAR);
+        ?>
+        <div style="width: 700px; margin: 0 auto; display: block;">
+            <div style="text-align:center">
+                <table id='header'>
+                    <tr valign='top'>
+                        <td class='brasao'>
+                            <img src="<?php echo realpath(APPLICATION_PATH . '/../public/img/JusticaTRF.jpg'); ?>">
+                        </td>
+                        <td class='date-time'>
+                            <?php echo $dia.'/'.$mes.'/'.$ano.' '.$hora.':'.$minuto.':'.$segundo; ?>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>

@@ -1,0 +1,15 @@
+<?php
+if($this->Lotacao_array):  ?>
+    <option value=""></option> 
+    <?php
+    foreach ($this->Lotacao_array as $value) : 
+?>
+    <option value="<?php echo $this->escape(Zend_Json::encode($value)); ?>"><?php echo $value["LOTA_SIGLA_LOTACAO"].' - '.$value["LOTA_DSC_LOTACAO"].' - '.$value["LOTA_COD_LOTACAO"].' - '.$value["LOTA_SIGLA_SECAO"]; ?></option>   
+<?php 
+    endforeach; ?>
+    <?php else: 
+?>
+        <option value="">NÃO EXITE UNIDADES PARA ESSA SEÇÃO</option>  
+<?php
+endif;
+?>

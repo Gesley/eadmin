@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @category	GUARDIAO
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Leidison Siqueira Barbosa [leidison_14@hotmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * Responsavél por exibir o detalhe das permissões dadas pelo sistema Guardião
+ */
+echo '<script src="' . $this->baseUrl() . '/js/guardiao/detalhe_permissao.js' . '"></script>';
+
+$arrayPartials = array(
+    /* DADOS DE HISTÓRICO DO DOCUMENTO */
+    array(
+        //'itens' => count($this->arrayDetalhe['historico_permissao'])
+        'itens' => 1 //Validação esta dentro do partial '_partials/historico_permissao.phtml'
+        , 'label' => 'Histórico'
+        , 'patch' => '_partials/historico_permissao.phtml'
+        , 'parametros' => array(
+            'historico_permissao' => $this->arrayDetalhe['historico_permissao']
+        )
+    )
+);
+
+$arrayPartials = array_filter($arrayPartials, 'filtro');
+
+/* MONTANDO O HTML */
+
+echo '<div id="tabs">';
+echo '<ul>';
+/* Monta as ABAS */
+$cont = 1;
+foreach ($arrayPartials as $partial) {
+    echo '<li><a href="#tabs-' . $cont++ . '">';
+    echo $partial['label'];
+    echo '</a></li>';
+}
+echo '</ul>'; //fim abas <ul>
+
+/* Monta o conteudo das ABAS */
+$cont = 1;
+foreach ($arrayPartials as $partial) {
+    echo '<div id="tabs-' . $cont++ . '">';
+    echo $this->partial($partial['patch'], $partial['parametros']);
+    echo '</div>';
+}
+
+echo '</div>'; //fim <div id="tabs">
+
+function filtro($array) {
+    return ($array['itens'] > 0);
+}

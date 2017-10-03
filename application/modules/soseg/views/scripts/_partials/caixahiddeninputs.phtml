@@ -1,0 +1,16 @@
+<input name="module" type="hidden"  value="<?php echo $this->view->module; ?>"/>        
+<input name="controller" type="hidden"  value="<?php echo $this->view->controller; ?>"/>        
+<input name="action"     type="hidden"  value="<?php echo $this->view->action; ?>"/> 
+<input name="title"     type="hidden"  value="<?php echo $this->view->title; ?>"/> 
+<?php if ( isset($this->view->caixa['caixa']) ): ?>
+    <input name="caixa" type="hidden"  value="<?php echo $this->view->caixa['caixa']; ?>"/> 
+<?php endif; ?>
+<?php if ( isset($this->view->caixa['idCaixa']) ): ?>
+    <input name="idCaixa"     type="hidden"  value="<?php echo $this->view->caixa['idCaixa']; ?>"/> 
+<?php endif; ?>
+<?php if ( isset($this->view->caixa['idGrupoServico']) ): ?>
+    <input name="idGrupoServico"     type="hidden"  value="<?php echo $this->view->caixa['idGrupoServico']; ?>"/> 
+<?php endif; ?>
+<?php if ( isset($this->view->caixa['tipoSolicitacao']) ): ?>
+    <input name="tipoSolicitacao"     type="hidden"  value="<?php echo $this->view->caixa['tipoSolicitacao']; ?>"/> 
+<?php endif; ?>

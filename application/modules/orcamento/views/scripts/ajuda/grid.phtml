@@ -1,0 +1,185 @@
+<?php
+$base = $this->baseUrl ();
+$baseImgsAjuda = $this->baseUrl () . '/img/orcamento/ajuda';
+$link = $this->url ( array ('module' => 'orcamento', 'controller' => 'ajuda', 'action' => 'grid', 'opcao' => '' ), 0, true );
+
+/* ********************************************************************************
+ * Dados sobre o Grid
+ ******************************************************************************** */
+// Títulos
+$gridDados ['ordem'] ['titulo'] = 'Ordenação por campo';
+$gridDados ['semordem'] ['titulo'] = 'Remover ordenação';
+$gridDados ['filtro'] ['titulo'] = 'Filtros';
+$gridDados ['semfiltro'] ['titulo'] = 'Remover filtro';
+$gridDados ['semfiltroordem'] ['titulo'] = 'Remover filtro e ordenação';
+$gridDados ['acao'] ['titulo'] = 'Ações';
+$gridDados ['impressao'] ['titulo'] = 'Impressão';
+$gridDados ['exportacao'] ['titulo'] = 'Exportações';
+$gridDados ['paginacao'] ['titulo'] = 'Paginação';
+$gridDados ['registros'] ['titulo'] = 'Quantidade de registros exibidos';
+
+// Descrição de cada tópico
+$gridDados ['ordem'] ['descricao'] = "
+<p>Todos os campos do grid permitem ordenação ascendente e descendente.</p>
+<p>Para apresentar os dados listados em ordem crescente (A-Z, 0-9) basta clicar na imagem de seta para cima<span class='ordenacaoasc'></span> (antes do título do campo desejado).</p>
+<p>Para apresentar os dados listados em ordem decrescente (Z-A, 9-0) basta clicar na imagem de seta para baixo<span class='ordenacaodesc'></span> (depois do título do campo desejado).</p>
+<p>Note que uma vez aplicada qualquer ordenação de um campo, a imagem correspondente a sua classificação não é mais exibida. Para alternar a classificação, basta selecionar qualquer outra ordenação.</p>
+";
+
+$gridDados ['semordem'] ['descricao'] = "
+<p>Para remover uma ordenação aplicada aos dados listados, basta clicar no botão <img src='$baseImgsAjuda/ceo_ajuda_grid_botao_$this->gridOpcao.png' alt='Botão remover ordenação' title='Botão remover ordenação'> para voltar a exibição original.</p>
+";
+
+$gridDados ['filtro'] ['descricao'] = "
+<p>Todos os campos do grid permitem filtros do seu conteúdo (de forma similar à ordenação; inclusive com filtro e ordenação ao mesmo tempo).</p>
+<p>Para aplicar um ou mais filtros, digite no campo abaixo do título do campo desejado o texto, número ou data e clique no botão <img src='$baseImgsAjuda/ceo_ajuda_grid_botao_$this->gridOpcao.png' alt='Botão aplicar filtro' title='Botão aplicar filtro'> (ou pressione a tecla [ENTER]) que o sistema irá buscar os respectivos dados correspondentes.</p>
+<p>É possível, ainda, utilizar os seguintes comandos, sendo que a maioria deles se aplicam em textos, números, valores ou datas:</p>
+<div id='gridLinhas'><table>
+	<thead>
+		<th width='10%'>Opção</th>
+		<th width='50%'>Resultado</th>
+		<th width='80%'>Exemplo</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td> =valor </td>
+			<td>Procura exata. Apresenta apenas resultados coincidentes, diferenciando maiúsculas de minúsculas, bem como caracteres acentuados</td>
+			<td>=seção judiciária do pará</td>
+		</tr>
+		<tr>
+			<td> valor* </td>
+			<td>Início fixo. Apresenta apenas resultados iniciando pelo valor informado</td>
+			<td>seção*</td>
+		</tr>
+		<tr>
+			<td> *valor </td>
+			<td>Término fixo. Apresenta apenas resultados terminando com o valor informado</td>
+			<td>*pará</td>
+		</tr>
+		<tr>
+			<td> *valor* </td>
+			<td>Contendo o valor informado. O mesmo que utilizar apenas o valor procurado sem os asteríscos</td>
+			<td>judiciária d</td>
+		</tr>
+		<tr>
+			<td> &lt;valor </td>
+			<td>Menor que o valor informado</td>
+			<td>&lt;90010</td>
+		</tr>
+		<tr>
+			<td> &lt;=valor </td>
+			<td>Menor ou igual ao valor informado</td>
+			<td>&lt;=90020</td>
+		</tr>
+		<tr>
+			<td> &gt;valor </td>
+			<td>Maior que o valor informado</td>
+			<td>&gt;90030</td>
+		</tr>
+		<tr>
+			<td> &gt;=valor </td>
+			<td>Maior ou igual ao valor informado</td>
+			<td>&gt;=90027</td>
+		</tr>
+		<tr>
+			<td> &lt;&gt;valor </td>
+			<td>Diferente do valor informado</td>
+			<td>&lt;&gt;90032</td>
+		</tr>
+		<!-- <tr>
+			<td> valor1, valor2</td>
+			<td>Procura por 2 ou mais valores informados</td>
+			<td>90027,90032</td>
+		</tr> -->
+	</tbody>
+</table></div>
+";
+
+$gridDados ['semfiltro'] ['descricao'] = "
+<p>Para remover todos os filtros aplicados aos dados listados, basta clicar no botão <img src='$baseImgsAjuda/ceo_ajuda_grid_botao_$this->gridOpcao.png' alt='Botão remover ordenação' title='Botão remover ordenação'> para voltar a exibição original.</p>
+<p>Para remover apenas um filtro de vários aplicados, você deve limpar o conteúdo do campo que não mais deseja ter os dados filtrados e clicar no botão <img src='$baseImgsAjuda/ceo_ajuda_grid_botao_filtro.png' alt='Botão aplicar filtro' title='Botão aplicar filtro'> (ou pressione a tecla [ENTER]).</p>
+";
+
+$gridDados ['semfiltroordem'] ['descricao'] = "
+<p>Para remover todos os filtros e a ordenação aplicada aos dados listados, basta clicar no botão <img src='$baseImgsAjuda/ceo_ajuda_grid_botao_$this->gridOpcao.png' alt='Botão remover filtro e ordenação' title='Botão remover filtro e ordenação'> para voltar a exibição original.</p>
+";
+
+$gridDados ['acao'] ['descricao'] = "
+<p>Em cada funcionalidade é possível executar certas ações, conforme os dados da tela em questão e observando as permissão de acesso. As ações disponíveis são:</p>
+
+<img src='$baseImgsAjuda/ceo_ajuda_acao_incluir.png' alt='Botão para a inclusão de um novo registro' title='Botão para a inclusão de um novo registro'> Inclui um novo registro. Qualquer seleção de registros é ignorada.<br />
+<img src='$baseImgsAjuda/ceo_ajuda_acao_importar.png' alt='Botão para a importação de novos dados' title='Botão para a importação de novos dados'> Importa novos dados externos para o sistema e-Orçamento. Qualquer seleção de registros é ignorada.<br />
+<img src='$baseImgsAjuda/ceo_ajuda_acao_visualizar.png' alt='Botão para a visualização individual de um registro' title='Botão para a visualização individual de um registro'> Visualiza um único registro que deve ser explicitamente selecionado para tal.<br />
+<img src='$baseImgsAjuda/ceo_ajuda_acao_editar.png' alt='Botão para a edição de um registro' title='Botão para a edição de um registro'> Edita os dados de um único registro que deve ser explicitamente selecionado para tal.<br />
+<img src='$baseImgsAjuda/ceo_ajuda_acao_excluir.png' alt='Botão para a exclusão de um registro' title='Botão para a exclusão de um registro'> Exclui um ou mais registros selecionados, mediante prévia confirmação.</p>
+<p></p>
+";
+
+$gridDados ['impressao'] ['descricao'] = "
+<p>A impressão será realizada com todas as informações do grid em todas as páginas e ainda com os filtros e ordenações aplicadas, se for o caso.</p>
+<p>Para imprimir os dados da listagem basta clicar no botão <img src='$baseImgsAjuda/ceo_ajuda_impressao.png' alt='Botão imprimir' title='Botão imprimir'> para abrir uma nova tela com os dados em formato apropriado para impressão.</p>
+";
+
+$gridDados ['exportacao'] ['descricao'] = "
+<p>De forma similiar à impressão, a exportação irá gerar um arquivo a ser salvo localmente, de acordo com o formato selecionado, contendo todos os dados apresentados no grid em todas as páginas disponíveis e ainda com os filtros e ordenações aplicadas, se for o caso.</p>
+<p>Para exportar os dados da listagem basta clicar em um dos botões a seguir, sendo:<br />
+<img src='$baseImgsAjuda/ceo_ajuda_exporta_pdf.png' alt='Botão exportar para PDF' title='Botão exportar para PDF'> para gerar arquivo em formato PDF,<br />
+<img src='$baseImgsAjuda/ceo_ajuda_exporta_xls.png' alt='Botão exportar para MS Excel' title='Botão exportar para MS Excel'> para gerar arquivo em formato MS Excel,<br />
+<img src='$baseImgsAjuda/ceo_ajuda_exporta_csv.png' alt='Botão exportar para CSV' title='Botão exportar para CSV'> para gerar arquivo em formato CSV (comma separated values - dados separados por vírgula), e <br />
+<img src='$baseImgsAjuda/ceo_ajuda_exporta_doc.png' alt='Botão exportar para MS Word' title='Botão exportar para MS Word'> para gerar arquivo em formato MS Word.</p>
+";
+
+$gridDados ['paginacao'] ['descricao'] = "
+<p></p>
+";
+
+$gridDados ['registros'] ['descricao'] = "
+<p></p>
+";
+
+$gridAltTitle = 'Funcionalidades do Grid no sistema e-Orçamento - ' . $gridDados [$this->gridOpcao] ['titulo'];
+?>
+
+<h3>Veja abaixo as funcionalidades comuns aos grids utilizados no
+	sistema</h3>
+
+<ul>
+	<li><a href="<?php echo $link;?>ordem">Ordenação por campo</a></li>
+	<li><a href="<?php echo $link;?>semordem">Remover ordenação</a></li>
+	<li><a href="<?php echo $link;?>filtro">Filtros</a></li>
+	<li><a href="<?php echo $link;?>semfiltro">Remover filtro</a></li>
+	<li><a href="<?php echo $link;?>semfiltroordem">Remover filtro e
+			ordenação</a></li>
+	<li><a href="<?php echo $link;?>acao">Ações</a></li>
+	<li><a href="<?php echo $link;?>impressao">Impressão</a></li>
+	<li><a href="<?php echo $link;?>exportacao">Exportações</a></li>
+	<li><a href="<?php echo $link;?>paginacao">Paginação</a></li>
+	<li><a href="<?php echo $link;?>registros">Quantidade de registros
+			exibidos</a></li>
+</ul>
+
+<?php
+if ($this->gridOpcao) {
+	?>
+<div id="gridDadosTabs" class="tabs">
+	<ul>
+		<li><a href="#gridDados"><?php echo $gridDados[$this->gridOpcao]['titulo']; ?></a></li>
+		<li><a href="#gridImagem">Imagem de exemplo</a></li>
+	</ul>
+
+	<div id="gridDados">
+		<?php echo $gridDados[$this->gridOpcao]['descricao']; ?>
+	</div>
+
+	<div id="gridImagem">
+		<img
+			src="<?php echo $baseImgsAjuda; ?>/ceo_ajuda_grid_<?php echo $this->gridOpcao; ?>.png"
+			alt="<?php echo $gridAltTitle; ?>"
+			title="<?php echo $gridAltTitle; ?>" />
+	</div>
+</div>
+<br />
+<?php
+}
+
+echo $this->partial ( '_partials/botao.phtml', array ('nomeController' => 'ajuda', 'nomeAction' => Trf1_Orcamento_Definicoes::ACTION_INDEX, 'nomeClasse' => Trf1_Orcamento_Definicoes::CLASSE_VOLTAR, 'textoBotao' => 'Voltar para a tela de ajuda do e-Orçamento.', 'textoAlternativo' => 'Retornar à tela de ajuda do e-Orçamento' ) );

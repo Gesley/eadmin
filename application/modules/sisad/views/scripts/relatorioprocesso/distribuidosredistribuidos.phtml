@@ -1,0 +1,74 @@
+<?php $this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript'); 
+      $this->inlineScript()->appendFile($this->baseUrl() . '/js/combobox_app_jquery.js' , 'text/javascript');
+      $this->inlineScript()->appendFile(($this->baseUrl().'/js/jquery.MetaData.js'));
+      $this->inlineScript()->appendFile($this->baseUrl() . '/js/sisad/relatorioprocesso.js', 'text/javascript'); 
+      $this->inlineScript()->appendFile($this->baseUrl() . '/js/datepicker.js', 'text/javascript');
+      $this->headLink()->prependStylesheet($this->baseUrl() . '/css/relatorioProcesso.css' );
+?>
+
+<div class="help" id="pesq_div" class="span-23" >
+    <?php echo $this->form; ?>
+</div>
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+
+<?php if (count($this->resultado) > 0): ?>
+
+<div id="container_pagination">
+   
+        <div class="painel" id="">
+            <input type="button" title="Gerar PDF do Relatório" name="acao" value="PDF" id="pdf" onclick="javascript: location.href='<?php echo $this->baseUrl(); ?>/sisad/relatorioprocesso/distribuidosredistribuidospdf/';" >      
+        </div>
+    
+       <div class="cabecalho">
+                <div class="orgao"> 
+                   <h3> <strong> <?php echo $this->title; ?> </strong> </h3>
+                </div>
+                <?php echo $this->partial('_partials/relatorioprocesso/cabecalhoRelatorio.phtml', array(
+                                           'cabecalho' => $this->cabecalho )); ?>
+        </div>
+        
+        <div class="dados-resultado">
+            <table id="dados-resultado">
+                <thead>
+                    <tr>
+                        <th style="font-weight: bold;"> N. Processo </td>
+                        <th style="font-weight: bold;"> Assunto </td>
+                        <th style="font-weight: bold;"> &Oacute;rg&atilde;o Julgador </td>
+                        <th style="font-weight: bold;"> Modalidade Distribui&ccedil;&atilde;o</td>
+                        <th style="font-weight: bold;"> Data Distribui&ccedil;&atilde;o </td>
+                        <th style="font-weight: bold;"> Data Julgamento </td>
+                        <th style="font-weight: bold;"> Relator </td>
+                        <th style="font-weight: bold;"> Partes </td>
+                    </tr>
+                </thead>
+            <tbody>
+            <?php  foreach($this->resultado as $data):  ?>
+                    <tr>
+                        <td title="<?php echo $data['NR_PROCESSO']; ?>"> <?php echo $data['MASC_NR_DOCUMENTO']; ?></td>
+                        <td title="Assunto"> <?php echo $data['ASSUNTO']; ?></td>
+                        <td title="Órgão Julgador"> <?php echo $data['ORGAO_JULGADOR']; ?></td>
+                        <td title="Modalidade Distribui&ccedil;&atilde;o"> <?php echo $data['MODALIDADE_DISTRIBUICAO']; ?></td>
+                        <td title="Data da Distribui&ccedil;&atilde;o"> <?php echo $data['DH_DISTRIBUICAO']; ?></td>
+                        <td title="Data do Julgamento"> <?php echo $data['DH_JULGAMENTO']; ?></td>
+                        <td title="Relator"> <?php echo $data['RELATOR']; ?></td>
+                        <td title="Partes" style="width: 25%;"> <?php echo $data['PARTE']; ?></td>
+                    </tr>
+             <?php   endforeach; ?>
+            </tbody>
+            </table>
+        </div>
+        
+        <div class="span-24">
+        <?php echo $this->paginationControl($this->resultado, null, null, null); ?>
+        </div>
+        
+        <div class="totais span-24">
+            <strong> TOTAL DE REGISTROS: <?php  echo $this->resultado->getTotalItemCount() ;  ?> </strong> <br />
+            <strong> TOTAL DE PROCESSOS DISTRIBU&Iacute;DOS: <?php  echo $this->qtdeDistribuidos;  ?> </strong> <br />
+            <strong> TOTAL DE PROCESSOS REDISTRIBU&Iacute;DOS: <?php  echo $this->qtdeRedistribuidos; ?> </strong> <br />
+        </div>
+</div>
+<?php endif; ?>
+     
+   

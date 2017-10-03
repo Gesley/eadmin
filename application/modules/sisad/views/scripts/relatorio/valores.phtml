@@ -1,0 +1,97 @@
+<?php
+$datas = json_decode($this->data, false);
+$userNs = new Zend_Session_Namespace('userNs');
+?>
+<style>
+    #container{
+        margin: 0 auto;
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+
+    }
+    table#header{
+        width: 100%;
+    }
+    table#header td.orgao{
+        font-size: 13px;
+    }
+    table#header td.brasao{
+
+        background-image: url(<?= $this->baseUrl(); ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    table.titulo-tabela{
+        padding-top: 10px;
+        padding-bottom: 7px;
+        font-size: 14px;
+    }
+    table.titulo-tabela td.col1{
+        text-align: center;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    table.titulo-tabela td.col2{
+        font-weight: bold;
+    }
+    table.titulo-tabela td.col3{
+        font-weight: bold;
+        padding-top: 30px;
+        padding-left: 150px;
+    }
+
+
+
+</style>
+ 
+
+<body>
+<watermarkimage src="<?= $this->baseUrl(); ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+
+    <table class="titulo-tabela" border="0">
+        <tr>
+            <td  class="col2">Período Informado: <?php echo $datas->DATA_INICIAL . " a " . $datas->DATA_FINAL; ?></bold></td>    
+        </tr>
+
+        <tr>
+            <td  class="col2">Seção/Subseção: <?php echo $userNs->codSec . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $userNs->descrisaosecsubsec; ?></td> 
+        </tr>
+        <tr>
+            <td class="col3"> <?php echo $this->titulo; ?></td>
+        </tr>
+    </table>
+
+    <table class="titulo-tabela" border="0">
+        <thead>
+            <tr>
+                <th style="width: 130px;">Data Postagem</th>
+                <th>Tipo Postagem</th>
+                <th style="width: 120px;">Cód. Correios</th>
+                <th style="margin-left: 40px;  width: 100px;">Cep. Destino</th>
+                <th style="margin-left: 40px;  width: 100px;">Peso(g)</th>
+                <th style="margin-left: 40px;  width: 100px;">Valor (R$)</th>
+            </tr>
+        </thead>
+
+<?php foreach ($this->dados as $dados) { ?>
+
+            <tr>
+                <td style="width: 130px; padding-left: 15px;"><?php echo $dados["PRDC_DH_PROTOCOLO_DOC_PROC"]; ?></td>
+                <td style="width: 250px;"><?php echo $dados["TPPO_DS_TIPO_POSTAGEM"]; ?></td>
+                <td style="padding-left: 15px;"><?php echo $dados["POST_CD_CORREIO_ENVIO"]; ?></td>
+                <td style="padding-left: 15px;"><?php echo $dados["POST_CD_CEP_DESTINO"]; ?></td>
+                <td style="padding-left: 30px;"><?php echo $dados["POST_NR_PESO_POSTAGEM_PROC_DOC"]; ?></td>
+                <td style="padding-left: 30px;"><?php echo $dados["POST_VR_POSTAGEM"]; ?></td>
+            </tr>
+<?php } ?>
+
+    </table>
+
+</body>

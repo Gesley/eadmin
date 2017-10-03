@@ -1,0 +1,17 @@
+<br/><strong>Ajuda:</strong><br/>
+
+<?php if ($this->ajuda["ACAO_DS_AJUDA"]) {
+             echo $this->ajuda["ACAO_DS_AJUDA"];
+         }else{ ?>
+             <br/><span>Não existe ajuda cadastrada para a funcionalidade.</span><br/>
+     <?php } ?>
+             
+<br/><strong>Informação:</strong><br/>
+
+<?php if ($this->ajuda["ACAO_DS_INFORMACAO"]) {
+             echo $this->ajuda["ACAO_DS_INFORMACAO"];
+         }else{ ?>
+             <br/><span>Não existe nenhuma informação cadastrada para a funcionalidade.</span>
+     <?php } ?>
+
+

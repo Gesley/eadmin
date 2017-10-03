@@ -1,0 +1,141 @@
+<?php
+/**
+ * @category            SISAD
+ * @package             _partials
+ * @copyright           Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Leidison Siqueira Barbosa [leidison_14@hotmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string Código HTML que exibe os dados de historico
+ * 
+ * @param		array historico			
+ * @param		array documento			
+ * 
+ * @example		echo $this->partial('_partials/leitura/tabs_historico.phtml', array());
+ * 
+ */
+?>
+<!--
+MOSTRA OS DADOS DE HISTÓRICO DOCUMENTO SELECIONADO
+
+Variaveis
+
+$this->document
+$this->historico
+$this->juntada
+$this->minuta
+-->
+<div id="tabs_historico-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">
+    <?php
+    $ultima_movimentacao = NULL;
+    $count = count($this->historico);
+    
+    for ($i = ($count - 1); $i >= 0; $i--) {
+        if (strcmp($ultima_movimentacao, $this->historico[$i]['MOFA_ID_MOVIMENTACAO']) != 0) {
+            $this->historico[$i]['MOSTRA_MOVIMENTACAO'] = true;
+        } else {
+            $this->historico[$i]['MOSTRA_MOVIMENTACAO'] = false;
+        }
+        $ultima_movimentacao = $this->historico[$i]['MOFA_ID_MOVIMENTACAO'];
+    }
+    $rn_processo = new Trf1_Sisad_Negocio_Processo();
+    $rn_juntadaProcProc = new Trf1_Sisad_Negocio_JuntadaProcessoProcesso();
+    foreach ($this->historico as $historico):
+        $numDocumento = $rn_processo->getNumeroDocumento($historico['DOCM_ID_DOCUMENTO'], $historico['MOFA_ID_MOVIMENTACAO'], $historico['MOFA_DH_FASE']);
+
+        if ($historico['MOSTRA_MOVIMENTACAO'] == true):
+            ?> 
+            <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+
+                <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                    <b>Enviada em:&emsp;</b><?php echo $historico['MOFA_DH_FASE']; ?>
+                    <br/>
+                    <b>Pela:</b>
+                    <?= $historico['LOTA_SIGLA_LOTACAO_ORIGEM'] ?>
+                    - <?= $historico['LOTA_DSC_LOTACAO_ORIGEM'] ?>
+                    - <?= $historico['MOVI_CD_SECAO_UNID_ORIGEM'] ?>
+                    - <?= $historico['FAMILIA_ORIGEM'] ?>
+                    <br/>
+
+                    <b>Por:</b>
+                    <?php
+                    echo $historico['ENCAMINHADOR'];
+                    /* caso não seja minuta */
+                    if (!is_array($this->minuta['documento_da_minuta'])):
+                        ?>
+                        <br/><b>Para:</b>
+                        <?= $historico['LOTA_SIGLA_LOTACAO_DESTINO'] ?>
+                        - <?= $historico['LOTA_DSC_LOTACAO_DESTINO'] ?>
+                        - <?= $historico['MODE_CD_SECAO_UNID_DESTINO'] ?>
+                        - <?= $historico['FAMILIA_DESTINO'] ?>
+                        <?php
+                    endif;
+                    if (!is_null($historico['MODP_CD_MAT_PESSOA_DESTINO'])) {
+                        echo '<br/><b>Caixa Pessoal de:</b> ' . $historico['MODP_CD_MAT_PESSOA_DESTINO'];
+                    }
+                    ?>
+                    <br/>
+                    <b>Recebido em&emsp;<?= $historico['MODE_DH_RECEBIMENTO'] ?>&emsp;por:</b> 
+                    <?= $historico['RECEBEDOR'] ?>
+                </div>
+            </fieldset>
+
+        <?php endif; ?>
+
+        <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+            <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                <b>Fase:</b>
+                <?php
+                echo str_replace(' SISAD', '', $historico['FADM_DS_FASE']) . ' em ' . $historico['MOFA_DH_FASE'];
+                if (($numDocumento) && in_array($historico['FADM_ID_FASE'], array(Trf1_Sisad_Definicoes::FASE_ADICAO_DOCUMENTO_PROCESSO, Trf1_Sisad_Definicoes::FASE_AUTUACAO_PROCESSO))) {
+                    echo '<br/><b>Nº documento:</b>' . implode(' , ', $numDocumento);
+                }
+                if (
+                        in_array(
+                                $historico['FADM_ID_FASE']
+                                , array(
+                            Trf1_Sisad_Definicoes::FASE_ANEXAR_PROCESSO_PROCESSO
+                            , Trf1_Sisad_Definicoes::FASE_DESANEXAR_PROCESSO_PROCESSO
+                            , Trf1_Sisad_Definicoes::FASE_APENSAR_PROCESSO_PROCESSO
+                            , Trf1_Sisad_Definicoes::FASE_DESAPENSAR_PROCESSO_PROCESSO
+                                )
+                        )
+                ) {
+
+                    $processosJuntados = $rn_juntadaProcProc->getJuntadaPorFase($this->documento, null, $historico);
+                    $numeroProcessos = '';
+                    foreach ($processosJuntados as $processo) {
+                        $numeroProcessos .= $processo['DOCM_NR_DOCUMENTO'] . ', ';
+                    }
+                    echo '<br/><b>Nº processos: </b>' . substr($numeroProcessos, 0, -2);
+                }
+                ?>
+                &emsp;
+                <br/>
+                <b>Por:</b><?= $historico['MOFA_CD_MATRICULA_NOME'] . '&emsp;' ?>
+                <br/>
+                <b>Descrição:</b>
+                <div style="margin-right: 10px;">+  <?= $historico['MOFA_DS_COMPLEMENTO'] ?></div>
+                <?php
+                /* caso seja minuta */
+                if (is_array($this->minuta['documento_da_minuta'])):
+                    foreach ($this->anexoSemMetadados as $semMetadados_p):
+                        if ($historico['MOFA_DH_FASE'] == $semMetadados_p['ANEX_DH_FASE']):
+                            ?>
+                            <b>Anexos:</b>
+                            <div style="margin-right: 10px;"> 
+                                <a target="_blank" title="Abrir Documento" href="<?= $this->baseUrl() . '/sisad/gerenciared/recuperar/id/' . $semMetadados_p['ANEX_ID_DOCUMENTO'] . '/dcmto/' . $semMetadados_p['ANEX_NR_DOCUMENTO_INTERNO'] . '/tipo/' . $semMetadados_p['ANEX_ID_TP_EXTENSAO'] ?>">
+                                    Anexo
+                                </a>
+                            </div>
+                            <?php
+                        endif;
+                    endforeach;
+                endif;
+                ?>
+            </div>
+        </fieldset>
+
+    <?php endforeach; ?>
+</div>

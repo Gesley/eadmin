@@ -1,0 +1,118 @@
+<?php
+$datas = json_decode($this->data, false);
+$userNs = new Zend_Session_Namespace('userNs');
+?>
+<style>
+    #container{
+        margin: 0 auto;
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+
+    }
+    table#header{
+        width: 100%;
+    }
+    table#header td.orgao{
+        font-size: 13px;
+    }
+    table#header td.brasao{
+
+        background-image: url(<?= $this->baseUrl(); ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    table.titulo-tabela{
+     font-size: 14px;
+    }
+    
+    
+    table.titulo-tabela td.col1{
+        text-align: center;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    table.titulo-tabela td.col2{
+        font-weight: bold;
+    }
+    table.titulo-tabela td.col3{
+        font-weight: bold;
+        padding-top: 30px;
+        padding-left: 150px;
+    }
+
+   table.titulo-dados{
+     font-size: 14px;
+     margin-left: 30px;
+    }
+   
+    table.titulo-dados .titulo{
+    background-color: #A4B0B9;
+    }
+    
+    
+    
+ 
+    
+    
+
+</style>
+
+<body>
+
+<watermarkimage src="<?= $this->baseUrl(); ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+
+    <table class="titulo-tabela" border="0">
+        <tr>
+            <td  class="col2">Período Informado: <?php echo $datas->DATA_INICIAL . " a " . $datas->DATA_FINAL; ?></bold></td>    
+        </tr>
+
+        <tr>
+            <td  class="col2">Seção/Subseção: <?php echo $userNs->codSec . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $userNs->descrisaosecsubsec; ?></td> 
+        </tr>
+        <tr>
+            <td class="col3"> <?php echo $this->titulo; ?></td>
+        </tr>
+    </table>
+
+    <br/>
+    <table class="titulo-dados" border="1" cellspacing="0">
+        <tr class="titulo">
+          
+                <td style="width: 130px;" align="center">Nº do Malote</td>
+                <td align="center" style="width: 130px;">Nº do Lacre</td>
+                <td align="center" style="width: 130px;">Peso Saída (Kg)</td>
+                <td style="width: 400px;" align="center">Destino</td>
+        </tr>
+
+<?php foreach ($this->dados as $dados) { ?>
+      <tr>
+
+                <td  align="center" style="width: 130px;"><?php echo $dados["PRDC_DH_PROTOCOLO_DOC_PROC"]; ?></td>
+                <td align="center" style="width: 130px;"><?php echo $dados["TPPO_DS_TIPO_POSTAGEM"]; ?></td>
+                <td align="center" style="width: 130px;"><?php echo $dados["POST_CD_CORREIO_ENVIO"]; ?></td>
+                <td style="width: 400px;" align="center"><?php echo $dados["POST_CD_CEP_DESTINO"]; ?></td>
+           </tr>
+<?php } ?>
+
+      <!-- TESTE -->
+           <tr>
+                <td  align="center" style="width: 130px;">2</td>
+                <td align="center" style="width: 130px;">4.295</td>
+                <td align="center" style="width: 130px;"> </td>
+                <td style="width: 400px;" align="center">SUBSEÇÃO JUDICIÁRIA DE PATOS DE MINAS</td>
+           </tr>
+      
+      <!-- FIM TESTE -->
+           
+           
+           
+    </table>
+
+</body>

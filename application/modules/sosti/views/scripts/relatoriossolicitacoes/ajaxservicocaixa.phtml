@@ -1,0 +1,8 @@
+<?php if(count($this->arrayServico) > 0): ?>
+<option value="">Selecione</option>   
+<?php foreach ($this->arrayServico as $value): ?>
+    <option value="<?php echo $value['SSER_ID_SERVICO']; ?>"><?php echo $value["SSER_DS_SERVICO"]; ?></option>   
+<?php endforeach; ?>
+<?php else: ?>
+    <option value="">Não exite caixa de atendimento para TRF1/Seções</option>  
+<?php endif; ?>

@@ -1,0 +1,36 @@
+<?php
+/**
+ * Contém view da action específica
+ * 
+ * e-Admin
+ * e-Orçamento
+ * View
+ * 
+ * @author Anderson Sathler M. Ribeiro <asathler@gmail.com>
+ */
+
+/**
+ * Disponibiliza as informações a serem exibidas na view
+ *
+ * @category Orcamento
+ * @package Orcamento_View_Elemento_Index
+ * @author Anderson Sathler M. Ribeiro <asathler@gmail.com>
+ * @license Creative Commons Atribuição 3.0 não adaptada
+ *          <http://creativecommons.org/licenses/by/3.0/deed.pt_BR>
+ * @ignore Este código é livre para uso dentro do TRF! Fora do TRF pode apenas
+ *         servir como fonte de estudo ou base para futuros códigos-fonte sem
+ *         nenhuma restrição, salvo pelas informações de @copyright e @author
+ *         que devem ser mantidas inalteradas.
+ * @copyright Tribunal Regional Federal ©2007-2014 <http://www.trf1.jus.br>
+ */
+echo '<br />';
+
+// Define array de ajuda
+$ajuda [ 'msgAjuda' ] = $this->msgAjuda;
+$ajuda [ 'msgInfo' ] = $this->msgInfo;
+
+// Chama a partial para exibição da ajuda e informação da tela
+echo $this->partial ( '_partials/ajuda_informacao.phtml', $ajuda );
+
+// Exibe o grid
+echo $this->grid;

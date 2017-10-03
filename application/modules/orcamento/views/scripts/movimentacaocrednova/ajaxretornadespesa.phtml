@@ -1,0 +1,56 @@
+<?php
+if ( $this->dados ) {
+    // Define os dados a apresentar sobre despesa
+    $despesa = $this->escape ( $this->dados [ 'DESP_NR_DESPESA' ] . ' - ' . 
+        $this->dados [ 'DS_DESPESA' ] );
+    
+    // Define os dados a apresentar sobre ano
+    $ano = $this->escape ( $this->dados [ 'DESP_AA_DESPESA' ] );
+    
+    // Define os dados a apresentar sobre a unidade gestora
+    $ug = $this->escape ( $this->dados [ 'DESP_CD_UG' ] . ' - ' . 
+        $this->dados [ 'UNGE_DS_UG' ] );
+    
+    // Define os dados a apresentar sobre responsável
+    $responsavel = $this->escape ( $this->dados [ 'SG_DS_FAMILIA_RESPONSAVEL' ] );
+    
+    // Define os dados a apresentar sobre a fonte
+    $fonte = $this->escape ( $this->dados [ 'DESP_CD_FONTE' ] . ' - ' . 
+        $this->dados [ 'FONT_DS_FONTE' ] );
+    
+    // Define os dados a apresentar sobre o PTRES
+    $ptres = $this->escape ( $this->dados [ 'CD_DS_SG_PTRES' ] );
+    
+    // Define os dados a apresentar sobre a natureza da despesa
+    $natureza = $this->escape ( $this->dados [ 'CD_DS_ELEMENTO' ] );
+    
+    // TESTES
+    // Zend_Debug::dump( $despesa );
+    // Zend_Debug::dump( $ano );
+    // Zend_Debug::dump( $ug );
+    // Zend_Debug::dump( $responsavel );
+    // Zend_Debug::dump( $fonte );
+    // Zend_Debug::dump( $ptres );
+    // Zend_Debug::dump( $natureza );
+    //
+    // Zend_Debug::dump( $this->dados );
+    ?>
+    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+        <legend style="font-size: 12px;">Resumo da despesa</legend>
+        
+        <div style="margin-left: 10px;">
+            <b>Despesa:</b> <?php echo $despesa; ?><br>
+            <b>Ano:</b> <?php echo $ano; ?><br>
+            <b>UG:</b> <?php echo $ug; ?><br>
+            <b>Responsável:</b> <?php echo $responsavel; ?><br>
+            <b>Fonte:</b> <?php echo $fonte; ?><br>
+            <b>PTRES:</b> <?php echo $ptres; ?><br>
+            <b>Natureza da despesa:</b> <?php echo $natureza; ?><br>
+        </div>
+    </fieldset>
+    <?php
+} else {
+    ?>
+    <fieldset class="invalida" style="display: none;"></fieldset>
+    <?php
+}

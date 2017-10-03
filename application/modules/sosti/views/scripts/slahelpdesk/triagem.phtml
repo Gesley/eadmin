@@ -1,0 +1,84 @@
+<?php $this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript'); ?>
+<script>
+$(function() {
+    $('#DATA_INICIAL').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: 'hh:mm:ss',
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK',
+        onClose: function(dateText, inst) {
+            var endDateTextBox = $('#DATA_FINAL');
+            if (endDateTextBox.val() != '') {
+                var testStartDate = new Date(dateText);
+                var testEndDate = new Date(endDateTextBox.val());
+                if (testStartDate > testEndDate)
+                    endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+                }
+                else {
+                    endDateTextBox.val((dateText)?(dateText.substring(0,11) + '23:59:59'):(''));
+                }
+        },
+        onSelect: function (selectedDateTime){
+            var start = $(this).datetimepicker('getDate');
+            $('#DATA_FINAL').datetimepicker('option', 'minDate', new Date(start.getTime()));
+        }
+    });
+    $('#DATA_FINAL').datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                             'Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior',
+        changeMonth: true,
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+         timeFormat: 'hh:mm:ss',
+        timeOnlyTitle: 'Escolha o intervalo de tempo',
+	timeText: 'Tempo',
+	hourText: 'Hora',
+	minuteText: 'Minutos',
+	secondText: 'Segundos',
+	currentText: 'Agora',
+	closeText: 'OK'
+    });
+});
+    
+</script>
+<fieldset>
+    <legend>Filtro do Sla</legend>
+    <div class="painel">
+        <div class="painel" >
+            <input type="button" title="Último Filtro" name="acao" value="Filtro" id="pesquisar">
+        </div> 
+    </div>
+    <div id="pesq_div"  <?php echo ($this->data == '')?(''):('style="display: none;"'); ?> >
+        <?php echo $this->form; ?>
+        <span id="botao_ajuda_recolhe" ></span>
+    </div>
+</fieldset>

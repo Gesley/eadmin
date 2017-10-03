@@ -1,0 +1,134 @@
+<?php
+/**
+  $this->isDocumentoPrincipal;
+  $this->documento;
+  $this->anexos;
+  $this->formPesquisaAnexos;
+  $this->formPesquisaApensos;
+ */
+?>
+<div id="tabs-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="tabs_principal">
+    <input type="hidden" id="documento_post-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" name="documento_post" value="<?= $this->escape(Zend_Json::encode($this->documento_post)) ?>" />
+    <div id="documento_tabs-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">
+        <center>
+            <h2 style="margin: 0;"><?= ($this->isDocumentoPrincipal ? 'Documento Principal da Leitura: ' . $this->documento['MASC_NR_DOCUMENTO'] : 'Documento: ' . $this->documento['MASC_NR_DOCUMENTO']) ?></h2>
+        </center>
+        <p>
+            <?php
+            echo '
+            <b>Número:</b> ' . $this->documento['MASC_NR_DOCUMENTO']
+            . '<br/><b>Tipo Documento:</b> ' . $this->documento['DTPD_NO_TIPO']
+            . '<br/><b>Assunto:</b> ' . $this->documento['AQVP_CD_PCTT'] . ' - ' . $this->documento['AQAT_DS_ATIVIDADE'];
+            ?>
+
+        </p>
+
+        <div id="tabs_interna-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="tabs_interna">
+            <ul>
+                <li><a href="#tabs_metadados-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">Metadados</a></li>
+                <li><a href="#tabs_historico-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">Histórico</a></li>
+                <?php
+                $qtdTodos = count($this->todos);
+
+                if ($qtdTodos > 0) {
+                    echo '<li><a href="#tabs_todos-' . $this->documento['DOCM_ID_DOCUMENTO'] . '">Anexos(' . $qtdTodos . ')</a></li>';
+                }
+                $qtdAnexos = count($this->anexos);
+                if ($qtdAnexos > 0) {
+                    echo '<li><a href="#tabs_anexos-' . $this->documento['DOCM_ID_DOCUMENTO'] . '">Anexos(' . $qtdAnexos . ')</a></li>';
+                }
+                $qtdAnexosSemMetadados = count($this->anexos_sem_metadados);
+                if ($qtdAnexosSemMetadados > 0) {
+                    echo '<li><a href="#tabs_anexos_sem_metadados-' . $this->documento['DOCM_ID_DOCUMENTO'] . '">Anexos sem metadados(' . $qtdAnexosSemMetadados . ')</a></li>';
+                }
+                $qtdApensos = count($this->apensos);
+                if ($qtdApensos > 0) {
+                    echo '<li><a href="#tabs_apensos-' . $this->documento['DOCM_ID_DOCUMENTO'] . '">Apensos(' . $qtdApensos . ')</a></li>';
+                }
+                $qtdVinculos = count($this->vinculos);
+                if ($qtdVinculos > 0) {
+                    echo '<li><a href="#tabs_vinculos-' . $this->documento['DOCM_ID_DOCUMENTO'] . '">Vinculos(' . $qtdVinculos . ')</a></li>';
+                }
+                echo '<li><a href="#tabs_parecer-' . $this->documento['DOCM_ID_DOCUMENTO'] . '">Realize Parecer</a></li>';
+                echo '<li><a href="#tabs_despacho-' . $this->documento['DOCM_ID_DOCUMENTO'] . '">Realize Despacho</a></li>';
+                ?>
+            </ul>
+
+            <?php
+            echo $this->partial('_partials/leitura/tabs_metadados.phtml', array(
+                'documento' => $this->documento
+            ));
+
+            echo $this->partial('_partials/leitura/tabs_historico.phtml', array(
+                'documento' => $this->documento
+                , 'historico' => $this->historico
+                , 'anexosSemMetadados' => $this->anexosSemMetadados
+                , 'minuta' => $this->minuta
+            ));
+
+
+
+            if ($qtdTodos > 0) {
+                echo $this->partial('_partials/leitura/tabs_todos.phtml', array(
+                    'documento' => $this->documento
+                ));
+            }
+
+            if ($qtdAnexos > 0) {
+                echo $this->partial('_partials/leitura/tabs_anexos.phtml', array(
+                    'documento' => $this->documento
+                    , 'formPesquisa' => $this->formPesquisaAnexos
+                    , 'anexos' => $this->anexos
+                ));
+            }
+            if ($qtdAnexosSemMetadados > 0) {
+                echo $this->partial('_partials/leitura/tabs_anexos_sem_metadados.phtml', array(
+                    'documento' => $this->documento
+                    /* , 'formPesquisa' => $this->formPesquisaAnexos */
+                    , 'anexos_sem_metadados' => $this->anexos_sem_metadados
+                ));
+            }
+
+            if ($qtdApensos > 0) {
+                echo $this->partial('_partials/leitura/tabs_apensos.phtml', array(
+                    'documento' => $this->documento
+                    , 'formPesquisa' => $this->formPesquisaApensos
+                    , 'apensos' => $this->apensos
+                ));
+            }
+
+            if ($qtdVinculos > 0) {
+                echo $this->partial('_partials/leitura/tabs_vinculos.phtml', array(
+                    'documento' => $this->documento
+                    , 'formPesquisa' => $this->formPesquisaVinculos
+                    , 'vinculos' => $this->vinculos
+                ));
+            }
+            ?>
+            <!--Carregado via ajax-->
+            <div id="tabs_parecer-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">
+                <?=
+                $this->partial('_partials/leitura/tabs_parecer.phtml', array(
+                    'documento' => $this->documento
+                ));
+                ?>
+            </div>
+            <!--Carregado via ajax-->
+            <div id="tabs_despacho-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>">
+                <?=
+                $this->partial('_partials/leitura/tabs_despacho.phtml', array(
+                    'documento' => $this->documento
+                ));
+                ?>
+            </div>
+
+        </div>
+    </div>
+
+    <?=
+    $this->partial('_partials/leitura/visualizador.phtml', array(
+        'documento' => $this->documento
+    ));
+    ?>
+    <?= $this->partial('_partials/leitura/visualizador_sem_metadados.phtml', array('documento' => $this->documento)); ?>
+</div>

@@ -1,0 +1,264 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MultiFile.js'));
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        });
+    </script>
+
+
+
+<script type="text/javascript">
+    
+    $(function() {
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var encaminharpessoa = $('form[name=encaminharpessoa]');
+            if(acao == 'Encaminhar'){
+                encaminharpessoa.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/encaminharpessoa');
+            }
+        }
+    );
+        $('#MODE_CD_MATR_RECEBEDOR').hide();
+        $('#MODE_CD_MATR_RECEBEDOR-label').hide();
+        $('#MODE_CD_MATR_RECEBEDOR').attr('disabled', 'disabled');
+        $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').hide();
+        $('#MODE_CD_MATR_RECEBEDOR_UNIDADES-label').hide();
+        $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').attr('disabled', 'disabled');
+        $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').hide();
+        $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL-label').hide();
+        $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').attr('disabled', 'disabled');
+        $('#CAIXAS_DISPONIVEIS').hide();
+        $('#CAIXAS_DISPONIVEIS-label').hide();
+        $('#CAIXAS_DISPONIVEIS').attr('disabled', 'disabled');
+            
+        if( $('#ENCAMINHAMENTO-daunidade').is(':checked') == true){
+                
+            $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').hide();
+            $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL-label').hide();
+            $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').attr('disabled', 'disabled');
+            $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').hide();
+            $('#MODE_CD_MATR_RECEBEDOR_UNIDADES-label').hide();
+            $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').attr('disabled', 'disabled');
+            $('#CAIXAS_DISPONIVEIS').hide();
+            $('#CAIXAS_DISPONIVEIS-label').hide();
+            $('#CAIXAS_DISPONIVEIS').attr('disabled', 'disabled');
+                
+            $('#MODE_CD_MATR_RECEBEDOR').show();
+            $('#MODE_CD_MATR_RECEBEDOR-label').show();
+            $('#MODE_CD_MATR_RECEBEDOR').removeAttr('disabled');
+                
+        }else if ( $('#ENCAMINHAMENTO-responsaveis').is(':checked') == true) {
+            $('#MODE_CD_MATR_RECEBEDOR').hide();
+            $('#MODE_CD_MATR_RECEBEDOR-label').hide();
+            $('#MODE_CD_MATR_RECEBEDOR').attr('disabled', 'disabled');
+            $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').hide();
+            $('#MODE_CD_MATR_RECEBEDOR_UNIDADES-label').hide();
+            $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').attr('disabled', 'disabled');
+            $('#CAIXAS_DISPONIVEIS').hide();
+            $('#CAIXAS_DISPONIVEIS-label').hide();
+            $('#CAIXAS_DISPONIVEIS').attr('disabled', 'disabled');
+                
+            $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').show();
+            $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL-label').show();
+            $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').removeAttr('disabled');
+                
+        } else if ( $('#ENCAMINHAMENTO-outraunidade').is(':checked') == true) {
+            $('#MODE_CD_MATR_RECEBEDOR').hide();
+            $('#MODE_CD_MATR_RECEBEDOR-label').hide();
+            $('#MODE_CD_MATR_RECEBEDOR').attr('disabled', 'disabled');
+            $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').hide();
+            $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL-label').hide();
+            $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').attr('disabled', 'disabled');
+                
+            $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').show();
+            $('#MODE_CD_MATR_RECEBEDOR_UNIDADES-label').show();
+            $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').removeAttr('disabled');
+            $('#CAIXAS_DISPONIVEIS').show();
+            $('#CAIXAS_DISPONIVEIS-label').show();
+            $('#CAIXAS_DISPONIVEIS').removeAttr('disabled');
+        }
+            
+        $('input[type=radio][name=ENCAMINHAMENTO]').click(
+        function(){
+            if(this.value == 'daunidade'){
+                $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').hide();
+                $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL-label').hide();
+                $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').attr('disabled', 'disabled');
+                $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').hide();
+                $('#MODE_CD_MATR_RECEBEDOR_UNIDADES-label').hide();
+                $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').attr('disabled', 'disabled');
+                $('#CAIXAS_DISPONIVEIS').hide();
+                $('#CAIXAS_DISPONIVEIS-label').hide();
+                $('#CAIXAS_DISPONIVEIS').attr('disabled', 'disabled');
+
+                $('#MODE_CD_MATR_RECEBEDOR').show();
+                $('#MODE_CD_MATR_RECEBEDOR-label').show();
+                $('#MODE_CD_MATR_RECEBEDOR').removeAttr('disabled');
+                
+            }else if (this.value == 'responsaveis'){
+                $('#MODE_CD_MATR_RECEBEDOR').hide();
+                $('#MODE_CD_MATR_RECEBEDOR-label').hide();
+                $('#MODE_CD_MATR_RECEBEDOR').attr('disabled', 'disabled');
+                $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').hide();
+                $('#MODE_CD_MATR_RECEBEDOR_UNIDADES-label').hide();
+                $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').attr('disabled', 'disabled');
+                $('#CAIXAS_DISPONIVEIS').hide();
+                $('#CAIXAS_DISPONIVEIS-label').hide();
+                $('#CAIXAS_DISPONIVEIS').attr('disabled', 'disabled');
+
+                $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').show();
+                $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL-label').show();
+                $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').removeAttr('disabled');
+                
+            }else if (this.value == 'outraunidade'){
+                $('#MODE_CD_MATR_RECEBEDOR').hide();
+                $('#MODE_CD_MATR_RECEBEDOR-label').hide();
+                $('#MODE_CD_MATR_RECEBEDOR').attr('disabled', 'disabled');
+                $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').hide();
+                $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL-label').hide();
+                $('#MODE_CD_MATR_RECEBEDOR_RESPONSAVEL').attr('disabled', 'disabled');
+
+                $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').show();
+                $('#MODE_CD_MATR_RECEBEDOR_UNIDADES-label').show();
+                $('#MODE_CD_MATR_RECEBEDOR_UNIDADES').removeAttr('disabled');
+                $('#CAIXAS_DISPONIVEIS').show();
+                $('#CAIXAS_DISPONIVEIS-label').show();
+                $('#CAIXAS_DISPONIVEIS').removeAttr('disabled');
+            }
+        });
+        $("#MODE_CD_MATR_RECEBEDOR_UNIDADES").autocomplete({
+            source: base_url+"/sisad/caixaunidade/ajaxnomesolicitante",
+            minLength: 3,
+            delay: 300,
+            select: function(){
+                var matricula = $(this).val().split(' - ')[0];
+                $("#CAIXAS_DISPONIVEIS").removeAttr('disabled');
+                $.ajax({
+                    url: '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/ajaxpessoacaixa/matricula/'+matricula,
+                    dataType: 'html',
+                    type: 'POST',
+                    data: this.value,
+                    contentType: 'application/json',
+                    processData: false,
+                    beforeSend:function() {
+                        $("#CAIXAS_DISPONIVEIS").removeClass('erroInputSelect');
+                        $("#CAIXAS_DISPONIVEIS").html('');
+                        $("#CAIXAS_DISPONIVEIS").addClass('carregandoInputSelect');
+                    },
+                    success: function(data) {
+                        $("#CAIXAS_DISPONIVEIS").html(data);
+                        $("#CAIXAS_DISPONIVEIS").removeClass('carregandoInputSelect');
+                        $("#CAIXAS_DISPONIVEIS").focus();
+                    },
+                    error: function(){
+                        $("#CAIXAS_DISPONIVEIS").removeClass('x-form-field');
+                        $("#CAIXAS_DISPONIVEIS").val('Erro ao carregar.');
+                        $("#CAIXAS_DISPONIVEIS").addClass('erroInputSelect');
+                        $("#CAIXAS_DISPONIVEIS").html('<option>Erro ao carregar</option>');
+                    }
+                });  
+            },
+            change:function(){
+                var matricula = $(this).val().split(' - ')[0];
+                $("#CAIXAS_DISPONIVEIS").removeAttr('disabled');
+                $.ajax({
+                    url: '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/ajaxpessoacaixa/matricula/'+matricula,
+                    dataType: 'html',
+                    type: 'POST',
+                    data: this.value,
+                    contentType: 'application/json',
+                    processData: false,
+                    beforeSend:function() {
+                        $("#CAIXAS_DISPONIVEIS").removeClass('erroInputSelect');
+                        $("#CAIXAS_DISPONIVEIS").html('');
+                        $("#CAIXAS_DISPONIVEIS").addClass('carregandoInputSelect');
+                    },
+                    success: function(data) {
+                        $("#CAIXAS_DISPONIVEIS").html(data);
+                        $("#CAIXAS_DISPONIVEIS").removeClass('carregandoInputSelect');
+                        $("#CAIXAS_DISPONIVEIS").focus();
+                    },
+                    error: function(){
+                        $("#CAIXAS_DISPONIVEIS").removeClass('x-form-field');
+                        $("#CAIXAS_DISPONIVEIS").val('Erro ao carregar.');
+                        $("#CAIXAS_DISPONIVEIS").addClass('erroInputSelect');
+                        $("#CAIXAS_DISPONIVEIS").html('<option>Erro ao carregar</option>');
+                    }
+                });  
+            }
+        });
+        $(function(){ 
+            $('#ANEXOS').MultiFile({
+                STRING: {
+                    file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+                    remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+                }
+            });
+        });
+    });
+        
+</script>
+
+<form method="POST" action="encaminharpessoa" enctype="multipart/form-data" >
+    <?php if (count($this->data)): ?>
+        <div class="container_pagination_fixed">
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th >Tipo</th>
+                        <th >Número</th>
+                        <th >Encaminhador</th>
+                        <th >Data/Hora Encaminhamento</th>
+                    </tr>
+                </thead>
+                <tbody id="documentosList">
+                    <?php
+                    foreach ($this->data as $data):
+                        ?>
+                        <tr>
+                            <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+<!--                            <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                            <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                            <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                            <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                        </tr>
+                        <?php ?>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    <?php else: ?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+        <input type="hidden" name="acao" value="EncaminharPessoaForm" />
+    <?php
+    echo $this->formInterno->getElement('ENCAMINHAMENTO');
+    echo $this->formInterno->getElement('MODE_CD_SECAO_UNID_DESTINO');
+    echo $this->formInterno->getElement('MOFA_DS_COMPLEMENTO');
+    echo $this->formInterno->getElement('MODE_CD_MATR_RECEBEDOR');
+    echo $this->formInterno->getElement('MODE_CD_MATR_RECEBEDOR_UNIDADES');
+    echo $this->formInterno->getElement('CAIXAS_DISPONIVEIS');
+    echo $this->formInterno->getElement('MODE_CD_MATR_RECEBEDOR_RESPONSAVEL');
+    ?>
+    <b>Anexos</b></br>
+    <input id="ANEXOS" type="file" name="ANEXOS[]"  class="Multi" accept="pdf" maxlength="20" />
+    Até 20 Anexos. </br>
+    Somente serão aceitos arquivos com o formato PDF. </br>
+    Soma dos arquivos até 50 Megas.</p>
+    <span class="msg_alerta"> </span>
+</p>
+<span class="msg_alerta"> </span>
+<input type="submit" name="salvar" value="Salvar" />
+</form>

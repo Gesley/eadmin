@@ -1,0 +1,217 @@
+<div style="width: 700px; margin: 0 auto; display: block; /*background:url(<? //echo $this->baseUrl();  ?>/img/brasaoPequeno.jpg) no-repeat center;*/">
+    <div style="width: 80px;margin: 0 auto;">
+    <!--    <img src="<? //echo $this->baseUrl();  ?>/img/BrasaoBrancoRelatorio.jpg" width="80px">-->
+    </div>
+    <p style="text-align:center">PODER JUDICIÁRIO<br /><strong>TRIBUNAL REGIONAL FEDERAL DA 1ª REGIÃO</strong> <? echo $this->codpctt['AQVP_CD_PCTT']; ?></p><br />
+    <p style="text-align:center"><strong>SOLICITAÇÃO DE SERVIÇO</strong> </p>
+    <p style="text-align:center"><strong><? echo $this->codpctt['AQAT_DS_ATIVIDADE']; ?></strong></p>
+    <div style="width: 800px;">
+        <table  style="font-size: 12px; text-align: left;" >
+            <tr style="font-size: 12px; font-weight: bold;">
+                <td style="width:100px;">
+                    <b>Solicitação Nº:</b>
+                </td>
+                <td>
+                    <?php echo $this->DocmDocumento['DOCM_NR_DOCUMENTO']; ?>
+                </td>         
+            </tr>
+            <tr style="font-size: 12px; font-weight: bold;">
+                <td style="width:100px;" title="Data e hora de cadastro">
+                    <b>Data da Solicitação:</b>
+                </td>
+                <td>
+                    <?php echo $this->DocmDocumento['DOCM_DH_CADASTRO'] ?>
+                </td>
+            </tr>
+            <?php if ($this->DocmDocumento['DOCM_NR_DCMTO_USUARIO']): ?>
+                <tr>
+                    <td style="width:70px;">
+                        Nº Documento Usuário:
+                    </td>
+                    <td title="Número do documento">
+                        <?php echo $this->DocmDocumento['DOCM_NR_DCMTO_USUARIO'] ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <?php if (!$this->DocmDocumento['SSOL_NM_USUARIO_EXTERNO']) { ?>
+                <tr>
+                    <td style="width:100px;">
+                        <b>Unidade Solicitante:</b>
+                    </td>
+                    <td>
+                        <?php echo $this->DocmDocumento['LOTA_SIGLA_LOTACAO'] . ' - ' . $this->DocmDocumento['LOTA_DSC_LOTACAO'] ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:100px;">
+                        <b>Nome do Solicitante / Matrícula:</b>
+                    </td>
+                    
+                    <td>
+                        <?php echo $this->DocmDocumento['NOME'] ?> - <?php echo $this->DocmDocumento['DOCM_CD_MATRICULA_CADASTRO']; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:100px;">
+                        <b>E-mail do Solicitante:</b>
+                    </td>
+                    <td>
+                        <?php echo $this->DocmDocumento['SSOL_DS_EMAIL_EXTERNO']; ?>
+                    </td>
+                </tr>
+            <?php } else { ?>
+                <tr>
+                    <td style="width:100px;">
+                       <b>Unidade Cadastrante:</b> 
+                    </td>
+                    <td ><?php echo $this->DocmDocumento['LOTA_SIGLA_LOTACAO'] . ' - ' . $this->DocmDocumento['LOTA_DSC_LOTACAO'] ?></td>
+                </tr>
+                <tr>
+                    <td style="width:100px;">Nome do Solicitante <strong>Externo:</strong></td>
+                    <td ><?php echo $this->DocmDocumento['SSOL_NM_USUARIO_EXTERNO'] ?></td>
+                </tr>
+                <tr>
+                    <td style="width:100px;"><strong>E-mail do Solicitante</strong></td>
+                    <td ><?php echo $this->DocmDocumento['SSOL_DS_EMAIL_EXTERNO'] ?></td>
+                </tr>
+
+            <?php } ?>
+            <tr>
+                <td style="width:100px;"><strong>Telefone:</strong></td>
+                <td ><?php echo $this->DocmDocumento['SSOL_NR_TELEFONE_EXTERNO'] ?></td>
+            </tr>
+            <tr>
+                <td style="width:100px;"><strong>Local de Atendimento:</strong></td>
+                <td ><?php echo $this->DocmDocumento['SSOL_ED_LOCALIZACAO'] ?></td>
+            </tr>
+<!--                    <tr>
+                <th >Unidade Solicitante:</th>
+                <td ><?php echo $this->DocmDocumento['LOTA_SIGLA_LOTACAO_REDATORA'] . ' - ' . $this->DocmDocumento['LOTA_DSC_LOTACAO_REDATORA'] ?></td>
+            </tr>-->
+            <?php if ($this->DocmDocumento['DOCM_NR_DOCUMENTO_RED']): ?>
+                <tr >
+                    <th>Abrir:</th>
+                    <td><a class="<?php if (is_null($this->DocmDocumento["DOCM_NR_DOCUMENTO_RED"])) {
+                echo 'alertaButton';
+            } else {
+                echo 'abrirAnexo';
+            } ?>" target="_blank" title="<?php if (is_null($this->DocmDocumento["DOCM_NR_DOCUMENTO_RED"])) {
+                echo 'Adicionar Arquivo';
+            } else {
+                echo 'Abrir Documento';
+            } ?>" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/<?php echo $this->DocmDocumento["DOCM_NR_DOCUMENTO_RED"]; ?> "></a></td>
+                </tr>
+            <?php endif; ?>
+            <tr>
+                <td style="width:100px;"><strong>Serviço Atual:</strong></td>
+                <td ><?php echo $this->DocmDocumento['SSER_DS_SERVICO'] ?></td>
+            </tr>
+            <?php if ($this->DocmDocumento['SSOL_NR_TOMBO']): ?>
+                <tr>
+                    <th >Nº do Tombo:</th>
+                    <td ><?php echo $this->DocmDocumento['SSOL_NR_TOMBO'] ?></td>
+                </tr>
+            <?php endif; ?>
+            <?php if ($this->AnexAnexo): ?>
+                <tr >
+                    <th>Quantidade de anexos::</th>
+                    <td>
+            <?php echo count($this->AnexAnexo); ?>
+                    </td>
+                </tr >
+            <?php endif; ?>
+            <tr  >
+            </tr>
+<?php if ($this->DocmDocumento['ATENDENTE'] != ''): ?> 
+                <tr>
+                    <td style="width:100px;"><b>Encaminhado para:</b></td>
+                    <td>
+                        <?php echo $this->DocmDocumento['ATENDENTE'] ?>
+                    </td>
+                </tr>
+                <tr>
+                    
+                </tr>
+<?php endif; ?>
+               
+            <tr  >
+                <th style="font-size: 12px; padding-left: 20px; text-align: left;"  colspan="4" >Descrição:</th>
+            </tr>
+            <tr>
+                <td style="font-size: 12px; padding-left: 20px; text-align: left;" colspan="4">
+                    <table style="width: 780px; border-width: 1px; border-spacing: 0px; border-style: solid; border-color: black; border-collapse: collapse;">
+                            <tr>
+                                <td>
+                                    <?php echo $this->DocmDocumento['DOCM_DS_ASSUNTO_DOC'] ?>
+                                </td>
+                           </tr>                        
+                    </table>
+                </td>
+            </tr>
+<?php if ($this->DocmDocumento['SSOL_DS_OBSERVACAO'] != ""): ?>
+                <tr >
+                    <th style="font-size: 12px; padding-left: 20px; text-align: left;" colspan="4">Observação da Solicitação:</th>
+                </tr>
+                <tr>
+                    <td style="font-size: 12px; padding-left: 20px; text-align: left;" colspan="4" >
+                        <?php echo $this->DocmDocumento['SSOL_DS_OBSERVACAO'] ?>
+                    </td>
+                </tr>
+<?php endif; ?>
+
+            <br />
+            <tr>
+                <th style="font-size: 12px; padding-left: 20px; text-align: left;" colspan="4">
+                    Solução:
+                <table style="width: 780px; border-width: 1px; border-spacing: 0px; border-style: solid; border-color: black; border-collapse: collapse;">
+                    <tr>
+                        <td><br/><br/><br/><br/><br/><br/><br/></td>
+                    </tr>                        
+                </table>
+                    
+                </th>
+            </tr>
+            <br />
+            <tr>
+                <th style="font-size: 12px; padding-left: 20px; text-align: left;" colspan="4">
+                    Observação da Solução:
+                    <table style="width: 780px; border-width: 1px; border-spacing: 0px; border-style: solid; border-color: black; border-collapse: collapse;">
+                    <tr>
+                        <td><br/><br/><br/><br/><br/><br/><br/></td>
+                    </tr>                        
+                    </table>
+                </th>
+            </tr>
+            <br />
+            <br />
+            <tr>
+                <td style="font-size: 12px; padding-left: 20px; text-align: left;" colspan="4">
+                    <b>Atesto que a solicitação nº:</b> <?php echo $this->DocmDocumento['DOCM_NR_DOCUMENTO'] ?> foi atendida <br />em ____/____/________ às ____:____:____                        
+                </td>
+            </tr>
+            <br />
+            <br />
+            <tr>
+                <th style="font-size: 12px; padding-left: 20px; text-align: left;" colspan="4">
+                    Responsável pelo atendimento:____________________________________________________________________
+                </th>
+            </tr>
+            <br />
+            <br />
+            <tr>
+                <th style="font-size: 12px; padding-left: 20px; text-align: left;" colspan="4">
+                    Solicitante / Matrícula:_____________________________________________________________________________
+                </th>
+            </tr>
+        </table>
+        
+        
+        
+<!--        <strong>Descrição da Solicitação:&nbsp;</strong>
+        <p style="text-align:justify"><? echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $this->DadosSolicitacao["DOCM_DS_ASSUNTO_DOC"]; ?></p>-->
+    </div>
+    <br />
+    <?php $userNamespace = new Zend_Session_Namespace('userNs');?>
+    <p style="text-align:center"><? echo strtoupper($userNamespace->municipiosecsubsec); ?> - <?php echo $userNamespace->ufsecsubsec.' - '. date("d/m/Y"); ?></p>
+    <!--<strong><? //echo substr($this->data["DOCM_CD_LOTACAO_REDATORA"], 0, strlen($this->data["DOCM_CD_LOTACAO_REDATORA"]) - 4); ?></strong></p>-- RETIRADO POR SCHUMACHER 11/JUN/2012, PARA E-SOSTI NÃO DEVE APARECER POIS E A MESMA DA UNIDADE GERADORA, RESOLVENDO O BUG DAS DUAS PÁGINAS. -->
+</div>

@@ -1,0 +1,307 @@
+<?php
+echo $this->partial('_partials/ajuda_informacao.phtml', array(
+    'msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+?>
+
+<style type="text/css">
+    #carregandoRelatorio {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        border: 1px red solid;
+        padding: 5px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 12px;
+        display: none;
+    }
+
+    .validar {
+        font: 10px Arial,sans-serif;
+        color: #EC4A24 !important;
+        display: none;
+    }
+    
+    #mensagensErro {
+        display: none;
+    }
+
+   dd#UNIDADE_GESTORA-element, #UG_TODAS-element { display: inline }
+</style>
+
+<div id="mensagensErro"></div>
+
+<br />
+
+<form id="formgerarrelatoriocnj" name="formgerarrelatoriocnj" action="gerarrelatoriocnj/relatorio" target="_relatorioLoad" method="POST">
+    <div id="carregandoRelatorio">
+        <img src="<?php echo $this->baseUrl('img/loader.gif') ?>" style="vertical-align: baseline" /> <br /><br />
+        Construindo o relatório, aguarde alguns instantes...
+    </div>
+
+    <?php
+    $this->formulario->REGC_CD_REGRA;
+
+    echo $this->formulario->REGC_AA_REGRA;
+    echo '<div class="validar" id="msgAno">Preenchimento Obrigatório</div>';
+    echo '<div class="validar" id="msgAnoSuperior">Não é possível informar datas futuras para geração de relatório, apenas data anterior ou atual.</div>';
+
+    echo $this->formulario->IMPA_IC_MES;
+    echo '<div class="validar" id="msgMes">Preenchimento Obrigatório</div>';
+    echo "<br />";
+    echo $this->formulario->TIPO_ANEXO;
+    echo "<br />";
+    echo $this->formulario->TIPO_RELATORIO;
+    echo "<br />";
+    ?>
+
+    <div id="tipo_html">
+        <?php
+        echo $this->formulario->TIPO_ANEXO_HTML;
+        ?>
+        <?php echo '<div class="validar" id="msgAnexoHtml">Preenchimento Obrigatório</div>'; ?>
+    </div>
+
+    <div id="tipo_excel">
+        <?php
+        echo $this->formulario->TIPO_ANEXO_EXCEL;
+        ?>
+        <?php echo '<div class="validar" id="msgAnexoExcel">Preenchimento Obrigatório</div>'; ?>
+    </div>
+    
+    <div id="unidade_gestora_div">
+       <?php
+       echo $this->formulario->UNIDADE_GESTORA ." " . $this->formulario->UG_TODAS;
+       ?>
+       <?php echo '<div class="validar" id="msgUg">Preenchimento Obrigatório</div>'; ?>
+    </div>
+
+    <?php echo $this->formulario->Enviar; ?>
+
+    <div id="newIframe">
+        <iframe id="_relatorioLoad" name="_relatorioLoad" src="javascript:void(0)" width="0" height="0" style="display: none"></iframe>
+    </div>
+
+</form>
+
+<script type="text/javascript">
+
+    var tipoAnexo = $('input:radio[name=TIPO_ANEXO]').val();
+    var tipoRelatorio = $('input:radio[name=TIPO_RELATORIO]').val();
+
+    function carregarTipo() {
+
+        // inabilita o botao incluir
+        if (tipoAnexo === '1') {
+            tipoAnexo = $(":input:radio[name=TIPO_ANEXO][checked]").val();
+            carregarTipoRelatorio();
+        } else {
+            tipoAnexo = $(":input:radio[name=TIPO_ANEXO][checked]").val();
+            $("#tipo_html").hide();
+            $("#tipo_excel").hide();
+
+            $("#TIPO_ANEXO_EXCEL").attr("disabled", "disabled");
+            $("#TIPO_ANEXO_HTML").attr("disabled", "disabled");
+            carregarTipoRelatorio();
+        }
+    }
+
+    function carregarTipoRelatorio() {
+
+        if (tipoAnexo === '1') {
+            if (tipoRelatorio === '1') {
+                tipoRelatorio = $(":input:radio[name=TIPO_RELATORIO][checked]").val();
+                $("#tipo_html").show();
+                $("#tipo_excel").hide();
+                
+                $("#unidade_gestora_div").show();
+
+                $("#TIPO_ANEXO_HTML").val("");
+                $("#TIPO_ANEXO_EXCEL").val("");
+
+                $("#TIPO_ANEXO_HTML").removeAttr("disabled");
+                $("#TIPO_ANEXO_EXCEL").attr("disabled", "disabled");
+
+            } else {
+                tipoRelatorio = $(":input:radio[name=TIPO_RELATORIO][checked]").val();
+                $("#tipo_html").hide();
+                $("#tipo_excel").show();
+                
+                $("#unidade_gestora_div").hide();
+
+                $("#TIPO_ANEXO_EXCEL").removeAttr("disabled");
+
+                $("#TIPO_ANEXO_HTML").val("");
+                $("#TIPO_ANEXO_EXCEL").val("");
+
+                $("#TIPO_ANEXO_HTML").attr("disabled", "disabled");
+            }
+        } else {
+            $("#unidade_gestora_div").show();
+        }
+
+    }
+
+    var iframeLoad = '<iframe id="_relatorioLoad" name="_relatorioLoad" src="javascript:void(0)" width="0" height="0" style="display: none"></iframe>';
+
+    function controlarLoad() {
+        
+        importar = false;
+
+        parent.$("#carregandoRelatorio").hide();
+
+        setTimeout(function () {
+            parent.$("#_relatorioLoad").remove();
+            parent.$("#newIframe").empty().append(iframeLoad);
+
+            parent.$("#_relatorioLoad").load(function () {
+                controlarLoad();
+            });
+        }, 2000);
+
+    }
+
+    var botao = $("#Enviar");
+    var form = $("#formgerarrelatoriocnj");
+
+    $(document).ready(function () {
+
+        /*
+            deprecated
+        var ano = <?= date('Y'); ?>;
+        
+        $('#REGC_AA_REGRA').blur(function(){
+            if($(this).val() > ano ){
+                $( "#REGC_AA_REGRA" ).after( "<p id='msg' style='color: red;'>Não é possível informar datas futuras para geração de relatório, apenas data anterior ou atual.</p>" );
+                $( "#REGC_AA_REGRA" ).val("");
+            }else{
+                $("#msg").text("");
+            }
+        });         
+        */
+
+        $("#formgerarrelatoriocnj").submit(function () {
+            return acaoEnviar();
+        });
+
+        carregarTipo();
+        // habilita o botao de incluir em caso do preenchimento
+        $('input:radio[name=TIPO_ANEXO]').change(function () {
+            tipoAnexo = $(":input:radio[name=TIPO_ANEXO][checked]").val();
+            carregarTipo();
+        });
+
+        // habilita o botao de incluir em caso do preenchimento
+        $('input:radio[name=TIPO_RELATORIO]').change(function () {
+            tipoRelatorio = $(":input:radio[name=TIPO_RELATORIO][checked]").val();
+            carregarTipoRelatorio();
+        });
+        
+        ug();
+        
+    });
+    
+    function ug() {
+        $("#UG_TODAS").change(function() {
+           if ($(this).is(":checked")) {
+               $("#UNIDADE_GESTORA").attr('disabled', 'disabled');
+           } else {
+               $("#UNIDADE_GESTORA").removeAttr('disabled');
+           }
+        });
+    }
+    
+    var importar = false;
+    
+    function acaoEnviar() {
+        
+        var erro = 0;
+        var ano = <?= date('Y'); ?>;
+
+        if ($("#REGC_AA_REGRA").val().trim().length == 0) {
+            $("#msgAno").show();
+            erro++;
+        } else {
+            $("#msgAno").hide();
+        }
+
+        if ($("#REGC_AA_REGRA").val() > ano){
+            $("#msgAnoSuperior").show();
+            erro++;
+        }
+
+        if ($("#IMPA_IC_MES").val() == "") {
+            $("#msgMes").show();
+            erro++;
+        } else {
+            $("#msgMes").hide();
+        }
+
+        if ($("#TIPO_ANEXO_HTML").val() == "" && $("#TIPO_ANEXO_HTML").attr('disabled') != 'disabled') {
+            $("#msgAnexoHtml").show();
+            erro++;
+        } else {
+            $("#msgAnexoHtml").hide();
+        }
+
+        if ($("#TIPO_ANEXO_EXCEL").val() == "" && $("#TIPO_ANEXO_EXCEL").attr('disabled') != 'disabled') {
+            $("#msgAnexoExcel").show();
+            erro++;
+        } else {
+            $("#msgAnexoExcel").hide();
+        }
+
+        var selecionadoUG  = $("#UG_TODAS:checkbox:checked").length;
+        
+        if (tipoRelatorio == '2' && tipoAnexo == '1') {
+            
+        } else {
+            if (selecionadoUG == 0 && $("#UNIDADE_GESTORA").val() == '') {
+                $("#msgUg").show();
+                erro++;
+            } else {
+                $("#msgUg").hide();
+            }
+        }
+
+        if (erro > 0) {
+            return false;
+        }
+        
+        if (!importar) {
+            importar = true;
+            
+            botao.attr('disabled', 'disabled');
+            
+            var request = $.post(base_url + "/orcamento/gerarrelatoriocnj/validardata/",
+                    {REGC_AA_REGRA: $("#REGC_AA_REGRA").val(), IMPA_IC_MES: $("#IMPA_IC_MES").val()},
+            function (data) {
+                botao.removeAttr('disabled');
+                
+                if (data) {
+                    $("#mensagensErro").hide();
+                    form.submit();
+
+                    $("#_relatorioLoad").load(function () {
+                        controlarLoad();
+                    });
+
+                    $("#formgerarrelatoriocnj").attr('disabled', 'disabled');
+                    $("#carregandoRelatorio").show();
+                } else {
+                    $("#mensagensErro").html('<div class="error"><strong>Erro:</strong> Não é possível informar datas futuras para geração de relatório, apenas data anterior ou atual.</div>').show();
+                    importar =  false;
+                }
+            }, "json");
+
+            request.fail(function () {
+                botao.removeAttr('disabled', 'disabled');
+                alert("Falha ao verificar se existe mês e ano já importados.");
+            });
+            
+            return false;
+        }          
+
+    }
+
+</script>

@@ -1,0 +1,45 @@
+<table>
+    <?php $grupo = $this->grupo; 
+          $reg1 = explode(':',$grupo[0]["CXEN_DS_CAIXA_ENTRADA"]); 
+          $reg2 = explode(' - ', $reg1[1]); 
+    ?>
+    <tr><th rowspan="6"><img width="80" height="76" src="<?php echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" /></th></tr>
+    <tr><td>PODER JUDICIÁRIO</td><td>Data e Hora da Emissão: <?php echo $this->horaAtual; ?></td></tr>
+    <tr><td><?php echo "Colaborador: ".$this->nome; ?></td></tr>
+<!--    <tr><td><?php //echo substr($reg1[0], 0, -5); ?></td></tr>
+    <tr><td><?php //echo ($this->descricaoNivel)?($this->descricaoNivel):(''); ?></td></tr>-->
+    <tr><td><?php //echo 'Solicitações Finalizadas por Período: '.$this->titulo; ?></td></tr>
+</table>
+<br />
+<table style="border: 1px solid #C3C3C3;">
+    <thead>
+          <tr>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">N. DA SOLICITAÇÃO</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">SERVIÇO ATUAL</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">DATA INÍCIO</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">DATA DA BAIXA</th>
+            <th align="left" style="border: 1px solid #C3C3C3; padding: 3px;">AVALIAÇÃO</th>
+         </tr>
+    </thead>
+    <tbody>
+        <?php $descricaoSatisfacao = new Application_Model_DbTable_SosTbSsolSolicitacao(); ?>
+        <?php foreach($this->data as $data): ?>                                                                                                     
+            <tr name="rowList" value="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" >
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $this->escape($data["SSER_DS_SERVICO"]); ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $this->escape($data["DH_CADASTRO"]); ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $this->escape($data["DH_FASE"]); ?></td>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php echo $this->escape((!$descricaoSatisfacao->getTipoSatisfacao($data["SSOL_ID_DOCUMENTO"]))?('NÃO AVALIADA'):
+                                             ($descricaoSatisfacao->getTipoSatisfacao($data["SSOL_ID_DOCUMENTO"]))); 
+                    ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="7">TOTAL GERAL DE BAIXAS: <?php echo count($this->data); ?>
+           </td>
+        </tr>
+    </tfoot>
+</table>

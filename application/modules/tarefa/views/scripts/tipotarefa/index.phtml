@@ -1,0 +1,68 @@
+<?php 
+$this->inlineScript()
+     ->appendFile($this->baseUrl() . '/js/tooltipster-1.2/js/jquery.tooltipster.min.js', 'text/javascript')
+     ->appendFile($this->baseUrl() . '/js/tarefa/tipoTarefa.js ', 'text/javascript');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div id="container_pagination">
+    <div style="margin-bottom: 5px;">
+        <a  class="novo" href="<?php echo $this->baseUrl(); ?>/tarefa/tipotarefa/adicionar">Novo</a>
+    </div>
+    <?php if (count($this->data)): ?>
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        <a href="<?php echo $this->baseUrl(); ?>/tarefa/tipotarefa/index/ordem/TPTA_NM_TAREFA/direcao/<?php echo $this->direcao ?> ">
+                            Nome do Tipo de Tarefa
+                            <span class="<?php echo ($this->direcao == 'DESC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="<?php echo $this->baseUrl(); ?>/tarefa/tipotarefa/index/ordem/TPTA_DS_TAREFA/direcao/<?php echo $this->direcao ?> ">
+                            Descrição do Tipo de Tarefa
+                            <span class="<?php echo ($this->direcao == 'DESC') ? ('ordenacaodesc') : ('ordenacaoasc'); ?>"></span>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->data as $data): ?>
+                    <tr>
+                        <td id="painel_<?php echo $this->escape($data->getId()); ?>" class="painel" >
+                            <a title="Editar" id="editar_<?php echo $this->escape($data->getId()); ?>" style="margin: 6px;" class="editar" href="<?php echo $this->baseUrl(); ?>/tarefa/tipotarefa/editar/id/<?php echo $this->escape($data->getId()); ?>" >
+                                Editar
+                            </a> 
+                            <a title="Excluir" id="<?php echo $this->escape($data->getId()); ?>" class="excluir" href="#" >
+                                Excluir
+                            </a>
+                        </td>
+                        <td><?php echo $this->escape($data->getNome()); ?></td>
+                        <td><?php echo $this->escape($data->getDescricao()); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">
+                        Total: 
+                        <?php echo $this->data->getTotalItemCount(); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    <?php else: ?>
+        <p>Não existem registros.</p>
+    <?php endif; ?>
+</div>
+<!-- Confirma a exclusão do registro -->
+<div id="dialog-tipo-tarefa" title="Confirmação" style="display: none;">
+    <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+    <p id="msn"></p>
+</div>

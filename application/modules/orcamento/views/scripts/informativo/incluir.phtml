@@ -1,0 +1,54 @@
+<div id="incluir" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all" style="width: 800px; padding-left:20px;">
+<?php echo  $this->partial('_partials/ajuda_informacao.phtml', array(
+                'msgAjuda'  => $this->msgAjuda,
+                'msgInfo' => $this->msgInfo)
+            );
+?>
+
+    <form id="frmInformativo" enctype="application/x-www-form-urlencoded" method="post" action=""><dl class="zend_form">
+
+    <?php
+        echo $this->formulario->INFO_TX_TITULO_INFORMATIVO;
+        echo $this->formulario->INFO_DT_INICIO;
+        echo $this->formulario->INFO_DT_TERMINO;
+        echo $this->formulario->INFO_DS_INFORMATIVO;
+    ?>
+        <div>
+            <table>
+                <tr>
+                    <td width="10%"><?php echo $this->formulario->INFR_CD_RESPONSAVEL; ?></td>
+                    <td width="90%"><?php echo $this->formulario->Add ?></td>
+                </tr>
+            </table>
+        </div>
+        <div id="listagem" style="border: 1px #ccc solid; margin: 5px; padding: 10px; width: 300px">
+            <ul class="list-style">
+                <!-- lista de destinatarios -->
+            </ul>
+            <a id="clear" href="#limpar">Limpar</a>
+        </div>
+
+    <?php echo $this->formulario->Incluir; ?>
+
+        <div id="campos_ocultos">
+            <!--  dados destinatários -->
+        </div>
+    </form>
+
+</div>
+
+<script type="text/javascript">
+
+// Add responsaveis
+$('#Add').click(function(){
+	$("#listagem ul").append('<li>' + $("#INFR_CD_RESPONSAVEL option:selected").text() + '</li>');
+	$("#campos_ocultos").append('<input type="hidden" name="responsaveis[]" value="'+ $("#INFR_CD_RESPONSAVEL option:selected").val() + '" />');
+
+});
+
+// Limpa a lista de responsaveis
+$('#clear').click(function(){
+	$("#listagem ul").empty();
+
+});
+</script>

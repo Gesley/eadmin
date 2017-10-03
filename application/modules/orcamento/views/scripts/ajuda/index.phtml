@@ -1,0 +1,39 @@
+<h3>Características e Funcionalidades</h3>
+
+<div class="span-24 last clear">
+	<?php $sDescricao = 'Funcionalidades do Grid'; ?>
+	<div class="span-6">
+		<a	href="<?php echo $this->url(array(	'module'		=> 'orcamento',
+												'controller'	=> 'ajuda',
+												'action'		=> 'grid'), 0, true); ?>"
+			title="<?php echo $sDescricao; ?>" >
+		<img src="<?php echo $this->baseUrl(); ?>/img/orcamento/ceo_ajuda_grid.jpg" height="120" width="200" alt="<?php echo $sDescricao; ?>" title="<?php echo $sDescricao; ?>" />
+		<?php echo $sDescricao; ?>
+		</a>
+	</div>
+	
+	<?php $sDescricao = 'Níveis de permissão'; ?>
+	<div class="span-6">
+		<a	href="<?php echo $this->url(array(	'module'		=> 'orcamento',
+												'controller'	=> 'ajuda',
+												'action'		=> 'permissao'), 0, true); ?>"
+			title="<?php echo $sDescricao; ?>" >
+		<img src="<?php echo $this->baseUrl(); ?>/img/orcamento/ceo_ajuda_permissao.jpg" height="120" width="200" alt="<?php echo $sDescricao; ?>" title="<?php echo $sDescricao; ?>" />
+		<?php echo $sDescricao; ?>
+		</a>
+	</div>
+	
+</div>
+<br />
+
+<div class="span-24 last clear">
+	<br /><br />
+	<?php
+	echo	$this->partial('_partials/botao.phtml',
+			array(	'nomeController'	=> 'index',
+					'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+					'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+					'textoBotao'		=> 'Voltar para a tela inicial do e-Orçamento.',
+					'textoAlternativo'	=> 'Retornar à tela inicial do sistema e-Orçamento'));
+	?>
+</div>

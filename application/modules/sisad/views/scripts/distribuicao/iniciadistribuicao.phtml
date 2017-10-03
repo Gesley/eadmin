@@ -1,0 +1,309 @@
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $('document').ready(function(){
+            $("#enviar").hide();
+        });
+        var mostrarDistribuir = false;
+        function mostrarBotaoDistribuir(aux){
+            if(aux){
+                if($("#nome_orgao").val() != '' && mostrarDistribuir){
+                    $("#enviar").show();
+                }else{
+                    $("#enviar").hide();
+                }
+            }else{
+                $("#enviar").hide();
+            }
+        }
+        var orgao = '';
+        var GLOBAL_indice_abas =  0;
+        var xhr_abrir_documento;
+        function distribuir(PRDI_ID_PROCESSO_DIGITAL,IMDI_CD_COMISSAO){
+            $.ajax({
+                url: base_url + "/sisad/distribuicao/impedimento/",
+                data: {"IMDI_CD_COMISSAO" : IMDI_CD_COMISSAO, "PRDI_ID_PROCESSO_DIGITAL" : PRDI_ID_PROCESSO_DIGITAL},
+                type: "POST",
+                success: function(data){
+                        
+                    //monta um formulario com os mombros e um check box
+                    $('#dialog-impedimento').dialog({
+                        height: 400,
+                        width:500,
+                        title:'Membros Impedidos para a Distribuição Eletrônica',
+                        buttons: {
+                            "Salvar": function() {
+                                var $form = $('form#distribuicao');
+                                $.ajax({
+                                    url: base_url + '/sisad/distribuicao/impedir',
+                                    type: "POST",
+                                    data: $form.serialize(),
+                                    dataType: "json",
+                                    success: function(data){
+                                        if(data.success){
+                                                
+                                            $('#flashMessagesDiv').html('<div class="success"><strong>Sucesso:</strong> '+data.mensagem+'</div>');
+                                        }else{
+                                            $('#flashMessagesDiv').html('<div class="error"><strong>Erro:</strong> '+data.mensagem+'</div>');
+                                        }
+                                        $("#dialog-impedimento").scrollTop(0);
+                                    }
+                                });
+                            },
+                            "Fechar": function() {
+                                $( this ).dialog( "close" );
+                            }
+                        }
+                            
+                    });
+                    $('#dialog-impedimento').html('');                   
+                    $('#dialog-impedimento').html(data);
+                    $('#dialog-impedimento').dialog('open');
+                    $('#dialog-impedimento').attr('css','overflow:auto;');
+                },
+                error : function(){
+                    alert('Erro 1: Não foi possível excluir documento do Processo.');
+                }
+            });
+        }
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+            $('.impedimento').hide();
+            $('.promocao').hide();
+        });
+        //AUTO COMPLETA DO ORGAO JULGADOR
+        $(function() {
+            $("#nome_orgao").autocomplete({
+                    
+                source: base_url+"/sisad/distribuicao/ajaxorgaojulgador",
+                minLength: 3,
+                delay: 300,
+                select: function (event, ui){
+                    
+                    mostrarDistribuir = true;
+                    
+                    orgao = ui.item.orgj_cd_orgao_julgador;
+                    //preenche campo hiden
+                    $('#ORGJ_CD_ORGAO_JULGADOR').val(orgao);
+                    if(orgao==1000 || orgao==2000 || orgao==3000){
+                        $('.impedimento').hide();
+                        $('.promocao').show();
+                    }else{
+                        $('.impedimento').show();
+                        $('.promocao').hide();
+                    }
+                    $("#matricula_membro").hide();
+                    $("#matricula_membro").html('');
+                    $("#GRUPO_DISTRIBUICAO-distautomatica").attr('checked', 'checked');
+                    $("#flashMessagesView").html('');
+                    mostrarBotaoDistribuir(true);
+                }
+            });
+        });
+            
+            
+        $(function(){
+            $("#dialog-documentos_detalhe").dialog({
+                title    : 'Detalhe',
+                autoOpen : false,
+                modal    : false,
+                show: 'fold',
+                hide: 'fold',
+                resizable: true,
+                width: 800,
+                height: 600,
+                position: [580,140,0,0],
+                buttons : {
+                    Ok: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+                
+            grid_tbody_tr = $("table.grid > tbody > tr");
+            grid_tbody_tr.dblclick(function(){
+                var this_tr = $(this);
+                var input_dados_documento = $(this).find('input');
+                    
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_dados_documento = input_dados_documento.val();
+                //input_dados_documento.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                    
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                xhr_abrir_documento = $.ajax({
+                    url: base_url + '/sisad/detalhedcmto/detalhedcmto',
+                    dataType: 'html',
+                    type: 'POST',
+                    data: value_input_dados_documento,
+                    contentType: 'application/json',
+                    processData: false,
+                    beforeSend:function() {
+                        
+                        div_dialog_by_id.dialog("open");
+                        div_dialog_by_id.html('');
+                    },
+                    success: function(data) {
+                        div_dialog_by_id.html(data);
+                            
+                    },
+                    complete: function(){
+                            
+                    },
+                    error : function(xhr, er){
+
+                    }
+                });
+            });
+
+            if($("#GRUPO_DISTRIBUICAO-distautomatica").attr('checked') ){
+                    
+                $("#matricula_membro").hide();   
+                $("#matricula_membro-label").hide(); 
+            }else{
+                $("#matricula_membro").show();   
+                $("#matricula_membro-label").show();
+            }
+                
+            $("#matricula_membro").change(function(){
+                if($("#matricula_membro").val() != ""){
+                    mostrarBotaoDistribuir(true);
+                }else{
+                    mostrarBotaoDistribuir(false);
+                }
+            });
+                
+            $("#GRUPO_DISTRIBUICAO-distautomatica").click(function(){
+                mostrarBotaoDistribuir(true);
+                $("#matricula_membro").hide();
+                $("#matricula_membro-label").hide(); 
+                $("#matricula_membro").html('');
+            }); 
+            $("#GRUPO_DISTRIBUICAO-distmanual").click(function(){
+                if($("#ORGJ_CD_ORGAO_JULGADOR").val()!=''){
+                    mostrarBotaoDistribuir(false);
+                    $.ajax({
+                        url:  base_url + "/sisad/distribuicao/ajaxpessoasorgao/",
+                        type: "POST",
+                        dataType: "json",
+                        data: {"ORGJ_CD_ORGAO_JULGADOR" : orgao},
+                        beforeSend:function() {
+                            $("#matricula_membro").show();
+                            $("#matricula_membro-label").show();
+                            $("#matricula_membro").removeClass('erroInputSelect');
+                            $("#matricula_membro").html("");
+                            $("#matricula_membro").addClass('carregandoInputSelect');
+                        },
+                        success: function(data) {
+                            guia = new Array();
+                            guia["id"] = "pmat_cd_matricula";
+                            guia["label"] = "pnat_no_pessoa";
+                            $("#flashMessagesView").html('');
+                            montaSelect($("#matricula_membro"), data, guia);
+                            $("#matricula_membro").removeClass('carregandoInputSelect');                            
+                        },
+                        error: function(){
+                            $("#GRUPO_DISTRIBUICAO-distautomatica").attr('checked', 'checked');
+                            $("#flashMessagesView").html("<div class='error'><strong>Erro:</strong> Não foi possivel buscar os membros do orgão</div>");
+                            $("#matricula_membro").removeClass('x-form-field');
+                            $("#matricula_membro").addClass('erroInputSelect');
+                        }
+                    });
+                }else{
+                    $("#GRUPO_DISTRIBUICAO-distautomatica").attr('checked', 'checked');
+                    $("#flashMessagesView").html("<div class='notice'><strong>Erro:</strong> Escolha primeiro o orgão julgador</div>");
+                }
+            }); 
+                
+            function montaSelect($elemento, data, guia){
+                var linhas = $elemento.get(0); //Pegando o combo
+                linhas.options.length = 0; //reset para zero
+                linhas.options[linhas.length] = new Option('', '');
+                $.each(data, function(i,item){
+                    linhas.options[linhas.length] = new Option(item[guia.id] + ' - ' + item[guia.label], item[guia.id]);
+                });
+            }
+        });
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>A distribuição realizada em um <i>Processo Administrativo</i> implica em movimenta-lo para uma <i>unidade</i> ou um <i>Orgão Julgador</i>.</li>
+    </ul>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<?php if (count($this->data)): ?>
+    <form method="POST" action="distribuir" enctype="multipart/form-data" >
+        <input type="hidden" value="submitParecer" name="acao" />
+
+        <p>
+            <?= $this->formDistribuir->ORGJ_CD_ORGAO_JULGADOR; ?>
+            <?= $this->formDistribuir->nome_orgao; ?>
+            Digite o código do orgão ou pedaco do nome do orgão. 
+            <?= $this->formDistribuir->GRUPO_DISTRIBUICAO; ?>
+            <?= $this->formDistribuir->matricula_membro; ?>
+
+
+
+        </p>
+
+        <div class="container_pagination_fixed">
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th >Tipo</th>
+                        <th >Número</th>
+                        <th >Encaminhador</th>
+                        <th >Data/Hora Encaminhamento</th>
+                        <th class='impedimento' style="display: none;">Impedimento</th>
+                        <th class='promocao' style="display: none;">Promo&ccedil;&atilde;o</th>
+                    </tr>
+                </thead>
+                <tbody id="documentosList">
+                    <?php
+                    //Zend_Debug::dump($this->data);
+                    foreach ($this->data as $data):
+                        $dadosInput = Zend_Json::encode($data);
+                        ?>
+                        <tr>
+                            <td> 
+                                <!--                                DADOS UTILIZADOS PELO CLICK DUPLO-->
+                                <input type="hidden" name="documento[]" id="<?= $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" value='<?= $dadosInput ?>'/> 
+                                <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?>
+                            </td>
+                            <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+                            <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                            <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+                            <td class='impedimento' style="display: none;"> <input id="Distribuir" name="acao" type="button" class="novo" value="Impedimento" onclick="distribuir('<?= $data["PRDI_ID_PROCESSO_DIGITAL"]; ?>',orgao);"/></td>
+                            <td class='promocao' style="display: none;">  <input type="checkbox" name="promo-<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]) ?>" title="Adcionar titulo" value="S"/></td>
+                        </tr>
+                        <?php ?>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">Total: <?= count($this->data) ?></td>
+                    </tr>
+            <!--        <tr>
+                        <td colspan="4"><?php //echo $this->paginationControl($this->data, null, null, null)                      ?></td>
+                    </tr>-->
+                </tfoot>
+            </table>
+        </div>
+        <span class="msg_alerta"> </span>
+
+        <span class="msg_alerta"> </span>
+        <br/>
+        <input id="enviar" name="acao" type="submit" class="novo" value="Distribuir"/>
+    </form>
+    <div id="dialog-impedimento"></div>
+    <!-- CLICK DUPLO MOSTRA HISTORICO DO DOCUMENTO -->
+    <div id="dialog-documentos_detalhe">
+        <div id="dialog-documentos_conteudo"></div>
+    </div>
+<?php else: ?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+

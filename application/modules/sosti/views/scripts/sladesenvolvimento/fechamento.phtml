@@ -1,0 +1,40 @@
+<script type="text/javascript">
+    $(function() {
+    
+     $('#fechamentoform').submit(function(){
+        url = '<?php echo $this->baseUrl(); ?>/sosti/sladesenvolvimento/fechamento';
+        xhr_abrir_documento = $.ajax({
+            url: url,
+            dataType: 'html',
+            data: $('#fechamentoform').serialize(),
+            type: 'POST',
+            beforeSend:function() {
+                if(! $("#dialog-fechar").dialog( "isOpen" )){
+                    $("#dialog-fechar").dialog("open");
+                }
+            },
+            success: function(data) {
+                $("#dialog-fechar").html(data);
+            },
+            complete: function(){
+            },
+            error : function(){
+
+            }
+        });
+        return false;
+        });
+        if(
+        <?php if($this->op == 1){
+            echo '1';
+        }else{
+            echo '0';
+        }
+        ?> == 1){
+                $('.gerado').hide();
+        }
+        
+   });
+</script>
+<div id="flashMessages"><?php echo $this->flashMessages(); ?></div>
+<?php echo $this->form; ?>

@@ -1,0 +1,531 @@
+<?php
+$this->inlineScript()
+        ->appendFile($this->baseUrl() . '/js/tooltipster-1.2/js/jquery.tooltipster.min.js', 'text/javascript');
+?>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/partesInteressadosDocumentos.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/partesInteressados.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/solicitar_documento/solicitarDocumento.js'));
+?>
+
+<script type="text/javascript">
+    $(function() {
+        /**
+         * Para transformar o select em um combo de autocomplete via somente java-script
+         **/
+        $("#DOCM_ID_PCTT").combobox();
+        $("#combobox-input-text-DOCM_ID_PCTT").attr('style', 'width: 600px;');
+        $("#combobox-input-button-DOCM_ID_PCTT").attr('style', 'display: none;');
+        $("#DOCM_ID_TIPO_DOC").combobox();
+        $("#combobox-input-text-DOCM_ID_TIPO_DOC").attr('style', 'width: 500px;');
+
+        /**
+         * Para apresentar a Lista completa de ASSUNTOS
+         */
+        var botao_detalhe_pctt = $("<input type='button' name='LST_CPT_PCTT' value='Lista completa de Assuntos' />");
+        botao_detalhe_pctt.css('position', 'relative');
+        botao_detalhe_pctt.css('display', 'inline');
+        botao_detalhe_pctt.css('float', 'right');
+        botao_detalhe_pctt.css('top', '-44px');
+        botao_detalhe_pctt.css('left', '-140px');
+        botao_detalhe_pctt.button();
+        $("#DOCM_ID_PCTT-element").append(botao_detalhe_pctt);
+        botao_detalhe_pctt.click(
+                function() {
+                    if ($('#detalhe_pctt').attr('id') == undefined) {
+                        var detalhe_pctt = $("<div id='detalhe_pctt'></div>");
+                        var select = $("#DOCM_ID_PCTT");
+                        select.css('display', 'block');
+                        select.css('width', '680px');
+                        select.css('height', '480px');
+                        select.attr('size', '20');
+                        detalhe_pctt.append(select);
+                        $('body').append(detalhe_pctt);
+                        detalhe_pctt.dialog({
+                            title: 'Lista completa de Assuntos',
+                            modal: true,
+                            width: 700,
+                            height: 600,
+                            buttons: {
+                                OK: function() {
+                                    $("#DOCM_ID_PCTT").css('display', 'none');
+                                    selected = $("#DOCM_ID_PCTT").children(":selected");
+                                    $("#combobox-input-text-DOCM_ID_PCTT").val(selected.text());
+                                    $("#DOCM_ID_PCTT-element").append(select);
+                                    $(this).dialog('close');
+                                    $("#combobox-input-text-DOCM_ID_PCTT").focus();
+                                }
+                            }
+                        });
+                        detalhe_pctt.dialog('open');
+                    } else {
+                        $("#DOCM_ID_PCTT").css('display', 'block');
+                        $('#detalhe_pctt').append($("#DOCM_ID_PCTT"));
+                        $('#detalhe_pctt').dialog('open');
+                    }
+                }
+        );
+        $('.tooltip').tooltipster({
+            fixedWidth: 650,
+            position: 'bottom-left'
+        });
+        $(".tooltip").each(function() {
+            $(this).attr("data-oldhref", $(this).attr("href"));
+            $(this).removeAttr("href");
+        });
+    });
+
+</script>
+<script type="text/javascript">
+
+    var GLOBAL_indice_abas = 0;
+    var xhr_abrir_documento;
+
+    var grid_tbody_tr;
+    $(function() {
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+                function() {
+                    grid_tbody_tr.removeClass('hover_nav');
+
+                    var this_tr = $(this);
+                    var is_checked_tr = $(this).attr('marcado');
+
+                    var input_check_box = $(this).find('input[type=checkbox]');
+                    var is_checked_input = input_check_box.attr('checked');
+
+                    if ((is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined)) {
+                        input_check_box.attr('checked', 'checked');
+                        this_tr.attr('marcado', 'marcado');
+                        this_tr.addClass('hover');
+                    } else {
+                        input_check_box.removeAttr('checked');
+                        this_tr.removeAttr('marcado');
+                        this_tr.removeClass('hover');
+                    }
+                    input_check_box.focus();
+                }
+        );
+        grid_tbody_tr.dblclick(
+                function() {
+                    var this_tr = $(this);
+                    var input_check_box = $(this).find('input');
+
+                    var div_dialog_by_id = $("#dialog-documentos_detalhe");
+                    value_input_check_box = input_check_box.val();
+                    input_check_box.attr('checked', 'checked');
+                    this_tr.attr('marcado', 'marcado');
+                    this_tr.addClass('hover');
+
+                    if (xhr_abrir_documento) {
+                        xhr_abrir_documento.abort();
+                    }
+                    url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+                    xhr_abrir_documento = $.ajax({
+                        url: url,
+                        dataType: 'html',
+                        type: 'POST',
+                        data: value_input_check_box,
+                        contentType: 'application/json',
+                        processData: false,
+                        beforeSend: function() {
+                            div_dialog_by_id.dialog("open");
+                        },
+                        success: function(data) {
+                            div_dialog_by_id.html(data);
+
+                        },
+                        complete: function() {
+
+                        },
+                        error: function() {
+
+                        }
+                    });
+                }
+        );
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+                function() {
+                    if ($(this).attr('checked')) {
+                        $(".nav_check_boxes").attr('checked', 'checked');
+                        $("tr[name=rowList]").addClass('hover');
+                    } else {
+                        $(".nav_check_boxes").removeAttr('checked');
+                        $("tr[name=rowList]").removeClass('hover');
+                    }
+                }
+        );
+        $('input[name=acao]').click(
+                function() {
+                    var acao = this.value;
+                    var formhelpdesk = $('form[name=helpdesk]');
+                    if (acao == 'Encaminhar') {
+                        formhelpdesk.attr('action', '<?php echo $this->baseUrl(); ?>/sosti/atendimentotecnico/encaminhar');
+                    } else if (acao == 'Baixar') {
+                        formhelpdesk.attr('action', '<?php echo $this->baseUrl(); ?>/sosti/atendimentotecnico/baixarcaixa');
+                    } else if (acao == 'Espera') {
+                        formhelpdesk.attr('action', '<?php echo $this->baseUrl(); ?>/sosti/atendimentotecnico/esperacaixa');
+                    }
+                }
+        );
+        $('form[name=helpdesk]').submit(
+                function() {
+                    var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                    if (solictacaoSelecionada == undefined) {
+                        var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                        $('#flashMessages').html(mensagem);
+                        return false;
+                    }
+                }
+        );
+        $("#dialog-documentos_detalhe").dialog({
+            title: 'Detalhe',
+            autoOpen: false,
+            modal: false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580, 140, 0, 0],
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function() {
+        var secao;
+
+        $("#TRF1_SECAO_1").change(
+                function() {
+                    secao = $("#TRF1_SECAO_1").val();
+                    if (secao == "") {
+                        $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+                            source: base_url + "/sosti/solicitacao/ajaxunidade",
+                            minLength: 3,
+                            delay: 500
+                        });
+
+                        $("#DOCM_CD_LOTACAO_REDATORA").autocomplete({
+                            source: base_url + "/sosti/solicitacao/ajaxunidade",
+                            minLength: 3,
+                            delay: 500
+                        });
+                    } else {
+                        secao = $("#TRF1_SECAO_1").val().split('|')[0];
+                        $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+                            source: base_url + "/sosti/solicitacao/ajaxunidade/secao/" + secao,
+                            minLength: 3,
+                            delay: 500
+                        });
+                        $("#DOCM_CD_LOTACAO_REDATORA").autocomplete({
+                            source: base_url + "/sosti/solicitacao/ajaxunidade/secao/" + secao,
+                            minLength: 3,
+                            delay: 500
+                        });
+                    }
+                }
+        );
+
+        $("#DOCM_CD_MATRICULA_CADASTRO").autocomplete({
+            //source: "sosti/solicitacao/ajaxnomesolicitante",
+            source: base_url + "/sosti/solicitacao/ajaxnomesolicitante",
+            minLength: 3,
+            delay: 300
+        });
+
+        secao = $("#TRF1_SECAO_1").val();
+        if (secao == "") {
+            $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+                source: base_url + "/sosti/solicitacao/ajaxunidade",
+                minLength: 3,
+                delay: 500
+            });
+
+            $("#DOCM_CD_LOTACAO_REDATORA").autocomplete({
+                source: base_url + "/sosti/solicitacao/ajaxunidade",
+                minLength: 3,
+                delay: 500
+            });
+        } else {
+            secao = $("#TRF1_SECAO_1").val().split('|')[0];
+            $("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+                source: base_url + "/sosti/solicitacao/ajaxunidade/secao/" + secao,
+                minLength: 3,
+                delay: 500
+            });
+            $("#DOCM_CD_LOTACAO_REDATORA").autocomplete({
+                source: base_url + "/sosti/solicitacao/ajaxunidade/secao/" + secao,
+                minLength: 3,
+                delay: 500
+            });
+        }
+
+
+        $('#pesquisar')
+                .click(function() {
+            $("#pesq_div").show();
+            //$("#pesq_div").hide();
+            $("#container_pagination").hide();
+        });
+
+//            $('#irparacaixa')
+//                .click(function() {
+//                        $("#pesq_div").show();
+//                        //$("#pesq_div").hide();
+//                        $("#container_pagination").hide();
+//                });
+
+        $('#Pesquisar').button();
+
+        $("#botao_ajuda_recolhe")
+                .click(function() {
+            $("#pesq_div").hide();
+            $("#pesquisar").show();
+        });
+        $(function() {
+            var dates = $("#DATA_INICIAL, #DATA_FINAL").datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro',
+                    'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Próximo',
+                prevText: 'Anterior',
+                changeMonth: true,
+                numberOfMonths: 1,
+                changeMonth: true,
+                        changeYear: true,
+                changeMonth: true,
+                        onSelect: function(selectedDate) {
+                    var option = this.id == "DATA_INICIAL" ? "minDate" : "maxDate",
+                            instance = $(this).data("datepicker");
+                    date = $.datepicker.parseDate(
+                            instance.settings.dateFormat ||
+                            $.datepicker._defaults.dateFormat,
+                            selectedDate, instance.settings);
+                    dates.not(this).datepicker("option", option, date);
+                }
+            });
+        });
+    });
+    //PARTES/INTERESSADOS   
+    $(function() {
+        $("#selecionados_partes").show();
+        $.data(document.body, 'config',
+                {
+                    containerPartes: $("#partes_adicionadas"),
+                    tabela: $("#selecionados_partes tbody"),
+                    descParte: 'linha_interessado',
+                    tipoParte: '1'
+                }
+        );
+
+
+
+        /**
+         * BOTÕES de AÇÃO
+         */
+        $('input[name=acao]').click(function() {
+            var acao = this.value;
+            var cx_pesquisa_documento = $('form[name=pesquisa_documento]');
+            if (acao == 'Juntar Documento à Processo') {
+                cx_pesquisa_documento.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/juntada/documentoaprocesso');
+                cx_pesquisa_documento.submit();
+            }
+        });
+        $('form[name=pesquisa_documento]').submit(function() {
+            var formulario_valido = true;
+            var documentoSelecionado = $(".nav_check_boxes:checked").val();
+            if (documentoSelecionado == undefined) {
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('drop');
+                flashMessages_by_id.delay(2000).hide('drop');
+                return false;
+            }
+
+            grid_tbody_tr.each(function() {
+                var this_tr = $(this);
+                var input_check_box = this_tr.find('input');
+                var is_checked_input = input_check_box.attr('checked');
+                if (is_checked_input != undefined) {
+                    var span_id_leitura = $(this_tr).find('span[id=leitura]');
+                    if (span_id_leitura.hasClass('naolido')) {
+                        var mensagem = "<div class='notice'><strong>Alerta:</strong> Não é possível realizar ações sobre documentos <strong>não</strong> recebidos.</div>";
+                        flashMessages_by_id.hide();
+                        flashMessages_by_id.html(mensagem);
+                        flashMessages_by_id.show('drop');
+                        //flashMessages_by_id.delay(6000).hide('drop');
+                        formulario_valido = false;
+                    }
+                }
+
+            });
+            if (!formulario_valido) {
+                return false;
+            }
+        });
+
+    });
+</script>
+
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="painel" style="<?php if (!$this->ultima_pesq) echo "display: none;" ?>">
+    <input type="button" title="Última pesquisa" name="acao" value="Última Pesquisa" id="pesquisar"/>
+    <a title="Nova Pesquisa" name="acao" value="Pesquisa" id="pesquisar" href="<?php echo $this->baseUrl(); ?>/sisad/pesquisadcmto/index/nova/1" >Nova Pesquisa</a>
+    <input type="button" title="Adicionar o documento selecionado à processos." name="acao" value="Juntar Documento à Processo" id="pesquisar"/>
+</div> 
+
+<div class="help" id="pesq_div"  style="<?php if ($this->ultima_pesq) echo "display: none;" ?>" >
+    <form enctype="" method="post" action="" >
+        <input type="submit" name="Pesquisar" id="Pesquisar" value="Pesquisar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
+        <br /><br />
+        <?php
+        // echo $this->form; 
+        echo $this->form->TRF1_SECAO_1;
+        echo $this->form->OPCAO_NR_DOCUMENTO;
+        echo $this->form->DOCM_ID_DOCUMENTO;
+        echo $this->form->NUMERO_ANO;
+        echo $this->form->OPCAO_DOCUMENTO;
+        echo $this->form->DOCM_CD_MATRICULA_CADASTRO;
+        echo $this->form->DOCM_CD_LOTACAO_GERADORA;
+        echo $this->form->DOCM_CD_LOTACAO_REDATORA;
+        echo $this->form->TIPO_PROCESSO;
+        echo $this->form->DOCM_ID_TIPO_DOC;
+        echo $this->form->DOCM_NR_DCMTO_USUARIO;
+        echo $this->form->DOCM_ID_PCTT;
+        echo $this->form->DOCM_DS_PALAVRA_CHAVE;
+        echo $this->form->DOCM_ID_TIPO_SITUACAO_DOC;
+        echo $this->form->DOCM_ID_CONFIDENCIALIDADE;
+        echo $this->form->DOCM_NR_DOCUMENTO_RED;
+        echo $this->form->DATA_INICIAL;
+        echo $this->form->DATA_FINAL;
+        ?> 
+        <fieldset>
+            <legend>Partes</legend>
+            <?php
+            echo $this->partial('_partials/cadastrapartesinteressados.phtml', array('form' => $this->formParte));
+            ?>
+        </fieldset>
+
+        <br />
+        <input type="submit" name="Pesquisar" id="Pesquisar" value="Pesquisar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
+    </form>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<form method="POST" action="" name="pesquisa_documento">
+    <div id="container_pagination">
+        <?php if (count($this->data)): ?>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>
+                            <!--                    
+                                  <input type="checkbox" name="input_check_all_grid" id="check_all" />
+                            --></th>
+                        <th></th>
+                        <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/pesquisadcmto/index/ordem/DTPD_NO_TIPO/direcao/<?php echo $this->direcao ?> ">Tipo<span class="<?php
+                                if ($this->direcao == 'ASC')
+                                    echo 'ordenacaodesc';
+                                else
+                                    echo 'ordenacaoasc';
+                                ?>"></span></a></th>
+                        <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/pesquisadcmto/index/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">Número<span class="<?php
+                                if ($this->direcao == 'ASC')
+                                    echo 'ordenacaodesc';
+                                else
+                                    echo 'ordenacaoasc';
+                                ?>"></span></a></th>
+                        <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/pesquisadcmto/index/ordem/DOCM_DH_CADASTRO/direcao/<?php echo $this->direcao ?> ">Data de Criação<span class="<?php
+                                if ($this->direcao == 'ASC')
+                                    echo 'ordenacaodesc';
+                                else
+                                    echo 'ordenacaoasc';
+                                ?>"></span></a></th>
+                        <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/pesquisadcmto/index/ordem/LOTA_SIGLA_LOTACAO/direcao/<?php echo $this->direcao ?> ">Localização<span class="<?php
+                                if ($this->direcao == 'ASC')
+                                    echo 'ordenacaodesc';
+                                else
+                                    echo 'ordenacaoasc';
+                                ?>"></span></a></th>
+                        <th><a  href="<?php echo $this->baseUrl(); ?>/sisad/pesquisadcmto/index/ordem/ENCAMINHADOR/direcao/<?php echo $this->direcao ?> ">Encaminhador<span class="<?php
+                                if ($this->direcao == 'ASC')
+                                    echo 'ordenacaodesc';
+                                else
+                                    echo 'ordenacaoasc';
+                                ?>"></span></a></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <?php foreach ($this->data as $data): ?>
+                        <tr class="grid_rows <?php echo $this->escape($data["CLASS_LIDO_TR"]); ?>" name="rowList" value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" > 
+                            <td>
+                                <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" value="<?php echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                            </td>
+                            <td>
+                                <span id="leitura" class="<?php echo $this->escape($data["CLASS_LIDO"]); ?>" title="<?php echo $this->escape($data["MSG_LIDO"]); ?>"></span>
+                                <?php
+                                if (isset($data["ENDERECADO"])) {
+                                    ?>
+                                    <span id="leitura" class="<?php echo $this->escape($data["ENDERECADO"]); ?>" title="<?php echo $this->escape($data["MSG_ENDERECADO"]); ?>"></span>
+                                <?php } ?>
+                                <?php
+                                if (isset($data["PARA_POSTAGEM"])) {
+                                    ?>
+                                    <span id="leitura" class="<?php echo $this->escape($data["PARA_POSTAGEM"]); ?>" title="<?php echo $this->escape($data["MSG_POSTAGEM"]); ?>"></span>
+                                <?php } ?>
+                            </td>
+                            <td><a href="#" class="tooltip" title="<?php echo $this->escape($data["hint"]); ?>"> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></a></td>
+            <!--                        <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                            <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                        
+                            <td> <?php echo $this->escape($data["DOCM_DH_CADASTRO"]) ?></td>
+                            <td> <?php
+                                echo $this->escape($data["LOTA_SIGLA_LOTACAO"]);
+                                if (($this->escape($data["IR_CAIXA"]) == "Sim") && (isset($data["ESTA_NA_CAIXA"]) && $this->escape($data["ESTA_NA_CAIXA"]) == "Sim")) {
+                                    ?>
+                                    <div class="painel"><a href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/irparacaixa/secao/<?php echo $this->escape($data["MODE_SG_SECAO_UNID_DESTINO"]); ?>/cdunidade/<?php echo $this->escape($data["MODE_CD_SECAO_UNID_DESTINO"]); ?>/sigla/<?php echo $this->escape($data["LOTA_SIGLA_LOTACAO"]); ?>" >Ir Para Caixa</a></div>
+                                <?php } else { ?>
+                                    <div class="painel"><a href="<?php echo $this->baseUrl(); ?>/sisad/pesquisadcmto/setsolicitardocumento/id/<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" >Solicitar</a></div>
+                                <?php } ?></td>
+                            <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                <!--                        <td> <?php //echo $this->escape($data["TEMPO_TRANSCORRIDO"])                                   ?></td>-->
+                <!--                        <td><a class="<?php //echo $this->escape($data["CLASS_ARQUIVO"]);                                  ?>" target="_blank" title="<?php //echo $this->escape($data["MSG_ARQUIVO"]);                                  ?>" href="<?php //echo $this->baseUrl();                                  ?>/sisad/gerenciared/recuperar/dcmto/<?php //echo $this->escape($data["DOCM_NR_DOCUMENTO_RED"])                                  ?> "></a></td>-->
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7">Total: <?php echo $this->data->getTotalItemCount(); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="7"><?php echo $this->paginationControl($this->data, null, null, null); ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        <?php else: ?>
+            <?php if (($this->ultima_pesq) && (!$this->sucesso)): ?>
+                <p><br/><strong>Não existem registros para os parametros de pesquisa informados</strong></p>
+            <?php endif; ?>
+
+        <?php endif; ?>
+    </div>
+    <?php echo $this->partial('_partials/caixahiddeninputs.phtml', array('view' => $this)); ?>   
+</form>
+
+
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

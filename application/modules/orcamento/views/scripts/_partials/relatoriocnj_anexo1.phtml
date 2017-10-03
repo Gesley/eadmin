@@ -1,0 +1,166 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Anexo I - <?php echo $this->tituloAnexo ?></title>
+        <style type="text/css">
+            @media print {
+                .quebra {page-break-after: always;}
+            }
+        </style>
+    </head>
+    <body>
+        <?php
+        $matriz = $this->dadosAnexo;
+
+        switch ($matriz['ug']['mes']) {
+            case 'IMPO_VL_TOTAL_JAN':
+                $mes = '01';
+                break;
+            case 'IMPO_VL_TOTAL_FEV':
+                $mes = '02';
+                break;
+            case 'IMPO_VL_TOTAL_MAR':
+                $mes = '03';
+                break;
+            case 'IMPO_VL_TOTAL_ABR':
+                $mes = '04';
+                break;
+            case 'IMPO_VL_TOTAL_MAI':
+                $mes = '05';
+                break;
+            case 'IMPO_VL_TOTAL_JUN':
+                $mes = '06';
+                break;
+            case 'IMPO_VL_TOTAL_JUL':
+                $mes = '07';
+                break;
+            case 'IMPO_VL_TOTAL_AGO':
+                $mes = '08';
+                break;
+            case 'IMPO_VL_TOTAL_SET':
+                $mes = '09';
+                break;
+            case 'IMPO_VL_TOTAL_OUT':
+                $mes = '10';
+                break;
+            case 'IMPO_VL_TOTAL_NOV':
+                $mes = '11';
+                break;
+            case 'IMPO_VL_TOTAL_DEZ':
+                $mes = '12';
+                break;
+            
+        }        
+
+        $dataAtual = date("d/m/Y H:i:s");
+        
+        $mesReferencia = "{$mes}/{$matriz['ug']['ano']}";
+
+     unset($matriz['ug']['mes']);
+     unset($matriz['ug']['ano']);
+
+
+        if (count($matriz['ug']) == 0) {
+            echo "<p>Nenhum registro encontrado para a consulta em '{$dataAtual}' na data referência '{$mesReferencia}'.";
+        }
+        
+        foreach ($matriz['ug'] as $anexo):
+            ?>
+
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody><tr height="27">
+                        <td width="4" align="LEFT"> <br></td><td width="665" align="CENTER" bgcolor="#FFFFFF"><font style="FONT-SIZE:18pt" face="Haettenschweiler" color="#000000">ANEXO I - <?php echo $this->tituloAnexo ?></font></td>
+                    </tr>
+                </tbody></table>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody><tr height="14">
+                        <td width="2" align="LEFT"> <br></td><td width="669" align="CENTER" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Artº 2º, Incisos I a IV da Resolução CNJ 102, de 15 de dezembro de 2009 (Valores Mensais)</font></td>
+                    </tr>
+                </tbody></table>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody><tr height="14">
+                        <td width="4" align="LEFT"> <br></td><td width="203" align="LEFT" bgcolor="#FFFFFF"><b><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Sigla</font></b></td>
+                        <td width="467" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000"><?php echo $anexo['sigla'] ?></font></td>
+                    </tr>
+                </tbody></table>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody><tr height="14">
+                        <td width="4" align="LEFT"> <br></td><td width="203" align="LEFT" bgcolor="#FFFFFF"><b><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Nome do Órgão</font></b></td>
+                        <td width="467" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000"><?php echo $anexo['orgao'] ?></font></td>
+                    </tr>
+                </tbody></table>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody><tr height="14">
+                        <td width="4" align="LEFT"> <br></td><td width="203" align="LEFT" bgcolor="#FFFFFF"><b><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Autoridade Máxima</font></b></td>
+                        <td width="467" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000"><?php echo $anexo['autoridade'] ?></font></td>
+                    </tr>
+                </tbody></table>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody><tr height="14">
+                        <td width="4" align="LEFT"> <br></td><td width="203" align="LEFT" bgcolor="#FFFFFF"><b><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Responsável pela Informação</font></b></td>
+                        <td width="467" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Secretaria de Planejamento Orçamentário e Financeiro - SECOR / TRF 1º Região</font></td>
+                    </tr>
+                </tbody></table>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody><tr height="14">
+                        <td width="4" align="LEFT"> <br></td><td width="203" align="LEFT" bgcolor="#FFFFFF"><b><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Mês de Referência</font></b></td>
+                        <td width="467" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000"><?php echo $mesReferencia ?></font></td>
+                    </tr>
+                </tbody></table>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody><tr height="14">
+                        <td width="4" align="LEFT"> <br></td><td width="203" align="LEFT" bgcolor="#FFFFFF"><b><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Data da Publicação</font></b></td>
+                        <td width="467" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000"><?php echo $dataAtual ?></font></td>
+                    </tr>
+                </tbody></table>
+
+            <?php
+            foreach ($anexo['inciso'] as $inciso):
+                ?>
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tbody><tr height="14">
+                            <td width="4" align="LEFT"> <br></td><td width="671" align="LEFT" bgcolor="#FFFFFF"><b><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Inciso <?php echo $inciso['valor'] ?> - <?php echo $inciso['descricao'] ?></font></b></td>
+                        </tr>
+                    </tbody></table>
+
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tbody><tr height="14">
+                            <td width="4" align="LEFT"> <br></td><td width="38" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Alínea</font></td>
+                            <td width="524" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Discriminação das despesas</font></td>
+                            <td width="102" align="RIGHT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Valores em R$ 1,00</font></td>
+                        </tr>
+                    </tbody></table>
+
+                <?php
+                foreach ($inciso['alinea'] as $alinea):
+                    ?>
+
+                    <table border="0" cellspacing="0" cellpadding="0">
+                        <tbody><tr height="14">
+                                <td width="4" align="LEFT"> <br></td><td width="38" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000"><?php echo $alinea['valor'] ?></font></td>
+                                <td width="524" align="LEFT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000"><?php echo $alinea['descricao'] ?></font></td>
+                                <td width="102" align="RIGHT" bgcolor="#FFFFFF"><font style="FONT-SIZE:8pt" face="Arial" color="#000000"><?php echo number_format($alinea['total'], 2, ',', '.') ?></font></td>
+                            </tr>
+                        </tbody></table>
+                    <?php
+                endforeach;
+                ?>
+
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tbody><tr height="14">
+                            <td width="4" align="LEFT"> <br></td><td width="532" align="LEFT" bgcolor="#FFFFFF"><b><font style="FONT-SIZE:8pt" face="Arial" color="#000000">Total</font></b></td>
+                            <td width="132" align="RIGHT" bgcolor="#FFFFFF"><b><font style="FONT-SIZE:8pt" face="Arial" color="#000000"><?php echo number_format($inciso['total'], 2, ',', '.') ?></font></b></td>
+                        </tr>
+                    </tbody></table>
+
+
+                <?php
+            endforeach;
+
+            echo "<div class='quebra' />";
+
+        endforeach;
+        ?>
+
+    </body>
+</html>

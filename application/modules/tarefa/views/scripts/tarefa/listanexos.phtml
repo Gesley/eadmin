@@ -1,0 +1,10 @@
+<?php foreach ($this->arrayAnexoTarefa as $at): ?>
+    <a class="abrirAnexo ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" 
+       target="_blank" title="Abrir Documento" role="button" style="width: 40px; height: 16px;"
+       href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $at->id; ?>/dcmto/<?php echo $at->documento; ?>/extensao/<?php echo $at->extensao; ?> ">
+        <span class="ui-button-icon-primary ui-icon ui-icon-folder-open"></span>
+        <span class="ui-button-text">Abrir</span>
+    </a>
+    <br />
+<?php endforeach; ?>
+<br />

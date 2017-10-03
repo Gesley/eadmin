@@ -1,0 +1,13 @@
+<?php
+if($this->servicos):  
+    foreach ($this->servicos as $value) : 
+?>
+    <option value="<?php echo $value['SSER_ID_SERVICO'].'|'.$value['SSER_IC_TOMBO'].'|'.$value['SSER_IC_VIDEOCONFERENCIA']; ?>"><?php echo $value['SSER_DS_SERVICO']; ?></option>   
+<?php 
+    endforeach;
+    else: 
+?>
+        <option value="">Não exite Serviços para esse Grupo</option>  
+<?php
+endif;
+?>

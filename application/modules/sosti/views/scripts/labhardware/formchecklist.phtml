@@ -1,0 +1,288 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/sosti/checklist.js'));
+?>
+<script>
+$(document).ready(function(){
+    //Desabilitando o Salvar
+    $('#Salvar').attr('disabled','disabled');
+});
+</script>
+<form name="<?php echo $this->form->getName() ?>" action="<?php echo $this->form->getAction() ?>" method="<?php echo $this->form->getMethod() ?>">
+
+    <!--Dados da solicitaçao-->
+    <fieldset>
+        <legend>Dados da Solicitação</legend>
+        <label style="display:block">
+            Solicitação Nr: 
+            <span style="font-weight:normal">
+                <?php echo $this->solicitacaoNr; ?>
+            </span>
+        </label> 
+        <label style="display:block">
+            Observação: 
+            <span style="font-weight:normal">
+                <?php echo $this->observacao; ?>
+            </span>
+        </label> 
+        <label style="display:block">
+            Localização: 
+            <span style="font-weight:normal">
+                <?php echo $this->localizacao; ?>
+            </span>
+        </label> 
+        <label style="display:block">
+            Data de Entrada no Segundo Nível: 
+            <span style="font-weight:normal">
+                <?php echo $this->entradaNivel; ?>
+            </span>
+        </label> 
+        <label style="display:block">
+            Tipo Cadastro: 
+            <span style="font-weight:normal">
+                <?php echo $this->tipoCadastro; ?>
+            </span>
+        </label> 
+        <label style="display:block">
+            Lotação: 
+            <span style="font-weight:normal">
+                <?php echo $this->lotacao; ?>
+            </span>
+        </label> 
+        <label style="display:block">
+            Sigla Lotação: 
+            <span style="font-weight:normal">
+                <?php echo $this->siglalotacao; ?>
+            </span>
+        </label> 
+        <label style="display:block">
+            Telefone: 
+            <span style="font-weight:normal">
+                <?php echo $this->telefoneExterno; ?>
+            </span>
+        </label> 
+        <label style="display:block">
+            Email Externo: 
+            <span style="font-weight:normal">
+                <?php echo $this->emailExterno; ?>
+            </span>
+        </label> 
+        <label style="display:block">
+            Tombo Número: 
+            <span style="font-weight:normal">
+                <?php echo $this->numeroTombo; ?>
+            </span>
+        </label> 
+    </fieldset>
+    <!--Fim dos dados da solicitacao-->
+
+    <!--Ficha de Serviço-->
+    <br><br>
+    <h3>FICHA DE SERVIÇO</h3>
+
+    <!--Campos de escolha de Serviços, Software e Hardwares-->
+    <fieldset id="fieldsetServicos" style="width: 940px" class="fields">
+        <legend>Serviços</legend>
+        <input type="button" value="Selecionar Serviços" id="ServicosButton"
+               title="Selecionar Serviços" role="button" aria-disabled="false"
+               style="margin: 10px 0px;" class="buttonOpcoes fechado" />
+
+        <div id="ServicosDiv" class="divOpcoesList">
+            <?php
+            echo $this->formServico->SERVICO;
+            ?>
+            <table id="Servicos" style="margin-top: 20px; width: 100%;" 
+                   class="grid tabela">
+                <thead>
+                    <tr>
+                        <th colspan="3">Serviços Selecionados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">
+                            <a href="#" class="removeTodos" 
+                               id="removeTodosServicos" title="Remover Todos">
+                                Remover todos
+                            </a>
+                        </td>
+                    </tr>
+
+                    <?php
+                    if (!empty($this->recuperaServicos)) {
+                        foreach ($this->recuperaServicos as $servico){
+                        ?>
+                        <tr id="linhaservico-<?php echo $servico['TPSE_ID_TP_SERVICO']?>" class="linhaservico">
+                            <input type="hidden" name="servicos[]" value="<?php echo $servico['TPSE_ID_TP_SERVICO']?>" /> 
+                            <td width="20px"> 
+                                <input type="button" value="x" id="removeservico-<?php echo $servico['TPSE_ID_TP_SERVICO']?>" class="removeItem" title="Remover ítem" />
+                            </td> 
+                            <td> 
+                                <?php echo $servico['TPSE_DS_TP_SERVICO']?> 
+                            </td> 
+                        </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+
+    <fieldset id="fieldsetSoftware" style="width: 940px" class="fields">
+        <legend>Software</legend>
+        <input type="button" value="Selecionar Softwares" 
+               id="SoftwareButton" title="Selecionar/Listar Software" 
+               role="button" aria-disabled="false" style="margin: 10px 0px;" 
+               class="buttonOpcoes fechado" />
+
+        <div id="SoftwareDiv" class="divOpcoesList">
+            <?php echo $this->Software->SOFTWARE; ?>
+            <table id="Softwares" style="margin-top: 20px; width: 100%;" 
+                   class="grid tabela ">
+                <thead>
+                    <tr>
+                        <th colspan="4">Softwares Selecionados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4">
+                            <a href="#"  class="removeTodos" 
+                               id="removeTodosSoftware" title="Remover Todos">
+                                Remover todos
+                            </a>
+                        </td>
+                    </tr>
+                    
+                    <?php
+                    if (!empty($this->recuperaSoftwares)) {
+                        foreach ($this->recuperaSoftwares as $software){
+                        ?>
+                        <tr id="linhasoftware-<?php echo $software['LSFW_ID_SOFTWARE']?>" class="linhasoftware">
+                            <input type="hidden" name="softwares[]" value="<?php echo $software['LSFW_ID_SOFTWARE']?>" /> 
+                            <td width="20px"> 
+                                <input type="button" value="x" id="removesoftware-<?php echo $software['LSFW_ID_SOFTWARE']?>" class="removeItem" title="Remover ítem" />
+                            </td> 
+                            <td> 
+                                <?php echo $software['LSFW_DS_SOFTWARE']?> 
+                            </td> 
+                            <td width='120px'> 
+                                Disponível: 
+                                <span class="disponivel-software-<?php echo $software['LSFW_ID_SOFTWARE']?>">
+                                    <?php echo $software['qtd_soft_disponivel']?>
+                                </span> 
+                            </td>
+                        </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                        
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+
+    <fieldset id="fieldsetHardware" style="width: 940px" class="fields">
+        <legend>Hardware</legend>
+        <input type="button" value="Selecionar Hardwares" 
+               id="HardwareButton" title="Selecionar/Listar Hardware" 
+               role="button" aria-disabled="false" style="margin: 10px 0px;" 
+               class="buttonOpcoes fechado" />
+
+        <div id="HardwareDiv" class="divOpcoesList">
+            <?php
+            echo $this->hardware->TRF1_SECAO;
+            echo $this->hardware->SECAO_SUBSECAO;
+            echo $this->hardware->HARDWARE;
+            ?>
+            <table id="Hardwares" style="margin-top: 20px; width: 100%;" 
+                   class="grid tabela ">
+                <thead>
+                    <tr>
+                        <th colspan="5">Hardwares Selecionados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5">
+                            <a href="#" class="removeTodos" 
+                               id="removeTodosHardwares" title="Remover Todos">
+                                Remover todos
+                            </a> 
+                        </td>
+                    </tr>
+                    
+                    <?php
+                    if (!empty($this->recuperaHardwares)) {
+                        foreach ($this->recuperaHardwares as $hardware){
+                        ?>
+                        <tr id="linhahardware-<?php echo $hardware['LHDW_ID_HARDWARE']?>" class="linhahardware">
+                            <input type="hidden" name="hardwares[]" value="<?php echo $hardware['LHDW_ID_HARDWARE']?>" /> 
+                            <td width="20px"> 
+                                <input type="button" value="x" id="removehardware-<?php echo $hardware['LHDW_ID_HARDWARE']?>" class="removeItem" title="Remover ítem" />
+                            </td> 
+                            <td> 
+                                <?php echo $hardware['LHDW_CD_MATERIAL'] . ' - ' . $hardware['MARC_DS_MARCA'] . ' - ' . $hardware['LHDW_DS_HARDWARE']; ?> 
+                            </td> 
+                            <td width='120px'> 
+                                Disponível: 
+                                <span class="disponivel-hardware-<?php echo $hardware['LHDW_ID_HARDWARE']?>">
+                                    <?php echo $hardware['qtd_hard_disponivel']?>
+                                </span> 
+                            </td>
+                            <td width='120px'> 
+                                *Quantidade: 
+                                <input class="campoQtdInsert" id="campoQtdInsert-<?php echo $hardware['LHDW_ID_HARDWARE']?>" type='text' name='qtdHardware["<?php echo $hardware['LHDW_ID_HARDWARE']?>"]' size='3' /> 
+                            </td> 
+                            <td>
+                                Status: -
+                            </td>
+                        </tr>
+                    <?php
+                        }
+                    }
+                    ?>                        
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+
+    <?php
+    echo $this->form->acao;
+    echo $this->form->controller;
+    echo $this->form->LFSE_ID_DOCUMENTO;
+    echo $this->form->DOCM_NR_DOCUMENTO;
+    echo $this->form->MOFA_DH_FASE;
+    echo $this->form->LFSE_DS_SERVICO_EXECUTADO;
+    echo $this->form->LFSE_ID_TP_USUARIO;
+    echo $this->form->SSOL_NR_TOMBO_PESQUISA;
+    echo $this->form->SSOL_NR_TOMBO;
+    echo $this->form->TI_TOMBO;
+    echo $this->form->LBKP_NR_TOMBO_PESQUISA;
+    echo $this->form->LBKP_NR_TOMBO;
+    echo $this->form->LFSE_NO_COMPUTADOR;
+    echo $this->form->SSOL_CD_MATRICULA_ATENDENTE;
+    echo $this->form->SSOL_NR_TELEFONE_EXTERNO;
+    echo $this->form->SSOL_DS_EMAIL_EXTERNO;
+    echo $this->form->LFSE_DS_MOTIVO_MANUTENCAO;
+    echo $this->form->LFSE_IC_BACKUP;
+    echo $this->form->LFSE_IC_FORMATACAO;
+    echo $this->form->LFSE_IC_EXCLUSAO_ARQTEMP;
+    echo $this->form->LFSE_IC_EXCLUSAO_PROFILE;
+    echo $this->form->LFSE_IC_WINUPDATE;
+    echo $this->form->LFSE_IC_DESFRAGMENTACAO;
+    echo $this->form->LFSE_IC_SCANDISK;
+    echo $this->form->LFSE_IC_MANUTENCAO_EXTERNA;
+    echo $this->form->LFSE_IC_GARANTIA;
+    echo $this->form->SOFTWARE;
+    echo $this->form->HARDWARE;
+    echo $this->form->DOC_ID;
+    echo $this->form->Salvar;
+    echo $this->form->OBRIGATORIO;
+    ?>
+
+</form>

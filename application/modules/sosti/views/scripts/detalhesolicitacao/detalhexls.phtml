@@ -1,0 +1,474 @@
+<!--<meta http-equiv="content-type" content="text/html;charset=utf-8" />-->
+<?php 
+    $TobomTiCentral = $this->TobomTiCentral;
+    $idDocumentoPrincipal = $this->DocmDocumento["SSOL_ID_DOCUMENTO"] ;
+    $AnexAnexo      = new Application_Model_DbTable_SadTbAnexAnexo();
+    $anx = $AnexAnexo->fetchAll("ANEX_ID_DOCUMENTO = $idDocumentoPrincipal");
+    if(!is_null($anx)){
+        $anxSemMetadado = $anx->toArray();
+    }
+    $caso_categoria = new Application_Model_DbTable_SosTbCasoCategoriaSolic();
+    $categoriasPessoal = $caso_categoria->getCategoriasDocumentoPessoal($idDocumentoPrincipal);
+    if($this->DocmDocumento["SNAS_ID_NIVEL"] != NULL){
+        $tipo = 'NIVEL';
+        $identificador = $this->DocmDocumento["SNAS_ID_NIVEL"];
+    }else{
+        $tipo = 'GRUPO';
+        $identificador = $this->DocmDocumento["SGRS_ID_GRUPO"];
+    }
+    $categoriasGrupo = $caso_categoria->getCategoriasDocumentoGrupo($idDocumentoPrincipal,$identificador,$tipo);
+?>
+<br />
+<div style="width: 700px; margin: 0 auto; display: block;">
+    <table  style="font-size: 12px;" border="1" class="" style="width: 700px;" >
+        <thead>
+            <tr>
+                <th colspan="2" style="text-align: center;" bgcolor="#CCCCCC">
+                    SOLICITAÇÃO DE SERVIÇO A TI Nº: <?php echo $this->DocmDocumento['DOCM_NR_DOCUMENTO']?>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Início do documento -->
+            <tr>
+                <th colspan="2" style="text-align: center;">Documento</th>
+            </tr>
+            <?php if($this->idCaixa == 2): ?>
+                <?php if($this->DocmDocumento["ASSO_IC_ATENDIMENTO_EMERGENCIA"] == 'S'){ ?>
+                    <tr style="font-size: 12px; font-weight: bold;">
+                            <td>
+                                    <img src="<?php echo $this->baseUrl(); ?>/img/sosti/emergencial.png" title="Demanda de Carater Emergencial" /> 
+                            </td>   
+                            <td colspan="2">
+                                    DEMANDA EMERGÊNCIAL
+                            </td>   
+                    </tr>
+                <?php } ?>
+                <tr style="font-size: 12px; font-weight: bold;">
+                        <td colspan="2">
+    <!--							<img src="<?php echo $this->baseUrl(); ?>/img/sosti/<?php echo $this->DocmDocumento["CTSS_ID_CATEGORIA_SERVICO"]?>.png" title="<?php echo $this->DocmDocumento["CTSS_NM_CATEGORIA_SERVICO"]?>" /> -->
+                                <?php echo $this->DocmDocumento["CTSS_NM_CATEGORIA_SERVICO"]." - "; ?>
+                                <?php echo $this->DocmDocumento["OSIS_NM_OCORRENCIA"] ?>
+                        </td>    
+                        <td >
+                                <?php echo "Nível de Criticidade: ".$this->DocmDocumento["ASIS_IC_NIVEL_CRITICIDADE"]; ?>
+                        </td>    
+                </tr>
+            <?php endif; ?>
+            <tr>
+<!--                <td title="Número do documento">
+                    <strong>Solicitação Nº:</strong>
+                    <?php //echo $this->DocmDocumento['DOCM_NR_DOCUMENTO']?>
+                </td>-->
+                <td title="Data e hora de cadastro" colspan="2">
+                    <strong>Data da Solicitação:</strong>
+                    <?php echo $this->DocmDocumento['DOCM_DH_CADASTRO']?>
+                </td>
+            </tr>
+            <?php if($this->DocmDocumento['DOCM_NR_DCMTO_USUARIO']): ?>
+            <tr>
+                <td title="Número do documento">
+                    <strong>Nº Documento Usuário:</strong>
+                    <?php echo $this->DocmDocumento['DOCM_NR_DCMTO_USUARIO']?>
+                </td>
+            </tr>
+            <?php endif;?>
+            <!-- <tr>
+                    <th >Situação</th>
+                    <td title="Número do documento">
+                            <?php echo $this->DocmDocumento['TPSD_DS_TIPO_SITUACAO_DOC']?>
+                    </td>
+                    <th >Confidencialidade</th>
+                    <td title="Número do documento">
+                            <?php echo $this->DocmDocumento['CONF_DS_CONFIDENCIALIDADE']?>
+                    </td>
+            </tr> -->
+            <?php if(!$this->DocmDocumento['SSOL_NM_USUARIO_EXTERNO']):?>
+            <tr>
+                <td colspan="2">
+                    <strong>Unidade Solicitante:</strong>
+                    <?php echo $this->DocmDocumento['LOTA_SIGLA_LOTACAO'].' - '.$this->DocmDocumento['LOTA_DSC_LOTACAO'].' - '.$this->DocmDocumento['LOTA_COD_LOTACAO'].' - '.$this->DocmDocumento['LOTA_SIGLA_SECAO'].' - '.$this->DocmDocumento['FAMILIA']; ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <strong>Solicitante:</strong>
+                    <?php echo $this->DocmDocumento['DOCM_CD_MATRICULA_CADASTRO'].' - '.$this->DocmDocumento['NOME']?>
+                </td>
+            </tr>
+            <?php if(!is_null($this->DocmPapdParteProcDocPorOrdemDe['PAPD_CD_MATRICULA_INTERESSADO'])):?>
+            <tr>
+                <td colspan="2"><strong>Por ordem de: </strong><?php echo $this->DocmPapdParteProcDocPorOrdemDe['PAPD_CD_MATRICULA_INTERESSADO']." - ".$this->DocmPapdParteProcDocPorOrdemDe['NOME']; ?></td>
+            </tr>
+            <?php endif; ?>
+            <tr>
+                <td colspan="1">
+                    <strong>E-mail do Solicitante:</strong>
+                    <?php echo $this->DocmDocumento['SSOL_DS_EMAIL_EXTERNO']?>
+                </td>
+                <td colspan="1">
+                    <strong>Telefone:</strong>
+                    <?php echo $this->DocmDocumento['SSOL_NR_TELEFONE_EXTERNO'] ?>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <?php else: ?>
+            <tr>
+                <td colspan="2">
+                    <strong>Unidade Cadastrante:</strong>
+                    <?php echo $this->DocmDocumento['LOTA_SIGLA_LOTACAO'].' - '.$this->DocmDocumento['LOTA_DSC_LOTACAO'] ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">
+                    <strong>Nome do Solicitante Externo:</strong>
+                    <?php echo $this->DocmDocumento['SSOL_NM_USUARIO_EXTERNO']?>
+                </td>
+            </tr>
+            <?php if(!is_null($this->DocmPapdParteProcDocPorOrdemDe['PAPD_CD_MATRICULA_INTERESSADO'])):?>
+            <tr>
+                <td colspan="2"><strong>Por ordem de: </strong><?php echo $this->DocmPapdParteProcDocPorOrdemDe['PAPD_CD_MATRICULA_INTERESSADO']." - ".$this->DocmPapdParteProcDocPorOrdemDe['NOME']; ?></td>
+            </tr>
+            <?php endif; ?>
+            <tr>
+                <td colspan="1">
+                    <strong>E-mail do Solicitante</strong>
+                    <?php echo $this->DocmDocumento['SSOL_DS_EMAIL_EXTERNO']?>
+                </td>
+            </tr>
+
+            <?php endif; ?>
+            <tr>
+                <td colspan="2">
+                    <strong>Local de Atendimento:</strong>
+                    <?php echo $this->DocmDocumento['SSOL_ED_LOCALIZACAO'] ?>
+                </td>
+            </tr>
+            <!-- <tr>
+                <th >Unidade Solicitante:</th>
+                <td colspan="3"><?php echo $this->DocmDocumento['LOTA_SIGLA_LOTACAO_REDATORA'].' - '.$this->DocmDocumento['LOTA_DSC_LOTACAO_REDATORA'] ?></td>
+            </tr> -->
+            <?php if($this->DocmDocumento['DOCM_NR_DOCUMENTO_RED']): ?>
+            <tr>
+                <td>
+                    <strong>Abrir:</strong>
+                    <?php echo $this->DocmDocumento["DOCM_ID_DOCUMENTO"]; ?>
+                </td>
+            </tr>
+            <?php endif; ?>
+            <tr>
+                <td colspan="2">
+                    <strong>Serviço Atual:</strong>
+                    <?php echo $this->DocmDocumento['SSER_DS_SERVICO']?>
+                </td>
+            </tr>
+			<?php if($this->DocmDocumento['SSES_DT_INICIO_VIDEO']): ?>
+             <tr>
+                <td colspan="2">
+                    <strong>Data e hora do início da videoconferência:</strong>
+                    <?php echo $this->DocmDocumento['SSES_DT_INICIO_VIDEO']?>
+                </td>
+            </tr>
+			 <?php endif;?>
+			<?php if($this->DocmDocumento['SSOL_NR_TOMBO']): ?>
+            <tr>
+                <td colspan="2">
+                    <strong>Tombo:</strong>
+                    <?php echo $this->DocmDocumento['SSOL_NR_TOMBO'] . ' ' . $TobomTiCentral[0]['DE_MAT']?>
+                </td>
+            </tr>
+            <?php endif;?>
+            <?php if(strcmp($this->DocmDocumentoVinculacao["DOCM_NR_DOCUMENTO"], $this->DocmDocumento['DOCM_NR_DOCUMENTO'])&&$this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO']!=NULL){ ?>
+            <tr>
+                <td colspan="2"> 
+                    <strong>Solicitação Vinculada:</strong>
+                    ESTA SOLICITAÇÃO ESTÁ VINCULADA A UMA PRINCIPAL: <?php echo $this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO']?>
+                </td>
+            </tr>
+            <?php }elseif(!(strcmp($this->DocmDocumentoVinculacao["DOCM_NR_DOCUMENTO"], $this->DocmDocumento['DOCM_NR_DOCUMENTO']))&&$this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO']!=NULL){?>
+             <tr>
+                <td colspan="2">
+                    <strong>Solicitação Vinculada:</strong> 
+                    ESTA SOLICITAÇÃO É A PRINCIPAL DE UMA VINCULAÇÃO
+                </td>
+            </tr>
+
+            <?php }?>
+            <tr>
+                <td colspan="2">
+                    <strong>Descrição:</strong>
+                     <?php echo $this->decodehtmlentities($this->DocmDocumento['DOCM_DS_ASSUNTO_DOC']); ?>
+                </td>
+            </tr>
+            <?php if ($this->DocmDocumento['SSOL_DS_OBSERVACAO'] != ""): ?>
+            <tr>
+                <td colspan="2">
+                    <strong>Observação:</strong>
+                    <?php echo $this->decodehtmlentities($this->DocmDocumento['SSOL_DS_OBSERVACAO']); ?>
+                </td>
+            </tr>
+            <?php endif; ?>
+            <?php if ($this->DocmDocumento['ATENDENTE'] != ''):?>
+            <tr>
+                <td colspan="2">
+                    <strong>Encaminhado para:</strong>
+                    <?php echo $this->DocmDocumento['ATENDENTE']?>
+                </td>
+            </tr>
+            <?php endif; ?>
+            <!-- FIM DO DOCUMENTO -->
+
+            <!-- HISTÓRICO DAS SOLICITAÇÕES -->
+            <tr>
+                <th colspan="2" style="text-align: center;">Histórico</th>
+            </tr>
+            <?php foreach ($this->DocmDocumentoHistorico as $historico): ?>
+                <?php if( $historico['FADM_ID_FASE'] == 1006 || $historico['FADM_ID_FASE'] == 1001 || $historico['FADM_ID_FASE'] == 1022 || $historico['FADM_ID_FASE'] == 1029 || $historico['FADM_ID_FASE'] == 1050): ?>
+                    <tr>
+                        <td colspan="2">
+                            <strong>Fase:</strong>
+                            <?php echo str_replace(' SISAD', '',$historico['FADM_DS_FASE']); ?>
+                            <?php echo $historico['MOFA_DH_FASE']; ?>
+                        
+                   
+                    <br />
+                   
+                            <strong>Caixa destino:</strong>
+                            <?php echo $historico['CXEN_DS_CAIXA_ENTRADA']; ?>
+                 
+                    <br />
+               
+                            <strong>Serviço:</strong>
+                            <?php echo $historico['SSER_DS_SERVICO']; ?>
+                
+                    <br />
+                    <?php if(!is_null($historico['SSES_DT_INICIO_VIDEO'])): ?>
+                  
+                            <br />
+                            <strong>Data e hora do início da videoconferência:</strong>
+                            <?php echo $historico['SSES_DT_INICIO_VIDEO']; ?>
+                            <br />
+                            <strong>Videoconferência realizada por este grupo:</strong>
+                            <?php echo $historico['SSES_IC_VIDEO_REALIZADA']; ?>
+                 
+                    <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if(($historico['FADM_ID_FASE'] == 1005 && !(is_null($historico['SNAT_CD_NIVEL']))) 
+                           ||($historico['FADM_ID_FASE'] == 1006 && !(is_null($historico['SNAT_CD_NIVEL'])))
+                           ||($historico['FADM_ID_FASE'] == 1022 && !(is_null($historico['SNAT_CD_NIVEL'])))
+                           ||($historico['FADM_ID_FASE'] == 1029 && !(is_null($historico['SNAT_CD_NIVEL'])))
+                           ||($historico['FADM_ID_FASE'] == 1001 && !(is_null($historico['SNAT_CD_NIVEL'])))): 
+                    ?> 
+                    <br />
+                    <strong>Nível destino: </strong><?php echo $historico['SNAT_CD_NIVEL']; ?> - <?php echo $historico['SNAT_DS_NIVEL']; ?>
+                   
+                <?php endif; ?>
+                <?php if( $historico['FADM_ID_FASE'] == 1014 || $historico['FADM_ID_FASE'] == 1019): ?> 
+                    <tr>
+                        <td colspan="2">
+                            <strong>Avaliação: </strong><?php echo $historico['STSA_DS_TIPO_SAT']; ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php if( $historico['FADM_ID_FASE'] == 1038): ?> 
+                    <tr>
+                         <td colspan="2">
+                            <br />
+                            <strong>Prazo: </strong><?php echo $historico['SSPA_DT_PRAZO']; ?>
+                            <br />
+                            <strong>Aprovação: </strong><?php if($historico['SSPA_IC_CONFIRMACAO'] == 'S'){echo ' aprovado';}else if($historico['SSPA_IC_CONFIRMACAO'] == 'N'){echo ' reprovado';} ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+                <br />
+                    <tr>
+                        <td colspan="2">
+                        <strong>Fase:</strong>
+                        <?php echo str_replace(' SISAD', '',$historico['FADM_DS_FASE']); ?>
+                        <?php echo $historico['MOFA_DH_FASE']; ?>
+              
+                <br />
+                   
+                        <strong>Por:</strong>
+                        <?php echo $historico['MOFA_CD_MATRICULA']." - ".$historico['MOFA_CD_MATRICULA_NOME']; ?>
+                
+                <br />
+            
+                        <strong>Descrição:</strong>
+                        +  <?php echo $this->decodehtmlentities($historico['MOFA_DS_COMPLEMENTO']); ?>
+                        </td>
+                        </tr>
+                <?php if ($historico["NR_RED"]): ?>
+                    <tr>
+                        <td colspan="2">
+                            <strong>Anexos:</strong>
+                            <?php echo $this->DocmDocumento["SSOL_ID_DOCUMENTO"]; ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <?php if($anxSemMetadado): ?>
+                <tr>
+                    <td>
+                        Anexos:
+                    </td>
+                    <td>
+                        <?php if ($anxSemMetadado): ?>
+                            <?php foreach ($anxSemMetadado as $semMetadados_p): ?>
+                                <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                                <div style="margin-left: 10px; font-size: 12px; ">
+                                    <p>
+                                        <br /><strong>Documento Sem Metadado:</strong>
+                                        <br /><strong>Tipo de Vinculo:</strong> Anexado
+                                        <br /><strong>Data de vinculação:</strong>
+                                        <?php echo $semMetadados_p["ANEX_DH_FASE"]; ?>
+                                    </p>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <!-- FIM HISTÓRICO DAS SOLICITAÇÕES -->  
+
+            <!-- SOLICITAÇÕES VINCULADAS -->
+            <?php $count = count($this->DocmListaVinculados); ?>
+            <?php if($count != 0): ?>
+                <tr>
+                    <td>
+                        <strong>Vinculados:</strong>
+                    </td>
+                    <td>
+                        <p>
+                            <br /><strong>Solicitação Principal:</strong> <?php echo $this->DocmDocumentoVinculacao['DOCM_NR_DOCUMENTO']?>
+                            <br /><strong>Data de vinculação:</strong> <?php  echo $this->DocmDocumentoVinculacao['VIDC_DH_VINCULACAO']?>
+                        </p>
+                        <?php foreach ($this->DocmListaVinculados as $solicVinculadas): ?>
+                            <?php if (strcmp($this->DocmDocumentoVinculacao["DOCM_NR_DOCUMENTO"], $solicVinculadas["DOCM_NR_DOCUMENTO"])): ?>
+                                <?php echo $solicVinculadas["DOCM_NR_DOCUMENTO"]."<br>";?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <!-- FIM SOLICITAÇÕES VINCULADAS -->
+
+            <!-- NÃO CONFORMIDADE -->
+            <?php
+            $count = count($this->DocmNaoConformidades);
+            if ($count != 0): ?>
+                <td>
+                    <strong>Não Conformidades:</strong>
+                    <?php foreach ($this->DocmNaoConformidades as $DocmNaoConformidades): ?>
+                      
+                            <div style="margin-left: 10px; font-size: 12px; ">
+                                <p>
+                                    <br /><strong>Tipo de Não Conformidade:</strong> <?php echo $DocmNaoConformidades['SOTC_DS_CONFORMIDADE'] ?>
+                                    <br /><strong>Data:</strong> <?php echo $DocmNaoConformidades['MVCO_DH_INCLUSAO'] ?>
+                                    <br /><strong>Referente à movimentação do dia:</strong> <?php echo $DocmNaoConformidades['MOVI_DH_ENCAMINHAMENTO'] ?>
+                                    <br /><strong>Por:</strong> <?php echo $DocmNaoConformidades['MVCO_CD_MATRICULA_INCLUSAO'] ?>
+                                    <br /><strong>Descrição:</strong><br />
+                                    + <?php echo $DocmNaoConformidades['MVCO_DS_JUSTIF_N_CONFORMIDADE']; ?>
+                                </p>
+                            </div>
+                    
+                    <?php endforeach; ?>
+                </td>
+            <?php endif; ?>
+            <!-- FIM NÃO CONFORMIDADE --> 
+
+            <!-- INÍCIO CONTROLE QUALIDADE -->
+            <?php if (count($this->DocmDefeitos) > 0): ?>
+                <tr>
+                    <td>
+                        <strong>Controlde de Qualidade:</strong>
+                        <?php foreach ($this->DocmDefeitos as $defeito): ?>
+                            <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                                <div style="margin-left: 10px; font-size: 12px; ">
+                                    <p>
+                                        <br /><strong>Tipo de Defeito:</strong> <?php echo $defeito['TIDE_NM_DEFEITO']; ?>
+                                        <br /><strong>Data:</strong> <?php echo $defeito['MDSI_DH_INCLUSAO']; ?>
+                                        <br /><strong>Por:</strong> <?php echo $defeito['MDSI_CD_MATRICULA_INCLUSAO']; ?>
+                                        <br /><strong>Justificativa:</strong> <?php echo $defeito['MDSI_DS_JUSTIF_DEFEITO']; ?>
+                                        <?php if($defeito['MDSI_IC_CANCELAMENTO']=='S'): ?>
+                                            <br /><strong>Data do cancelamento:</strong> <?php echo $defeito['MDSI_DH_CANCELAMENTO']; ?><br />
+                                            <br /><strong>Cancelado por :</strong> <?php echo $defeito['MDSI_CD_MATRIC_CANCELAMENTO']; ?><br />
+                                            <br /><strong>Justificativa:</strong> <?php echo $defeito['MDSI_DS_CANCELAMENTO']; ?><br />
+                                        <?php endif; ?>
+                                    </p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <!-- FIM CONTROLE QUALIDADE -->
+
+            <!-- INÍCIO MANUTENÇÃO DE EQUIPAMENTOS -->
+            <?php if ((count($this->DocmManutencaoEquip)) > 0): ?>
+                <tr>
+                    <td>
+                        <strong>Manutenção de Equipamento</strong>
+                        <?php foreach ($this->DocmManutencaoEquip as $manutencao): ?>
+                            <?php if ($manutencao["MAEQ_CD_MATRICULA_RECEBIMENTO"] != null) { ?>
+                                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                                    <legend style='font-size: 12px;'>Recebimento de Equipamento</legend>
+                                    <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                                        <div style="margin-left: 10px; font-size: 12px; ">
+                                            <p>
+                                                <br /><strong>Descricao</strong> <?php echo $manutencao['MAEQ_DS_RECEBIMENTO_EQPTO']; ?>
+                                                <br /><strong>Data:</strong> <?php echo $manutencao['MAEQ_DH_RECEBIMENTO_EQPTO']; ?>
+                                                <br /><strong>Por:</strong> <?php echo $manutencao['MAEQ_CD_MATRICULA_RECEBIMENTO']; ?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            <?php } if ($manutencao["MAEQ_CD_MATRICULA_DEVOLUCAO"] != null) { ?>
+                                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                                    <legend style='font-size: 12px;'>Devolução de Equipamento</legend>
+                                    <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                                        <div style="margin-left: 10px; font-size: 12px; ">
+                                            <p>
+                                                <br /><strong>Data:</strong> <?php echo $manutencao['MAEQ_DH_DEVOLUCAO_EQUIPAMENTO']; ?>
+                                                <br /><strong>Por:</strong> <?php echo $manutencao['MAEQ_CD_MATRICULA_DEVOLUCAO']; ?>
+                                            </p>	
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            <?php } if ($manutencao["MAEQ_CD_MATRICULA_AUT_RETIRADA"] != null) { ?>
+                                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                                    <legend style='font-size: 12px;'>Autorização de Retirada de Equipamento</legend>
+                                    <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                                        <div style="margin-left: 10px; font-size: 12px; ">
+                                            <p>
+                                                <br /><strong>Descricao</strong> <?php echo $manutencao['MAEQ_DS_AUTORIZA_RETIRADA']; ?>
+                                                <br /><strong>Data:</strong> <?php echo $manutencao['MAEQ_DH_AUTORIZACAO_RETIRADA']; ?>
+                                                <br /><strong>Por:</strong> <?php echo $manutencao['MAEQ_CD_MATRICULA_AUT_RETIRADA']; ?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            <?php } if ($manutencao["MAEQ_CD_MATRICULA_RETIRADA"] != null) { ?>
+                                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                                    <legend style='font-size: 12px;'>Solicitação de Retirada de Equipamento</legend>
+                                    <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                                        <div style="margin-left: 10px; font-size: 12px; ">
+                                            <p>
+                                                <br />< strong>Descricao</strong> <?php echo $manutencao['MAEQ_DS_SOLICITACAO_RETIRADA']; ?>
+                                                <br /><strong>Data:</strong> <?php echo $manutencao['MAEQ_DH_SOLICITACAO_RETIRADA']; ?>
+                                                <br /><strong>Por:</strong> <?php echo $manutencao['MAEQ_CD_MATRICULA_RETIRADA']; ?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            <?php } ?>
+                        <?php endforeach; ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <!-- FIM    MANUTENÇÃO DE EQUIPAMENTOS -->
+        </tbody>
+    </table>
+</div>

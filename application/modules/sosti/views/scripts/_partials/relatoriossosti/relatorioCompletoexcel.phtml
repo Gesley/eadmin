@@ -1,0 +1,44 @@
+<div style="border: 1px solid #ccc; padding: 5px;">
+    <?php foreach($this->data as $data): ?>
+            <table style="border: 1px solid #C3C3C3">
+               <tr>
+                    <td style="font-weight: bold;"> N. Solicita&ccedil;&atilde;o </td>
+                    <td style="font-weight: bold;"> Data Abertura </td>
+                    <td style="font-weight: bold;"> Tempo Total </td>
+                    <td style="font-weight: bold;"> &Uacute;ltima Fase </td>
+                    <td style="font-weight: bold;"> Data &Uacute;lt. Fase </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;" > <?php echo $data['DOCM_NR_DOCUMENTO'].'.'; ?></td>
+                    <td> <?php echo $data['DH_CADASTRO']; ?></td>
+                    <td> <?php echo $data['TEMPO_TOTAL_FORMATADO']; ?></td>
+                    <td> <?php echo $data['DESCRICAO_FASE']; ?></td>
+                    <td> <?php echo $data['MOFA_DH_FASE'];  ?></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;" colspan="5"> Descri&ccedil;&atilde;o do Servi&ccedil;o </td>
+                </tr>
+                <tr>
+                    <td colspan="5"> <?php echo $data['DESCRICAO_SERVICO']; ?> </td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;" colspan="5"> Data da Baixa </td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="text-align: left;"> <?php echo $data['DH_BAIXA']; ?> </td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;" colspan="5"> Descri&ccedil;&atilde;o da Baixa </td>
+                </tr>
+                <tr>
+                    <td colspan="5"> <?php echo $data['DESCRICAO_BAIXA']; ?> </td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;" colspan="5"> Avalia&ccedil;&atilde;o  </td>
+                </tr>
+                <tr>
+                    <td colspan="5"> <?php echo $data['TIPO_AVALIACAO']; if(!empty($data['DESCRICAO_AVALIACAO'])) echo  " - ".$data['DESCRICAO_AVALIACAO'];  ?> </td>
+                </tr>
+            </table>
+    <?php endforeach; ?>
+</div>

@@ -1,0 +1,194 @@
+<?php
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo '<br />';
+echo $this->partial ( '_partials/despesa_detalhe.phtml', array ('despesa' => $this->despesa ) );
+echo '<br />';
+
+$valor = new Trf1_Orcamento_Valor ();
+
+if( $this->inconsistencia ){
+	$this->saldo['PROJ_VR_JANEIRO'] = 0;
+	$this->saldo['PROJ_VR_FEVEREIRO'] = 0;
+	$this->saldo['PROJ_VR_MARCO'] = 0;
+	$this->saldo['PROJ_VR_ABRIL'] = 0;
+	$this->saldo['PROJ_VR_MAIO'] = 0;
+	$this->saldo['PROJ_VR_JUNHO'] = 0;
+	$this->saldo['PROJ_VR_JULHO'] = 0;
+	$this->saldo['PROJ_VR_AGOSTO'] = 0;
+	$this->saldo['PROJ_VR_SETEMBRO'] = 0;
+	$this->saldo['PROJ_VR_OUTUBRO'] = 0;
+	$this->saldo['PROJ_VR_NOVEMBRO'] = 0;
+	$this->saldo['PROJ_VR_DEZEMBRO'] = 0;
+
+}
+
+?>
+
+<form id="frmProjecao" enctype="application/x-www-form-urlencoded"
+	method="post" action="">
+	<dl class="zend_form">
+		
+		<div id="saldoTabs" class="tabs">
+			<ul>
+				<li><a href="#saldo">Saldo</a></li>
+			</ul>
+
+			<div id="gridLinhas">
+				<div id="saldo">
+				<?php
+				echo $this->partial ( '_partials/saldo_basico.phtml', array ('saldo' => $this->saldo, 'inconsistencia' => $this->inconsistencia ) );
+				?>
+			</div>
+			</div>
+		</div>
+		<br />
+		
+		<div id="complementarTabs" class="tabs">
+			<ul>
+				<li><a href="#complementar">Informações complementares</a></li>
+			</ul>
+			
+			<div id="gridLinhas">
+				<div id="complementar">
+				<?php
+				echo	$this->partial('_partials/saldo_complementar.phtml',
+						array(	'saldo'	=> $this->saldo));
+				?>
+			</div>
+			</div>
+		</div>
+		<br />
+		
+		<div id="situacaoTabs" class="tabs">
+			<ul>
+				<li><a href="#situacao">Situação</a></li>
+			</ul>
+			
+			<div id="gridLinhas">
+				<div id="situacao">
+					<table>
+						<tbody>
+							<tr>
+								<?php
+								/*
+								 * No caso de alteração no campo 'Dotação autorizada final' lembrar de alterar o arquivo views\scripts\_partials\saldo_basico.html
+								 */
+								?>
+								<td width="80%" class="total"><abbr title="Campo calculado: Dotação descentralizada no exercício + proposta aprovada a receber + crédito aprovado a receber">Dotação autorizada do exercício:</abbr></td>
+								<td class="total valorPositivo" id="dotacaofinal">R$ 0,00</td>
+							</tr>
+							<tr>
+								<td width="80%">Projeção anual:</td>
+								<td class="valorNegativo" id="futuro">R$ 0,00</td>
+							</tr>
+							<?php if( !$this->inconsistencia ): ?>
+							<tr>
+                                <td>Percentual de Reajuste:</td>
+                                <td class="percentualreajuste valorPositivo" id="percentualreajuste">0,00%</td>
+                            </tr>
+								<?php else: ?>
+								<tr>
+									<td>Percentual de Reajuste:</td>
+									<td class="valorNegativo" id="">0%</td>
+								</tr>
+							<?php endif;?>
+							<tr>
+								<td class="total"><abbr title="Campo calculado: Total - Projeção futura - Valor do mês atual - Executado até o mês anterior">Situação Orçamentária:</abbr></td>
+								<td class="total valorPositivo" id="situacaoorcamentaria">R$ 0,00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<br />
+		
+		<div id="projecaoTabs" class="tabs">
+			<ul>
+				<li><a href="#projecao">Projeção</a></li>
+			</ul>
+			
+			<div id="projecao">
+				<table>
+					<tbody>
+						<tr>
+							<td> <strong>Janeiro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_JANEIRO']); ?></span> </td>
+							
+							<td> <strong>Fevereiro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_FEVEREIRO']); ?></span> </td>
+							
+							<td> <strong>Março:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_MARCO']); ?></span> </td>
+							
+							<td> <strong>Abril:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_ABRIL']); ?></span> </td>
+							
+							<td> <strong>Maio:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_MAIO']); ?></span> </td>
+							
+							<td> <strong>Junho:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_JUNHO']); ?></span> </td>
+						</tr>
+						<tr>
+							<td> <strong>Julho:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_JULHO']); ?></span> </td>
+							
+							<td> <strong>Agosto:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_AGOSTO']); ?></span> </td>
+							
+							<td> <strong>Setembro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_SETEMBRO']); ?></span> </td>
+							
+							<td> <strong>Outubro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_OUTUBRO']); ?></span> </td>
+							
+							<td> <strong>Novembro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_NOVEMBRO']); ?></span> </td>
+							
+							<td> <strong>Dezembro:</strong><br />
+							<span class="projecao valorPositivo"><?php echo $this->escape($this->projecao['PROJ_VR_DEZEMBRO']); ?></span> </td>
+						</tr>
+						<tr>
+							<td colspan="5"> &nbsp; </td>
+							<td> <strong>Total:</strong><br />
+							<?php echo $this->escape($this->projecao['PROJ_VR_TOTAL']); ?> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<br />
+		
+		<?php
+        echo $this->partial ( '_partials/execucao.phtml', array ( 'execucao' => $this->execucao ) );
+        echo '<br />';
+        ?>
+        
+		<div id="justificativasTabs" class="tabs">
+			<ul>
+				<li><a href="#justificativas">Justificativas</a></li>
+			</ul>
+			
+			<div id="justificativas">
+				<table>
+					<tbody>
+						<?php
+						foreach ( $this->justificativas as $key => $value ) {
+							echo '<strong>' . $value ['ORIGEM'] . '</strong> em ' . $value ['DATA_JUSTIFICATIVA'] . '<br />';
+							echo '<p>' . $value ['PRJJ_DS_JUSTIFICATIVA'] . '</span></p>';
+						}
+						?>
+					</tbody>
+				</table>
+				<br />
+				
+			</div>
+		</div>
+		<br />
+		
+	</dl>
+</form>

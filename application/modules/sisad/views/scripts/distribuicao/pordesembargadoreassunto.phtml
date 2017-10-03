@@ -1,0 +1,128 @@
+<style>
+    #container{
+        font-family: arial;
+        width: 210mm;
+        height: 297mm;
+        margin: 0 auto;
+        /*background-size: 190mm 170mm;
+        background-image: url(marca_d_agua.gif);
+        background-position: center;
+        background-repeat: no-repeat;*/
+    }
+    table#header{
+        width: 100%;
+    }
+    table#header td.orgao{
+        font-size: 13px;
+    }
+    table#header td.brasao{
+        
+        background-image: url(<?= $this->baseUrl(); ?>/img/JusticaTRF.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 97px;
+        width: 271px;
+    }
+    table#header td.date-time{
+        text-align: right;
+        font-size: 13px;
+    }
+    table.titulo-tabela{
+        padding-top: 10px;
+        padding-bottom: 7px;
+        font-size: 14px;
+    }
+    table.titulo-tabela td.col1{
+        padding-right: 25px;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    table.titulo-tabela td.col2{
+        font-weight: bold;
+    }
+    span.tipo-divisao{
+        float: left;
+        font-size: 13px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        padding-left: 10px;
+    }
+    table.conteudo{
+        width: 210mm;
+        padding-left: 10px;
+    }
+    table.conteudo td.titulo{
+        text-align: center;
+        font-weight: bold;
+        background-color: silver;
+        font-size: 13px;
+    }
+    table.conteudo td.dados{
+        font-size: 13px;
+    }
+    .rodape{
+        font-weight: bold;
+        font-size: 13px;
+    }
+    .rodapeTotal{
+        text-align: center;
+        font-weight: bold;
+        font-size: 13px;
+    }
+</style>
+
+<div id="container">
+    <watermarkimage src="<?= $this->baseUrl(); ?>/img/JusticaTRFMarcaDagua.png" alpha="2" size="300,100"/>
+
+    <table class="titulo-tabela" border="0">
+        <tr valign='top'>
+            <td class="col1">
+                RELATOR
+            </td>
+            <td class="col2">
+                <?=$this->relator?>
+            </td>
+        </tr>
+    </table>
+    
+    
+    <!-- ############################# FOREACH INICIA AQUI-->
+    <?php
+    $soma = 0;
+    foreach ($this->arrayAssunto as $assunto => $arrayHistorico):  
+        $soma += count($arrayHistorico);
+    ?>
+        <span class="tipo-divisao">&nbsp;&nbsp;&nbsp;&nbsp;ASSUNTO: &nbsp;&nbsp;&nbsp;&nbsp;<?= $assunto?></span>
+        <table class="conteudo" border="0" cellspacing="0" cellpadding="3">
+            <tr >
+                <td nowrap="nowrap" style="padding-right: 10px;" class="titulo">PROCESSO</td>
+                <td nowrap="nowrap" width="40%" align="left" class="titulo">RELATOR</td>
+                <td nowrap="nowrap" class="titulo">MODALIDADE DE DISTRIBUIÇÃO</td>
+                <td nowrap="nowrap" class="titulo">DATA DISTRIBUIÇÃO</td>
+            </tr>
+            <!-- ############################# INICIO DO CONTEUDO-->
+            <?php
+            foreach ($arrayHistorico as $historico):  
+            ?>
+                <tr>
+                    <td align="left" class="dados"><?=$historico['DOCM_NR_DOCUMENTO']?></td>
+                    <td class="dados"><?=$historico['PNAT_NO_PESSOA']?></td>
+                    <td align="center" class="dados"><?=$historico['HDPA_IC_FORMA_DISTRIBUICAO']?></td>
+                    <td align="center" class="dados"><?=$historico['HDPA_TS_DISTRIBUICAO']?></td>
+                </tr>
+            <?php
+            endforeach;
+            ?>
+            <!-- ############################# FIM DO CONTEUDO-->
+            <tr>
+                <td colspan="4" class="rodape"><br/>TOTAL DE PROCESSOS POR ASSUNTO: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= count($arrayHistorico)?></td>
+            </tr>
+        </table>
+        <hr/>
+    <?php
+    endforeach;
+    ?>
+    
+    <!-- ############################# FOREACH TERMINA AQUI-->
+    <center class="rodapeTotal"><b>TOTAL DE PROCESSOS DISTRIBUÍDOS PELO RELATOR: <?= $soma?></b></center>
+</div><!-- Fim da div Container-->

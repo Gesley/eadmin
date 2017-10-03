@@ -1,0 +1,18 @@
+<?php
+echo $this->partial('_partials/despesa_detalhe.phtml',	array(	'despesa'	=> $this->despesa));
+
+
+echo	$this->partial('_partials/tela_detalhe_crud.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo,
+				'dados'		=> $this->dados));
+
+echo	'<br />';
+
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'projecaojustificativa',
+				'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+				'parametros'		=> array('cod' => $this->projecao),
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+				'textoBotao'		=> 'Voltar para listagem',
+				'textoAlternativo'	=> 'Retornar à tela de Listagem de Padrões das Unidades Gestoras'));

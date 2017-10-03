@@ -1,0 +1,41 @@
+
+<div><a  class="novo" href="<?php echo $this->baseUrl(); ?>/sisad/aviso/addpermdivulgacao/sgsecao/<?php echo $this->sgsecao; ?>/codlotacao/<?php echo $this->codlotacao; ?>">Adicionar Documento(s)</a></div>
+<?php if (count($this->data)): ?>
+<?php
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/avisoindex.js'));
+?>
+<div id="container_pagination">
+<br/>
+<table class="grid">
+    <thead>
+        <tr>
+            <th colspan="9">Documentos Permitidos para Divulgação</th>
+        </tr>
+        <tr>
+            <th>Excluir</th>
+            <th ><a  href="<?php //echo $this->baseUrl(); ?>/sisad/caixa/index/ordem/GRDV_ID_GRUPO_DIVULGACAO/direcao/<?php //echo $this->direcao ?> ">ID Tipo Doc</a></th>
+            <th ><a  href="<?php //echo $this->baseUrl(); ?>/sisad/caixa/index/ordem/GRDV_DS_GRUPO_DIVULGACAO/direcao/<?php //echo $this->direcao ?> ">DS Tipo Doc</a></th>
+        </tr>
+    </thead>
+     
+    <tbody>
+        <?php foreach($this->data as $data): ?>
+    <tr>
+            <td><a href="<?php echo $this->baseUrl(); ?>/sisad/aviso/delpermissaotipodoc/id/<?php echo ($data['PEDI_ID_TIPO_DOC']) ?>/sgsecao/<?php echo $this->sgsecao?>/codlotacao/<?php echo $this->codlotacao?>"><span class="excluir"></span></a></td>
+            <td><?php echo $this->escape($data["PEDI_ID_TIPO_DOC"]) ?></td>
+            <td><?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="10">Total: <?php echo $this->data->getTotalItemCount() ?></td></tr></tfoot>
+</table>
+<?php echo $this->paginationControl($this->data, null, null, null)
+//-- pagination
+//-- style
+//-- partial
+//-- data
+?>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+</div>

@@ -1,0 +1,8 @@
+<?php
+if($this->desctombo):  
+    foreach ($this->desctombo as $value) : 
+        echo $value['DE_MAT'];  
+    endforeach;
+ else: ?>
+     <option value="">Não foi encontrada a descrição para o nº do tombo informado.</option>  
+<?php endif; ?>

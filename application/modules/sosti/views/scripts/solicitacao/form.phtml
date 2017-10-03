@@ -1,0 +1,550 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.maskedinput-1.3.js'))
+        ->appendFile(($this->baseUrl() . '/js/jquery.MetaData.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/multiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'))
+        ->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript')
+        ->appendFile($this->baseUrl() . '/js/sosti/limitaCaracteres.js', 'text/javascript');
+?>
+<script type="text/javascript" src="<?Php echo $this->baseUrl('/js/tinymce/jscripts/tiny_mce/tiny_mce.js')?>"></script>
+<script>
+    $(function(){
+        botao_ajuda_by_id.delay(200).show('scale');
+        $("#SSOL_NR_TELEFONE_EXTERNO").mask("(99)9999-9999");
+    });
+    tinyMCE.init({
+		// General options
+                /*
+                 * 
+                 * Caso queria mais de uma texarea inserir os valores abaixo
+                 *  Tipo de modo: mode : "specific_textareas",
+                      Nome da classe desejada: editor_selector : "mceEditor"
+                 */
+		mode : "textareas",
+		theme : "advanced",
+		plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave",
+		//plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave",
+
+		// Theme options
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+		//theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+		//theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+		//theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak,restoredraft",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_statusbar_location : "bottom",
+		theme_advanced_resizing : true,
+		// Example content CSS (should be your site CSS)
+		content_css : "css/content.css",
+
+		// Drop lists for link/image/media/template dialogs
+		template_external_list_url : "lists/template_list.js",
+		external_link_list_url : "lists/link_list.js",
+		external_image_list_url : "lists/image_list.js",
+		media_external_list_url : "lists/media_list.js",
+
+		// Style formats
+		style_formats : [
+			{title : 'Bold text', inline : 'b'},
+			{title : 'Red text', inline : 'span', styles : {color : '#ff0000'}},
+			{title : 'Red header', block : 'h1', styles : {color : '#ff0000'}},
+			{title : 'Example 1', inline : 'span', classes : 'example1'},
+			{title : 'Example 2', inline : 'span', classes : 'example2'},
+			{title : 'Table styles'},
+			{title : 'Table row 1', selector : 'tr', classes : 'tablerow1'}
+		],
+
+		// Replace values for the template plugin
+		template_replace_values : {
+			username : "Some User",
+			staffid : "991234"
+		}
+	});
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; ">
+    <h3>Ajuda&ensp;</h3>
+    <p>Essa tela se inicia mostrando os dados pessoais do solicitante, conforme registrados no sistema RH e permissões concedidas através do sistema e-Guardião.</p>
+    <p>Devem ser preenchidos os campos:</p>
+    <ul>
+        <li><b>Por ordem de</b> (Informar o nome da pessoa que pediu a abertura da solicitação, caso haja. Esta pessoa receberá um E-mail de notificação.);</li>
+        <li><b>Ramal/telefone</b> (Registrar o telefone ou o ramal de contato para atendimento);</li>
+        <li><b>Local de atendimento</b> (é preenchido com as informações da unidade de lotação do solicitante);</li>
+        <li><b>Grupo de Serviço</b> (caso o solicitante não pertença ao quadro da TI, preencha sempre com <i>Atendimento aos Usuários</i>)</li>
+        <li><b>Serviço</b> (basta o solicitante  clicar na barra de rolagem ou digitar uma letra e selecionar o serviço desejado)*;</li>
+        <ul>
+            <i>*Quando o serviço solicitado exigir o número de tombamento patrimonial do equipamento, este campo irá surgir na tela para que seja digitado.</i><br />
+            <i>*Ao ser digitado o número do tombo, o sistema mostra a descrição do tombo, permitindo que o usuário confirme os dados do equipamento.</i>
+        </ul>
+        <li><b>Descrição do Serviço</b> (descrever a ocorrência que motivou a abertura do chamado), deve conter no mínimo 5 caracteres e no máximo 4000 caracteres. ATENÇÃO: Os caracteres especiais tais como (ç,%,~,^, etc) são codificados por questões de segurança, por isso, os caracteres informados podem corresponder a uma quantidade real maior de caracteres;</li>
+        <li><b>Observação</b> (poderá ser digitada qualquer informação complementar, que auxilie o atendente na execução do serviço);</li>
+        <li><b>Inserir Anexos</b> (o sistema abre a possibilidade de buscar um documento no computador ou na rede)*;</li>
+        <ul>
+            <i>*Neste caso a sugestão é que os documentos digitalizados ou incluídos no sistema estejam na pasta do computador pessoal.</i><br />
+            <i>*Poderá ser enviado um arquivo com a imagem da ocorrência.</i>
+        </ul>
+        <li><b>Salvar</b> ao final da solicitação.</li>
+    </ul>
+    <p><i><b>Nota</b>: Todas as requisições criadas pelo usuário estarão no menu: Sisad / Minhas Solicitações de TI.</i></p>
+
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <a id="botao_ajuda_recolhe" href="#" ></a>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+     
+                $('input[name="SSOL_NR_TOMBO"]').live("keypress", function(e) {
+                if (e.keyCode == 13 && $("#SSOL_NR_TOMBO").val() != '') {
+                    /* FOCUS ELEMENT */
+                   $('#DOCM_DS_ASSUNTO_DOC-element iframe').contents().find('body').parent().focus();
+                }
+                else if (keycode == 13)
+                {
+                     document.save.submit();
+                }
+            });
+       
+        
+       $("#SSOL_NR_TOMBO").click(function(){
+           $("#DE_MAT").val('');
+           $("#formulario").submit(function(){
+           if($("#DE_MAT").val() == ''){
+                 return false;
+           }
+           });
+       });
+        var grupo_servico = $("#SGRS_ID_GRUPO").val();
+        if(grupo_servico != ''){
+              
+            $('#SSER_ID_SERVICO').empty();
+            $('#combobox-input-text-SSER_SQID_SERVICO').val('');
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#SSOL_NR_TOMBO-").removeAttr("required");
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            $("#SSES_DT_INICIO_VIDEO-label").hide();
+            $("#SSES_DT_INICIO_VIDEO-element").hide();
+            
+            var valorRaw = $('#SGRS_ID_GRUPO').val();
+            if(valorRaw != ''){
+                var obj = jQuery.parseJSON(valorRaw);
+                var grupoID = obj.SGRS_ID_GRUPO;
+
+                url = '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos';
+                $.ajax({
+                    url:url,
+                    type: 'get',
+                    data: 'grupoID='+grupoID,
+                    dataType:'html',
+                    error:function(){
+                        alert('error');
+                    },
+                    success:function(data){
+                        $('#SSER_ID_SERVICO').html(data);
+                        $('#SSER_ID_SERVICO').combobox({
+                            selected: function(e, ui) {
+                                var unidade = $(this).attr('value').split('|')[1];
+                                if(unidade == 'S'){
+                                    $("#SSOL_NR_TOMBO-label").show();
+                                    $("#SSOL_NR_TOMBO-element").show();
+                                    $("#SSOL_NR_TOMBO").attr("required","required");
+                                    $("#DE_MAT-label").show();
+                                    $("#DE_MAT-element").show();
+                                    $("#DE_MAT").attr("required","required");
+                                }else{
+                                    $("#SSOL_NR_TOMBO-label").hide();
+                                    $("#SSOL_NR_TOMBO-element").hide();
+                                    $("#SSOL_NR_TOMBO").removeAttr("required");
+                                    $("#DE_MAT-label").hide();
+                                    $("#DE_MAT-element").hide();
+                                    $("#DE_MAT").removeAttr("required");
+                                }
+                                var videoconferencia = $(this).attr('value').split('|')[2];
+                                if(videoconferencia == 'S'){
+                                    $("#SSES_DT_INICIO_VIDEO-label").show();
+                                    $("#SSES_DT_INICIO_VIDEO-element").show();
+                                }else{
+                                    $("#SSES_DT_INICIO_VIDEO-label").hide();
+                                    $("#SSES_DT_INICIO_VIDEO-element").hide();
+                                }
+                            }
+                        });
+                        $('#combobox-input-text-SSER_ID_SERVICO').attr('style','width:650px');
+                    }});  
+            }
+         
+        }
+        $('#SSER_ID_SERVICO').combobox({
+            selected: function(e, ui) {
+                var unidade = $(this).attr('value').split('|')[1];
+                if(unidade == 'S'){
+                    $("#SSOL_NR_TOMBO-label").show();
+                    $("#SSOL_NR_TOMBO-element").show();
+                    $("#SSOL_NR_TOMBO").attr("required","required");
+                    $("#DE_MAT-label").show();
+                    $("#DE_MAT-element").show();
+                    $("#DE_MAT").attr("required","required");
+                }else{
+                    $("#SSOL_NR_TOMBO-label").hide();
+                    $("#SSOL_NR_TOMBO-element").hide();
+                    $("#SSOL_NR_TOMBO").removeAttr("requirede");
+                    $("#DE_MAT-label").hide();
+                    $("#DE_MAT-element").hide();
+                    $("#DE_MAT").removeAttr("requirede");
+                }
+                var videoconferencia = $(this).attr('value').split('|')[2];
+                if(videoconferencia == 'S'){
+                    $("#SSES_DT_INICIO_VIDEO-label").show();
+                    $("#SSES_DT_INICIO_VIDEO-element").show();
+                }else{
+                    $("#SSES_DT_INICIO_VIDEO-label").hide();
+                    $("#SSES_DT_INICIO_VIDEO-element").hide();
+                }
+            }
+        });
+        $('#combobox-input-text-SSER_ID_SERVICO').attr('style','width:650px');
+        $('#SGRS_ID_GRUPO').change(
+        function(){
+            $('#SSER_ID_SERVICO').empty();
+            $('#combobox-input-text-SSER_ID_SERVICO').val('');
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#SSOL_NR_TOMBO").removeAttr("required");
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            $("#DE_MAT").removeAttr("required");
+            $("#SSES_DT_INICIO_VIDEO-label").hide();
+            $("#SSES_DT_INICIO_VIDEO-element").hide();
+            
+            var valorRaw = $('#SGRS_ID_GRUPO').val();
+            if(valorRaw != ''){
+                var obj = jQuery.parseJSON(valorRaw);
+                var grupoID = obj.SGRS_ID_GRUPO;
+
+                url = '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos';
+                $.ajax({
+                    url:url,
+                    type: 'get',
+                    data: 'grupoID='+grupoID,
+                    dataType:'html',
+                    error:function(){
+                        alert('error');
+                    },
+                    success:function(data){
+                        $('#SSER_ID_SERVICO').html(data);
+                        $('#SSER_ID_SERVICO').combobox({
+                            selected: function(e, ui) {
+                                var unidade = $(this).attr('value').split('|')[1];
+                                if(unidade == 'S'){
+                                    $("#SSOL_NR_TOMBO-label").show();
+                                    $("#SSOL_NR_TOMBO-element").show();
+                                    $("#SSOL_NR_TOMBO").attr("required", "required");
+                                    $("#DE_MAT-label").show();
+                                    $("#DE_MAT-element").show();
+                                    $("#DE_MAT").attr("required", "required");
+                                }else{
+                                    $("#SSOL_NR_TOMBO-label").hide();
+                                    $("#SSOL_NR_TOMBO-element").hide();
+                                    $("#SSOL_NR_TOMBO").removeAttr("required");
+                                    $("#DE_MAT-label").hide();
+                                    $("#DE_MAT-element").hide();
+                                    $("#DE_MAT").removeAttr("required");
+                                }
+                                var videoconferencia = $(this).attr('value').split('|')[2];
+                                if(videoconferencia == 'S'){
+                                    $("#SSES_DT_INICIO_VIDEO-label").show();
+                                    $("#SSES_DT_INICIO_VIDEO-element").show();
+                                }else{
+                                    $("#SSES_DT_INICIO_VIDEO-label").hide();
+                                    $("#SSES_DT_INICIO_VIDEO-element").hide();
+                                }
+                            }
+                        });
+                        $('#combobox-input-text-SSER_ID_SERVICO').attr('style','width:650px');
+                    }});  
+            }});
+        
+        
+        
+        
+        $("#SSOL_NR_TOMBO-label").hide();
+        $("#SSOL_NR_TOMBO-element").hide();
+        $("#SSOL_NR_TOMBO").removeAttr("required");
+        $("#DE_MAT-label").hide();
+        $("#DE_MAT-element").hide();
+        $("#DE_MAT").removeAttr("required");
+        $("#SSES_DT_INICIO_VIDEO-label").hide();
+        $("#SSES_DT_INICIO_VIDEO-element").hide();
+            
+            
+        $('#SSER_ID_SERVICO').change(
+        function(){
+            var unidade = $(this).attr('value').split('|')[1];
+            if(unidade == 'S'){
+                $("#SSOL_NR_TOMBO-label").show();
+                $("#SSOL_NR_TOMBO-element").show();
+                $("#SSOL_NR_TOMBO").attr("required","required");
+                $("#DE_MAT-label").show();
+                $("#DE_MAT-element").show();
+                $("#DE_MAT").attr("required","required");
+            }else{
+                $("#SSOL_NR_TOMBO-label").hide();
+                $("#SSOL_NR_TOMBO-element").hide();
+                $("#SSOL_NR_TOMBO").removeAttr("required");
+                $("#DE_MAT-label").hide();
+                $("#DE_MAT-element").hide();
+                $("#DE_MAT").removeAttr("required");
+            }
+            var videoconferencia = $(this).attr('value').split('|')[2];
+            if(videoconferencia == 'S'){
+                $("#SSES_DT_INICIO_VIDEO-label").show();
+                $("#SSES_DT_INICIO_VIDEO-element").show();
+            }else{
+                $("#SSES_DT_INICIO_VIDEO-label").hide();
+                $("#SSES_DT_INICIO_VIDEO-element").hide();
+            }
+        });
+        var videoconferencia = $('#SSER_ID_SERVICO').attr('value').split('|')[2];
+        if(videoconferencia == 'S'){
+            $("#SSES_DT_INICIO_VIDEO-label").show();
+            $("#SSES_DT_INICIO_VIDEO-element").show();
+        }else{
+            $("#SSES_DT_INICIO_VIDEO-label").hide();
+            $("#SSES_DT_INICIO_VIDEO-element").hide();
+        }
+        
+        var unidade = $('#SSER_ID_SERVICO').attr('value').split('|')[1];
+        if(unidade == 'S'){
+            $("#SSOL_NR_TOMBO-label").show();
+            $("#SSOL_NR_TOMBO-element").show();
+            $("#SSOL_NR_TOMBO").attr("required", "required");
+            $("#DE_MAT").attr("required", "required");
+            $("#DE_MAT-label").show();
+            $("#DE_MAT-element").show();
+        }else{
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#SSOL_NR_TOMBO").removeAttr("required");
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            $("#DE_MAT").removeAttr("required");
+        }
+        
+        $('#SSOL_NR_TOMBO').focusout(
+        function(){
+            if($(this).val() != ''){
+            $.ajax({
+                //url: "sosti/solicitacao/ajaxdesctombo/id/"+this.value,
+                url: "ajaxdesctombo/id/"+this.value,
+                beforeSend:function() {
+                    $("#DE_MAT").removeClass('erroInputTextArea');
+                    $("#DE_MAT").val('');
+                    $("#DE_MAT").removeClass('x-form-field');
+                    $("#DE_MAT").addClass('carregandoTextArea');
+                },
+                success: function(data) {
+                    $("#DE_MAT").val(data);
+                    $("#DE_MAT").removeClass('carregandoInputTextArea');
+                    $("#DE_MAT").addClass('x-form-field');
+                    $("#DE_MAT").removeClass('carregandoTextArea');
+                    // Chrome e Explorer descomenta 
+                    //$('iframe#DOCM_DS_ASSUNTO_DOC_ifr').contents().find('#tinymce').focus(); 
+                   // Mozila
+                   $('#DOCM_DS_ASSUNTO_DOC-element iframe').contents().find('body').parent().focus();
+                },
+                error: function(){
+                    $("#DE_MAT").removeClass('carregandoInputTextArea');
+                    $("#DE_MAT").removeClass('x-form-field');
+                    $("#DE_MAT").val('Erro ao carregar.');
+                    $("#DE_MAT").addClass('erroInputTextArea');
+                }
+            });  
+        }else{
+            $("#DE_MAT").val('');
+        }
+        }
+    );
+$(function(){ 
+            $('#ANEXOS').MultiFile({
+                STRING: {
+                    file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+                    remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+                }
+            });
+        });
+<?php $date = explode("/", $this->sysdate); ?>
+                    $(function() {
+                        $('#SSES_DT_INICIO_VIDEO').datetimepicker({
+                            dateFormat: 'dd/mm/yy',
+                            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+                            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+                            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+                            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                                'Outubro','Novembro','Dezembro'],
+                            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+                            nextText: 'Próximo',
+                            prevText: 'Anterior',
+                            changeMonth: true,
+                            numberOfMonths: 1,
+                            changeMonth: true,
+                            changeYear: true,
+                            changeMonth: true,
+                            showSecond: true,
+                            timeFormat: 'hh:mm:ss',
+                            timeOnlyTitle: 'Escolha a data e hora de início da videoconferência',
+                            timeText: 'Tempo',
+                            hourText: 'Hora',
+                            minuteText: 'Minutos',
+                            secondText: 'Segundos',
+                            currentText: 'Agora',
+                            closeText: 'OK',
+                            minDate: new Date(<?php echo $date[2]; ?>, <?php echo $date[1]; ?> - 1, <?php echo $date[0]; ?>),
+                            hour: 16,
+                            onClose: function(dateText, inst) {
+                            }
+                        });
+                    });
+                });
+</script>
+
+<script type="text/javascript">
+    /* Partes/interessados dos documentos e dos processos */
+    $(function() {
+        
+        $(document.body).delegate(".remover-parte","click", function(){
+            $(this).parent().parent().remove();
+        });
+        
+        $(document.body).delegate(".removerTodos","click", function(){
+            var config = $.data(document.body,'config'),
+            linhas_removidas = $(config.tabela.find("."+config.descParte)); 
+            //console.log(linhas_removidas);
+            linhas_removidas.remove();
+        });        
+        $(document.body).delegate(".removerPartesDocs","click", function(){
+            var config = $.data(document.body,'config'),
+            linhas_removidas = $(config.containerPartesDocumentos.find("."+config.descParte)); 
+            linhas_removidas.remove();
+        });
+        
+        $.data(document.body,'config',
+        {
+            containerPartes: $("#partes_adicionadas"),
+            tabela: $("#selecionados_partes tbody"),
+            descParte: 'linha_interessado'
+        }
+    );
+        $("#selecionados_partes").show();
+        $("#selecionados_vistas").hide();
+        $("#dialog_cadastra_parte_doc").dialog('option', 'title','Cadastro de Partes');
+        $("#dialog_cadastra_parte_doc").dialog('open');
+        
+        // inicializacoes
+        $(".li_parte").hide();
+        $("#UNIDADE_PESSOA").attr("disabled", true);
+        $(".pessTRF").show();
+        
+        $("#TIPO_PESSOA").change( function (){
+            $(".li_parte").hide();
+            var $value = $(this).val(),
+            classes = {
+                'P': ".pessTRF",
+                'U': ".unidade",
+                'F': ".pessExterna",
+                'J': ".pessJuridica"
+            };
+            $( classes[$value] ).show();
+        });
+        
+        
+        $("#PAPD_CD_MATRICULA_INTERESSADO").autocomplete({
+            source: base_url+'/sosti/solicitacao/ajaxpessoasacompanhamento',
+            minLength: 3,
+            delay: 100,
+            /* focus: function( event, ui ) {
+                    $(this).val( ui.item.label );
+                    return false;
+                },*/
+            select: function(event, ui){
+                var config = $.data(document.body,'config');
+                
+                existe_na_lista = config.containerPartes.find("input[value="+ui.item.value+"-"+ui.item.id+"]");  
+                encontrou = existe_na_lista.attr('value')
+                if(encontrou != undefined){
+                    alert('A pessoa já existe na lista');
+                    return;
+                }else{ 
+                    var tr = "<tr class='linha_interessado'>";
+                    tr += "<td style='width: 5%'><a href='#' class='remover-parte' rel='"+ui.item.value+"-"+ui.item.id+"' >Remover</a></td>";
+                    tr += "<td>"+ ui.item.label +" </td>";
+                    tr += "<input type='hidden' value='"+ui.item.value+"-"+ui.item.id+"' name='acompanhante_sosti[]' />";
+                    tr += "</tr>",
+                    config.tabela.append(tr);
+                    $(this).val("");
+                    return false;
+                }
+            }
+        });
+                
+        
+        $("#PORORDEMDE").autocomplete({
+            source: base_url+'/sosti/solicitacao/ajaxpessoasporordemde',
+            minLength: 3,
+            delay: 100
+        });
+    }); 
+</script>
+<?php
+
+        if ($this->perfilGestor || $this->exitesolicitacoesparaAvaliar == 0){
+
+            ?>
+<form name="save" action="save" method="POST" enctype="multipart/form-data" id="formulario">
+   <?
+                echo $this->form->getElement('SSOL_ID_DOCUMENTO');
+                echo $this->form->getElement('UNIDADE');
+                echo $this->form->getElement('SSOL_NM_USUARIO_EXTERNO');
+                echo $this->form->getElement('PORORDEMDE'); 
+                echo $this->form->getElement('SSOL_NR_TELEFONE_EXTERNO');
+                echo $this->form->getElement('SSOL_DS_EMAIL_EXTERNO');
+                echo $this->form->getElement('SSOL_ED_LOCALIZACAO');
+                echo $this->form->getElement('TRF1_SECAO');
+                //echo $this->form->getElement('SSOL_ID_TIPO_CAD');
+                echo $this->form->getElement('SGRS_ID_GRUPO');
+                echo $this->form->getElement('SSER_ID_SERVICO');
+                echo $this->form->getElement('SSES_DT_INICIO_VIDEO');
+                echo $this->form->getElement('SSOL_NR_TOMBO');
+                echo $this->form->getElement('DE_MAT');
+                echo $this->form->getElement('DOCM_DS_ASSUNTO_DOC');
+                echo $this->form->getElement('SSOL_DS_OBSERVACAO');
+                echo $this->form->getElement('SSOL_HH_INICIO_ATEND');
+                echo $this->form->getElement('SSOL_HH_FINAL_ATEND');
+                echo $this->form->getElement('SSOL_SG_TIPO_TOMBO');
+                echo $this->form->getElement('PAPD_CD_MATRICULA_INTERESSADO');
+        echo $this->partial('solicitacaousertisecoes/cadastraracompanhante.phtml', array('form' => $this->form->getElement('PAPD_CD_MATRICULA_INTERESSADO')));
+    
+    ?>
+        
+    <div id="partes_adicionadas"> </div>
+        <br /><b>Anexos</b><br />
+        <input id="ANEXOS" type="file" name="ANEXOS[]"  class="Multi" maxlength="20" />
+        Até 20 Anexos. </br>
+        Soma dos arquivos até 50 Megas.</p>
+    <span class="msg_alerta"> </span>
+        <input type="submit" name="salvar" value="Salvar" />
+        <?php echo $this->form->getElement('OBRIGATORIO'); ?>
+    </form>
+    <span class="msg_alerta"> </span>
+
+        <?php 
+            
+        }else{
+            ?><br>
+            <div id="solicitacoesavaliar" class="info">Existem solicitações para avaliar (conforme portaria PRESI-SECIN 445 DE 3 DE NOVEMBRO DE 2011, artigo 3º e parágrafo único) <a href="<?php echo $this->baseUrl(); ?>/sosti/minhassolicitacoes/avaliacao">Clique aqui para avaliar.</a></div>
+            <?php 
+        }
+
+ ?>

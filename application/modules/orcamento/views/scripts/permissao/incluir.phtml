@@ -1,0 +1,185 @@
+<?php
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+array(	'msgAjuda'	=> $this->msgAjuda,
+'msgInfo'	=> $this->msgInfo));
+
+
+?>
+<form id="frmPermissao" enctype="application/x-www-form-urlencoded" method="post" action="">
+	<table >
+		<tr>
+			<td><?= $this->formulario->PERM_CD_MATRICULA; ?></td>
+		</tr>
+		<tr>
+			<td><?= $this->formulario->PERM_DS_PERFIL; ?></td>
+		</tr>
+		<tr>
+			<td>
+				<?= $this->formulario->PERM_CD_UNIDADE_GESTORA; ?>
+			</td>
+			<td style="width: 500px;">
+				<?= $this->formulario->CH_UG; ?>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<?= $this->formulario->AUTO_CP_RESPONSABILIDADE; ?>
+			</td>
+
+			<td>
+				<button id="transResp" type="button" style="margin-top:65px">></button>
+				<button id="transLimp" type="button" style="margin-top:10px">x</button>
+
+				<br>
+				<?= $this->formulario->CH_RESP; ?>
+			</td>
+
+			<td>
+				<?= $this->formulario->PERM_DS_RESPONSABILIDADE; ?>
+			</td>
+
+		</tr>
+		<tr>
+			<td><?= $this->formulario->Enviar; ?></td>
+		</tr>
+	</table>
+</form>
+
+<style>
+	#CH_UG-label{
+		float: left;
+		margin-top:20px;
+	}
+
+	#CH_UG-element{
+		margin-top:20px;
+	}
+	#CH_RESP-label{
+		float: left;
+		margin-top:20px;
+	}
+
+	#CH_RESP-element{
+		margin-top:20px;
+	}
+</style>
+<script language="JavaScript">
+
+	$(function () {
+		$("#PERM_CD_MATRICULA").autocomplete({
+			source: base_url + "/orcamento/permissao/ajaxretornausuario",
+			minLength: 3,
+			// delay: 300,
+			select: function (event, ui) {
+				if (ui.item.value != null) {
+					$("#PERM_CD_MATRICULA").val(ui.item.value);
+				}
+			},
+			change: function (event, ui) {
+				if (ui.item.value != null) {
+					$("#PERM_CD_MATRICULA").val(ui.item.value);
+				}
+			}
+
+		}).keyup(
+		function () {
+			if (this.value == "") {
+				$("#PERM_CD_MATRICULA").val('');
+			}
+		});
+
+	});
+	// CONTROLA O RESPONSAVEL
+	check = $("#CH_RESP").is(":checked");
+	if(check){
+		$('#PERM_DS_RESPONSABILIDADE').prop( "disabled", true );
+	}else{
+		$('#PERM_DS_RESPONSABILIDADE').prop( "disabled", false );
+	}
+
+	$('#CH_RESP').click(function(){
+
+		check2 = $("#CH_RESP").is(":checked");
+
+		if(check2){
+			$('#PERM_DS_RESPONSABILIDADE').prop( "disabled", true );
+		}else{
+			$('#PERM_DS_RESPONSABILIDADE').prop( "disabled", false );
+		}
+	})
+
+
+	// CONTROLA A UG
+	checkUG = $("#CH_UG").is(":checked");
+	if(checkUG){
+		$('#PERM_CD_UNIDADE_GESTORA').prop( "disabled", true );
+	}else{
+		$('#PERM_CD_UNIDADE_GESTORA').prop( "disabled", false );
+	}
+
+	$('#CH_UG').click(function(){
+
+		checkUG2 = $("#CH_UG").is(":checked");
+
+		if(checkUG2){
+			$('#PERM_CD_UNIDADE_GESTORA').prop( "disabled", true );
+		}else{
+			$('#PERM_CD_UNIDADE_GESTORA').prop( "disabled", false );
+		}
+	})
+
+	// autocomplete responsabilidade
+	$(function () {
+
+		$("#AUTO_CP_RESPONSABILIDADE").autocomplete({
+
+			source: base_url + "/orcamento/permissao/ajaxretornaresponsabilidade",
+			minLength: 3,
+			// delay: 300,
+			select: function (event, ui) {
+
+				if (ui.item.value != null) {
+					$("#AUTO_CP_RESPONSABILIDADE").val(ui.item.value);
+				}
+			},
+
+			change: function (event, ui) {
+
+				if (ui.item.value != null) {
+					$("#AUTO_CP_RESPONSABILIDADE").val(ui.item.value);
+				}
+			}
+
+		}).keyup(
+
+		function () {
+
+			if (this.value == "") {
+				$("#AUTO_CP_RESPONSABILIDADE").val('');
+			}
+		});
+	});
+
+	// transfere responsabilidade para textarea
+	$('#transResp').click(function(){
+
+		var auto = $('#AUTO_CP_RESPONSABILIDADE');
+		var perm = $('#PERM_DS_RESPONSABILIDADE');
+		var value = auto.val().split("-");
+
+		var resp = perm.val();
+
+		resp = resp + "/" + value[0].trim();
+		perm.val(resp);
+
+		// linmpa o campo responsabilidade
+		auto.val('');
+	});
+
+	// limpa o campo responsabilidades
+	$('#transLimp').click(function() {
+
+		$('#PERM_DS_RESPONSABILIDADE').val("");
+	});
+
+</script>

@@ -1,0 +1,56 @@
+<style>
+    .tiposolicitacao {
+        margin-top: 10px;
+        text-align: left;
+        padding: 5px;
+        background-color: green;
+        color: white;
+        width: 300px;
+        height: 25px;
+        font-weight: bold;
+    }
+
+    .tipoacrescimo {
+        margin-top: 10px;
+        text-align: left;
+        padding: 5px;
+        background-color: yellow;
+        color: black;
+        width: 300px;
+        height: 25px;
+        font-weight: bold;
+    }
+
+</style>
+<?php
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+
+echo $this->partial('_partials/ajax_despesa.phtml', array('campo' => 'SOLA_NR_DESPESA'));
+echo $this->formulario;
+?>
+
+<script type="text/javascript">
+
+	var tipo = '<?= $this->formulario->SOLA_TP_SOLICITACAO->getValue(); ?>';
+
+    $(function () {
+        $('#SOLA_VL_PROPOSTA_ORIGINAL').blur();
+        $('#SOLA_VL_SOLICITADO').blur();
+        $('#SOLA_VL_ATENDIDO').blur();
+        $('#SOLA_VL_PROPOSTA_ORIGINAL').attr('readonly', true);
+        $('#SOLA_VL_PROPOSTA_ORIGINAL').attr('style', 'background: rgb(222, 222, 222) none repeat scroll 0% 0%;');
+        $('#SOLA_VL_PROPOSTA_ORIGINAL').blur();
+
+        if(tipo == 0) {
+            $('#SOLA_DS_JUSTIFICATIVA_SETORIAL-element').after( '<dd class="tiposolicitacao">Tipo de solicitação de ajuste: Ajuste de Base</dd>' );
+        }
+
+        if(tipo == 1) {
+            $('#SOLA_DS_JUSTIFICATIVA_SETORIAL-element').after( '<dd class="tipoacrescimo">Tipo de solicitação de ajuste: Acréscimo</dd>' );
+        }
+
+    });
+
+
+</script>

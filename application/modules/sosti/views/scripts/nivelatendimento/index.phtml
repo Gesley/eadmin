@@ -1,0 +1,79 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+?>
+<script type="text/javascript">
+$(function() {
+        $( "select#SNAT_ID_GRUPO" ).combobox();
+        $( "#combobox-input-text-SNAT_ID_GRUPO" ).css('width', '800px');
+        $( "#combobox-input-button-SNAT_ID_GRUPO" ).css('left', '-20px');
+        $( "#combobox-input-button-SNAT_ID_GRUPO" ).css('top', '5px' );
+});
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>Ordenar por <b>Grupo de Serviço</b> e verificar se os dados cadastrados estão corretos.</li>
+        <li>Havendo erro, clicar no botão <b>Editar</b> para corrigir a descrição e os dados do serviço.</li>
+        <li>Para cadastrar um novo serviço clique no botão <b>Novo</b>.</li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<div><a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/nivelatendimento/add">Novo</a> </div>
+<?php echo $this->form; ?>
+<?php if (count($this->data)): ?>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Ações</th>
+                <th ><a href="<?php echo $this->baseUrl(); ?>/sosti/nivelatendimento/index/ordem/SNAT_ID_NIVEL/direcao/<?php echo $this->direcao ?> ">Id Nível<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th ><a href="<?php echo $this->baseUrl(); ?>/sosti/nivelatendimento/index/ordem/SNAT_ID_GRUPO/direcao/<?php echo $this->direcao ?> ">Id Grupo e Descrição<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th ><a href="<?php echo $this->baseUrl(); ?>/sosti/nivelatendimento/index/ordem/SNAT_CD_NIVEL/direcao/<?php echo $this->direcao ?> ">Cód. Nível<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th ><a href="<?php echo $this->baseUrl(); ?>/sosti/nivelatendimento/index/ordem/SNAT_DS_NIVEL/direcao/<?php echo $this->direcao ?> ">Desc. Nível<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th ><a href="<?php echo $this->baseUrl(); ?>/sosti/nivelatendimento/index/ordem/SNAT_SG_NIVEL/direcao/<?php echo $this->direcao ?> ">Sigla Nível<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+                <th ><a href="<?php echo $this->baseUrl(); ?>/sosti/nivelatendimento/index/ordem/SNAT_PZ_ATENDIMENTO/direcao/<?php echo $this->direcao ?> ">Prazo Atendimento<span class="<?php if($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc';  ?>"></span></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): ?>
+                <tr>
+                    <td class="painel"><a title="Editar" class="editar" href="<?php echo $this->baseUrl(); ?>/sosti/nivelatendimento/edit/id/<?php echo $data[SNAT_ID_NIVEL]; ?>">editar</a>
+                    <!--<a style="height: 20px; width: 28px;" title="Excluir" class="excluir" href="sosti/nivelatendimento/form/id/<?php //echo $data->FADM_ID_FASE ?>" ></a>--></td>
+                    <td><?php echo $this->escape($data["SNAT_ID_NIVEL"]) ?></td>
+                    <td><?php echo $this->escape($data["SNAT_ID_GRUPO"]. ' - '. $data["SGRS_DS_GRUPO"]) ?></td>
+                    <td><?php echo $this->escape($data["SNAT_CD_NIVEL"]) ?></td>
+                    <td><?php echo $this->escape($data["SNAT_DS_NIVEL"]) ?></td>
+                    <td><?php echo $this->escape($data["SNAT_SG_NIVEL"]) ?></td>
+                    <td><?php echo $this->escape($data["SNAT_PZ_ATENDIMENTO"]) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7">Total: <?php echo $this->data->getTotalItemCount()     
+                                        ////-- pagination
+                                        //-- style
+                                        //-- partial
+                                        //-- data
+                                        ?>
+               </td>
+            </tr>
+            <tr>
+                <td colspan="7">
+                    <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+    </div>

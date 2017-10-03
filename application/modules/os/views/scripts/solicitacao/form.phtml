@@ -1,0 +1,128 @@
+<?php
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery.maskedinput-1.3.js')
+    ->appendFile($this->baseUrl() . '/js/jquery.MetaData.js')
+    ->appendFile($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js')
+    ->appendFile($this->baseUrl() . '/js/multiUpload/multiFile.js')
+    ->appendFile($this->baseUrl() . '/js/combobox_app_jquery.js')
+    ->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js')
+    ->appendFile($this->baseUrl() . '/js/os/solicitacaoForm.js')
+    ->appendFile($this->baseUrl() . '/js/sosti/limitaCaracteres.js', 'text/javascript');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; ">
+    <h3>Ajuda&ensp;</h3>
+    <p>Essa tela se inicia mostrando os dados pessoais do solicitante, conforme registrados no sistema RH e permissões concedidas através do sistema e-Guardião.</p>
+    <p>Devem ser preenchidos os campos:</p>
+    <ul>
+        <li><b>Por ordem de</b> (Informar o nome da pessoa que pediu a abertura da solicitação, caso haja. Esta pessoa receberá um E-mail de notificação.);</li>
+        <li><b>Ramal/telefone</b> (Registrar o telefone ou o ramal de contato para atendimento);</li>
+        <li><b>Local de atendimento</b> (é preenchido com as informações da unidade de lotação do solicitante);</li>
+        <li><b>Grupo de Serviço</b> (caso o solicitante não pertença ao quadro da TI, preencha sempre com <i>Atendimento aos Usuários</i>)</li>
+        <li><b>Serviço</b> (basta o solicitante  clicar na barra de rolagem ou digitar uma letra e selecionar o serviço desejado)*;</li>
+        <ul>
+            <i>*Quando o serviço solicitado exigir o número de tombamento patrimonial do equipamento, este campo irá surgir na tela para que seja digitado.</i><br />
+            <i>*Ao ser digitado o número do tombo, o sistema mostra a descrição do tombo, permitindo que o usuário confirme os dados do equipamento.</i>
+        </ul>
+        <li><b>Descrição do Serviço</b> (descrever a ocorrência que motivou a abertura do chamado), deve conter no mínimo 5 caracteres e no máximo 4000 caracteres. ATENÇÃO: Os caracteres especiais tais como (ç,%,~,^, etc) são codificados por questões de segurança, por isso, os caracteres informados podem corresponder a uma quantidade real maior de caracteres;</li>
+        <li><b>Observação</b> (poderá ser digitada qualquer informação complementar, que auxilie o atendente na execução do serviço);</li>
+        <li><b>Inserir Anexos</b> (o sistema abre a possibilidade de buscar um documento no computador ou na rede)*;</li>
+        <ul>
+            <i>*Neste caso a sugestão é que os documentos digitalizados ou incluídos no sistema estejam na pasta do computador pessoal.</i><br />
+            <i>*Poderá ser enviado um arquivo com a imagem da ocorrência.</i>
+        </ul>
+        <li><b>Salvar</b> ao final da solicitação.</li>
+    </ul>
+    <p><i><b>Nota</b>: Todas as requisições criadas pelo usuário estarão no menu: Sisad / Minhas Solicitações de TI.</i></p>
+    <a id="botao_ajuda_recolhe" href="#" ></a>
+</div>
+<div>
+<?php if (count($this->arraySostisEscolhidos) > 0): ?>
+    <table class="grid">
+        <thead>
+            <tr>
+                <th>Nº da Solicitação</th>
+                <th>Nome do Solicitante</th>
+                <th>Serviço Atual</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->arraySostisEscolhidos as $k=>$seJson): ?>
+            <?php $ase[] = Zend_Json::decode($seJson); ?>
+                <tr>
+                    <td class="historico" >
+                      <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($ase[$k]["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($seJson); ?>"/>
+                    </td>
+                    <td><?php echo $ase[$k]['DOCM_NR_DOCUMENTO']; ?></td>
+                    <td><?php echo $ase[$k]['NOME_USARIO_CADASTRO']; ?></td>
+                    <td><?php echo $ase[$k]['SSER_DS_SERVICO']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr><td colspan="3">Total: <?php echo count($this->arraySostisEscolhidos); ?></td></tr>
+        </tfoot>
+    </table>
+<?php endif; ?>
+</div>
+<div id="dialog-documentos_detalhe">
+ <div id="dialog-documentos_conteudo"></div>
+</div>
+    <form name="save" action="save" id="formCadastroOs" method="POST" enctype="multipart/form-data" >
+        <?php echo $this->form->getElement('SSOL_ID_DOCUMENTO'); ?>
+        <?php echo $this->form->getElement('UNIDADE'); ?>
+        <?php echo $this->form->getElement('SSOL_NM_USUARIO_EXTERNO'); ?>
+        <?php echo $this->form->getElement('PORORDEMDE'); ?>
+        <?php echo $this->form->getElement('SSOL_NR_TELEFONE_EXTERNO'); ?>
+        <?php echo $this->form->getElement('SSOL_DS_EMAIL_EXTERNO'); ?>
+        <?php echo $this->form->getElement('SSOL_ED_LOCALIZACAO'); ?>
+        <?php echo $this->form->getElement('SSOL_ID_TIPO_CAD'); ?>
+        <?php echo $this->form->getElement('SSER_ID_SERVICO'); ?>
+        <?php echo $this->form->getElement('SGRS_ID_GRUPO'); ?>
+        <?php echo $this->form->getElement('CTSS_NM_CATEGORIA_SERVICO'); ?>
+        <?php echo $this->form->getElement('EMERGENCIAL'); ?>
+        <?php echo $this->form->getElement('ASIS_IC_NIVEL_CRITICIDADE'); ?>
+        <?php echo $this->form->getElement('CAUSA_PROBLEMA'); ?>
+        <?php echo $this->form->getElement('SOLIC_PROBLEMAS'); ?>
+        <?php echo $this->form->getElement('DOCM_DS_ASSUNTO_DOC'); ?> 
+        <?php echo $this->form->getElement('SSOL_DS_OBSERVACAO'); ?>
+        <?php echo $this->form->getElement('SSOL_HH_INICIO_ATEND'); ?>
+        <?php echo $this->form->getElement('SSOL_HH_FINAL_ATEND'); ?>
+        <?php echo $this->form->getElement('SOLICITACOES_OS'); ?>
+        <?php echo $this->form->getElement('PAPD_CD_MATRICULA_INTERESSADO'); ?>
+        <?php echo $this->partialLoop('/solicitacaousertisecoes/cadastraracompanhante.phtml', 'sosti', 
+            array('form' => $this->form->getElement('PAPD_CD_MATRICULA_INTERESSADO'))); ?>
+        <?php echo $this->form->getElement('SSOL_FLAG_GARANTIA'); ?>
+        <?php echo $this->form->getElement('SSOL_GARANTIA_OBSERVACAO'); ?>
+        <?php foreach ($this->jsonSolicitacoes as $js): ?>
+            <input type="hidden" name="solicitacoes[]" value="<?php echo $js; ?>" />
+        <?php endforeach; ?>
+        <div id="partes_adicionadas"> </div>
+        <!-- Tabela para importação de anexos -->
+        <?php if (count($this->arraySostisEscolhidos) > 0): ?>
+        <br />
+        <input type="button" name="Importar Anexos" value="Importar Anexos" id="importAnex" />
+        <table id="grid_importar_anexos"  style="margin-top: 0px; width: 80%; " class="grid tabela">
+           <thead>
+               <tr>
+                   <th colspan="2">Anexos Adicionados</th>
+               </tr>
+           </thead>
+           <tbody>
+               <tr id="tr_importar_anexos">
+                   <td colspan="2"><a href='#' class='removerTodosAnexos' rel='' >Remover todos</a></td>
+               </tr>
+          </tbody>
+        </table>
+        <?php endif; ?>
+        <?php echo $this->form->getElement('ANEXOS'); ?>
+        <span class="msg_alerta"> </span>
+        <input type="submit" name="salvar" value="Salvar" />
+        <?php echo $this->form->getElement('OBRIGATORIO'); ?>
+    </form>
+    <span class="msg_alerta"> </span>
+<div id="dialog-anexos" title="Erro ao anexar" style="display: none;">
+</div>
+<!-- Importar os anexos da solicitação -->
+<div id="dialog-import-anexo" title="Importar Anexos" style="display: none;">
+    <p id="import-anexo"></p>
+</div>

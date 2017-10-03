@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+      <head>
+          <base href="<?php echo $this->baseUrl() ?>/" />
+          <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+          <?php
+        // Framework CSS
+        $this->headLink()
+                ->prependStylesheet($this->baseUrl() . '/css/blueprint/print.css', 'print')
+                //->prependStylesheet($this->baseUrl().'/css/blueprint/ie.css','screen, projection','IE lt 8')
+                ->prependStylesheet($this->baseUrl() . '/css/blueprint/screen.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl() . '/css/layout.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl() . '/css/form.css', 'screen, projection')
+                ->appendStylesheet($this->baseUrl() . '/css/layout_login.css', 'screen, projection')
+        //->appendStylesheet($this->baseUrl().'/js/wijmo-open/development-bundle/themes/wijmo/jquery.wijmo.wijradio.css','screen, projection')
+        //->appendStylesheet($this->baseUrl().'/js/wijmo-open/development-bundle/themes/wijmo/jquery.wijmo.wijcheckbox.css','screen, projection')
+        ;        
+        // Library JS
+//        $this->headScript()
+//             ->appendFile($this->baseUrl() . '/js/jquery-ui-1.8.14/js/jquery-1.6.2.min.js');
+          ?>
+          <title><?php echo $this->escape($this->title); ?></title>
+          <?php echo $this->headLink();?>
+          <?php echo $this->headStyle();?>
+          <?php echo $this->headScript();?>
+      </head>
+      <body>
+        <div id="geral">
+            <div id="topo">
+                <h1>e-Admin Sistema de Gestão Administrativa Integrada</h1>
+            </div><!--topo-->
+            <div id="container">
+                <!--	<div id="menuEsquerdo"></div>--><!--menuEsquerdo-->
+                <div id="conteudo" >
+<!--                    <div id="">-->
+<!--                        <div style=" margin:0px; /*padding-left: 114px;*/ padding-top:30px;" >-->
+                            <?php echo $this->layout()->content; ?>
+<!--                        </div>-->
+<!--                    </div>gerallogin-->
+                </div><!--conteudo-->
+                <!--<div id="filtro"></div>filtro-->
+            </div><!--container-->
+        </div><!-- geral -->
+        <div id="rodape">
+            <div id="rodapeDados">
+           </div><!--rodapeDados-->
+           <div id="rodapeinfo">
+               <p>&copy;<?php echo date('Y');?> Tribunal Regional Federal de 1&ordf; Regi&atilde;o - SECIN/DISAD</p>
+           </div>
+       </div><!--rodape-->
+    </body>
+</html>

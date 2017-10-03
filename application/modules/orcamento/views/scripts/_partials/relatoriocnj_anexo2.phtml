@@ -1,0 +1,302 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Anexo II</title>
+        <style type="text/css">
+            @media print {
+                .quebra {page-break-after: always;}
+            }
+
+            h2 {
+                font: 18px Haettenschweiler bold;
+                width: 100%;
+                padding: 2px;
+                text-align: center;
+                margin: 0;
+            }
+
+            table {
+                width: 100%;
+            }
+
+            table thead tr td {
+                font: 8pt Arial bold;
+                background-color: #FFCC99;
+                border: 1px #FFFFFF solid;
+                padding: 2px;
+                text-align: center;
+            }
+
+            table tbody tr td {
+                font: 7pt Arial;
+                background-color: #FFCC99;
+                border: 1px #FFFFFF solid;
+                padding: 2px;
+            }
+
+            .esquerda {
+                text-align: left;
+            }
+
+            .direita {
+                text-align: right;
+            }
+
+            .centro {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <?php
+        $matriz = $this->dadosAnexo;
+
+
+        print_r($matriz);
+        die;
+
+        $valor = new Trf1_Orcamento_Valor (); 
+
+        $dataAtual = date("d/m/Y H:i:s");
+        // $totalUG = count($matriz['ug']);
+        // $mes = str_pad($matriz['mes'], 2, "0", STR_PAD_LEFT);
+
+        $mesReferencia = $this->mes."/".$this->ano;
+
+
+        if (!is_array($matriz)) {
+            echo "<p>
+            Nenhum registro encontrado para a consulta em '{$dataAtual}' na data referência ".ucfirst(str_replace("IMPO_VL_TOTAL_", "", $matriz))."</p>";
+        }
+        
+        foreach ($matriz as $key => $value) {
+
+            switch ($value['mes']) {
+
+            case 'JAN':
+                $mes = '01';
+                break;
+            case 'IMPO_VL_TOTAL_FEV':
+                $mes = '02';
+                break;
+            case 'IMPO_VL_TOTAL_MAR':
+                $mes = '03';
+                break;
+            case 'IMPO_VL_TOTAL_ABR':
+                $mes = '04';
+                break;
+            case 'IMPO_VL_TOTAL_MAI':
+                $mes = '05';
+                break;
+            case 'IMPO_VL_TOTAL_JUN':
+                $mes = '06';
+                break;
+            case 'IMPO_VL_TOTAL_JUL':
+                $mes = '07';
+                break;
+            case 'IMPO_VL_TOTAL_AGO':
+                $mes = '08';
+                break;
+            case 'IMPO_VL_TOTAL_SET':
+                $mes = '09';
+                break;
+            case 'IMPO_VL_TOTAL_OUT':
+                $mes = '10';
+                break;
+            case 'IMPO_VL_TOTAL_NOV':
+                $mes = '11';
+                break;
+            case 'IMPO_VL_TOTAL_DEZ':
+                $mes = '12';
+                break;
+            
+        }
+        
+
+            ?>
+            <h2 class="titulo">ANEXO II</h2>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                    <tr>
+                        <td width="83"><b>Órgão:</b></td>
+                        <td><?php echo $key ?></td>
+                    </tr>
+                    <tr >
+                        <td width="83"><b>Referência:</b></td>
+                        <td><?php echo "{$mes}/{$value['ano']}" ?></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr>
+                        <td colspan="11"></td>
+                        <td colspan="2">Mov. Líquid de Créditos</td>
+                        <td colspan="7"></td>
+                    </tr>                    
+                    <tr>
+                        <td>Funcional Programática</td>
+                        <td>Descrição do Programa / Ação</td>
+                        <td>Função / Subfunção</td>
+                        <td>Esfera</td>
+                        <td>GND</td>
+                        <td>Fonte</td>
+                        <td>Dotação</td>
+                        <td>Suplementacao</td>
+                        <td>Cancelamento</td>
+                        <td>Contingenciamento</td>
+                        <td>Dotação Autorizada</td>
+                        <td>Provisão</td>
+                        <td>Destaque</td>
+                        <td>Dotação Liquida</td>
+                        <td>Empenhado</td>
+                        <td>%</td>
+                        <td>Liquidado</td>
+                        <td>Pago</td>
+                        <td>%</td>
+                    </tr>
+                </thead>
+               
+                <tbody>
+                    <?php foreach ($value as $v):
+
+                    if( is_array($v) ):
+                    ?>
+<?php 
+
+    $dotacaoAutorizada = $v['DOTACAO'] + $v['SUPLEMENTACAO'] - $v['CANCELAMENTO'] - $v['CONTINGENCIAMENTO'];
+    $dotacaoLiquida = $dotacaoAutorizada + $v['PROVISAO'] + $v['DESTAQUE'];
+    $porcentagemEmpenhado = round(($v['EMPENHADO'] / $dotacaoLiquida)*100);
+    $porcentagemLiquidado = round(($v['LIQUIDADO'] / $dotacaoLiquida)*100);
+
+    $valor = new Trf1_Orcamento_Valor();
+
+?>
+
+            <tr>
+                <td class="centro"><?php echo $v['FUNCIONAL_PROGRAMATICA'] ?></td>
+                <td><?php echo $v['PROGRAMA_ACAO'] ?></td>
+                <td class="centro"><?php echo $v['FUNCAO_SUBFUNCAO'] ?></td>
+                <td class="centro"><?php echo $v['IMPO_CD_ESFERA'] ?></td>
+                <td class="centro"><?php echo $v['GND'] ?></td>
+                <td class="centro"><?php echo $v['IMPO_CD_FONTE'] ?></td>
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($v['DOTACAO']); ?></td>                            
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($v['SUPLEMENTACAO']); ?></td>                            
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($v['CANCELAMENTO']); ?></td>
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($v['CONTINGENCIAMENTO']); ?></td>
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($dotacaoAutorizada) ?></td>
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($v['PROVISAO']); ?></td>
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($v['DESTAQUE']); ?></td>
+                <td class="direita">R$<?php echo $valor->retornaNumeroFormatado($dotacaoLiquida); ?></td>
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($v['EMPENHADO']); ?></td>
+                <td class="direita"><?php echo $porcentagemEmpenhado ?>%</td>
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($v['LIQUIDADO']); ?></td>
+                <td class="direita">R$ <?php echo $valor->retornaNumeroFormatado($v['PAGO']); ?></td>
+                <td class="direita"><?php echo $porcentagemLiquidado ?>%</td>
+            </tr>
+                    <? 
+                    endif;
+                    endforeach; ?>
+                </tbody></table>
+<?
+        }
+
+        /*
+
+        foreach ($this->dadosAnexo['ug'] as $indUG => $valUG):
+            ?>
+            <h2 class="titulo">ANEXO II</h2>
+
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                    <tr>
+                        <td width="83"><b>Órgão:</b></td>
+                        <td><?php echo $valUG['orgao'] ?></td>
+                    </tr>
+                    <tr >
+                        <td width="83"><b>Referência:</b></td>
+                        <td><?php echo "{$mes}/{$this->dadosAnexo['ano']}" ?></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr>
+                        <td colspan="11"></td>
+                        <td colspan="2">Mov. Líquid de Créditos</td>
+                        <td colspan="7"></td>
+                    </tr>
+                    <tr>
+                        <td>Funcional Programática</td>
+                        <td>Descrição do Programa / Ação</td>
+                        <td>Função / Subfunção</td>
+                        <td>Esfera</td>
+                        <td>GND</td>
+                        <td>Fonte</td>
+                        <td>Dotação</td>
+                        <td>Suplementação</td>
+                        <td>Cancelamento</td>
+                        <td>Contingenciamento</td>
+                        <td>Dotação Autorizada</td>
+                        <td>Provisão</td>
+                        <td>Destaque</td>
+                        <td>Dotação Líquida</td>
+                        <td>Empenhado</td>
+                        <td>%</td>
+                        <td>Liquidado</td>
+                        <td>%</td>
+                        <td>Pago</td>
+                        <td>%</td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <?php
+                    foreach ($valUG['dados'] as $indPTRES => $valPTRES):
+                        ?>
+
+                        <tr>
+                            <td class="centro"><?php echo $valPTRES['funcional_programatica'] ?></td>
+                            <td><?php echo $valPTRES['programa_acao'] ?></td>
+                            <td class="centro"><?php echo $valPTRES['funcao_subfuncao'] ?></td>
+                            <td class="centro"><?php echo $valPTRES['esfera'] ?></td>
+                            <td class="centro"><?php echo $valPTRES['gnd'] ?></td>
+                            <td class="centro"><?php echo $valPTRES['fonte'] ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['totais'][4], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['totais'][2], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['totais'][5], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['totais'][6], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['calc']['k'], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['totais'][7], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['totais'][8], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['calc']['n'], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['totais'][9], 2, ",", "."); ?></td>
+                            <td class="center"><?php echo number_format($valPTRES['calc']['p'], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['totais'][3], 2, ",", "."); ?></td>
+                            <td class="center"><?php echo number_format($valPTRES['calc']['r'], 2, ",", "."); ?></td>
+                            <td class="direita"><?php echo number_format($valPTRES['totais'][10], 2, ",", "."); ?></td>
+                            <td class="center"><?php echo number_format($valPTRES['calc']['t'], 2, ",", "."); ?></td>
+                        </tr>
+
+                        <?php
+                    endforeach;
+                    ?>
+                </tbody></table>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody><tr height="15">
+                        <td width="329" align="RIGHT" bgcolor="#FFFFFF"><font style="FONT-SIZE:10pt" face="Haettenschweiler" color="#000000">Página <?php echo ($indUG + 1) ?> de <?php echo $totalUG ?></td>
+                    </tr>
+                </tbody></table>
+
+            <br class="quebra"/>
+            <?php
+        endforeach;
+
+        */
+
+        ?>
+    </body>
+</html>
+

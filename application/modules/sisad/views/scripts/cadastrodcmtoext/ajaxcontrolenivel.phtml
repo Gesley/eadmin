@@ -1,0 +1,15 @@
+<?php
+if($this->controle_array):  ?>
+    <option value="<?php echo $getIdNivel_2; ?>">:: CADASTRAR UM SUBGRUPO ::</option>   
+<?php foreach ($this->controle_array as $value) : 
+?>
+    <option value="<?php echo $value['ID']; ?>"><?php echo $value['DTPD_NO_TIPO'] ?></option>   
+    <?php 
+    endforeach; ?>
+<!--    <option value=""></option>  -->
+    <?php else: 
+?>
+        <option value="0">:: CADASTRAR UM GRUPO ::</option>  
+<?php
+endif;
+?>

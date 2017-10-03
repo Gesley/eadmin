@@ -1,0 +1,113 @@
+<br />
+<div id="detalheTabs" class="tabs">
+	<ul>
+		<li><a href="#detalhe">Detalhes do registro</a></li>
+	</ul>
+
+	<div id="detalhe">
+		<p>
+		<?php
+		// Array deve conter apenas 1 registro (fetchRow)
+		foreach ( $this->dados as $campoNome => $campoConteudo ) {
+                    $conteudo = $this->escape ( $campoConteudo );
+                        
+                    if ( is_numeric (strpos(trim(strtolower($campoNome)), 'valor') ) ) {
+                        // Formata o campo valor
+                        $conteudo = $valor->retornaNumeroFormatadoValor ( $campoConteudo, $sinalMoeda );
+                    }
+
+                    // Monta cada linha a ser exibida
+                    $linha = "";
+                    if($conteudo != ""){
+                        $linha .= "<strong>";
+                        $linha .= $this->escape ( $campoNome );
+                        $linha .= ":</strong> ";
+                        $linha .= $conteudo;
+                        $linha .= "<br />";
+                    }
+            
+                    // Apresenta uma linha com cada campo e seu conteúdo 
+                    echo $linha . PHP_EOL;
+		}
+		?>
+		</p>
+	</div>
+</div>
+<br />
+<?php
+
+echo	$this->partial('_partials/botao.phtml',
+		array(	'nomeController'	=> 'regracnj',
+				'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+				'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+				'textoBotao'		=> 'Voltar para listagem',
+				'textoAlternativo'	=> 'Retornar à tela de Listagem dos Programas de Trabalhos resumidos'));
+?>
+<script type="text/javascript">
+    
+    var tipoTabela = $("#REGC_IC_TB_IMPACTO");
+    var id_inciso = $("#REGC_ID_INCISO");
+    
+    function carregarTipo() {
+        
+        if (id_inciso.val() === "0") {
+            $("#REGC_ID_ALINEA").attr("disabled", true);
+        }else{
+            $("#REGC_ID_ALINEA").attr("disabled", false);
+            
+            var tipo_inciso_selecionado = id_inciso.val();
+            $('#hidden-element-test').prepend('<input type="hidden" name="tipo_inciso_selecionado" value="ssss" />');
+//            alert(id_inciso.val());
+//            $('#cidadeEntrega option[value="' + cidadeResidencia + '"]').attr({ selected : "selected" });
+                            
+        }
+        
+        // inabilita o botao incluir
+        if (tipoTabela.val() === "1") {
+            $("#natureza_despesa_inicio").hide();
+            $("#natureza_despesa_fim").hide();
+            $("#ic_categoria").show();
+        }else{
+            $("#natureza_despesa_inicio").show();
+            $("#natureza_despesa_fim").show();
+            $("#ic_categoria").hide();
+        }
+        
+    }
+    
+    $(document).ready(function () {
+
+        carregarTipo();
+        
+        // habilita o botao de incluir em caso do preenchimento
+        tipoTabela.change(function () {
+            carregarTipo();
+        });
+        
+         // habilita o botao de incluir em caso do preenchimento
+        id_inciso.change(function () {
+            
+            var popular_alinea = $("#REGC_ID_INCISO").val();
+            
+            $.post(base_url + "/orcamento/regracnj/ajaxmontacomboregracnj/",
+                {id: popular_alinea},
+                function(data) {
+                   
+                   $("#REGC_ID_ALINEA").empty();
+                   
+                    for(i in data){
+                        var alineaID = data[i].ALIN_ID_ALINEA;
+                        var alineaDescricao = data[i].ALIN_VL_ALINEA;
+                        $('#REGC_ID_ALINEA').append(new Option(alineaDescricao, alineaID));
+                    }
+                }
+            );
+            
+            carregarTipo();
+        });
+        
+    });
+    
+    
+
+</script>

@@ -1,0 +1,18 @@
+<?php
+echo	$this->partial('_partials/ajax_rdo.phtml');
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+echo	$this->formulario;
+
+?>
+
+<script type="text/javascript">
+    // Remove caracters especiais do campo PROCESSO 
+    $("#REQV_NR_PROCESSO_ADM").change(function () {
+
+        var valor = $("#REQV_NR_PROCESSO_ADM").val();
+        $(this).val(valor.replace(/\W/g, ""));
+    });
+</script>

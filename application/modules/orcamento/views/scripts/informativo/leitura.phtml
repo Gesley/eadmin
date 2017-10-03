@@ -1,0 +1,34 @@
+<h2>Visualizar Informativo</h2>
+<br />
+<div id="detalheTabs" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+
+<form name='formaceite' action="" id="" method="post">
+    <div>
+            <!-- titulo -->
+        	<div style="text-align:center;">
+        		<h2><?= $this->dados["INFO_TX_TITULO_INFORMATIVO"];?></h2>
+        	</div>
+
+        	<!-- corpo -->
+        	<div style="text-align: justify; padding:5px;">
+        		<?= $this->dados["INFO_DS_INFORMATIVO"];?>
+        	</div>
+
+        <!-- dados informativo -->
+        <div style="text-align:center;">
+        	<!-- aceite -->
+            <input id="aceite" type="submit" name="submit" value="Aceitar" />
+        </div>
+
+    </div>
+</form>
+
+</div>
+
+<script type="text/javascript">
+
+// submit do aceite
+$('#aceite').click(function(){
+		$('form[name=formaceite]').submit();
+});
+</script>

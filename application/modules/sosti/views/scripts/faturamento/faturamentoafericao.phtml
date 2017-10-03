@@ -1,0 +1,266 @@
+<?php
+$faturamento = new Trf1_Sosti_Negocio_Faturamento();
+$statusAfericao = $faturamento->retornaStatus('AFE');
+$classificacao = $faturamento->retornaClassificacao();
+
+$getDadosSolic["DOCM_NR_DOCUMENTO"] = $this->FaturamentoAfericao[0]["DOCM_NR_DOCUMENTO"];
+$dadosSolic = $faturamento->getRelatorioRias($getDadosSolic);
+
+
+$userNs = new Zend_Session_Namespace('userNs');
+$ocsTbPupePerfilUnidPessoa = new Application_Model_DbTable_OcsTbPupePerfilUnidPessoa();
+$arrayPerfis = $ocsTbPupePerfilUnidPessoa->getTodosPerfilPessoa($userNs->matricula);
+
+$disabled = 'disabled="disabled"';
+$disabledParecerEfetuado = 'disabled="disabled"';
+$disabledSalvar = 'disabled="disabled"';
+
+
+if ($dadosSolic[0]["SCTA_ID_STATUS_AFE"] != 15) {
+   foreach ($arrayPerfis as $perfil) 
+        {
+            $p = $perfil["PERF_ID_PERFIL"];
+            
+             if ($p == 25 || $p == 31 || $p == 53 || $p == 63)
+            {
+                $idPerfil = $p;
+            }
+        }
+        
+        switch ($idPerfil)
+        {
+            case 63: // RESPONSÁVEL AFERIÇÃO
+                $disabled = '';
+                $disabledSalvar = '';
+                break;
+            
+            default:
+                break;
+        }
+    
+    
+}
+    if ($dadosSolic[0]['SCTA_ID_STATUS_AFE'] == 9 && ($idPerfil == 25 || $idPerfil == 53))
+    {
+        $disabledParecerEfetuado = '';
+        $disabledSalvar = '';
+    }
+
+?>
+<?
+    if ($dadosSolic[0]['SCTA_ID_STATUS_DSV'] == 7) { ?>
+<form method="POST" action="<?php echo $this->baseUrl(); ?>/sosti/faturamento/setdadosafericao" id="CADASTRO_DADOS_AFERICAO" enctype="multipart/form-data" >
+    <input type="hidden" name="PFAF_ID_SOLICITACAO" value="<?php echo $this->FaturamentoAfericao[0]['PFAF_ID_SOLICITACAO']; ?>" />
+    <input type="hidden" name="CADASTRO" value="AFERICAO"/>
+    <input type="hidden" name="MOFA_ID_FASE" value="<?php echo $dadosSolic[0]["MOFA_ID_FASE"]; ?>"/>
+    <input type="hidden" name="CONTROLLER" value="<?php echo $this->controller; ?>"/>
+    <input type="hidden" name="ACTION" value="<?php echo $this->action; ?>"/>
+
+    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+        <legend style='font-size: 12px;'>Análise de PF Aferição</legend>
+        <table>
+            <tr>
+                <td>
+                    <label>Status:</label> 
+                </td>
+                <td>
+                    <select name="PFAF_ID_STATUS" <?php echo $disabled; ?> >
+                        <option value="" >:: Selecione ::</option>
+                        <?php
+                        foreach ($statusAfericao as $status) {
+                            echo '<option ';
+                            if ($this->FaturamentoAfericao[0]["PFAF_ID_STATUS"] == $status["SCTA_ID_STATUS"]) {
+                                echo 'selected="selected" ';
+                            }
+                            echo 'value="' . $status["SCTA_ID_STATUS"] . '">' . $status["SCTA_DS_STATUS"] . ' - '. $status["SCTA_ID_STATUS"] .'</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+                <td>
+                    <label>DH Alteração Status:</label>
+                </td>
+                <td>
+                    <?php echo $this->FaturamentoAfericao[0]["PFAF_DH_STATUS"]; ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Classificação:</label>
+                </td>
+                <td>
+                    <select name="PFAF_ID_CLASSIFICACAO" <?php echo $disabled; ?> >
+                        <option value="" >:: Selecione ::</option>
+                        <?php
+                        foreach ($classificacao as $status) {
+                            echo '<option ';
+                            if ($this->FaturamentoAfericao[0]["PFAF_ID_CLASSIFICACAO"] == $status["CLCO_ID_CLASSIFICACAO"]) {
+                                echo 'selected="selected" ';
+                            }
+                            echo 'value="' . $status["CLCO_ID_CLASSIFICACAO"] . '">' . $status["CLCO_DS_OBSERVACAO"] . '</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>RIA do Desenvolvedor</label>
+                </td>
+                <td>
+                    <a class="<?php
+                        if (!is_null($this->FaturamentoAfericao[0]["RIA_DESENVOLVEDOR"])) {
+                            echo 'abrirAnexo';
+                        }
+                        ?>" 
+                           target="_blank" 
+                           title="<?php
+                    if (!is_null($this->FaturamentoAfericao[0]["RIA_DESENVOLVEDOR"])) {
+                        echo 'Abrir Documento';
+                    }
+                        ?>" 
+                           href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->FaturamentoAfericao[0]["PFAF_ID_SOLICITACAO"]; ?>/dcmto/<?php echo $this->FaturamentoAfericao[0]["RIA_DESENVOLVEDOR"]; ?>/fat/1/tipo/3 ">
+                               <?php
+                               if (!is_null($this->FaturamentoAfericao[0]["RIA_DESENVOLVEDOR"])) {
+                                   echo 'Abrir';
+                               }
+                               ?>
+                        </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>RIA com Parecer a Efetuar:</label>
+                </td> 
+                <td>
+                    <input type="file" name="PFAF_NR_DCMTO_RIA_PARECER" value="" <?php echo $disabled; ?> >
+                </td>
+                <td colspan="2">
+                    <?php if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_PARECER"])) { ?>
+                        Documento Cadastrado - 
+                        <a class="<?php
+                        if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_PARECER"])) {
+                            echo 'abrirAnexo';
+                        }
+                        ?>" 
+                           target="_blank" 
+                           title="<?php
+                    if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_PARECER"])) {
+                        echo 'Abrir Documento';
+                    }
+                        ?>" 
+                           href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->FaturamentoAfericao[0]["PFAF_ID_SOLICITACAO"]; ?>/dcmto/<?php echo $this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_PARECER"]; ?>/fat/1/tipo/3 ">
+                               <?php
+                               if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_PARECER"])) {
+                                   echo 'Abrir';
+                               }
+                               ?>
+                        </a>
+                    <?php } ?>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>RIA com Parecer Efetuado:</label>
+                </td> 
+                <td>
+                    <input type="file" name="PFAF_NR_DCMTO_RIA_ESCLARECIDO" value="" <?php echo $disabledParecerEfetuado; ?> >
+                </td>
+                <td colspan="2">
+                    <?php if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_ESCLARECIDO"])) { ?>
+                        Documento Cadastrado - 
+                        <a class="<?php
+                        if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_ESCLARECIDO"])) {
+                            echo 'abrirAnexo';
+                        }
+                        ?>" 
+                           target="_blank" 
+                           title="<?php
+                    if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_ESCLARECIDO"])) {
+                        echo 'Abrir Documento';
+                    }
+                        ?>" 
+                           href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->FaturamentoAfericao[0]["PFAF_ID_SOLICITACAO"]; ?>/dcmto/<?php echo $this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_ESCLARECIDO"]; ?>/fat/1/tipo/3 ">
+                               <?php
+                               if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_RIA_ESCLARECIDO"])) {
+                                   echo 'Abrir';
+                               }
+                               ?>
+                        </a>
+                    <?php } ?>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>Planilha de Contagem PF:</label>
+                </td> 
+                <td>
+                    <input type="file" name="PFAF_NR_DCMTO_CONTAGEM" value="" <?php echo $disabled; ?> >
+                </td>
+                <td colspan="2">
+                    <?php if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_CONTAGEM"])) { ?>
+                        Documento Cadastrado - 
+                        <a class="<?php
+                        if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_CONTAGEM"])) {
+                            echo 'abrirAnexo';
+                        }
+                        ?>" 
+                           target="_blank" 
+                           title="<?php
+                    if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_CONTAGEM"])) {
+                        echo 'Abrir Documento';
+                    }
+                        ?>" 
+                           href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->FaturamentoAfericao[0]["PFAF_ID_SOLICITACAO"]; ?>/dcmto/<?php echo $this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_CONTAGEM"]; ?>/fat/1/tipo/8 ">
+                               <?php
+                               if (!is_null($this->FaturamentoAfericao[0]["PFAF_NR_DCMTO_CONTAGEM"])) {
+                                   echo 'Abrir';
+                               }
+                               ?>
+                        </a>
+                    <?php } ?>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>PF Bruto:</label> 
+                </td> 
+                <td>
+                    <input type="text" name="PFAF_QT_PF_BRUTO" value="<?php echo $this->FaturamentoAfericao[0]["PFAF_QT_PF_BRUTO"]; ?>" <?php echo $disabled; ?> >
+                </td> 
+                <td>
+                    <label>PF Liquido:</label> 
+                </td> 
+                <td>
+                    <input type="text" name="PFAF_QT_PF_LIQUIDO" value="<?php echo $this->FaturamentoAfericao[0]["PFAF_QT_PF_LIQUIDO"]; ?>" <?php echo $disabled; ?> >
+                </td>  
+            </tr>
+            <tr>
+                <td>
+                    <label>Número do Lote: </label> <?php echo $this->FaturamentoAfericao[0]["PFAF_NR_LOTE"]; ?>
+                </td> 
+                <td>
+                    <label>Data Retorno Prevista: </label> <?php echo $this->FaturamentoAfericao[0]["PFAF_DH_PREVISAO_RETORNO_LOTE"]; ?>
+                </td> 
+                <td>
+                    <label>Data Retorno: </label> <?php echo $this->FaturamentoAfericao[0]["PFAF_DH_RETORNO_LOTE"]; ?>
+                </td> 
+            </tr>
+            <tr>
+                <td colspan="4"><label>Observação</label></td>
+            </tr>
+            <tr>
+                <td colspan="4"> <textarea type="text" name="PFAF_DS_OBSERVACAO_TEC" <?php echo $disabled; ?>  style="width: 680px; height: 30px;"><?php echo $this->FaturamentoAfericao[0]["PFAF_DS_OBSERVACAO_TEC"]; ?></textarea></td>
+            </tr>
+        </table>
+        <input type="submit" name="Salvar" value="Salvar" <?php echo $disabledSalvar; ?> >
+    </fieldset>
+</form>
+<?
+    }else{
+    ?>
+    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+        <legend style='font-size: 12px;'>Análise de PF Aferição</legend>
+        <table><tr><td>Análise de PF não publicada pela Desenvolvedora.</td></tr></table>
+    </fieldset>
+    <?}?>

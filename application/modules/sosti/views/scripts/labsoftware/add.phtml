@@ -1,0 +1,86 @@
+
+<script type="text/javascript" src="<?Php echo $this->baseUrl('/js/jquery.maskedinput-1.3.js') ?>"></script>
+<script type="text/javascript">
+    $(document).ready
+    $(function() {
+        var dates = $( "#LSFW_DT_AQUISICAO, #LSFW_DT_VALIDADE_LICENCA" ).datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro',
+                'Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            changeMonth: true,
+            numberOfMonths: 1,
+            changeMonth: true,
+            changeYear: true,
+            changeMonth: true
+        });
+
+        /*
+         * Mascara para os campos de data
+         */
+        $( "#LSFW_DT_AQUISICAO, #LSFW_DT_VALIDADE_LICENCA").mask("99/99/9999");
+        
+        $("#LSFW_ID_MARCA").change(
+        function(){
+            var marca = $("#LSFW_ID_MARCA");
+            $.ajax({
+                dataType: 'html',
+                url: "ajaxnometipomodelo/id/"+this.value,
+                beforeSend:function() {
+                    $("#LSFW_ID_MODELO").removeClass('erroInputSelect');
+                    $("#LSFW_ID_MODELO").val("");
+                    $("#LSFW_ID_MODELO").addClass('carregandoInputSelect');
+                },
+                success: function(data) {
+                    $("#LSFW_ID_MODELO").html(data);
+                    $("#LSFW_ID_MODELO").removeClass('carregandoInputSelect');
+                },
+                error: function(){
+                    $("#LSFW_ID_MODELO").removeClass('x-form-field');
+                    $("#LSFW_ID_MODELO").val('Erro ao carregar.');
+                    $("#LSFW_ID_MODELO").addClass('erroInputSelect');
+                    $("#LSFW_ID_MODELO").html('<option>Erro ao carregar</option>');
+                }
+            });      
+        }
+    );
+        $('#LSFW_IC_PERPETUIDADE_LICENCA').click(function(){
+            if($(this).is(':checked')){
+                $('#LSFW_DT_VALIDADE_LICENCA-label').hide();
+                $('#LSFW_DT_VALIDADE_LICENCA').hide();
+            }else{
+                $('#LSFW_DT_VALIDADE_LICENCA').show();
+                $('#LSFW_DT_VALIDADE_LICENCA-label').show();
+            }
+
+        });
+      
+        $("#LSFW_DS_SOFTWARE").css('text-transform','uppercase');
+      
+        /**
+         * Configurando entrada de dados no campo
+         */
+        $('#LSFW_QT_ADQUIRIDA').keyup(function(){
+            if(isNaN($(this).val())){
+                $(this).val('');
+            }else{
+                var x = $(this).val().replace(".","");
+                $(this).val(x);
+            }
+        });
+    }); 
+</script>
+<?php if (isset($this->msg_error)) { ?>
+    <div id="flashMessages">
+        <div class="notice">
+            <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+        </div>
+    </div>
+<?php } ?>
+<?php echo $this->form; ?>
+

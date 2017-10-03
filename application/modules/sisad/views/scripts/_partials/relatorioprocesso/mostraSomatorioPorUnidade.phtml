@@ -1,0 +1,30 @@
+<?php $this->headLink()->prependStylesheet($this->baseUrl() . '/css/relatorioProcesso.css' ); ?>
+
+<style>
+    .tabelaSomatorios td, th{
+        padding: 3px 5px;
+    }
+    .dados-resultado { border: 1px solid #ccc; }
+    thead th {
+        background-color: #C3D9FF;
+    }
+</style>
+  <br />
+<div class="tabelaSomatorios">
+    <table class="dados-resultado" >
+       <thead>
+           <tr>
+                <th>Quantidade processos autuados por Unidade</th>
+                <th style="text-align: center;">Quantidade</th>
+           </tr>
+       </thead>
+       <tbody>
+           <?php foreach( $this->somatorioUnidades as $desc => $total): ?>
+           <tr>
+                <td> <?php  echo $desc ?> </td>
+                <td style="text-align: center; width: 10%"> <?php  echo $total ?>  </td>   
+           </tr>
+           <?php endforeach; ?>
+       </tbody>
+    </table>
+</div>

@@ -1,0 +1,49 @@
+<script type="text/javascript">
+	$(function() {
+            $('#ENCAMINHAMENTO-nivel').focus();
+            $('#SNAS_ID_NIVEL').hide();
+            $('#SNAS_ID_NIVEL-label').hide();
+            $('#SNAS_ID_NIVEL-label').attr('disabled', 'disabled');
+            $('#MODE_ID_CAIXA_ENTRADA').hide();
+            $('#MODE_ID_CAIXA_ENTRADA-label').hide();
+            $('#MODE_ID_CAIXA_ENTRADA-label').attr('disabled', 'disabled');
+            $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO-label').attr('disabled', 'disabled');
+            
+            $('input[type=radio][name=ENCAMINHAMENTO]').click(
+                function(){
+                        if(this.value == 'grupo'){
+                            $('#SNAS_ID_NIVEL').hide();
+                            $('#SNAS_ID_NIVEL-label').hide();
+                            $('#SNAS_ID_NIVEL-label').attr('disabled', 'disabled');
+                            $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                            $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                            $('#MODE_CD_SECAO_UNID_DESTINO-label').attr('disabled', 'disabled');
+                            $('#MODE_ID_CAIXA_ENTRADA').show();
+                            $('#MODE_ID_CAIXA_ENTRADA-label').show();
+                            
+                        }else if (this.value == 'nivel'){
+                            $('#SNAS_ID_NIVEL').show();
+                            $('#SNAS_ID_NIVEL-label').show();
+                            $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                            $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                            $('#MODE_CD_SECAO_UNID_DESTINO-label').attr('disabled', 'disabled');
+                            $('#MODE_ID_CAIXA_ENTRADA').hide();
+                            $('#MODE_ID_CAIXA_ENTRADA-label').hide();
+                            $('#MODE_ID_CAIXA_ENTRADA-label').attr('disabled', 'disabled');
+                        }else if (this.value == 'unidade'){
+                            $('#SNAS_ID_NIVEL').hide();
+                            $('#SNAS_ID_NIVEL-label').hide();
+                            $('#SNAS_ID_NIVEL-label').attr('disabled', 'disabled');
+                            $('#MODE_CD_SECAO_UNID_DESTINO').show();
+                            $('#MODE_CD_SECAO_UNID_DESTINO-label').show();
+                            $('#MODE_ID_CAIXA_ENTRADA').hide();
+                            $('#MODE_ID_CAIXA_ENTRADA-label').hide();
+                            $('#MODE_ID_CAIXA_ENTRADA-label').attr('disabled', 'disabled');
+                        }
+                    });
+                }
+            );
+ </script>
+<?php echo $this->form; ?>

@@ -1,0 +1,133 @@
+<?php
+//echo '<pre>a';
+//var_dump($this->DocmDocumento);
+//Zend_Debug::dump($this->DocumentosProcesso);
+$SadTbAnexAnexo = new Application_Model_DbTable_SadTbAnexAnexo();
+foreach ($this->DocumentosProcesso as $DocumentosProcesso) {
+    if (($this->Todos == 0) || (($this->Todos == 1) && ($DocumentosProcesso['DTPD_ID_TIPO_DOC'] == 39) &&
+            ($this->MOFA_DH_FASE == $DocumentosProcesso['DCPR_DH_VINCULACAO_DOC']))) {
+        ?>
+        <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+            <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                <div style="margin-left: 10px; font-size: 12px; ">
+                    <p>
+                        <br/><b>Tipo:</b>
+                        <?php echo $DocumentosProcesso["DTPD_NO_TIPO"]; ?>
+                        <br/><b>Número:</b>
+                        <?php echo $DocumentosProcesso["DOCM_NR_DOCUMENTO"]; ?>
+                        <br/><b>Data de vinculação:</b>
+                        <?php echo $DocumentosProcesso["DCPR_DH_VINCULACAO_DOC"]; ?>
+                        <br/><b>Assunto:</b>
+                        <?php echo $DocumentosProcesso["AQAT_DS_ATIVIDADE"]; ?>
+                        <br/><b>Unidade Emissora:</b>
+                        <?php echo $DocumentosProcesso["LOTA_SIGLA_LOTACAO_EMISSORA"]; ?> -
+                        <?php echo $DocumentosProcesso["LOTA_DSC_LOTACAO_EMISSORA"]; ?> -
+                        <?php echo $DocumentosProcesso["LOTA_COD_LOTACAO_EMISSORA"]; ?> -
+                        <?php
+                        echo $DocumentosProcesso["FAMILIA_EMISSORA"];
+
+                        foreach ($this->DocmDocumentoHistorico as $historico) {
+                            if ($DocumentosProcesso["DCPR_DH_VINCULACAO_DOC"] == $historico["MOFA_DH_FASE"]) {
+                                ?>
+                                <br/><b>Inserido Por:</b> 
+                                <?php echo App_View_Helper_CadastranteDocumento::cadastrante($historico["DOCM_NR_DOCUMENTO"]); ?>
+                                <br/><b>Cadastrado Por:</b> 
+                                <?php echo App_View_Helper_CadastranteDocumento::cadastrante($DocumentosProcesso["DOCM_NR_DOCUMENTO"]); ?>
+                                <?php
+                            }
+                        }
+                        ?>
+                        <br/>
+                    </p>
+
+                    <?php
+                    if (count($this->Assinaturas[$DocumentosProcesso["DOCM_ID_DOCUMENTO"]]) > 0):
+                        ?>
+                        <fieldset>
+                            <legend>
+                                Assinaturas do Documento
+                            </legend>
+
+                            <ul>
+                                <?php
+                                $assinaturas_doc_atual = $this->Assinaturas[$DocumentosProcesso["DOCM_ID_DOCUMENTO"]];
+                                foreach ($assinaturas_doc_atual as $assinaturas):
+                                    ?>
+                                    <li style="list-style: none;">
+                                        <?php echo $assinaturas['MOFA_DH_FASE'] . " - " . $assinaturas['PMAT_CD_MATRICULA'] . " " . $assinaturas['PNAT_NO_PESSOA'] ?>
+
+                                    </li>
+                                    <?php
+                                endforeach;
+                                ?>
+                            </ul>
+                        </fieldset>
+                        <?php
+                    endif;
+                    ?>
+
+
+                    <a href="#" class="docs_pro proc_docs_icon_closed" value="<?php echo $this->escape(Zend_Json::encode($DocumentosProcesso)); ?>"> Detalhe </a>
+                    <a class="<?php
+                    if (is_null($DocumentosProcesso["DOCM_NR_DOCUMENTO_RED"])) {
+                        echo 'alertaButton';
+                    } else {
+                        echo 'abrirAnexo';
+                    }
+                    ?>" 
+                       target="_blank" 
+                       title="<?php
+                       if (is_null($DocumentosProcesso["DOCM_NR_DOCUMENTO_RED"])) {
+                           echo 'Sem Arquivo';
+                       } else {
+                           echo 'Abrir Documento';
+                       }
+                       ?>"
+                       
+                       href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $DocumentosProcesso["DOCM_ID_DOCUMENTO"]; ?>/dcmto/<?php echo $DocumentosProcesso["DOCM_NR_DOCUMENTO_RED"]; ?>/tipo/<?php echo (!empty($DocumentosProcesso["DOCM_ID_TP_EXTENSAO"])) ? ($DocumentosProcesso["DOCM_ID_TP_EXTENSAO"]) : ('') ?>/principal/1">
+                           <?php
+                           if (is_null($DocumentosProcesso["DOCM_NR_DOCUMENTO_RED"])) {
+                               echo 'Sem Arquivo';
+                           } else {
+                               echo 'Abrir';
+                           }
+                           ?></a>
+                    <?php
+                    $SadTbMofaMoviFase = new Application_Model_DbTable_SadTbMofaMoviFase();
+                    $dadosMovimentacao = $SadTbMofaMoviFase->getMovimentacaoProcesso($this->DocmDocumento["DOCM_ID_DOCUMENTO"], $DocumentosProcesso["DCPR_DH_VINCULACAO_DOC"]);
+
+                    $dadosExcluir["EXCLUIR_FASE"] = false;
+                    $dadosExcluir["IDDOCUMENTOPRINCIPAL"] = $this->DocmDocumento["DOCM_ID_DOCUMENTO"];
+                    $dadosExcluir["IDPROCESSO"] = $DocumentosProcesso["ID_PROCESSO"];
+                    $dadosExcluir["IDDOCUMENTO"] = $DocumentosProcesso["DOCM_ID_DOCUMENTO"];
+                    if (count($dadosMovimentacao) > 1) {
+                        $dadosExcluir["EXCLUIR_FASE"] = true;
+                        $dadosExcluir["DADOS_FASE"] = $dadosMovimentacao;
+                    }
+                    if (count($this->DocumentosProcesso) > 1) {
+                        //strtotime(), convertendo a data completa (YYYY-MM-DD HH:MM:SS) em inteiro, depois faz a comparação. 
+                        $ultimaMovi = explode(' ', $this->DocmDocumento["MOVI_DH_ENCAMINHAMENTO"]);
+                        $data = explode('/', $ultimaMovi[0]);
+                        $ultimaMovi = $data[2] . '-' . $data[1] . '-' . $data[0] . ' ' . $ultimaMovi[1];
+                        $ultimaMovi = strtotime($ultimaMovi);
+
+                        $dhVinculacao = explode(' ', $DocumentosProcesso["DCPR_DH_VINCULACAO_DOC"]);
+                        $data = explode('/', $dhVinculacao[0]);
+                        $dhVinculacao = $data[2] . '-' . $data[1] . '-' . $data[0] . ' ' . $dhVinculacao[1];
+                        $dhVinculacao = strtotime($dhVinculacao);
+
+                        if ($dhVinculacao >= $ultimaMovi) {
+                            ?>
+                            <a href="#" class="removerDocsProc proc_docs_icon_closed" onclick="javascript: return false;" id="excluirdocspro_<?php echo uniqid(); ?>" title="Remover documento do Processo" codigo="<?php echo $this->escape(Zend_Json::encode($dadosExcluir)) ?>"> Remover </a>
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+        </fieldset>
+
+        <?php
+    }
+}
+?>

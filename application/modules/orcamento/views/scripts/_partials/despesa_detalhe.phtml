@@ -1,0 +1,45 @@
+<?php
+$valor = new Trf1_Orcamento_Valor();
+
+$ano = $this->despesa ['DESP_AA_DESPESA'];
+$fase = $this->despesa ['FASE_NM_FASE_EXERCICIO'];
+
+$anoFase = $ano;
+$anoFase .= ( trim($fase) == '' ? '' : ", $fase" );
+?>
+
+<a class="ceo_janela"
+   alt="Exibir / Ocultar detalhes da despesa"
+   title="Exibir / Ocultar detalhes da despesa"
+   id="detalheDespesa"
+   href="#" style="margin-left: 790px; margin-bottom: 4px;">Exibir / Ocultar detalhes</a>
+
+<div id="despesaBasico" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <ul>
+        <li><a href="#despesaBasico">Despesa</a></li>
+    </ul>
+    <div id="despesaBasico">
+        <table border="0">
+            <tr>
+                <td width="20%">
+                    <strong>Ano</strong><br />
+                    <?php echo $this->escape($anoFase); ?>
+                </td>
+                <td width="80%">
+                    <strong>Despesa</strong><br />
+                    <?php echo $this->escape($this->despesa['DESP_NR_DESPESA'] . ' - ' . $this->despesa['DS_DESPESA']); ?>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<?php
+
+
+echo $this->partial('_partials/despesa_detalhe_mostrar.phtml', array(
+    'despesa' => $this->despesa,
+    'perfil' => $this->perfil,
+    'contrato' => $this->contrato,
+    'bloqueioConsolidacao' => $this->bloqueioConsolidacao
+));

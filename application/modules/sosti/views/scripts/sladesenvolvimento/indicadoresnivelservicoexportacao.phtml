@@ -1,0 +1,542 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        
+    </head>
+    <body>
+        <table>
+                <tr>
+                    <?php if ($this->param == 'pdf'): ?>
+                        <th>
+                            <img width="80" height="76" src="<?php echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" />
+                        </th>
+                    <?php endif; ?>
+                    <?php if ($this->param == 'xls'): ?>
+                        <th>
+                            <img width="80" src="<?php echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" />
+                        </th>
+                    <?php endif; ?>
+                    <th>
+                        PODER JUDICIÁRIO
+                        <br />
+                        TRIBUNAL REGIONAL FEDERAL DA PRIMEIRA REGIÃO
+                        <br />
+                        <?php echo $this->titulo; ?>
+                        <br />
+                        <?php echo $this->periodo; ?>
+                    </th>
+                    <th>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </th>
+                    <th>
+                        DATA E HORA DA EMISSÃO: <?php echo $this->horaAtual; ?>
+                        <br />
+                        EMITIDO POR: <?php echo $this->emissor; ?>
+                    </th>
+                    <?php if ($this->fuso != ""): ?>
+                        <th><?php echo $this->secao; ?></th>
+                        <th><?php echo $this->fuso; ?></th>
+                    <?php endif; ?>
+                </tr>
+            </table>
+            <div style="padding-left: 20px; padding-top: 10px; text-align: justify;">
+            <?php 
+            if (isset($this->descricao)) {
+                echo "<p><strong>Descrição do Documento:</strong>&nbsp;" . nl2br($this->descricao) . "</p>";
+            }
+            ?>
+            </div>
+            <div style="padding-left: 20px; padding-top: 10px;">
+                <br />
+                <table width="700">
+                    <tbody>
+                        <tr bgcolor="#CCCCCC">
+                            <th colspan="7" align="left" style="border: 1px solid #CCCCCC; padding: 3px;"> &#187; Indicadores de Nível Mínimo de Serviço</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Meta Exigida</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Meta Alcançada</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Glosa</th>
+                        </tr>
+                        <?php foreach ($this->slaIndices as $im): ?>
+                            <tr>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["SINS_CD_INDICADOR"]; ?></td>
+                                <td colspan="6" style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["SINS_DS_INDICADOR"]; ?></td>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["SINS_DS_SINAL_META"] . " " . $im["SINS_NR_META"]; ?></td>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["META_ALCANCADA"]; ?></td>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $im["GLOSA"]; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td style="border: 1px solid #CCCCCC; padding: 3px;">3</td>
+                            <td colspan="6" style="border: 1px solid #CCCCCC; padding: 3px;">Índice de Defeito (Qualidade)</td>
+                            <td style="border: 1px solid #CCCCCC; padding: 3px;">= 0.0</td>
+                            <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo number_format($this->totalIdq, 2); ?></td>
+                            <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $this->glosaIdq."%"; ?></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <PAGEBREAK></PAGEBREAK>
+                <table>
+                    <tbody>
+                         <!--EPA - Volume de ordens de serviço executadas nos prazos acordados--> 
+                        <tr bgcolor="#CCCCCC">
+                            <th colspan="10" align="left" style="border: 1px solid #CCCCCC; padding: 3px;"> &#187; Volume de ordens de serviço executadas nos prazos acordados</th>
+                        </tr>
+
+                        <?php $qtdeSolicitacoesEpa = count($this->solicitacoesEpa); ?>
+                        <tr><td colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;">Total de Chamados Baixados/Encaminhados: <?php echo $this->totalEpaSolicitacoes; ?></td></tr>
+                        <tr><td colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados no Prazo: <?php echo $this->countSolicitacoesNoPrazo; ?></td></tr>
+                        <tr><td colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados com o Prazo Ultrapassado: <?php echo $this->countSolicitacoesUtrapassadas; ?></td></tr>
+                        <tr><td colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados Agrupados Secundários (Mesmo Ria sem o principal): <?php echo count($this->secundarias); ?></td></tr>
+
+                        <tr><th colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;"><center>Lista de Chamados</center></th></tr>
+                        <tr>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Nº do Documento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data Cadastro</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data do Encaminhamento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data da Baixa/Encaminhamento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Prazo/Útil</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Tempo Útil</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Emer.</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Corre.</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">No Prazo</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Consi.</th>
+                        </tr>
+
+                        <?php if ($qtdeSolicitacoesEpa > 0): ?>
+                            <?php
+                            $impressos = array();
+                            foreach ($this->solicitacoesEpa as $epa):
+
+                                if (is_null($epa["REFERENCIA"])) {
+                                    ?>
+                                    <tr>
+                                        <td style="mso-number-format:'\@'; border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DOCM_NR_DOCUMENTO"].''; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DOCM_DH_CADASTRO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DATA_CHAMADO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DATA_FIM_CHAMADO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                            echo $epa["SSPA_DT_PRAZO"] . $epa["PRAZO_DATA"] . "<br/> ";
+                                            if ($epa["PRAZO_SEGUNDOS_UTEIS_STR"] != '0D 0h 0m 0s') {
+                                                echo $epa["PRAZO_SEGUNDOS_UTEIS_STR"];
+                                            } ?>
+                                        </td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["TEMPO_UTIL_TOTAL_STR"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["EMERGENCIA"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                if (!is_null($epa["SERVICO_SISTEMA"])) {
+                                    echo $epa["CORRETIVA"];
+                                }
+                                    ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;">
+                                            <?php
+                                            if (is_null($epa["SSPA_DT_PRAZO"]) && is_null($epa["PRAZO_DATA"]) && $epa["PRAZO_SEGUNDOS_UTEIS_STR"] == '0D 0h 0m 0s') {
+                                                echo 'N/D';
+                                            } else {
+                                                echo $epa["NO_PRAZO"];
+                                            }
+                                            ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["CONSIDERADO_EPA"]; ?></td>
+
+                                    </tr>
+                                    <?php
+                                } else {
+                                    if (array_search((string) $epa["DOCM_NR_DOCUMENTO"], $impressos, true) === false) {
+                                        ?>
+                                        <tr><td style="border: 1px solid #CCCCCC; padding: 3px;">&lceil;---Mesmo Ria</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--&rceil;</td></tr>
+                                        <?php
+                                        $arrSaidaConjunto = array();
+                                        foreach ($this->solicitacoesEpa as $cEap => $vEap) {
+                                            if (strcmp($this->solicitacoesEpa[$cEap]["REFERENCIA"], $epa["REFERENCIA"]) == 0) {
+                                                $arrSaidaConjunto[] = $this->solicitacoesEpa[$cEap];
+                                            }
+                                        }
+                                        foreach ($arrSaidaConjunto as $saida) { ?>
+                                            <tr>
+                                                <td style="mso-number-format:'\@'; border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DOCM_NR_DOCUMENTO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DOCM_DH_CADASTRO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DATA_CHAMADO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DATA_FIM_CHAMADO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                                    echo $saida["SSPA_DT_PRAZO"] . $saida["PRAZO_DATA"] . "<br/> ";
+                                                    if ($saida["PRAZO_SEGUNDOS_UTEIS_STR"] != '0D 0h 0m 0s') {
+                                                        echo $saida["PRAZO_SEGUNDOS_UTEIS_STR"];
+                                                    } ?>
+                                                </td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["TEMPO_UTIL_TOTAL_STR"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["EMERGENCIA"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                                    if (!is_null($saida["SERVICO_SISTEMA"])) {
+                                                        echo $saida["CORRETIVA"];
+                                                    } ?>
+                                                </td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">
+                                                    <?php
+                                                    if (is_null($saida["SSPA_DT_PRAZO"]) && is_null($saida["PRAZO_DATA"]) && $saida["PRAZO_SEGUNDOS_UTEIS_STR"] == '0D 0h 0m 0s') {
+                                                        echo 'N/D';
+                                                    } else {
+                                                        echo $saida["NO_PRAZO"];
+                                                    } ?>
+                                                </td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["CONSIDERADO_EPA"]; ?></td>
+                                            </tr>
+                                            <?php
+                                            $impressos[] = $saida["DOCM_NR_DOCUMENTO"];
+                                        } ?>
+                                        <tr><td style="border: 1px solid #CCCCCC; padding: 3px;">&lfloor;--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--&rfloor;</td></tr>
+                                        <?php
+                                                }
+                                            }
+                                        endforeach;
+                                        ?>
+                        <?php else: ?>
+                            <tr><td colspan="12">Não existem registros.</td></tr>
+                        <?php endif; ?>
+                        <tr>
+                            <td>
+                                <br />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                        <!--Fim Volume de Ordens de Serviço Executadas nos Prazos Acordados-->
+                        <PAGEBREAK></PAGEBREAK>
+           <div style="padding-left: 20px; padding-top: 10px;">
+                <table>
+                    <tbody>
+                         <!--MTA - Média de tempo de atraso das ordens de serviços do mês--> 
+                        <tr bgcolor="#CCCCCC">
+                            <th colspan="11" align="left" style="border: 1px solid #CCCCCC; padding: 3px;"> &#187; Média de tempo de atraso das ordens de serviço do mês</th>
+                        </tr>
+                        <?php $qtdeSolicitacoesMta = count($this->solicitacoesMta); ?>
+                        <tr><td colspan="11" style="border: 1px solid #CCCCCC; padding: 3px;">Total de Chamados Baixados/Encaminhados: <?php echo $this->totalMtaSolicitacoes; ?></td></tr>
+                        <tr><td colspan="11" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados no Prazo: <?php echo $this->noPrazoMtaSolicitacoes; ?></td></tr>
+                        <tr><td colspan="11" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados com o Prazo Ultrapassado: <?php echo $this->countSolicitacoesForadoPrazoMta; ?></td></tr>
+                        <tr><td colspan="11" style="border: 1px solid #CCCCCC; padding: 3px;">Média de Atrasos: <?php echo $this->mediaAtrasos; ?></td></tr>
+                        <tr><td colspan="11" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados Agrupados Secundários (Mesmo Ria sem o principal): <?php echo count($this->secundarias); ?></td></tr>
+
+                        <tr><th colspan="11" style="border: 1px solid #CCCCCC; padding: 3px;"><center>Lista de Chamados</center></th></tr>
+                        <tr>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Nº do Documento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data Cadastro</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data do Encaminhamento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data da Baixa/Encaminhamento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Prazo/Útil</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Tempo Útil</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Emer.</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Corre.</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">No Prazo</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Atraso</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Consi.</th>
+                        </tr>
+
+                        <?php if ($qtdeSolicitacoesMta > 0): ?>
+                            <?php
+                            $impressos = array();
+                            foreach ($this->solicitacoesMta as $mta):
+                                if (is_null($mta["REFERENCIA"])) {
+                                    ?>
+                                    <tr>
+                                        <td style="mso-number-format:'\@'; border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["DOCM_NR_DOCUMENTO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["DOCM_DH_CADASTRO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["DATA_CHAMADO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["DATA_FIM_CHAMADO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                            echo $mta["SSPA_DT_PRAZO"] . $mta["PRAZO_DATA"] . "<br/> ";
+                                            if ($mta["PRAZO_SEGUNDOS_UTEIS_STR"] != '0D 0h 0m 0s') {
+                                                echo $mta["PRAZO_SEGUNDOS_UTEIS_STR"];
+                                            } ?>
+                                        </td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["TEMPO_UTIL_TOTAL_STR"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["EMERGENCIA"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                            if (!is_null($mta["SERVICO_SISTEMA"])) {
+                                                echo $mta["CORRETIVA"];
+                                            }
+                                            ?>
+                                        </td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;">
+                                            <?php
+                                            if (is_null($mta["SSPA_DT_PRAZO"]) && is_null($mta["PRAZO_DATA"]) && $mta["PRAZO_SEGUNDOS_UTEIS_STR"] == '0D 0h 0m 0s') {
+                                                echo 'N/D';
+                                            } else {
+                                                echo $mta["NO_PRAZO"];
+                                            }
+                                            ?>
+                                        </td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["ATRASO_SEGUNDOS_STR"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["CONSIDERADO_MTA"]; ?></td>
+                                    </tr>
+                                    <?php
+                                } else {
+                                    if (array_search((string) $mta["DOCM_NR_DOCUMENTO"], $impressos, true) === false) {
+                                        ?>
+                                        <tr><td style="border: 1px solid #CCCCCC; padding: 3px;">&lceil;---Mesmo Ria</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--&rceil;</td></tr>
+                                        <?php
+                                        $arrSaidaConjunto = array();
+                                        foreach ($this->solicitacoesMta as $cMta => $vMta) {
+                                            if (strcmp($this->solicitacoesMta[$cMta]["REFERENCIA"], $mta["REFERENCIA"]) == 0) {
+                                                $arrSaidaConjunto[] = $this->solicitacoesMta[$cMta];
+                                            }
+                                        }
+
+                                        foreach ($arrSaidaConjunto as $saida) {
+                                            ?>
+                                            <tr>
+                                                <td style="mso-number-format:'\@'; border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DOCM_NR_DOCUMENTO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DOCM_DH_CADASTRO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DATA_CHAMADO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DATA_FIM_CHAMADO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                                    echo $saida["SSPA_DT_PRAZO"] . $saida["PRAZO_DATA"] . "<br/> ";
+                                                    if ($saida["PRAZO_SEGUNDOS_UTEIS_STR"] != '0D 0h 0m 0s') {
+                                                        echo $saida["PRAZO_SEGUNDOS_UTEIS_STR"];
+                                                    } ?>
+                                                </td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["TEMPO_UTIL_TOTAL_STR"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["EMERGENCIA"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                                    if (!is_null($saida["SERVICO_SISTEMA"])) {
+                                                        echo $saida["CORRETIVA"];
+                                                    } ?>
+                                                </td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">
+                                                    <?php
+                                                    if (is_null($saida["SSPA_DT_PRAZO"]) && is_null($saida["PRAZO_DATA"]) && $saida["PRAZO_SEGUNDOS_UTEIS_STR"] == '0D 0h 0m 0s') {
+                                                        echo 'N/D';
+                                                    } else {
+                                                        echo $saida["NO_PRAZO"];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["ATRASO_SEGUNDOS_STR"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["CONSIDERADO_MTA"]; ?></td>
+                                            </tr>
+                                            <?php
+                                            $impressos[] = $saida["DOCM_NR_DOCUMENTO"];
+                                        }
+                                        ?>
+                                        <tr><td style="border: 1px solid #CCCCCC; padding: 3px;">&lfloor;--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--&rfloor;</td></tr>
+                                        <?php
+                                    }
+                                }
+                                endforeach;
+                                ?>
+                            <?php else: ?>
+                                <tr><td colspan="12">Não existem registros.</td></tr>
+                            <?php endif; ?>
+                        <tr>
+                            <td colspan="12">
+                                <br />
+                            </td>
+                        </tr>
+                </table>
+               <PAGEBREAK></PAGEBREAK>
+                <table>
+                    <tbody>
+                         <!--MTA - Média de tempo de atraso das ordens de serviços do mês--> 
+                        <tr bgcolor="#CCCCCC">
+                            <th colspan="11" align="left" style="border: 1px solid #CCCCCC; padding: 3px;"> &#187; Índice de Defeito (Qualidade)</th>
+                        </tr>
+                        <?php $qtdeSolicitacoesMta = count($this->solicitacoesMta); ?>
+                       
+                        <tr><th colspan="11" style="border: 1px solid #CCCCCC; padding: 3px;"><center>Lista de Chamados</center></th></tr>
+                        <tr>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Nº do Documento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data Cadastro</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data do Encaminhamento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data da Baixa/Encaminhamento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Prazo/Útil</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Tempo Útil</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Qtd. Defeitos</th>
+                            <!--<th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Índice Defeitos</th>-->
+                        </tr>
+                        <?php  foreach ($this->solicitacoesIdq as $epa):  ?>
+                            <tr name="rowList" value="<?php echo $this->escape($epa["SSOL_ID_DOCUMENTO"]); ?>" >
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DOCM_NR_DOCUMENTO"]; ?></td>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DOCM_DH_CADASTRO"]; ?></td>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DATA_CHAMADO"]; ?></td>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DATA_FIM_CHAMADO"]; ?></td>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["SSPA_DT_PRAZO"] . $epa["PRAZO_DATA"] . "<br/> ";
+                                        if ($epa["PRAZO_SEGUNDOS_UTEIS_STR"] != '0D 0h 0m 0s') {
+                                            echo $epa["PRAZO_SEGUNDOS_UTEIS_STR"];
+                                        } ?>
+                                </td>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["TEMPO_UTIL_TOTAL_STR"]; ?></td>
+                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["QTDE_DEFEITOS"]; ?></td>
+                            </tr>
+                        <?php endforeach;?>
+                        
+                        <?php if ($qtdeSolicitacoesMta > 0): ?>
+                            <?php
+                            $impressos = array();
+                            foreach ($this->totalIdqSolicitacoes as $mta):
+                                if (is_null($mta["REFERENCIA"])) {
+                                    ?>
+                                    <tr>
+                                        <td style="mso-number-format:'\@'; border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["DOCM_NR_DOCUMENTO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["DOCM_DH_CADASTRO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["DATA_CHAMADO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["DATA_FIM_CHAMADO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                            echo $mta["SSPA_DT_PRAZO"] . $mta["PRAZO_DATA"] . "<br/> ";
+                                            if ($mta["PRAZO_SEGUNDOS_UTEIS_STR"] != '0D 0h 0m 0s') {
+                                                echo $mta["PRAZO_SEGUNDOS_UTEIS_STR"];
+                                            } ?>
+                                        </td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["TEMPO_UTIL_TOTAL_STR"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $mta["QTDE_DEFEITOS"]; ?></td>
+                                        <!--<td style="border: 1px solid #CCCCCC; padding: 3px;">0,0</td>-->
+                                    </tr>
+                                    <?php
+                                } else {
+                                    if (array_search((string) $mta["DOCM_NR_DOCUMENTO"], $impressos, true) === false) {
+                                        ?>
+                                        <tr>
+                                            <td style="border: 1px solid #CCCCCC; padding: 3px;">&lceil;---Mesmo Ria</td>
+                                            <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                            <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                            <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                            <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                            <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                            <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                            <td style="border: 1px solid #CCCCCC; padding: 3px;">--&rceil;</td></tr>
+                                        <?php
+                                        $arrSaidaConjunto = array();
+                                        foreach ($this->solicitacoesMta as $cMta => $vMta) {
+                                            if (strcmp($this->solicitacoesMta[$cMta]["REFERENCIA"], $mta["REFERENCIA"]) == 0) {
+                                                $arrSaidaConjunto[] = $this->solicitacoesMta[$cMta];
+                                            }
+                                        }
+
+                                        foreach ($arrSaidaConjunto as $saida) {
+                                            ?>
+                                            <tr>
+                                                <td style="mso-number-format:'\@'; border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DOCM_NR_DOCUMENTO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DOCM_DH_CADASTRO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DATA_CHAMADO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DATA_FIM_CHAMADO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php
+                                                    echo $saida["SSPA_DT_PRAZO"] . $saida["PRAZO_DATA"] . "<br/> ";
+                                                    if ($saida["PRAZO_SEGUNDOS_UTEIS_STR"] != '0D 0h 0m 0s') {
+                                                        echo $saida["PRAZO_SEGUNDOS_UTEIS_STR"];
+                                                    } ?>
+                                                </td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["TEMPO_UTIL_TOTAL_STR"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">0</td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">0,0</td>
+                                            </tr>
+                                            <?php
+                                            $impressos[] = $saida["DOCM_NR_DOCUMENTO"];
+                                        }
+                                        ?>
+                                        <tr>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">&lfloor;--</td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">--</td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">--&rfloor;</td></tr>
+                                        <?php
+                                    }
+                                }
+                                endforeach;
+                                ?>
+                            <?php else: ?>
+                                <tr><td colspan="12">Não existem registros.</td></tr>
+                            <?php endif; ?>
+                        <tr>
+                            <td colspan="12">
+                                <br />
+                            </td>
+                        </tr>
+                </table>
+                        <!--Fim Média de tempo de atraso das ordens de serviços do mês-->
+
+                         <!--IDQ - Índice de defeito (qualidade)--> 
+<!--                        <tr bgcolor="#CCCCCC">
+                            <th colspan="6" style="border: 1px solid #CCCCCC; padding: 3px; text-align: center;">ÍNDICE DE DEFEITO (QUALIDADE)</th>
+                        </tr>
+
+                        <tr><td colspan="6" style="border: 1px solid #CCCCCC; padding: 3px;">Total de Chamados: <?php echo $this->totalIdqSolicitacoes; ?> </td></tr>
+                        <tr><td colspan="6" style="border: 1px solid #CCCCCC; padding: 3px;">Total de defeitos: <?php echo $this->totalErros; ?> </td></tr>
+                        <tr><td colspan="6" style="border: 1px solid #CCCCCC; padding: 3px;">Total de pontos de função: <?php echo $this->mediaPontosFuncao; ?> </td></tr>
+                        <tr><td colspan="6" style="border: 1px solid #CCCCCC; padding: 3px;">Total Erros por PF Média: <?php echo $this->mediaErroPf; ?> </td></tr>
+                        <tr><td colspan="6" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados Agrupados Secundários (Mesmo Ria sem o principal): <?php echo count($this->secundarias); ?></td></tr>
+
+                        <tr>
+                            <th colspan="6" align="left" style="border: 1px solid #CCCCCC; padding: 3px;">
+                                <center>Índice de defeito (qualidade)</center>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Nº do Documento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data Cadastro</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data Encaminhamento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data da avaliação</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Quantidade Erros</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Considerado</th>
+                        </tr>-->
+
+                        <?php/* if ($this->totalIdqSolicitacoes > 0): ?>
+                            <?php
+                            $impressos = array();
+                            foreach ($this->solicitacoesIdq as $idq):
+                                if (is_null($idq["REFERENCIA"])) {
+                                    ?>
+                                    <tr>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $idq["DOCM_NR_DOCUMENTO"].'.'; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $idq["DOCM_DH_CADASTRO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $idq["MOVI_DH_ENCAMINHAMENTO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $idq["DATA_AVALIACAO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $idq["ERROS_SISTEMA"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $idq["CONSIDERADO_IDQ"]; ?></td>
+                                    </tr>
+                                        <?php
+                                    } else {
+                                        if (array_search((string) $idq["DOCM_NR_DOCUMENTO"], $impressos, true) === false) {
+                                            ?>
+                                            <tr> 
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;">&lceil;---Mesmo Ria</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--&rceil;</td></tr>
+                                            <?php
+                                            $arrSaidaConjunto = array();
+                                            foreach ($this->solicitacoesIdq as $cIdq => $vIdq) {
+                                                if (strcmp($this->solicitacoesIdq[$cIdq]["REFERENCIA"], $idq["REFERENCIA"]) == 0) {
+                                                    $arrSaidaConjunto[] = $this->solicitacoesIdq[$cIdq];
+                                                }
+                                            }
+
+                                            foreach ($arrSaidaConjunto as $saida) {
+                                                ?>
+                                                <tr>
+                                                    <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DOCM_NR_DOCUMENTO"]; ?></td>
+                                                    <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DOCM_DH_CADASTRO"]; ?></td>
+                                                    <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["MOVI_DH_ENCAMINHAMENTO"]; ?></td>
+                                                    <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DATA_AVALIACAO"]; ?></td>
+                                                    <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["ERROS_SISTEMA"]; ?></td>
+                                                    <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["CONSIDERADO_IDQ"]; ?></td>
+                                                </tr>
+                                                <?php
+                                                $impressos[] = $saida["DOCM_NR_DOCUMENTO"];
+                                            }
+                                            ?>
+                                        <tr><td style="border: 1px solid #CCCCCC; padding: 3px;">&lfloor;--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--&rfloor;</td></tr>
+                                            <?php
+                                        }
+                                    }
+                                endforeach;
+                                ?>
+                            <?php else: ?>
+                            <tr><td style="border: 1px solid #CCCCCC; padding: 3px;">Não existem registros.</td></tr>
+                            <?php endif; */?>
+                        <!--Fim de Índice de defeito (qualidade)-->
+                    </tbody>
+                </table>
+            </div>
+    </body>
+</html>

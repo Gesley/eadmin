@@ -1,0 +1,538 @@
+<?php
+$valor = new Trf1_Orcamento_Valor();
+
+echo $this->partial('_partials/ajax_responsaveis.phtml');
+echo $this->partial('_partials/ajax_bloqueio.phtml');
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+?>
+
+<form id="frmDespesa" enctype="application/x-www-form-urlencoded" method="post" action="">
+    <dl class="zend_form">
+
+        <br />
+        <!--abas da tela-->
+        <div id="editar" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+
+            <ul>
+
+                <li id="aba-resumo"><a href="#resumo">Resumo</a></li>
+                <li id="aba-gestor"><a href="#gestor">Gestor</a></li>
+                <li id="aba-celula"><a href="#orcamento">Célula Orçamentária</a></li>
+                <li id="aba-identificacao"><a href="#financeiro">Identificação Financeira</a></li>
+                <li id="aba-planejamento"><a href="#planejamento">Planejamento Estratégico</a></li>
+                <li id="aba-contrato"><a href="#contrato">Contrato</a></li>
+                <li id="aba-valor"><a href="#valor">Valores</a></li>
+
+            </ul>
+
+            <div id="resumo">
+                <strong>Despesa:</strong><br />
+                <input type="text"	value="<?php echo $this->nrDespesa; ?>" name=""
+                       size="10"
+                       disabled="true"
+                       style=" background: #CDCDCD;
+                       font-weight: bold;
+                       text-align: center;" /><br />&nbsp;
+
+                <?php
+// Descrição
+                echo $this->formulario->DESP_DS_ADICIONAL . '<br />';
+
+// Ano
+                echo $this->formulario->DESP_AA_DESPESA . '<br />';
+
+// Reflete despesa no ano seguinte
+                echo $this->formulario->DESP_NR_COPIA_DESPESA . '<br />';
+
+// Reflete despesa no ano seguinte
+
+                echo $this->formulario->DESP_IC_REFLEXO_EXERCICIO . '<br />';
+                ?>
+            </div>
+
+            <div id="gestor">
+                <?php
+// Unidade Gestora
+                echo $this->formulario->DESP_CD_UG . '<br />';
+// Responsável
+                echo $this->formulario->SG_DS_FAMILIA_RESPONSAVEL . '<br />';
+                ?>
+            </div>
+
+            <div id="orcamento">
+                <?php
+// Esfera
+                echo $this->formulario->DESP_CD_ESFERA . '<br />';
+// PTRes
+                echo $this->formulario->DESP_CD_PT_RESUMIDO . '<br />';
+// Elemento
+                echo $this->formulario->DESP_CD_ELEMENTO_DESPESA_SUB . '<br />';
+// Tipo de Despesa
+                echo $this->formulario->DESP_CD_TIPO_DESPESA . '<br />';
+                ?>
+            </div>
+
+            <div id="financeiro">
+                <?php
+// Fonte
+                echo $this->formulario->DESP_CD_FONTE . '<br />';
+// Categoria
+                echo $this->formulario->DESP_CD_CATEGORIA . '<br />';
+// Vinculação
+                echo $this->formulario->DESP_CD_VINCULACAO . '<br />';
+// Tipo de Recurso
+                echo $this->formulario->DESP_CD_TIPO_RECURSO . '<br />';
+                ?>
+            </div>
+
+            <div id="planejamento">
+                <?php
+// Tipo de Orçamento
+                echo $this->formulario->DESP_CD_TIPO_ORCAMENTO . '<br />';
+// Perspectiva
+                echo $this->formulario->DESP_CD_PERS_PERSPECTIVA . '<br />';
+// Macrodesafio
+                echo $this->formulario->DESP_CD_MACRO_MACRODESAFIO . '<br />';
+// Objetivo
+                echo $this->formulario->DESP_CD_OBJETIVO . '<br />';
+// Programa
+                echo $this->formulario->DESP_CD_PROGRAMA . '<br />';
+// Tipo Operacional
+                echo $this->formulario->DESP_CD_TIPO_OPERACIONAL . '<br />';
+                ?>
+            </div>
+
+            <div id="contrato">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número do Contrato</th>
+                            <th>Nome empresa contratada</th>
+                            <th>CPF / CNPJ contratada</th>
+                            <th>Inicio vigência</th>
+                            <th>Término vigência</th>
+                            <th>Valor contrato</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <?php foreach ($this->contrato as $contrato): ?>
+
+                            <tr>
+
+                                <td><?php echo $contrato['CTRD_ID_CONTRATO_DESPESA']; ?></td>
+                                <td><?php echo $contrato['CTRD_NM_EMPRESA_CONTRATADA']; ?></td>
+                                <td><?php echo $contrato['CTRD_CPFCNPJ_DESPESA']; ?></td>
+                                <td><?php echo $contrato['CTRD_DT_INICIO_VIGENCIA']; ?></td>
+                                <td><?php echo $contrato['CTRD_DT_TERMINO_VIGENCIA']; ?></td>
+                                <td class="valorgrid"><?php echo $contrato['CTRD_VL_DESPESA']; ?></td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+                    </tbody>
+
+                </table>
+
+                <script>
+
+                    document.addEventListener("DOMContentLoaded", function () {
+
+                        $(".valorgrid").each(function () {
+
+                            var valor = $(this).text().split(",");
+                            var num = [];
+                            valor[0].length % 3 > 0 && num.push(valor[0].substr(0, valor[0].length % 3));
+
+                            for (var i = parseInt(valor[0].length / 3); i > 0; i--) {
+
+                                num.push(valor[0].substr(valor[0].length - (3 * i), 3));
+                            }
+
+                            valor[0] = num.join(".");
+                            valor[1] = valor[1] || "00";
+                            $(this).text(valor.join(","))
+                        });
+                    });
+
+                </script>
+
+                <a href="<?php echo $this->baseUrl("orcamento/contrato/index/CTRD_NR_DESPESA/" . $this->nrDespesa); ?>" class="ceo_salvar ui-button ui-widget ui-state-default ui-corner-all" role="button" name="Contrato">
+                    Criar / Modificar Contrato
+                </a>
+
+            </div>
+
+            <div id="valor">
+                <p>
+                    <strong> Dotação autorizada do exercício anterior</strong><br />
+                    <span class="valordespesa">
+
+                        <?php
+// $valorAnterior = $this->despesa [ 'VL_DESPESA_ANTERIOR' ];
+                        $valorAnterior = $this->despesa ['VL_SALDO_ANTERIOR'];
+                        $sValor = $this->escape($valorAnterior);
+                        $sfValor = $valor->retornaNumeroFormatadoValor($sValor);
+
+                        $sDespesaAnterior = $this->despesa ['DESP_NR_COPIA_DESPESA'];
+
+// DAEA = Dotação autorizada do exercício anterior
+                        $sLinhaDAEA = '';
+
+                        if ($sDespesaAnterior != null) {
+                            $sLink ['module'] = Trf1_Orcamento_Definicoes::NOME_MODULO;
+                            $sLink ['controller'] = 'projecao';
+                            $sLink ['action'] = 'detalhe';
+                            $sLink ['cod'] = $sDespesaAnterior;
+
+                            $linkSaldo = $this->url($sLink, 0, true);
+
+                            $sLinhaDAEA .= '&nbsp;<a ';
+                            $sLinhaDAEA .= 'class="ceo_detalhar" ';
+                            $sLinhaDAEA .= 'alt="Veja o saldo desta despesa" ';
+                            $sLinhaDAEA .= 'title="Veja o saldo desta despesa" ';
+                            $sLinhaDAEA .= 'href="';
+                            $sLinhaDAEA .= $linkSaldo;
+                            $sLinhaDAEA .= '" ';
+                            $sLinhaDAEA .= 'target="_blank" >';
+                            $sLinhaDAEA .= 'Projeção da despesa ';
+                            $sLinhaDAEA .= $sDespesaAnterior;
+                            $sLinhaDAEA .= '</a>';
+                        }
+
+                        echo "$sfValor $sLinhaDAEA";
+                        ?>
+                    </span>
+                </p>
+
+                <!--Base do exercício anterior estático-->
+                <p>
+                    <strong> Base do exercício anterior estático</strong><br />
+                    <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_BASE_EXERC_ANTERIOR'])); ?></span>
+                </p>
+
+                <!--Base do exercício anterior dinâmico-->
+                <p>
+                    <strong> <abbr title="Campo calculado: Proposta aprovada + Crédito adicional + Movimentações de crédito da despesa do exercício anterior" >Base do exercício anterior dinâmica</abbr></strong><br />
+                    <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_SALDO_BASE_ANTERIOR'])); ?></span>
+                </p>
+
+                <!--composição da base (Ano da despesa) (%)-->
+                <p>
+                    <strong> Composição da Base <?php echo $this->despesa['DESP_AA_DESPESA']; ?> (%)</strong><br />
+                    <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->despesa ['VL_DESPESA_BASE_PERCENTUAL'])); ?></span>
+                </p>
+
+                <!--composição da base (Ano atual)-->
+                <p>
+                    <!-- <strong> Composição da Base <?php echo $this->despesa['DESP_AA_DESPESA']; ?> (R$)</strong><br />
+                    <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_BASE_DIFERENCA'])); ?></span> -->
+                    <?php echo $this->formValorDespesa->VL_DESPESA_BASE_DIFERENCA; ?>
+                </p>
+
+                <!--base da proposta (Ano da despesa)-->
+                <p>
+                    <!-- <strong> Base da pré-proposta <?php echo $this->despesa['DESP_AA_DESPESA']; ?></strong><br />
+                    <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->despesa ['VL_DESPESA_BASE_EXERC_ATUAL'])); ?></span>
+                    <input type="hidden" value="<?php echo $this->escape($this->despesa ['VL_DESPESA_BASE_EXERC_ATUAL']); ?>" id="vlde6" />
+                    -->
+
+                    <?php echo $this->formValorDespesa->VL_DESPESA_BASE_EXERC_ATUAL; ?>
+
+                    <?php if ( $this->perfil == 'planejamento' OR $this->perfil == 'desenvolvedor' ): ?>
+
+                        <a role="button" class="ceo_detalhar ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" 
+                           alt="Solicitar ajuste" title="Solicitar ajuste"
+                           href="<?php
+                           echo $this->baseUrl(
+                               'orcamento/solicitacaoajuste/incluir/despesa/' . $this->despesa ['DESP_NR_DESPESA'] . '/base' . '/' . $this->despesa ['VL_DESPESA_BASE_EXERC_ATUAL'] . '/solicitar/Ajuste/tipo/0'
+                           );
+                           ?>">
+                            <span class="ui-button-icon-primary ui-icon ui-icon-contact"></span>
+                            <span class="ui-button-text">Solicitar ajuste</span>
+                        </a>
+
+                <?php endif; ?>
+
+                </p>
+
+                <!--reajuste proposta (%)-->
+                <p>
+                    <strong> Reajuste pré-proposta <?php echo $this->despesa['DESP_AA_DESPESA']; ?> (%)</strong><br />
+                    <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->escape($this->despesa ['VL_PERCENT_REAJUSTE_PROPOSTA'])); ?></span>
+                </p>
+
+                <!--reajuste proposta (R$)-->
+                <p>
+                    <!--<strong> Reajuste pré-proposta <?php echo $this->despesa['DESP_AA_DESPESA']; ?> (R$)</strong><br  />
+                    <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->despesa['VL_REAJUSTE_PROPOSTA']); ?></span>-->
+                     <?php echo $this->formValorDespesa->VL_REAJUSTE_PROPOSTA; ?>
+                </p>
+
+                <!--Proposta inicial-->
+                <p>
+                    <?php echo $this->formValorDespesa->VL_DESPESA_RESPONSAVEL; ?>
+                </p>
+
+                <!--solicitação de acréscimo pelo responsável-->
+                <p>
+                    <strong> Solicitação de acréscimo pelo responsável (R$)</strong><br />
+
+                <?php 
+                $acrescimo = "";
+                isset( $this->despesa['VL_DESPESA_RESPONSAVEL'] ) ? $acrescimo = $this->despesa['VL_DESPESA_RESPONSAVEL'] : $acrescimo = 0;
+            ?>
+                <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->despesa['VL_SOLICITACAO_ACRESCIMO_RESP']); ?></span>
+                
+            <!--botão para solicitar acréscimo-->
+            <?php if ( $this->perfil == 'planejamento' OR $this->perfil == 'desenvolvedor'): ?>
+
+                <a role="button" class="ceo_detalhar ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" 
+                   alt="Solicitar acréscimo" title="Solicitar acréscimo" 
+                   href="<?php
+                   echo $this->baseUrl(
+                       'orcamento/solicitacaoajuste/incluir/despesa/' . $this->despesa ['DESP_NR_DESPESA'] . '/base' . '/' . $this->despesa ['VL_DESPESA_BASE_EXERC_ATUAL'] . '/acrescimo' . '/' . $acrescimo . '/solicitar/Acréscimo/tipo/1'
+                   );
+                   ?>">
+                    <span class="ui-button-icon-primary ui-icon ui-icon-contact"></span>
+                    <span class="ui-button-text">Solicitar Acréscimo</span>
+                </a>
+
+            <?php endif; ?>
+
+                    <br />
+                </p>
+
+                <!--ajuste setorial da pré proposta-->
+                <p>
+                    <?php echo $this->formValorDespesa->VL_DESPESA_DIPLA; ?>
+                </p>
+
+                <!--reajuste aplicado ao limite-->
+                <p>
+                    <strong> Reajuste Aplicado ao Limite (%)</strong><br />
+                    <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoPercentual($this->despesa['VL_PERCENT_APLICADO_LIMITE']); ?></span>
+                </p>
+
+                <!--reajuste aplicado ao limite-->
+                <p>
+                    <strong> Reajuste Aplicado ao Limite (R$)</strong><br />
+                    <span class="valordespesa"><?php echo $valor->retornaNumeroFormatadoValor($this->despesa['VL_REAJUSTE_APLICADO_LIMITE']); ?></span>
+
+                </p>
+
+                <!--reajuste do limite-->
+<!--                <p>
+                    <strong> Reajuste do limite (R$)</strong><br />
+                    <span class="valordespesa"><?php // echo $valor->retornaNumeroFormatadoValor($this->despesa['VL_AJUSTE_DO_LIMITE']);                                                                     ?></span>
+                </p>-->
+
+                <?php
+// Valor Ajuste setorial
+//                echo $this->formValorDespesa->VL_DESPESA_AJUSTE_DIPLA . '<br />';
+// Valor Solicitado pelo Responsável
+//                echo $this->formValorDespesa->VL_DESPESA_SOLIC_RESPONSAVEL . '<br />';
+// Ajuste ao limite
+                echo $this->formValorDespesa->VL_DESPESA_CONGRESSO . '<br />';
+
+// Orçamento aprovado
+                echo $this->formValorDespesa->VL_DESPESA_SECOR . '<br />';
+
+// Valor mensal máximo autorizado
+                echo $this->formulario->DESP_VL_MAX_MENSAL_AUTORIZADO . '<br />';
+
+// Valor mensal máximo autorizado
+//                echo $this->formulario->DESP_IC_CONFERIDO . '<br />';
+// Valor mensal máximo autorizado
+//                echo $this->formulario->DESP_IC_FINALIZADO . '<br />';
+                ?>
+            </div>
+        </div>
+
+        <?php
+        echo $this->formulario->Salvar;
+        echo $this->formulario->DESP_CD_RESPONSAVEL . '<br />';
+        ?>
+
+    </dl>
+</form>
+
+<?php
+echo $this->partial('despesa/js_soma.phtml');
+?>
+
+<script>
+
+    // varável para fase do exercício.
+    var $exercicio = "<?php echo $this->despesa['FANE_ID_FASE_EXERCICIO']; ?>";
+    // variável para perfil.
+    var $perfil = "<?php echo $this->perfil; ?>";
+    // Remove o botao de salvar caso não tenha o perfil correto rn147
+    var $regra = "<?php echo $this->bloqueioRegra ?>";
+    if ($regra) {
+    //    $('#Salvar').remove();
+    }
+
+    // 2015010001108011080160000044
+    // Se o perfil for planejamento, deixa o campo aberto, independente do exercício.
+    if ($perfil === "planejamento") {
+
+        $('#VL_DESPESA_SOLIC_RESPONSAVEL').removeAttr("readOnly");
+    }
+    // fim 2015010001108011080160000044
+
+    // sosti 2015010001108011080160000032
+    switch (parseInt($exercicio)) {
+
+        // verifica se a fase é "liberado para os responsáveis".
+        case 2:
+
+            if ($perfil === "seccional" || $perfil === "secretaria") {
+
+                // habilita campo solicitado pelo responsável e desabilita os demais, caso o perfil logado seja 'seccional' ou 'secretaria'.
+                $('#VL_DESPESA_AJUSTE_DIPLA').attr('readOnly', true);
+                $('#VL_DESPESA_RESPONSAVEL').attr('readOnly', true);
+                $('#VL_DESPESA_DIPLA').attr('readOnly', true);
+                $('#VL_DESPESA_CONGRESSO').attr('readOnly', true);
+                $('#VL_DESPESA_SECOR').attr('readOnly', true);
+                $('#DESP_VL_MAX_MENSAL_AUTORIZADO').attr('readOnly', true);
+                // habilita campo para edição.
+                $('#VL_DESPESA_SOLIC_RESPONSAVEL').removeAttr("readOnly");
+            }
+
+            if ($perfil === "seccional" || $perfil === "secretaria") {
+
+                this.desabilitaAbas();
+            }
+
+            break;
+            // encerrado.
+        case 6:
+
+            if ($perfil === "dipor") {
+
+                // libera o campo orçamento aprovado.
+                // 2016010001108011080160000030 
+                $('#VL_DESPESA_SECOR').attr('readOnly', true);
+                $('#DESP_VL_MAX_MENSAL_AUTORIZADO').attr('readOnly', true);
+            }
+
+            break;
+            // em aprovação.
+        case 7:
+
+            if ($perfil === "dipor" || $perfil === "planejamento") {
+
+                // libera o campo orçamento aprovado.
+                $('#VL_DESPESA_SECOR').attr('readOnly', false);
+            }
+
+            break;
+        default:
+
+            if ($perfil === "seccional" || $perfil === "secretaria") {
+
+                // desabilita campos para estes perfis.
+                $('#VL_DESPESA_AJUSTE_DIPLA').attr('readOnly', true);
+                $('#VL_DESPESA_RESPONSAVEL').attr('readOnly', true);
+                $('#VL_DESPESA_DIPLA').attr('readOnly', true);
+                $('#VL_DESPESA_CONGRESSO').attr('readOnly', true);
+                $('#VL_DESPESA_SECOR').attr('readOnly', true);
+                $('#DESP_VL_MAX_MENSAL_AUTORIZADO').attr('readOnly', true);
+                $('#VL_DESPESA_SOLIC_RESPONSAVEL').attr('readOnly', true);
+            }
+
+            break;
+    }
+    // fim sosti 2015010001108011080160000032
+
+    // função responsável por permitir somente números em um campo.
+    function verificaNumero(e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    }
+
+    // função que desabilita todas as abas exceto contrato e valores.
+    function desabilitaAbas() {
+
+        $('#aba-resumo').addClass('ui-state-disabled');
+        $('#aba-gestor').addClass('ui-state-disabled');
+        $('#aba-celula').addClass('ui-state-disabled');
+        $('#aba-identificacao').addClass('ui-state-disabled');
+        $('#aba-planejamento').addClass('ui-state-disabled');
+        // ativa a aba valor como selecionada.
+        $('#aba-valor').addClass('ui-tabs-selected ui-state-active');
+    }
+
+    // valida o campo (solicitado pelo responsável).
+    $('#VL_DESPESA_SOLIC_RESPONSAVEL').keypress(verificaNumero);
+    // exercicio atual
+    var anoVigente = <?php echo date('Y') ?>;
+    // proximo exercicio
+    var prxExercicio = anoVigente + 1;
+    if ($('#DESP_AA_DESPESA').val() != prxExercicio) {
+        // esconde os campos conferido e finalizado
+        $('#DESP_IC_CONFERIDO').hide();
+        $('#DESP_IC_CONFERIDO-label').hide();
+        $('#DESP_IC_FINALIZADO').hide();
+        $('#DESP_IC_FINALIZADO-label').hide();
+    }
+
+    $("#DESP_AA_DESPESA").change(function () {
+        if ($(this).val() == prxExercicio) {
+            // Libera ou não campos da aba valores
+            $('#DESP_IC_CONFERIDO').show();
+            $('#DESP_IC_CONFERIDO-label').show();
+            $('#DESP_IC_FINALIZADO').show();
+            $('#DESP_IC_FINALIZADO-label').show();
+            // ajuste dipla
+            $('#VL_DESPESA_AJUSTE_DIPLA').removeAttr("readonly");
+            $('#VL_DESPESA_AJUSTE_DIPLA').removeAttr("style");
+            // ajuste setorial
+            $('#VL_DESPESA_DIPLA').removeAttr("readonly");
+            $('#VL_DESPESA_DIPLA').removeAttr("style");
+            // ajuste ao limite
+            $('#VL_DESPESA_CONGRESSO').removeAttr("readonly");
+            $('#VL_DESPESA_CONGRESSO').removeAttr("style");
+            // valor mensal maximo autorizado
+            $('#DESP_VL_MAX_MENSAL_AUTORIZADO').removeAttr("readonly");
+            $('#DESP_VL_MAX_MENSAL_AUTORIZADO').removeAttr("style");
+        } else {
+            // ajuste dipla
+            $('#VL_DESPESA_AJUSTE_DIPLA').attr("readonly");
+            $('#VL_DESPESA_AJUSTE_DIPLA').attr("style", "background: none repeat scroll 0% 0% rgb(222, 222, 222); border-color: rgb(204, 204, 204);");
+            // ajuste setorial
+            $('#VL_DESPESA_DIPLA').attr("readonly");
+            $('#VL_DESPESA_DIPLA').attr("style", "background: none repeat scroll 0% 0% rgb(222, 222, 222); border-color: rgb(204, 204, 204);");
+            // ajuste ao limite
+            $('#VL_DESPESA_CONGRESSO').attr("readonly");
+            $('#VL_DESPESA_CONGRESSO').attr("style", "background: none repeat scroll 0% 0% rgb(222, 222, 222); border-color: rgb(204, 204, 204);");
+        }
+    });
+    // alerta que a despesa ja foi copiada
+    $('#DESP_IC_REFLEXO_EXERCICIO').click(function () {
+
+        var exercicio = parseInt($('#DESP_AA_DESPESA').val());
+        var exercicioSeguinte = exercicio + 1;
+        if ($('#DESP_IC_REFLEXO_EXERCICIO').is(':checked') == false) {
+            $.ajax({
+                url: "<?php echo $this->baseUrl(); ?>/orcamento/despesa/despesaexercicio/despesa/" +<?php echo $this->nrDespesa; ?> + "/exercicio/" + exercicioSeguinte,
+                success: function (result) {
+
+                    if (result != false) {
+                        alert('A Despesa foi copiada do exercicio ' + exercicio + ' para o exercicio seguinte. Caso seja desmarcado essa opção, ela sera apagada no exercicio ' + exercicioSeguinte);
+                    }
+                },
+                error: function (result) {
+                    alert('Ocorreu um erro ao consultar a despesa no exercicio seguinte. Favor informar a TI.');
+                    return false;
+                }
+
+            });
+        }
+    });
+</script>

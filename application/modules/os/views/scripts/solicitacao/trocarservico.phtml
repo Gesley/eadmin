@@ -1,0 +1,237 @@
+<?php
+    $this->inlineScript()->appendFile($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js')
+                         ->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript')
+                         ->appendFile($this->baseUrl() . '/js/multiUpload/multiFile.js')
+                         ->appendFile($this->baseUrl() . '/js/sosti/respostaPadrao.js')
+                         ->appendFile($this->baseUrl() . '/js/os/solicitacaoTrocarServico.js');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p><b>Trocar serviço</b>.</p>
+    <ul>
+        <li>faça uma nova descrição ou gere informações que justifiquem o motivo da troca do serviço.</li>
+        <li>clique no botão Salvar e será gerada uma mensagem de sucesso.</li>
+        <li>Feita a troca, a solicitação permanecerá na mesma caixa, com um serviço diferente.</li>
+    </ul>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+            function(){
+                grid_tbody_tr.removeClass('hover_nav');
+                
+                var this_tr = $(this);
+                var is_checked_tr = $(this).attr('marcado');
+                
+                var input_check_box = $(this).find('input[type=checkbox]');
+                var is_checked_input = input_check_box.attr('checked');
+                
+                if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                    input_check_box.attr('checked','checked');
+                    this_tr.attr('marcado','marcado');
+                    this_tr.addClass('hover');
+                }else{
+                    input_check_box.removeAttr('checked');
+                    this_tr.removeAttr('marcado');
+                    this_tr.removeClass('hover');
+                }
+                input_check_box.focus();
+            }
+        );
+                grid_tbody_tr.dblclick(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                
+                var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+                value_input_check_box = input_check_box.val();
+                input_check_box.attr('checked', 'checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+                
+                if (xhr_abrir_documento) {
+                    xhr_abrir_documento.abort();
+                }
+                
+                url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+                                xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+                });
+            }
+        ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+            function(){
+                if($(this).attr('checked')){
+                    $(".nav_check_boxes").attr('checked','checked');
+                    $("tr[name=rowList]").addClass('hover');
+                }else{
+                    $(".nav_check_boxes").removeAttr('checked');
+                     $("tr[name=rowList]").removeClass('hover');
+                }
+            }
+        );
+        $('input[name=acao]').click(
+            function(){
+                var acao = this.value;
+                var formhelpdesk = $('form[name=helpdesk]');
+                if(acao == 'Encaminhar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/desenvolvimentosustentacao/encaminhar');
+                }else if(acao == 'Baixar'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/desenvolvimentosustentacao/baixarcaixa');
+                }else if(acao == 'Espera'){
+                    formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/desenvolvimentosustentacao/esperacaixa');
+                }
+            }
+        );
+        $('form[name=helpdesk]').submit(
+           function(){          
+                var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+                if (solictacaoSelecionada == undefined){ 
+                    var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                    $('#flashMessages').html(mensagem);
+                    return false;
+                }
+           }
+        );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+                    autoOpen : false,
+                    modal    : false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    position: [580,140,0,0],
+                    buttons : {
+                            Ok: function() {
+                                    $(this).dialog("close");
+                            }
+                    }
+       });
+       $(".historico").hide('');
+    });
+</script>
+ <table class="grid">
+    <thead>
+        <tr>
+            <th>N. da solicitação</th>
+            <th>Nome do Solicitante</th>
+            <th>Tempo total</th>
+            <th>Serviço atual</th>
+            <th>Vinculada</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php foreach ($this->data as $data): ?>
+             <tr name="rowList" value="<?php echo $this->escape($d["SSOL_ID_DOCUMENTO"]); ?>"  style="<?php if($d["ESPERA_FLAG"] >= 0 && !is_null($d["ESPERA_FLAG"])) echo "color: #008000;"?>">
+                <?php $d = Zend_Json::decode($data); ?> 
+                 <td class="historico" <?php echo ($data["TEMPO_TOTAL"] > 120)?('style="background-color:#EE4115;" title="Solicitação com o tempo de atendimento ultrapassado!"'):('');  
+                          echo ($data["MOFA_ID_FASE"] == 1019)?('style="background-color:#E88400;" title="Solicitação recusada!"'):('');
+                          echo ($data["ESPERA_FLAG"] >= 0 && !is_null($data["ESPERA_FLAG"]))?('style="background-color:#0099FF;" title="Solicitação colocada em espera!"'):(''); ?> >
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data); ?>"/>
+                 </td>
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td><?php if(isset($d["NOME"])){echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME']);}else{echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME_USARIO_CADASTRO']);;} ?></td>
+                <td> <?php echo $this->escape($d["TEMPO_TRANSCORRIDO"]); ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"] ) ?></td>
+                <td><?php if(isset ($d["VINCULADA"])&&($d["VINCULADA"]==1)){echo "SIM";}else{echo "";}?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<form name="save" action="save" method="POST" enctype="multipart/form-data" >
+        <?php echo $this->form->getElement('SSOL_ID_DOCUMENTO'); ?>
+        <?php // echo $this->form->getElement('UNIDADE'); ?>
+        <?php // echo $this->form->getElement('SSOL_NM_USUARIO_EXTERNO'); ?>
+        <?php echo $this->form->getElement('PORORDEMDE'); ?>
+        <?php // echo $this->form->getElement('SSOL_NR_TELEFONE_EXTERNO'); ?>
+        <?php // echo $this->form->getElement('SSOL_DS_EMAIL_EXTERNO'); ?>
+        <?php // echo $this->form->getElement('SSOL_ED_LOCALIZACAO'); ?>
+        <?php echo $this->form->getElement('SSOL_ID_TIPO_CAD'); ?>
+        <?php echo $this->form->getElement('SSER_ID_SERVICO'); ?>
+        <?php echo $this->form->getElement('SGRS_ID_GRUPO'); ?>
+        <?php echo $this->form->getElement('CTSS_NM_CATEGORIA_SERVICO'); ?>
+        <?php echo $this->form->getElement('EMERGENCIAL'); ?>
+        <?php echo $this->form->getElement('ASIS_IC_NIVEL_CRITICIDADE'); ?>
+        <?php echo $this->form->getElement('CAUSA_PROBLEMA'); ?>
+        <?php echo $this->form->getElement('SOLIC_PROBLEMAS'); ?>
+        <?php echo $this->form->getElement('DOCM_DS_ASSUNTO_DOC'); ?> 
+        <?php // echo $this->form->getElement('SSOL_DS_OBSERVACAO'); ?>
+        <?php echo $this->form->getElement('SSOL_HH_INICIO_ATEND'); ?>
+        <?php echo $this->form->getElement('SSOL_HH_FINAL_ATEND'); ?>
+        <?php echo $this->form->getElement('SOLICITACOES_OS'); ?>
+        <?php // echo $this->form->getElement('PAPD_CD_MATRICULA_INTERESSADO'); ?>
+        <?php // echo $this->partialLoop('/solicitacaousertisecoes/cadastraracompanhante.phtml', 'sosti', 
+//            array('form' => $this->form->getElement('PAPD_CD_MATRICULA_INTERESSADO'))); ?>
+        <?php // echo $this->form->getElement('SSOL_FLAG_GARANTIA'); ?>
+        <?php // echo $this->form->getElement('SSOL_GARANTIA_OBSERVACAO'); ?>
+        <?php foreach ($this->jsonSolicitacoes as $js): ?>
+            <input type="hidden" name="solicitacoes[]" value="<?php echo $js; ?>" />
+        <?php endforeach; ?>
+        <div id="partes_adicionadas"> </div>
+        <br /><b>Anexos</b><br />
+        <input id="ANEXOS" type="file" name="ANEXOS[]"  class="Multi" maxlength="20" />
+        Até 20 Anexos. </br>
+        Soma dos arquivos até 50 Megas.</p>
+        <span class="msg_alerta"> </span>
+        <input type="submit" name="salvar" value="Salvar" />
+        <?php echo $this->form->getElement('OBRIGATORIO'); ?>
+    </form>
+<?php // echo $this->form; ?>
+<div id="dialog_escolha_resposta">
+    <fieldset>
+        <?= $this->formResposta; ?>
+    </fieldset>
+    <fieldset>
+        <legend> Resultados </legend>
+        <div id="resultados_resposta">
+           
+        </div>
+    </fieldset>
+</div>
+<div id="dialog-documentos_detalhe">
+ <div id="dialog-documentos_conteudo"></div>
+</div>

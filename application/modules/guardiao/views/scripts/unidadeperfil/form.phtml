@@ -1,0 +1,115 @@
+<?php
+$this->inlineScript()->prependFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->prependFile(($this->baseUrl() . '/js/listBox/duallistbox.js'));
+$this->inlineScript()->prependFile(($this->baseUrl() . '/js/guardiao/unidadePerfil.js'));
+?>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+        $(document).ready(function(){
+            carregaVariaveis({
+                "secao":"<?php echo $this->secao ?>",
+                "subsecao":"<?php echo $this->subsecao ?>"
+            });
+        });
+        
+    </script>
+    <h3>Ajuda&ensp;</h3>
+
+    <p>
+       - A funcionalidade <b>Perfil Unidade</b> permite autorizar o acesso de determinados perfis em determinadas Unidades do TRF1.
+    </p>
+    <p>
+       - Primeiramente é feita a busca pela Unidade. Neste caso só poderão ser listadas as unidades que pertencem à Seção/Subseção
+        do usuário, onde o mesmo poderá conceder ou retirar permissões.
+    </p>
+    <p>
+       - Após a escolha da Unidade desejada, serão listados abaixo, duas listas de perfis. Uma das listas trata-se dos perfis que
+       não têm acesso àquela Unidade. A outra lista mostra os perfis que possuem acesso àquela Unidade atualmente.
+    </p>
+    <br>
+    <p>
+        <h3>Concedendo Permissões de Perfil para a Unidade</h3> 
+    </p>
+    <p>
+        Existem algumas formas de conceder permissões para a Unidade que serão listadas abaixo:
+    </p>
+    <ul>
+        <li>
+            Dê um clique duplo com o mouse sobre algum perfil na coluna <b>PERFIS NÃO AUTORIZADOS</b>;
+        </li>
+        <li>
+            Selecione um perfil da coluna <b>PERFIS NÃO AUTORIZADOS</b> e clique no primeiro botão de ação, com legenda 
+            <b>Permitir Perfil</b>; 
+        </li>
+        <li>
+            Selecione vários perfis da coluna <b>PERFIS NÃO AUTORIZADOS</b> e clique no primeiro botão de ação, com legenda 
+            <b>Permitir Perfil</b>; 
+        </li>
+        <li>
+            Clicar no segundo botão de ação, com legenda <b>Permitir Todos os Perfis</b> para autorizar todos os perfis naquela Unidade;
+        </li>
+    </ul>
+    <p>
+    Após efetuar qualquer ação listada acima, para efetuar as alterações, basta clicar no botão <b>Salvar</b>.
+    </p>
+    
+    <br>
+    <p>
+        <h3>Retirando Permissões de Perfil para a Unidade</h3> 
+    </p>
+    <p>
+        Existem algumas formas de retirar permissões para a Unidade que serão listadas abaixo:
+    </p>
+    <ul>
+        <li>
+            Dê um clique duplo com o mouse sobre algum perfil na coluna <b>PERFIS AUTORIZADOS</b>;
+        </li>
+        <li>
+            Selecione um perfil da coluna <b>PERFIS AUTORIZADOS</b> e clique no quarto botão de ação, com legenda 
+            <b>Retirar Perfil</b>; 
+        </li>
+        <li>
+            Selecione vários perfis da coluna <b>PERFIS AUTORIZADOS</b> e clique no quarto botão de ação, com legenda 
+            <b>Retirar Perfil</b>; 
+        </li>
+        <li>
+            Clicar no terceiro botão de ação, com legenda <b>Retirar Todos os Perfis</b> para retirar todos os perfis naquela Unidade;
+        </li>
+    </ul>
+    <p>
+    Após efetuar qualquer ação listada acima, para efetuar as alterações, basta clicar no botão <b>Salvar</b>.
+    </p>
+    
+    <br>
+    
+    <p>
+        <h3>Desfazer alterações</h3> 
+    </p>
+    <p>
+        - Último botão de ação, com legenda <b>Desfazer Alterações</b>.
+    </p>
+    <p>
+        - A opção Desfazer Alterações, recarrega a relação dos perfis originais, desfazendo todas as alterações realizadas antes de clicar no 
+    botão <b>Salvar</b>. Ou seja, ele volta para a última relação de perfis salva.
+    </p>
+    <p>
+    <b>É importante relembrar que após clicar no botão SALVAR, a opção de desfazer alterações não retornará para um estado anterior ao último salvo.</b>
+    </p>
+
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<fieldset>
+    <form id="form" action="<?php echo $this->baseUrl(); ?>/guardiao/unidadeperfil/form" method="post">
+        <?php echo $this->form->TRF1_SECAO; ?>
+        <?php echo $this->form->SECAO_SUBSECAO; ?>
+        <?php echo $this->form->UNPE_SG_SECAO; ?>
+        <div id="div_associar_perfil"></div>
+    </form>
+</fieldset>
+<div id="confirma">
+    <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Antes de mudar a pesquisa, deseja salvar as alterações atuais?
+</div>

@@ -1,0 +1,54 @@
+ <script type="text/javascript">
+	$(function() {
+            if( $("#SSER_ID_SERVICO").val() != '' ){
+                $("#SSER_ID_SERVICO").removeAttr('disabled');
+            }
+            $('#SGRS_ID_GRUPO').change(
+                function(){
+                    $("#SSER_ID_SERVICO").removeAttr('disabled');
+                    $.ajax({
+                      url: "<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos/id/"+this.value,
+                      beforeSend:function() {
+                          $("#SSER_ID_SERVICO").removeClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('');
+                          $("#SSER_ID_SERVICO").addClass('carregandoInputSelect');
+                      },
+                      success: function(data) {
+                          $("#SSER_ID_SERVICO").html(data);
+                          $("#SSER_ID_SERVICO").removeClass('carregandoInputSelect');
+                          $("#SSER_ID_SERVICO").focus();
+                      },
+                      error: function(){
+                          $("#SSER_ID_SERVICO").removeClass('x-form-field');
+                          $("#SSER_ID_SERVICO").val('Erro ao carregar.');
+                          $("#SSER_ID_SERVICO").addClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('<option>Erro ao carregar</option>');
+                      }
+                    });  
+                }
+            );
+        });
+</script>
+ <table class="grid">
+    <thead>
+        <tr>
+            <th >Número</th>
+            <th >Autor</th>
+            <th >Data Criação</th>
+            <th >Tempo total</th>
+            <th >Serviço atual</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+            <tr>
+                <?php $d = explode('|', $this->data); ?>      
+                <td> <?php echo $this->escape($d[7]) ?></td>
+                <td> <?php echo $this->escape($d[8]) ?></td>
+                <td> <?php echo $this->escape($d[9]) ?></td>
+                <td> <?php echo $this->escape($d[11]) ?></td>
+                <td> <?php echo $this->escape($d[10]) ?></td>
+            </tr>
+    </tbody>
+    <tfoot><tr><td colspan="7">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<?php echo $this->form; ?>

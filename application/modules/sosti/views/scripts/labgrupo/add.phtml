@@ -1,0 +1,41 @@
+<style type="text/css">
+
+    dd#GRMA_ID_MARCA-element {
+
+        width:930px;
+    }
+    #GRMA_ID_MARCA-element label{
+        display:inline-block;
+        width:150px;
+        /*float:left;*/
+        margin:5px 5px;
+        padding: 3px 0px;
+        border:1px solid #dedede
+    }
+</style>
+<script type="text/javascript">
+    $(function() {
+        $("#GRUP_DS_GRUPO_MAT_SERV").autocomplete({
+            source: base_url + '/sosti/labgrupo/ajaxcadastrogrupo/',
+            minLength: 2,
+            
+            dataType: 'json',       
+            change: function( event, ui ) {
+                console.log(ui);
+                $("#GRUP_DS_GRUPO_MAT_SERV").val(ui.item.label);   
+            }
+        });
+        $("input:checkbox").click(function(){$(this).parent("label").toggleClass("hover")});
+        $("#GRUP_DS_GRUPO_MAT_SERV").css('text-transform','uppercase');
+    });
+</script>
+<?php if (isset($this->msg_error)) { ?>
+    <div id="flashMessages">
+        <div class="notice">
+            <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+        </div>
+    </div>
+<?php } ?>
+<?php
+echo $this->form;
+?>

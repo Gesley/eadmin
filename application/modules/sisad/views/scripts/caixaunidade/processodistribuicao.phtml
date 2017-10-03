@@ -1,0 +1,26 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php
+
+$arrayProcessosDist = $this->arrayProcessosDist;
+$arrayProcessosNaoDist = $this->arrayProcessosNaoDist;
+if ($arrayProcessosDist) {
+    
+    echo '<hr/>';
+    echo 'Processos Distribuidos<br>';
+    foreach ($arrayProcessosDist as $processoDist):
+        echo 'Documento: '.$processoDist['documento'] . '<br/>'
+            .'Relator: '.$processoDist['relator'] . '<br/>'
+            .'Forma Distribuição: '. $processoDist['forma'] . '<br/>'
+            .'Mensagem: '. $processoDist['Mensagem'] . '<br/>';
+    endforeach;
+}
+if ($arrayProcessosNaoDist) {
+    echo '<hr/>';
+    echo 'Processos Não Distribuidos<br>';
+    foreach ($arrayProcessosNaoDist as $processoNaoDist):
+        echo 'Processo:' . $processoNaoDist['documento'] 
+             . ' <br/> ' 
+             . 'Motivo: ' . $processoNaoDist['Message'] . '<br/>';
+    endforeach;
+    echo '<hr/>';
+}

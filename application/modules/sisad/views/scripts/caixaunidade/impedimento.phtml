@@ -1,0 +1,39 @@
+<div id="flashMessagesDiv"></div>
+<form method="post" name="distribuicao" id="distribuicao">
+    <input type="hidden" name="IMDI_CD_COMISSAO" value="<?=$this->IDPA_ORG_COD;?>"/>
+    <input type="hidden" name="IMDI_ID_PROCESSO_DIGITAL" value="<?=$this->IMDI_ID_PROCESSO_DIGITAL;?>"/>
+<?php if (count($this->data)): ?>
+    <div id="container_pagination">
+        <table class="grid">
+            <thead>
+                <tr>
+
+    <!--                <th >Excluir</th>-->
+                    <th >Matrícula</th>
+                    <th >Membro da Comissão</th>
+                    <th >Impedir?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->data as $data): ?>
+                    <tr>
+        <!--                    <td ><a title="Excluir" class="excluir" href="<?php echo $this->baseUrl(); ?>/sisad/tipoprocesso/del/id/<?php echo $this->escape($data["TPPR_ID_TIPO_PROCESSO"]); ?>" >Excluir</a></td>-->
+                        <td><?php echo $this->escape($data["PMAT_CD_MATRICULA"]); ?></td>
+                        <td><?php echo $this->escape($data["PNAT_NO_PESSOA"]); ?></td>
+                        <td><input type="checkbox"  name="<?php echo $this->escape($data["PMAT_CD_MATRICULA"]) ?>" <?php echo(isset($this->impedidos[$data["PMAT_CD_MATRICULA"]])) ? ('checked = "checked"') : (""); ?> value="S"/> </td>
+                    </tr>
+                    
+                    
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+            
+                
+            </tfoot>
+        </table>
+    <?php else: ?>
+        <p>Não existem membros cadastrados para essa Comissão</p>
+        <p>se necessário click AQUI para cadastrar</p>
+<?php endif; ?>
+</div>
+</form>

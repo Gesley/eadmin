@@ -1,0 +1,39 @@
+
+<div >
+Total de Registros: <?php echo count($this->resultado); ?>
+    
+       <div>
+            <table id="principal" style="border: 1px solid #ccc; margin-top: 10px; width: 100%;" >
+                <thead>
+                    <tr style="background-color: gainsboro;">
+                        <th style="font-weight: bold;"> N. Processo </td>
+                        <th style="font-weight: bold;"> Dt. Recebimento </td>
+                        <th style="font-weight: bold;"> Assunto </td>
+                        <th style="font-weight: bold;"> Origem </td>
+                        <th style="font-weight: bold;"> Partes </td>
+                        <th style="font-weight: bold;"> Local </td>
+                        <th style="font-weight: bold;"> Responsável </td>
+                        <th style="font-weight: bold;"> Tempo Unidade/dias </td>
+                    </tr>
+                </thead>
+            <tbody>
+            <?php  foreach($this->resultado as $data): ?>
+                    <tr style="border: 1px solid #C3C3C3;">
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['MASC_NR_DOCUMENTO']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['DH_RECEBIMENTO']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['ASSUNTO']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['LOTACAO_ORIGEM']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['PARTE']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['LOCAL']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['RESPONSAVEL']; ?></td>
+                        <td style="border: 1px solid #C3C3C3;"> <?php echo $data['TEMPO_UNIDADE']; ?></td>
+                    </tr>
+             <?php   endforeach; ?>
+            </tbody>
+            </table>
+       </div>
+    <br/>
+</div>    
+   
+
+   

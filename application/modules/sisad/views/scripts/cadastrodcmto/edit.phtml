@@ -1,0 +1,39 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/partesInteressados.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/partesVistasAutuar.js'));
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/sisad/cadastrodcmto/edit.js'));
+?>
+
+<form name="<?= $this->form->getName() ?>" action="<?= $this->form->getAction() ?>" method="<?= $this->form->getMethod() ?>" enctype="multipart/form-data" >
+    <?php
+    echo $this->form->DOCM_ID_DOCUMENTO;
+    echo $this->form->DOCM_ID_PCTT;
+    echo $this->form->DOCM_DS_PALAVRA_CHAVE;
+    echo $this->form->DOCM_ID_TIPO_SITUACAO_DOC;
+    echo $this->form->DOCM_ID_CONFIDENCIALIDADE;
+    ?>
+    <fieldset style="margin-top: 10px; width: 250px;">
+        <legend> Cadastro de Partes/Vistas  </legend>
+        <input type="button" value="Cadastrar Partes"  class="ui-button ui-widget ui-state-default ui-corner-all cadPartes" name="cadPartes" title="Cadastrar Interessados ao Processo" role="button" aria-disabled="false" style="margin: 10px 0px;"/>
+        <input type="button" value="Cadastrar Vistas"  class="ui-button ui-widget ui-state-default ui-corner-all cadVistas" name="cadVistas" title="Cadastrar Vistas ao Processo" role="button" aria-disabled="false" style="margin: 10px 0px; display:none; "/>
+    </fieldset>
+
+    <div id="dialog_cadastra_parte_doc">  
+        <?php echo $this->partial('_partials/cadastrapartesinteressados.phtml', array('form' => $this->formParte));
+        ?>
+
+        <div id="partes_documentos" style="display:none;"> 
+            <?php echo $this->action('partesvistasdocumentos', 'partes', 'sisad', array('tipo' => '1', 'descricao' => 'partes')); ?>
+        </div>  
+
+        <div id="vistas_documentos" style="display:none;"> 
+            <?php echo $this->action('partesvistasdocumentos', 'partes', 'sisad', array('tipo' => '3', 'descricao' => 'vistas')); ?>
+        </div> 
+    </div> 
+
+    <div id="partes_adicionadas" style="display: none;"> </div>
+    <div id="vistas_adicionadas" style="display: none;"> </div>
+
+    <?= $this->form->Alterar ?>
+</form>

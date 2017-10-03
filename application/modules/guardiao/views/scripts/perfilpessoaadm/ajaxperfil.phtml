@@ -1,0 +1,14 @@
+<?php
+if($this->perfil_array):  
+    foreach ($this->perfil_array as $value) : 
+?>
+    <option value="<?php echo $value['UNPE_ID_PERFIL']; ?>"><?php echo $value['PERF_DS_PERFIL'] ?></option>   
+    <?php 
+    endforeach; ?>
+<!--    <option value=""></option>  -->
+    <?php else: 
+?>
+        <option value="">INFORME PRIMEIRO A UNIDADE ADMINISTRATIVA</option>  
+<?php
+endif;
+?>

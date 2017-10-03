@@ -1,0 +1,154 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/multiUpload/multiFile.js'))
+        ->appendFile(($this->baseUrl() . '/js/sisad/documento/cadastrar.js'))
+        ->appendFile(($this->baseUrl() . '/js/sisad/documento/parteVista.js'))
+        ->appendFile(($this->baseUrl() . '/js/sisad/mensagem.js'));
+?>
+<script type="text/javascript" src="<?Php echo $this->baseUrl('/js/tinymce/jscripts/tiny_mce/tiny_mce.js') ?>"></script>
+<script type="text/javascript">
+    
+</script>
+<style>
+    #formularioCadastro fieldset {
+        margin: 10px 0px;
+    }
+    #formularioCadastro div#listaPartesVistas {
+        margin: 10px 0px;
+        width: 940px;
+    }
+
+    #formularioCadastro div#partes {
+        width: 468px;
+        float: left;
+    }
+
+    #formularioCadastro div#vistas {
+        width: 468px;
+        float: left;
+    }
+
+    #formularioCadastro div#listaPartesVistas ul {
+        list-style-type: none;
+        padding: 0 0 0 5px;
+    }
+
+    #formularioCadastro h3 {
+        font-size: 12px;
+        background-color: #f2f2f2;
+        padding: 5px 0 5px 5px ;
+    }
+
+    #formularioCadastro fieldset {
+        min-width: 600px;
+    }
+</style>
+
+<div id="formularioCadastro">
+    <form id="<?= $this->formCadastro->getId() ?>" action="<?= $this->formCadastro->getAction() ?>" method="<?= $this->formCadastro->getMethod() ?>" enctype="<?= $this->formCadastro->getEnctype() ?>">
+        <dl class="zend_form">
+            <?php
+            echo $this->formCadastro->radio_tipo_cadastro;
+            echo $this->formCadastro->DOCM_CD_LOTACAO_GERADORA;
+            echo $this->formCadastro->DOCM_CD_LOTACAO_REDATORA;
+            echo $this->formCadastro->DOCM_ID_PESSOA_EXTERNO;
+            echo $this->formCadastro->DOCM_DS_NOME_EMISSOR_EXTERNO;
+            echo $this->formCadastro->DOCM_NR_DCMTO_USUARIO;
+            echo $this->formCadastro->DOCM_ID_TIPO_DOC;
+            echo $this->formCadastro->DOCM_ID_PCTT;
+            echo $this->formCadastro->DOCM_ID_TIPO_SITUACAO_DOC;
+            echo $this->formCadastro->DOCM_DS_PALAVRA_CHAVE;
+            echo $this->formCadastro->DOCM_DS_ASSUNTO_DOC;
+            echo $this->formCadastro->DOCM_ID_CONFIDENCIALIDADE;
+            ?>
+
+            <fieldset id="cadastro_partes">
+                <legend>Adicionar partes e vistas</legend>
+
+                <?php
+                echo $this->formCadastro->tipo_parte;
+                echo $this->formCadastro->pessoa_fisica_interna;
+                echo $this->formCadastro->pessoa_fisica_externa;
+                echo $this->formCadastro->pessoa_juridica;
+                echo $this->formCadastro->secao_parte_vista;
+                echo $this->formCadastro->subsecao_parte_vista;
+                echo $this->formCadastro->unidade_administrativa;
+                echo $this->formCadastro->tipo_pessoa_parte;
+                echo $this->formCadastro->adicionar_parte_vista;
+                /*
+                  CAMPO HIDDEM RESPONSÁVEL POR ARMAZENAR O JSON DAS PARTES
+                  OU VISTAS ADICIONADOS
+                 */
+                echo $this->formCadastro->partes_pessoa_trf;
+                echo $this->formCadastro->partes_unidade;
+                echo $this->formCadastro->partes_pess_ext;
+                echo $this->formCadastro->partes_pess_jur;
+                echo $this->formCadastro->partes_array;
+                ?>
+
+                <div id="listaPartesVistas">
+                    <div id="partes">
+                        <h3 >Partes</h3>
+                        <ul >
+                        </ul>
+                    </div>
+                    <div id="vistas">
+                        <h3 >Vistas</h3>
+                        <ul >
+                        </ul>
+                    </div>
+                </div>
+            </fieldset>
+
+            <?php
+            echo $this->formCadastro->arquivo_principal;
+            echo $this->formCadastro->ANEXOS;
+            /**
+             * Alteração para restringir autuação de documentos para atender 
+             * a solicitação: 2014010001784017840160000030
+             */
+            $userNs = new Zend_Session_Namespace('userNs');
+           if (!(
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'TRF1') || 
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJAC') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJAM') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJAP') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJBA') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJDF') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJGO') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJMA') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJMG') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJMT') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJPA') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJPI') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJRO') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJRR') ||
+				((strtoupper($userNs->siglasecsubseclotacao)) == 'SJTO')
+				)) {
+					echo $this->formCadastro->check_box_autuacao;
+            }
+            echo $this->formCadastro->PRDI_DS_TEXTO_AUTUACAO;
+            echo $this->formCadastro->radio_tipo_encaminhamento;
+            echo $this->formCadastro->checkbox_minha_caixa_pessoal;
+            echo $this->formCadastro->checkbox_apenas_responsaveis;
+            echo $this->formCadastro->caixa_minha_responsabilidade;
+            echo $this->formCadastro->pessoas_da_unidade;
+            echo $this->formCadastro->responsaveis_pela_unidade;
+            echo $this->formCadastro->salvar;
+            ?>
+        </dl>
+
+        <div id="dialog_cadastra_parte_doc" style="display: none;">
+            <?= $this->partial('_partials/cadastrapartesinteressados.phtml', array('form' => $this->formParte)) ?>
+        </div>
+    </form>
+</div>
+<script>
+    $('document').ready(function() {
+        inicializaVariaveis({
+            "jsonResponsaveisAgrupadosPorUnidade": <?= $this->jsonResponsaveisAgrupadosPorUnidade ?>
+            , "jsonPessoasFisicasTrf1AgrupadasPorLotacao": <?= $this->jsonPessoasFisicasTrf1AgrupadasPorLotacao ?>
+        });
+    });
+</script>

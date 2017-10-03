@@ -1,0 +1,9 @@
+<option value="">Selecione</option> 
+<?php
+foreach ($this->grupos as $value) :
+    ?>
+    <option value="<?php echo $this->escape(Zend_Json::encode($value['SGRS_ID_GRUPO'])); ?>"><?php echo $value['SGRS_DS_GRUPO']; ?></option>   
+    <?php
+endforeach;
+?>
+  

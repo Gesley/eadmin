@@ -1,0 +1,18 @@
+a,a:link,a:visited,a:active,.ui-widget-content a {
+	color: #2E6E9E;
+	outline: 0 none;
+	text-decoration: none;
+}
+
+a:hover,.ui-widget-content a:hover {
+	color: #F02027;
+	text-decoration: underline;
+}
+
+img {
+	border: 0;
+}
+
+td a {
+	margin: 1px;
+}

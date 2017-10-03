@@ -1,0 +1,20 @@
+<?php
+$nomeCampoFonte = $this->campo;
+?>
+<script type="text/javascript">
+    $(function() {
+        $("#<?php echo $nomeCampoFonte; ?>").keypress( function () {
+            $("#<?php echo $nomeCampoFonte; ?>").autocomplete( {
+                source: base_url+'/orcamento/fonte/ajaxfonte/',
+                minLength: 3,
+                delay: 100,
+                select: function (event, ui) {
+                    $("#<?php echo $nomeCampoFonte; ?>").text(ui.item.label);
+                },
+                change: function (event, ui) {
+                    $("#<?php echo $nomeCampoFonte; ?>").val(ui.item.label);
+                }
+            });
+        });
+    });
+</script>

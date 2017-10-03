@@ -1,0 +1,93 @@
+<script>
+    $(document).ready(function(){
+        
+        /**
+         * Configurando entrada de dados no campo
+         */
+        $('#LISW_QT_LICENCA').keyup(function(){
+            
+            if(isNaN($(this).val())){
+                $(this).val('');
+            }else{
+                var x = $(this).val().replace(".","");
+                $(this).val(x);
+            }
+        });
+        
+        //bloqueando campos
+        if($('#LSFW_ID_MARCA').val() == ""){
+            $('#LSFW_ID_MODELO').attr('disabled', 'disabled');
+        }
+        if($('#LSFW_ID_MODELO').val() == ""){
+            $('#LISW_ID_SOFTWARE').attr('disabled', 'disabled');
+        }
+        
+        $("#LSFW_ID_MARCA").change(function(){
+            var marca = $("#LSFW_ID_MARCA");
+            $.ajax({
+                dataType: 'html',
+                url: "ajaxnometipomodelo/id/"+this.value,
+                beforeSend:function() {
+                    $('#LISW_ID_SOFTWARE').attr('disabled', 'disabled');
+                    $('#LISW_ID_SOFTWARE').val("");
+                    $('#combobox-input-text-LISW_ID_SOFTWARE').val("");
+                    $("#LSFW_ID_MODELO").removeClass('erroInputSelect');
+                    $("#LSFW_ID_MODELO").val("");
+                    $("#LSFW_ID_MODELO").addClass('carregandoInputSelect');
+                },
+                success: function(data) {
+                    $('#LSFW_ID_MODELO').removeAttr('disabled', 'disabled');
+                    $("#LSFW_ID_MODELO").html(data);
+                    $("#LSFW_ID_MODELO").removeClass('carregandoInputSelect');
+                },
+                error: function(){
+                    $("#LSFW_ID_MODELO").removeClass('x-form-field');
+                    $("#LSFW_ID_MODELO").val('Erro ao carregar.');
+                    $("#LSFW_ID_MODELO").addClass('erroInputSelect');
+                    $("#LSFW_ID_MODELO").html('<option>Erro ao carregar</option>');
+                }
+            });      
+        });
+        
+        $("#LSFW_ID_MODELO").change(function(){
+            var marca = $("#LSFW_ID_MARCA").val();
+            var modelo = $(this).val();
+            $.ajax({
+                dataType: 'html',
+                url: "ajaxsoftware/modelo/"+modelo,
+                beforeSend:function() {
+                    $("#LISW_ID_SOFTWARE").removeClass('erroInputSelect');
+                    $("#LISW_ID_SOFTWARE").val("");
+                    $("#LISW_ID_SOFTWARE").addClass('carregandoInputSelect');
+                },
+                success: function(data) {
+                    $('#LISW_ID_SOFTWARE').removeAttr('disabled', 'disabled');
+                    $("#LISW_ID_SOFTWARE").html(data);
+                    $("#LISW_ID_SOFTWARE").removeClass('carregandoInputSelect');
+                },
+                error: function(){
+                    $("#LISW_ID_SOFTWARE").removeClass('x-form-field');
+                    $("#LISW_ID_SOFTWARE").val('Erro ao carregar.');
+                    $("#LISW_ID_SOFTWARE").addClass('erroInputSelect');
+                    $("#LISW_ID_SOFTWARE").html('<option>Erro ao carregar</option>');
+                }
+            });      
+        });
+        
+        $("#LISW_ID_SOFTWARE").combobox({ 
+            selected: function(event, ui) {
+                $('#LISW_ID_SOFTWARE').val(ui.item.value);
+            },
+            changed: function(event, ui) {
+                $('#LISW_ID_SOFTWARE').val(ui.item.value);
+            } 
+        });
+        $("#combobox-input-text-LISW_ID_SOFTWARE").attr("style","width: 492px;");
+        $("#combobox-input-text-LISW_ID_SOFTWARE").css('text-transform','uppercase');
+        
+        
+    })
+</script>
+<?php
+echo $this->form;
+?>

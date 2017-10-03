@@ -1,0 +1,114 @@
+<script>
+    $(document).ready(function () {
+        $('input[type="hidden"]').closest('dd').css('display', 'none').prev().css('display', 'none');
+        $.get('<?php echo $this->baseUrl('js/jquery-1.9.1.js')?>').done(function () {
+            $.get('<?php echo $this->baseUrl('js/jquery-ui-1.10.2/ui/jquery-ui.js')?>').done(function () {
+                $.get('<?php echo $this->baseUrl('js/sosti/trocarsolicitacao.js')?>');
+            });
+        });
+    });
+</script>
+
+<style>
+    .ui-dialog .ui-state-default.ui-dialog-titlebar-close, .ui-widget-content .ui-state-default.ui-dialog-titlebar-close, .ui-widget-header .ui-state-default.ui-dialog-titlebar-close {
+        border: none;
+        background: transparent;
+        font-weight: normal;
+        color: #4a4a4a;
+    }
+
+    .ui-dialog .ui-button-icon-only .ui-icon {
+        left: 0;
+        top: 0;
+
+    }
+    .ui-autocomplete {
+        max-height: 250px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+    }
+
+    /* IE 6 doesn't support max-height
+     * we use height instead, but this forces the menu to always be this tall
+     */
+    * html .ui-autocomplete {
+        height: 250px;
+    }
+
+    button.ui-button {
+        padding: .4em 1em !important;
+    }
+
+    .hide {
+        display: none;
+    }
+</style>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; ">
+    <script>
+        $(function () {
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>Ordenar por <b>Grupo de Serviço</b> e verificar se os dados cadastrados estão corretos.</li>
+        <li>Havendo erro, clicar no botão <b>Editar</b> para corrigir a descrição e os dados do serviço.</li>
+        <li>Para cadastrar um novo serviço clique no botão <b>Novo</b>.</li>
+    </ul>
+
+    <span id="botao_ajuda_recolhe"></span>
+</div>
+<h2>Troca de Solicitante</h2>
+<?php if (!empty($this->sostis)): ?>
+    <?php $this->form->setAttrib('class', 'hide'); ?>
+<?php endif; ?>
+<button id="filter" role="button" class="<?php echo (!empty($this->sostis)) ? '' : 'hide' ?> ui-button">Filtro</button>
+<?php echo $this->form; ?>
+
+<?php if (!empty($this->sostis)): ?>
+    <br/>
+    <br/>
+    <form method="post" action="<?php echo $this->baseUrl("/sosti/trocarsolicitante/novo-solicitante/matricula/$this->matricula") ?>">
+        <input type="hidden" name="lista" value="true"/>
+        <table id="sosti-solicitante" class="grid">
+            <thead>
+            <tr>
+                <th><input id="checkAll" type="checkbox"/></th>
+                <th>Nº da solicitação</th>
+                <th>Tempo Total</th>
+                <th>Nome do Solicitante</th>
+                <th>Serviço Atual</th>
+                <th>Atendente</th>
+                <th>Vinculada</th>
+                <th>Categorias</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($this->sostis as $sosti): ?>
+                <tr>
+                    <td><input type="checkbox" name="sostisSelecionados[]"
+                               value='<?php echo json_encode($sosti) ?>'/></td>
+                    <td><?php echo $sosti["MASCARA_DOCM"] ?></td>
+                    <td><?php echo $sosti["DH_CADASTRO"] ?></td>
+                    <td><?php echo $sosti["DOCM_CD_MATRICULA_CADASTRO"] . ' - ' . $sosti["NOME_USARIO_CADASTRO"] ?></td>
+                    <td><?php echo $sosti["SSER_DS_SERVICO"] ?></td>
+                    <td><?php echo $sosti["ATENDENTE"] ?></td>
+                    <td><?php echo $sosti["VINCULADA"] ?></td>
+                    <td><?php echo $sosti["CATEGORIA"] ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <br/>
+        <button id="trocarsol" class="ui-button" type="submit" data-mat="<?php echo $this->matricula; ?>">
+            Trocar Solicitante
+        </button>
+    </form>
+<?php endif; ?>
+</div>
+
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>

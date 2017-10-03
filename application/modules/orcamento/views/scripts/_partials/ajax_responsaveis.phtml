@@ -1,0 +1,49 @@
+<script type="text/javascript">
+$(function() {
+	$("#SG_DS_FAMILIA_RESPONSAVEL").keypress( function () {
+	  var  ug = $('#DESP_CD_UG').val();
+     $("#SG_DS_FAMILIA_RESPONSAVEL").autocomplete( {
+			source: base_url + '/orcamento/responsavel/ajaxresponsaveis/ug/'+ug+'/',
+			minLength: 3,
+			delay: 100,
+			select: function(event, ui) {
+			$('#DESP_CD_RESPONSAVEL').val(ui.item.cod);
+			},
+            change: function(event, ui) {
+			$('#DESP_CD_RESPONSAVEL').val(ui.item.cod);
+			}
+		});
+	});
+    
+    $('#DESP_CD_UG').change(function(){
+        $('#DESP_CD_RESPONSAVEL').val('');
+        $('#SG_DS_FAMILIA_RESPONSAVEL').val('');
+    });
+
+
+	$("#SOLD_CD_RESPONSAVEL").keypress( function () {
+	  var  ug2 = $('#SOLD_CD_UG').val();
+     $("#SOLD_CD_RESPONSAVEL").autocomplete( {
+			source: base_url + '/orcamento/responsavel/ajaxresponsaveis/ug/'+ug2+'/',
+			minLength: 3,
+			delay: 100,
+			select: function(event, ui) {
+				//console.log(ui.item.cod);
+				$('#RESP_CD_LOTACAO').val(ui.item.cod);
+			},
+            change: function(event, ui) {
+            	//console.log(ui.item.cod);
+				$('#RESP_CD_LOTACAO').val(ui.item.cod);
+			}
+		});
+	});
+    
+    $('#SOLD_CD_UG').change(function(){
+        $('#RESP_CD_LOTACAO').val('');
+        $('#SOLD_CD_RESPONSAVEL').val('');
+    });
+
+
+
+});
+</script>

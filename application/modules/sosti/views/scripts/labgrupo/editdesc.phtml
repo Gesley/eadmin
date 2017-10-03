@@ -1,0 +1,71 @@
+<style type="text/css">
+
+dd#GRMA_ID_MARCA-element {
+
+	width:930px;
+}
+#GRMA_ID_MARCA-element label{
+	display:inline-block;
+	width:150px;
+	/*float:left;*/
+	margin:5px 5px;
+	padding: 3px 0px;
+	border:1px solid #dedede
+}
+
+
+</style>
+ <script type="text/javascript"><!--
+
+ $(function() {
+        $("#GRUP_DS_GRUPO_MAT_SERV").css('text-transform','uppercase');
+        $("#GRUP_DS_GRUPO_MAT_SERV").autocomplete({
+            source: base_url + '/sosti/labgrupo/ajaxcadastrogrupo/',
+            minLength: 3,
+            dataType: 'json',       
+           change: function( event, ui ) {
+               	console.log(ui);
+                        $("#GRUP_DS_GRUPO_MAT_SERV").val(ui.item.label);   
+                    }
+           
+        });
+        $("input:checkbox:checked").parent("label").addClass("hover");
+        $("input:checkbox").click(function(){
+            $(this).parent("label").toggleClass("hover")
+			//VALORES PASSADOS PRA CONTROLLER::1
+			grupoId =  $('#GRUP_ID_GRUPO_MAT_SERV').val();
+			checkboxValue = $(this).attr('value');
+			//::1
+			acao = 'A';
+            if($(this).is(':checked')){
+                flagAtivo = 'S';
+            }else{
+                flagAtivo = 'N';
+                }
+			$.ajax({
+			 url: base_url +'/sosti/labgrupo/atualizaauditoriatabela',
+			dataType: "Text",
+			data:{grupoId:grupoId,acao:acao,Ativo:flagAtivo,checkboxValor:checkboxValue},
+			
+			error:function(xhr){
+				alert(xhr.responseText);
+			}
+			//	}); 
+
+				
+			
+			});
+
+            });     
+     });
+--></script>
+<?php if (isset($this->msg_error)) { ?>
+    <div id="flashMessages">
+        <div class="notice">
+            <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+        </div>
+    </div>
+<?php } ?>
+<?php 
+echo $this->form;
+?>

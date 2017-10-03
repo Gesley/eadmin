@@ -1,0 +1,120 @@
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<div style="padding-left: 20px; padding-top: 10px;">
+    <table>
+        <tr><td colspan="4" >PODER JUDICIÁRIO</td></tr>
+        <tr><td colspan="4" >TRIBUNAL REGIONAL FEDERAL DA 1ª REGIÃO</td></tr>
+        <tr><td colspan="4" ><?php echo 'Relatório de Solicitações por Serviço: ' . $this->parametros["DATA_INICIAL"] . ' a ' . $this->parametros["DATA_FINAL"]; ?></td></tr>
+        <tr><td colspan="4" >Data e Hora da Emissão: <?php echo date("d/m/Y H:i:s"); ?></td></tr>
+    </table>
+    <br />
+
+    <table class="tabela-relatorio">
+        <thead>
+            <tr>
+                <th style="width: 530px;">
+                    Serviço 
+                </th>
+                <th style="width: 40px;">
+                    Mês/Ano
+                </th>
+                <?php if (($this->caixa == "TR|1784|2") || ($this->caixa == "TR|1155|2") || ($this->caixa == "TR|1783|2")): ?>
+                <th style="width: 200px;">
+                        Qtd Manutenções Corretivas
+                    </th>
+                    <th style="width: 200px;">
+                        Qtd Manutenções Evolutivas / Adaptativas / Novos Projetos
+                    </th>
+                <?php else: ?>
+                    <th style="width: 200px;">
+                    Quantidade Total de Demandas
+                </th>
+                <?php if (isset($this->dados[0]['CAT'])) { ?>
+                    <th style="width: 200px;">
+                        Quantidade de <?php echo $this->nomeCategoria ?>
+                    </th>
+                <?php } ?>
+                <?php endif; ?>
+                    
+                
+            </tr>  
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="height: 25px;">
+                </td> 
+            </tr>
+        </tfoot>
+        <tbody>
+            <?php
+            $idServicoAux = "";
+            foreach ($this->dados as $d) {
+                $idServico = $d['SSER_ID_SERVICO'];
+                if ($idServico == $idServicoAux) {
+                    ?>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                            <?php echo $d['MOVI_DH_ENCAMINHAMENTO'] ?>
+                        </td>
+                        <td style="text-align: center;">
+                            <?php echo $d['QTD'] ?>
+                        </td>
+                        <?php if (isset($this->dados[0]['CAT'])) { ?>
+                            <td style="text-align: center;">
+                                <?php echo $d['CAT'] ?>
+                            </td>
+                        <?php } ?>
+                    </tr>
+                    <?php
+                } else {
+                    $idServicoAux = $idServico;
+                    ?>
+                    <tr style="background-color: #eee; padding: 6px; margin-top: 15px;">
+                        <td>
+                            <?php echo $d['SSER_DS_SERVICO'] ?>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        TR|1783|2
+                        <?php if (($this->caixa == "TR|1784|2") || ($this->caixa == "TR|1155|2") || ($this->caixa == "TR|1783|2")): ?>
+                            <td></td>
+                        <?php endif; ?>
+                        <?php if (isset($this->dados[0]['CAT'])) { ?>
+                            <td></td>
+                        <?php } ?>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                            <?php echo $d['MOVI_DH_ENCAMINHAMENTO'] ?>
+                        </td>
+                        
+                        <?php if (($this->caixa == "TR|1784|2") || ($this->caixa == "TR|1155|2") || ($this->caixa == "TR|1783|2")): ?>
+                        <td style="text-align: center;">
+                                <?php echo $d["CATEGORIA_SERVICO_CORRETIVA"] ?>
+                            </td>
+                            <td style="text-align: center;">
+                                <?php echo $d["DEMAIS_CATEGORIAS"] ?>
+                            </td>
+                        <?php else: ?>
+                            <td style="text-align: center;">
+                            <?php echo $d['QTD'] ?>
+                        </td>
+                        <?php if (isset($this->dados[0]['CAT'])) { ?>
+                            <td style="text-align: center;">
+                                <?php echo $d['CAT'] ?>
+                            </td>
+                        <?php } ?>
+                        <?php endif; ?>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+</div>

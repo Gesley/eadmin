@@ -1,0 +1,61 @@
+<?php
+/**
+ * @category	TRF1
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Anderson Sathler M. Ribeiro [asathler@gmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que gera um link com formato de botão
+ * 
+ * @param		string		nomeController		Nome da controller a ser direcionada
+ * @param		string		nomeAction			Nome da action a ser direcionada. Utilizar padrões em Trf1_Orcamento_Definicoes::ACTION_xyz
+ * @param		array		parametros			Array contendo diversos parâmetros e seus valores no link
+ * @param		string		nomeClasse			Nome da classe utilizada para o formato (e imagem) do botão
+ * @param		string		textoBotao			Texto a ser utilizado no link em <a href=''> $textoBotao </a>
+ * @param		string		textoAlternativo	Texto a ser apresentado em <a href=' $textoAlternativo ' ALT='' TITLE=' $textoAlternativo '>
+ * 
+ * @example		echo $this->partial('_partials/botao.phtml', array(	'nomeController'	=> 'controller',
+ * 'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_xyz,
+ * 'parametros'		= array('parametro' => 'valor'),
+ * 'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_xyz,
+ * 'textoBotao'		=> 'texto',
+ * 'textoAlternativo'	=> 'Texto descritivo a ser utilizado do ALT e TITLE do objeto'));
+ */
+
+$arrayUrl = array ('module' => Trf1_Orcamento_Definicoes::NOME_MODULO, 'controller' => $this->escape ( $this->nomeController ), 'action' => $this->escape ( $this->nomeAction ) );
+
+if (isset ( $this->parametros )) {
+	foreach ( $this->parametros as $chave => $valor ) {
+		$arrayUrl [$chave] = $valor;
+	}
+}
+
+$link = $this->url ( $arrayUrl, 0, true );
+
+// Alteração a ser aplicada APENAS nos botões de voltar
+if ( $this->nomeClasse == Orcamento_Business_Dados::CLASSE_VOLTAR ) {
+    // Busca o controle no parâmetro informado
+    $controle = $this->escape ( $this->nomeController );
+    
+    // Retorna a sessão das preferências do usuário para essa grid
+    $sessao = new Orcamento_Business_Sessao ();
+    $url = $sessao->retornaOrdemFiltro ( $controle );
+    
+    if ( $url ) {
+        // Ajuste particular para esse _partial
+        $url = str_replace ( '/' . Trf1_Orcamento_Definicoes::NOME_MODULO, '', $url );
+        $url = str_replace ( '/' . $controle, '', $url );
+        
+        // Se tiver a sessão, sobrescreve a variável com link
+        $link .= $url;
+    }
+}
+
+?>
+<a class="<?php echo $this->escape($this->nomeClasse); ?>"
+	alt="<?php echo $this->escape($this->textoAlternativo); ?>"
+	title="<?php echo $this->escape($this->textoAlternativo); ?>"
+	href="<?php echo $link; ?>"><?php echo $this->escape($this->textoBotao); ?></a>
+&nbsp;

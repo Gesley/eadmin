@@ -1,0 +1,1117 @@
+<?php
+$prdc = new Application_Model_DbTable_SadTbPrdcProtDocProcesso();
+$prdi = new Application_Model_DbTable_SadTbPrdiProcessoDigital();
+$mapperDocumento = new Sisad_Model_DataMapper_Documento();
+$processo = $prdc->getDadosEnderecados($this->DocmDocumento["DOCM_ID_DOCUMENTO"]);
+$protocolado = $prdc->getDadosProtocolados($this->DocmDocumento["DOCM_ID_DOCUMENTO"]);
+$rn_juntadaProcProc = new Trf1_Sisad_Negocio_JuntadaProcessoProcesso();
+$SadTbAnexAnexo = new Application_Model_DbTable_SadTbAnexAnexo();
+?>
+
+<script type="text/javascript">
+    $(function() {
+        $("#tabs").tabs();
+        //$("#tabs").tabs("select", GLOBAL_indice_abas);
+        $("#tabs").tabs({
+            select: function(event, ui) {
+                GLOBAL_indice_abas = ui.index;
+            }
+        });
+        $("#buttonsetmanifestacao").buttonset();
+        $(".abrirAnexo").button({
+            icons: {
+                primary: "ui-icon-folder-open"
+            }
+        }).attr('style', 'width: auto; height: 26px;');
+        $(".alertaButton").button({
+            icons: {
+                primary: "ui-icon-alert"
+            }
+        }).attr('style', 'width: auto; height: 26px;');
+
+        $(".proc_docs_icon_closed").button({
+            icons: {
+                primary: "ui-icon-radio-on"
+            }
+        });
+
+        $(".novoDespacho").button({
+            icons: {
+                primary: "ui-icon-document"
+            }
+        });
+        $('input[name=btnPesq]').click(function() {
+            var buscaNoProcessoForm = $('form[name=buscaNoProcessoForm]');
+            buscaNoProcessoForm.attr('action', base_url + '/sisad/pesquisadcmto/pesquisadocumentoemprocesso');
+        });
+
+    });
+</script>
+<div id="tabs">
+    <ul>
+        <?php
+        if (!$this->DocumentosProcesso) {
+            ?>
+            <li><a href="#tabs-1">Documento</a></li>
+        <?php } else { ?>
+            <li><a href="#tabs-1">Processo</a></li>
+            <?php
+        }
+        if ($this->interessados) {
+            ?>
+            <li><a href="#tabs-2">Partes</a></li>
+            <?php
+        }
+
+        if ($this->vistas) {
+            ?>
+            <li><a href="#tabs-9">Vistas</a></li>
+        <?php } ?>
+
+        <?php
+        if ($processo) {
+            ?>
+            <li><a href="#tabs-3">Para Postagem</a></li>
+            <?php
+        }
+        if ($protocolado) {
+            ?>
+            <li><a href="#tabs-4">Encaminhados</a></li>
+            <?php
+        }
+
+        if ($this->DocumentosProcesso) {
+            ?>
+            <li><a href="#tabs-5">Documentos do Processo</a></li>
+        <?php } ?>
+
+        <li><a href="#tabs-6">Histórico</a></li>
+
+        <?php
+        if ($this->AnexAnexo) {
+            $totalAnexo = "Total de Anexos: " . count($this->AnexAnexo);
+            ?>
+            <li><a href="#tabs-7">Anexos</a></li>
+            <?php
+        }
+
+        $mostraDespacho = false;
+        foreach ($this->DocmDocumentoHistorico as $historico) {
+            if ($historico['FADM_ID_FASE'] == 1040) {
+                $mostraDespacho = true;
+                break;
+            }
+        }
+
+        foreach ($this->DocumentosProcesso as $DocumentosProcesso) {
+            if ($DocumentosProcesso['DTPD_ID_TIPO_DOC'] == 39) {
+                $mostraDespacho = true;
+                break;
+            }
+        }
+
+        if ($mostraDespacho) {
+            ?>
+            <li><a href="#tabs-8">Despacho</a></li>
+            <?php
+        }
+        if (count($this->arrayDetalhe['juntada']['anexo']['processo_processo']) > 0) {
+            ?>
+            <li><a href="#tabs-14">Processos Anexados</a></li>
+            <?php
+        }
+        if (count($this->arrayDetalhe['juntada']['apenso']['processo_processo']) > 0) {
+            ?>
+            <li><a href="#tabs-15">Processos Apensados</a></li>
+            <?php
+        }
+        if (count($this->arrayDetalhe['juntada']['vinculado']['processo_processo']) > 0) {
+            ?>
+            <li><a href="#tabs-16">Processos Vinculados</a></li>
+        <?php } 
+        if (count($this->arrayDetalhe['assinatura']['digital']) > 0) {
+            ?>
+            <li><a href="#tabs-17">Assinaturas digitais</a></li>
+        <?php } ?>
+    </ul>
+    <div id="tabs-1">
+        <table class="" style=" cursor: default;/*border: 1px solid red; border-collapse: separate; border-bottom: 1px solid red;*/" >
+            <tr style="font-size: 12px; font-weight: bold;">
+                <td title="Tipo do documento" colspan="1">
+                    <?php echo $this->DocmDocumento["DTPD_NO_TIPO"] ?>
+                </td>
+                <td title="Número do documento">
+                    Nº:&emsp;<a href="<?php echo $this->fullBaseUrl?>/sisad/pesquisadcmto/pesquisa-doc-email/DOCM_ID_DOCUMENTO/<?php echo $this->DocmDocumento["DOCM_NR_DOCUMENTO"] ?>" >
+                    <?php echo $this->fullUrl . $this->DocmDocumento["DOCM_NR_DOCUMENTO"] ?>
+                    </a>
+                </td>
+                <td title="Data e hora de cadastro">
+                    D/H criação:&emsp;<?php echo $this->DocmDocumento["DOCM_DH_CADASTRO"] ?>
+                </td>
+            </tr>
+            <tr>
+                <th >Nº Documento Usuário:</th>
+                <td title="Número do documento">
+                    
+                    <?php echo $this->DocmDocumento["DOCM_NR_DCMTO_USUARIO"] ?>
+                </td>
+            </tr>
+            <tr>
+                <th >Assunto do documento: </th>
+                <td colspan="3" title="Número do documento">
+                    <?php echo $this->DocmDocumento["AQVP_CD_PCTT"] . ' - ' . $this->DocmDocumento["AQAT_DS_ATIVIDADE"]; ?>
+                </td>
+            </tr>
+            <?php if ($this->objeto) { ?>
+                <tr>
+                    <th >Objeto do Processo: </th>
+                    <td colspan="3" title="Objeto do Processo">
+                        <?php echo $this->objeto; ?>
+                    </td>
+                </tr>
+            <?php } ?>
+            <tr>
+                <th >Situação:</th>
+                <td title="Número do documento">
+                    <?php echo $this->DocmDocumento["TPSD_DS_TIPO_SITUACAO_DOC"] ?>
+                </td>
+                <th >Confidencialidade:</th>
+                <td title="Número do documento">
+                    <?php echo $this->DocmDocumento["CONF_DS_CONFIDENCIALIDADE"] ?>
+                </td>
+            </tr>
+            <tr>
+                <th >Unidade Emissora:</th>
+                <td colspan="3">
+                    <?php //echo $this->DocmDocumento[LOTA_SIGLA_LOTACAO_EMISSORA].' - '.$this->DocmDocumento[LOTA_DSC_LOTACAO_EMISSORA]  ?>
+                    <?php echo $this->DocmDocumento["LOTA_SIGLA_LOTACAO_EMISSORA"]; ?> -
+                    <?php echo $this->DocmDocumento["LOTA_DSC_LOTACAO_EMISSORA"]; ?> -
+                    <?php echo $this->DocmDocumento["LOTA_COD_LOTACAO_EMISSORA"]; ?> -
+                    <?php echo $this->DocmDocumento["FAMILIA_EMISSORA"]; ?>
+                </td>
+            </tr>
+            <tr>
+                <th >Unidade Redatora:</th>
+                <td colspan="3">
+                    <?php echo $this->DocmDocumento["LOTA_SIGLA_LOTACAO_REDATORA"]; ?> -
+                    <?php echo $this->DocmDocumento["LOTA_DSC_LOTACAO_REDATORA"]; ?> -
+                    <?php echo $this->DocmDocumento["LOTA_COD_LOTACAO_REDATORA"]; ?> -
+                    <?php echo $this->DocmDocumento["FAMILIA_REDATORA"]; ?>
+                </td>
+            </tr>
+            <th>Cadastrante:</th>
+            <td colspan="1"><?php echo $this->DocmDocumento["NOME"] ?></td>
+            <th>Matrícula:</th>
+            <td colspan="1"><?php echo $this->DocmDocumento["DOCM_CD_MATRICULA_CADASTRO"] ?></td>
+            </tr>
+            <?php if ($this->ProcessosDocumento) { ?>                    
+                <tr>
+                    <th>Inserido no PA número:</th>
+                    <td colspan="3"><?php echo $this->ProcessosDocumento; ?>
+                    </td>                               
+                </tr>
+                <?php
+            }
+
+            if (count($this->arrayDetalhe['juntada']['apenso']['processo_processo']) > 0){
+                $aux = '';
+                foreach ($this->arrayDetalhe['juntada']['apenso']['processo_processo'] as $apenso) {
+                    if (in_array($apenso['STATUS_JUNTADA'], array('APENSO PRINCIPAL', 'APENSO'))) {
+                        $aux = $apenso['STATUS_JUNTADA'] . ' Nº ' . $apenso['MASC_NR_DOCUMENTO']
+                                . ' em ' . $apenso['VIPD_DH_VINCULACAO']
+                                . '<br/>';
+                    }
+                }
+                if ($aux != '') {
+                    ?>
+                    <tr>
+                        <th>Apensado com:</th>
+                        <td colspan="3">
+                            <?= $aux ?>
+                        </td>
+                    </tr>
+                    <!-- Se o documento for uma minuta -->
+                    <?php
+                }
+            }
+            if ($this->NumDocPrincipal) {
+                ?>                    
+                <tr>
+                    <th>Vinculada ao documento:</th>
+                    <td><?php echo $this->NumDocPrincipal[0]["DOCM_NR_DOCUMENTO"]; ?>
+                    </td>                               
+                </tr>
+                <?php
+            }
+
+            if ($this->NumDocVinculado) {
+                ?>                    
+                <tr>
+                    <th>Minuta vinculada:</th>
+                    <td><?php echo $this->NumDocVinculado[0]["DOCM_NR_DOCUMENTO"]; ?>
+                    </td>                               
+                </tr>
+            <?php }
+            ?>
+            <?php
+            if (is_null($this->DocmDocumento["DOCM_NR_DOCUMENTO_RED"]) && ($this->DocmDocumento["DTPD_NO_TIPO"] == "Processo administrativo")) {
+
+                /* NAO MOSTRA A LINHA "ABRIR:" */
+            } elseif ((!is_null($this->DocmDocumento["DOCM_NR_DOCUMENTO_RED"]) && $this->DocmDocumento["DTPD_NO_TIPO"] == "Processo administrativo") || ($this->DocmDocumento["DTPD_NO_TIPO"] != "Processo administrativo")) {
+                ?>
+                <tr >
+                    <th>Abrir:</th>
+                    <?php $docPrincipal = $SadTbAnexAnexo->getAnexosFase($this->DocmDocumento["DOCM_ID_DOCUMENTO"], $this->DocmDocumento["DOCM_DH_CADASTRO"], $this->DocmDocumento["DOCM_ID_MOVIMENTACAO"]); ?>
+                    <td><a class="<?php
+                        if (is_null($this->DocmDocumento["DOCM_NR_DOCUMENTO_RED"])) {
+                            echo 'alertaButton';
+                        } else {
+                            echo 'abrirAnexo';
+                        }
+                        ?>" 
+                           target="_blank" 
+                           title="<?php
+                           if (is_null($this->DocmDocumento["DOCM_NR_DOCUMENTO_RED"])) {
+                               echo 'Sem Arquivo';
+                           } else {
+                               echo 'Abrir Documento';
+                           }
+                           ?>" 
+                           href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $this->DocmDocumento["DOCM_ID_DOCUMENTO"]; ?>/dcmto/<?php echo $this->DocmDocumento["DOCM_NR_DOCUMENTO_RED"]; ?>/tipo/<?php echo (!empty($this->DocmDocumento["DOCM_ID_TP_EXTENSAO"])) ? ($this->DocmDocumento["DOCM_ID_TP_EXTENSAO"]) : ('') ?>/principal/1 "><?php
+                               if (is_null($this->DocmDocumento["DOCM_NR_DOCUMENTO_RED"]))
+                                   if ($this->DocmDocumento["DTPD_NO_TIPO"] == "Processo administrativo") {
+                                       
+                                   } elseif ($this->DocmDocumento["DTPD_NO_TIPO"] != "Processo administrativo") {
+                                       echo 'Sem Arquivo';
+                                   } else {
+                                       echo 'Abrir';
+                                   }
+                               ?></a></td>
+                </tr>
+            <?php } ?>
+            </tr>
+            <tr >
+                <th>Descrição:</th>
+                <td colspan="3"><?php echo $this->DocmDocumento["DOCM_DS_ASSUNTO_DOC"];  ?></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <div style="font-size: 10pt; padding-left: 6px;">
+                        
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <?php if ($this->interessados): ?>   
+        <div id="tabs-2">
+            <div id="mostra_partes">
+                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                    <legend>Partes Cadastradas</legend>
+                    <?php
+                    foreach ($this->interessados as $i) {
+                        echo $i['NOME'] . "<br/>";
+                    }
+                    ?>
+                </fieldset>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php
+
+    if ($this->vistas) {
+        ?>   
+        <div id="tabs-9">
+            <div id="mostra_vistas">
+                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                    <legend>Quem tem vistas</legend>
+                    <?php
+                    foreach ($this->vistas as $i) {
+                        echo $i['NOME'] . "<br/>";
+                    }
+                    ?>
+                </fieldset>
+            </div>
+        </div>
+    <?php } ?>
+
+
+    <?php
+    if (isset($processo[0]["NOME_EXTERNO"])) {
+        if ($processo[0]["NOME_EXTERNO"]) {
+            ?>
+            <div id="tabs-3">
+                <?php
+                foreach ($processo as $value):
+                    $postagem = new Application_Model_DbTable_SadTbPostPostagemProcDoc();
+                    ?>
+                    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                        <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                            <br/><b>Destino:</b>
+                            <?php echo $value["DESTINATARIO"]; ?>
+                            <br/><b>Destinatário:</b>
+                            <?php echo $value["NOME_EXTERNO"]; ?>
+                            <br/><b>Endereço:</b>
+                            <?php echo $value["POST_DS_ENDERECO_DESTINO"]; ?>
+                            <br/><b>Bairro:</b>
+                            <?php echo $value["POST_DS_BAIRRO_DESTINO"]; ?>
+                            <br/><b>Cidade:</b>
+                            <?php echo $value["POST_DS_CIDADE_DESTINO"]; ?>
+                            <br/><b>UF:</b>
+                            <?php echo $value["POST_CD_UF_DESTINO"]; ?>
+                            <br/><b>CEP:</b>
+                            <?php echo $value["POST_CD_CEP_DESTINO"]; ?>
+                        </div>
+                    </fieldset>
+                    <?php
+                endforeach;
+                ?>
+            </div>
+            <?php
+        }
+    }
+    if ($protocolado) {
+        ?>
+        <div id="tabs-4">
+            <?php
+            foreach ($protocolado as $value):
+                ?>
+                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                    <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                        <br/><b>Nr Protocolo:</b>
+                        <?php echo $value["PRDC_ID_PROTOCOLO"]; ?>
+                        <br/><b>Protocolado Por:</b>
+                        <?php echo $value["CRIADOR"]; ?>
+                        <br/><b>Em:</b>
+                        <?php echo $value["PRDC_DH_PROTOCOLO_DOC_PROC"]; ?>
+                        <br/><b>Destino:</b>
+                        <?php echo $value["DESTINATARIO"]; ?>
+                        <br/><b>Destinatário:</b>
+                        <?php echo $value["NOME_EXTERNO"]; ?>
+                        <br/><b>Endereço:</b>
+                        <?php echo $value["POST_DS_ENDERECO_DESTINO"]; ?>
+                        <br/><b>Bairro:</b>
+                        <?php echo $value["POST_DS_BAIRRO_DESTINO"]; ?>
+                        <br/><b>Cidade:</b>
+                        <?php echo $value["POST_DS_CIDADE_DESTINO"]; ?>
+                        <br/><b>UF:</b>
+                        <?php echo $value["POST_CD_UF_DESTINO"]; ?>
+                        <br/><b>CEP:</b>
+                        <?php echo $value["POST_CD_CEP_DESTINO"]; ?>
+                    </div>
+                    <?php
+                    if ($value["PRDC_IC_RECEBIMENTO"] != 'S') {
+                        echo 'Protocolo aguardando documento físico!';
+                    }
+                    ?>
+                </fieldset>
+                <?php
+            endforeach;
+            ?>
+        </div>
+        <?php
+    }
+    if ($this->DocumentosProcesso) {
+        ?>
+        <div id="tabs-5">
+            <form name="buscaNoProcessoForm" action="" method="POST">
+                <input type="submit" title="Pesquisar Documento no Processo" value="Pesquisar" name="btnPesq">
+                <input type="hidden" value="<?php echo $this->DocmDocumento["DOCM_ID_DOCUMENTO"]; ?>" name="ID_PROCESSO">
+            </form>
+            <?php
+            echo 'Quantidade de Documentos no Processo: ' . count($this->DocumentosProcesso);
+
+            echo $this->partial('_partials/documentosprocesso.phtml', array('DocmDocumento' => $this->DocmDocumento,
+                'DocumentosProcesso' => $this->DocumentosProcesso,
+                'Assinaturas' => $this->assinaturasDocumento,
+                'DocmDocumentoHistorico' => $this->DocmDocumentoHistorico,
+                'MOFA_DH_FASE' => "",
+                'Todos' => 0));
+            ?>
+        </div>
+    <?php } ?>
+
+    <div id="tabs-6">
+        <?php
+        $ultima_movimentacao = NULL;
+        $count = count($this->DocmDocumentoHistorico);
+        for ($i = ($count - 1); $i >= 0; $i--) {
+            if (
+                    strcmp($ultima_movimentacao, $this->DocmDocumentoHistorico[$i]["MOFA_ID_MOVIMENTACAO"]) != 0
+            ) {
+                $this->DocmDocumentoHistorico[$i]['MOSTRA_MOVIMENTACAO'] = true;
+            } else {
+                $this->DocmDocumentoHistorico[$i]['MOSTRA_MOVIMENTACAO'] = false;
+            }
+            $ultima_movimentacao = $this->DocmDocumentoHistorico[$i]["MOFA_ID_MOVIMENTACAO"];
+        }
+
+        foreach ($this->DocmDocumentoHistorico as $historico):
+            $anexos = $SadTbAnexAnexo->getAnexosFase($historico["DOCM_ID_DOCUMENTO"], $historico["MOFA_DH_FASE"], $historico["MOFA_ID_MOVIMENTACAO"]);
+            $identificador = $historico["DOCM_ID_DOCUMENTO"] . '-' . $historico["MOFA_DH_FASE"] . '-' . $historico["MOFA_ID_MOVIMENTACAO"];
+            $numDocumento = $mapperDocumento->getNumeroDocumento($historico['DOCM_ID_DOCUMENTO'], $historico['MOFA_ID_MOVIMENTACAO'], $historico['MOFA_DH_FASE']);
+            ?>
+            <form method="POST" action="../caixaunidade/anexoerro" id="<?php echo $identificador; ?>" enctype="multipart/form-data" >
+                <input type="hidden" value="<?php echo $identificador; ?>" name="identificacao"/>
+                <input type="hidden" value="<?php echo $this->controller; ?>" name="controller"/>
+                <input type="hidden" value="<?php echo $this->caixa; ?>" name="caixa"/>
+                <?php //  echo $this->partial('_partials/caixahiddeninputs.phtml',array('view'=> $this));  ?>  
+                <?php if ($historico['MOSTRA_MOVIMENTACAO'] == true) { ?> 
+                    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                        <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                            <b>Enviada em:&emsp;</b><?php echo $historico["MOFA_DH_FASE"]; ?>
+                            <br/><b>Pela:</b>
+                            <?php echo $historico["LOTA_SIGLA_LOTACAO_ORIGEM"] . ' - ' . $historico["LOTA_DSC_LOTACAO_ORIGEM"]; ?> - <?php echo $historico["MOVI_CD_SECAO_UNID_ORIGEM"]; ?> - <?php echo $historico["FAMILIA_ORIGEM"]; ?>
+                            <br/><b>Por:</b>
+                            <?php
+                            echo $historico["ENCAMINHADOR"];
+                            if ($this->tipodoc <> 'Minuta') {
+                                ?>
+                                <br/><b>Para:</b> 
+                                <?php echo $historico["LOTA_SIGLA_LOTACAO_DESTINO"] . ' - ' . $historico["LOTA_DSC_LOTACAO_DESTINO"]; ?> - <?php echo $historico["MODE_CD_SECAO_UNID_DESTINO"]; ?> - <?php echo $historico["FAMILIA_DESTINO"]; ?>
+
+                                <?php
+                            }
+                            if (!is_null($historico["MODP_CD_MAT_PESSOA_DESTINO"])) {
+                                ?>
+                                <br/><b>Caixa Pessoal de:</b> 
+                                <?php echo $historico["MODP_CD_MAT_PESSOA_DESTINO"]; ?>
+                            <?php } ?>
+                            <br/><b>Recebido em: </b> <?php echo $historico["MODE_DH_RECEBIMENTO"]; ?>: <b>por:</b> 
+                            <?php echo $historico["RECEBEDOR"];
+                            ?>  
+                        </div>
+
+                    </fieldset>
+
+                <?php } ?>
+                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                    <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                        <b>Fase:</b>
+                        <?php
+                        echo str_replace(' SISAD', '', $historico["FADM_DS_FASE"]) . ' em ' . $historico["MOFA_DH_FASE"];
+                        echo $historico["MOFA_DH_FASE"];
+                        if (($numDocumento) && in_array($historico["FADM_ID_FASE"], array(Trf1_Sisad_Definicoes::FASE_ADICAO_DOCUMENTO_PROCESSO, Trf1_Sisad_Definicoes::FASE_AUTUACAO_PROCESSO))) {
+                            echo '<br/><b>Nº documento:</b>' . implode(' , ', $numDocumento);
+                        }
+                        if (
+                                in_array(
+                                        $historico["FADM_ID_FASE"]
+                                        , array(
+                                    Trf1_Sisad_Definicoes::FASE_ANEXAR_PROCESSO_PROCESSO
+                                    , Trf1_Sisad_Definicoes::FASE_DESANEXAR_PROCESSO_PROCESSO
+                                    , Trf1_Sisad_Definicoes::FASE_APENSAR_PROCESSO_PROCESSO
+                                    , Trf1_Sisad_Definicoes::FASE_DESAPENSAR_PROCESSO_PROCESSO
+                                    , Trf1_Sisad_Definicoes::FASE_VINCULA_PROCESSO_PROCESSO
+                                    , Trf1_Sisad_Definicoes::FASE_DESVINCULAR_PROCESSO_PROCESSO
+                                        )
+                                )
+                        ) {
+                            $processosJuntados = $rn_juntadaProcProc->getJuntadaPorFase($this->arrayDetalhe['dados_processo'], null, $historico);
+                            $numeroProcessos = '';
+                            foreach ($processosJuntados as $processo) {
+                                $numeroProcessos .= $processo['DOCM_NR_DOCUMENTO'] . ', ';
+                            }
+                            if (!in_array($historico["FADM_ID_FASE"], array(
+                                        Trf1_Sisad_Definicoes::FASE_VINCULA_PROCESSO_PROCESSO
+                                        , Trf1_Sisad_Definicoes::FASE_DESVINCULAR_PROCESSO_PROCESSO))) {
+                                echo '<br/><b>Status: </b>' . ($processosJuntados[0]['VIPD_ID_PROCESSO_DIGITAL_PRINC'] == $this->dados_processo['PRDI_ID_PROCESSO_DIGITAL'] ? 'Processo principal.' : 'Processo não principal.');
+                            }
+                            echo '<br/><b>Nº processos: </b>' . substr($numeroProcessos, 0, -2);
+                        }
+                        ?>&emsp;
+                        <br/><b>Por:</b>
+                        <?php echo $historico["MOFA_CD_MATRICULA_NOME"]; ?>&emsp;
+                        <br/><b>Descrição:</b>
+                        <div style="margin-right: 10px;">
+                            +  <?php echo $historico["MOFA_DS_COMPLEMENTO"]; ?> 
+                        </div>
+
+                        <?php
+                        if ($anexos) {
+                            ?>
+                            <label>Anexos: </label><br>
+                            <?php
+                            $nr = 1;
+                            $userNs = new Zend_Session_Namespace('userNs');
+                            foreach ($anexos as $semMetadados_p) {
+                                if ($semMetadados_p["ANEX_NM_ANEXO"] === 'Sem informação.') {
+                                    $nomeAnexo = 'Anexo' . $nr;
+                                } else {
+                                    $nomeAnexo = $semMetadados_p["ANEX_NM_ANEXO"];
+                                }
+
+                                /**
+                                 * If para correção do anexo
+                                 */
+                                if ((($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"] == $semMetadados_p["ANEX_ID_TP_EXTENSAO"]) &&
+                                        ($semMetadados_p["ANEX_ID_TP_EXTENSAO"] == $semMetadados_p["ANEX_NM_ANEXO"])) && $historico["MOFA_CD_MATRICULA"] == $userNs->matricula) {
+                                    echo 'O anexo que havia sido inserido apresentou error, favor anexar novamente o arquivo.';
+                                    $submit = true;
+                                    echo $this->form->getElement('ANEXOS');
+                                    ?>
+                                    <?php
+                                } else if ((($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"] == $semMetadados_p["ANEX_ID_TP_EXTENSAO"]) &&
+                                        ($semMetadados_p["ANEX_ID_TP_EXTENSAO"] == $semMetadados_p["ANEX_NM_ANEXO"])) && $historico["MOFA_CD_MATRICULA"] != $userNs->matricula) {
+                                    echo '<font color="#FF3300">Houve erro na inserção do arquivo nesta fase, favor solicite ao responsável que recadastre-o.</font>';
+                                }
+                                /**
+                                 * Fim do IF
+                                 */ else {
+                                    echo $nomeAnexo
+                                    ?> - 
+                                    <a class="<?php
+                                    if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                        echo 'alertaButton';
+                                    } else {
+                                        echo 'abrirAnexo';
+                                    }
+                                    ?>" 
+                                       target="_blank" 
+                                       title="<?php
+                                       if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                           echo 'Sem Arquivo';
+                                       } else {
+                                           echo 'Abrir Documento';
+                                       }
+                                       ?>" 
+                                       <?php $aux2 = explode('.', $nomeAnexo); ?>
+                                       href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $historico["DOCM_ID_DOCUMENTO"]; ?>/dcmto/<?php echo $semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"]; ?>/extensao/<?php echo $aux2[count($aux2) - 1]; ?>">
+                                           <?php
+                                           if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                               echo 'Sem Arquivo';
+                                           } else {
+                                               echo 'Abrir';
+                                           }
+                                           ?>
+                                    </a><br>
+                                    <?php
+                                }
+                                $nr++;
+                            }
+                        }
+                        /**
+                         * IF PARA CORREÇÃO DO ANEXO
+                         */
+                        if ($submit) {
+                            ?>
+                            <button id="envia" type="submit">Enviar</button>
+                            <?php
+                            $submit = false;
+                        }
+                        /**
+                         * FIM DO IF
+                         */
+                        ?>
+                        <br>
+                    </div>
+                </fieldset>
+            </form>   
+
+        <?php endforeach; ?>
+    </div>
+
+    <?php
+    if ($this->AnexAnexo) {
+        ?>
+        <div id="tabs-7">
+            <?php
+            echo $totalAnexo;
+            foreach ($this->AnexAnexo as $semMetadados_p) {
+                if ($semMetadados_p["ANEX_NM_ANEXO"] === 'Sem informação.') {
+                    $nomeAnexo = 'Sem Nome Definido';
+                } else {
+                    $nomeAnexo = $semMetadados_p["ANEX_NM_ANEXO"];
+                }
+                ?>
+                <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                    <div style="margin-left: 10px; margin-top: -14px; font-size: 12px; ">
+                        <div style="margin-left: 10px; font-size: 12px; ">
+                            <p>
+                                <br/><b>Nome do Documento: <?php echo $nomeAnexo; ?></b>
+                                <br/><b>Tipo de Vinculo:</b> Anexado
+                                <br/><b>Data de vinculação:</b>
+                                <?php echo $semMetadados_p["ANEX_DH_FASE"]; ?>
+                            </p><?php
+                            if (($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"] == $semMetadados_p["ANEX_ID_TP_EXTENSAO"]) &&
+                                    ($semMetadados_p["ANEX_ID_TP_EXTENSAO"] == $semMetadados_p["ANEX_NM_ANEXO"])) {
+                                echo '<font color="#FF3300">Houve erro na inserção do arquivo nesta fase, favor solicite ao responsável que recadastre-o.</font>';
+                            }
+                            /**
+                             * Fim do IF
+                             */ else {
+                                echo $nomeAnexo
+                                ?> - 
+                            <a class="<?php
+                            if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                echo 'alertaButton';
+                            } else {
+                                echo 'abrirAnexo';
+                            }
+                            ?>" 
+                               target="_blank" 
+                               title="<?php
+                               if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                   echo 'Sem Arquivo';
+                               } else {
+                                   echo 'Abrir Documento';
+                               }
+                               ?>" 
+                               <?php $aux3 = explode('.', $nomeAnexo); ?>
+                               href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $semMetadados_p["ANEX_ID_DOCUMENTO"]; ?>/dcmto/<?php echo $semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"]; ?>/extensao/<?php echo $aux3[count($aux3) - 1]; ?>">
+                                   <?php
+                                   if (is_null($semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"])) {
+                                       echo 'Sem Arquivo';
+                                   } else {
+                                       echo 'Abrir';
+                                   }
+                                       ?>
+                                </a><br>
+                            <?php } ?>
+                        </div>
+                </fieldset>
+            <?php } ?>
+        </div>
+    <?php } ?>
+
+    <?php if ($mostraDespacho) { ?>
+        <div id="tabs-8">
+            <?php
+            $ultima_movimentacaoDes = NULL;
+            $count = count($this->DocmDocumentoHistorico);
+            ?>
+            <p>
+                <a class="novoDespacho" title="Abrir Documento" href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/despacho/despachodetalhe/S">Novo Despacho</a>
+            </p>
+            <?php
+            foreach ($this->DocmDocumentoHistorico as $historico) {
+
+                if ($historico['FADM_ID_FASE'] == 1040) {
+                    ?> 
+                    <fieldset style="border: 1px solid #A6C9E2; margin-right: 15px;">
+                        <div style="margin-left: 10px; margin-top: 4px; font-size: 12px; ">
+                            <b>Fase:</b>
+                            <?php echo str_replace(' SISAD', '', $historico["FADM_DS_FASE"]); ?>
+                            em  
+                            <?php echo $historico["MOFA_DH_FASE"]; ?> 
+                            <br/><b>Por:</b>
+                            <?php echo $historico["MOFA_CD_MATRICULA_NOME"]; ?>:&emsp;
+                            <br/><b>Descrição:</b>
+                            <div style="margin-right: 10px;">
+                                +  <?php echo $historico["MOFA_DS_COMPLEMENTO"]; ?> 
+                            </div>
+                            <div>
+                                <?php
+                                foreach ($this->AnexAnexo as $semMetadados_p) {
+                                    if ($historico["MOFA_DH_FASE"] == $semMetadados_p["ANEX_DH_FASE"]) {
+                                        ?>
+                                        <div style="margin-right: 10px;"> 
+                                            <?php $aux4 = explode('.', $nomeAnexo); ?>
+                                            <a target="_blank" title="Abrir Documento" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $semMetadados_p['ANEX_ID_DOCUMENTO']; ?>/dcmto/<?php echo $semMetadados_p["ANEX_NR_DOCUMENTO_INTERNO"]; ?>/extensao/<?php echo $aux4[count($aux4) - 1]; ?>">Anexo </a>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <?php
+                }
+                echo $this->partial('_partials/documentosprocesso.phtml', array(
+                    'DocmDocumento' => $this->DocmDocumento,
+                    'DocumentosProcesso' => $this->DocumentosProcesso,
+                    'DocmDocumentoHistorico' => $this->DocmDocumentoHistorico,
+                    'MOFA_DH_FASE' => $historico["MOFA_DH_FASE"],
+                    'Todos' => 1
+                        )
+                );
+            }
+            ?>
+        </div> 
+        <?php
+    }
+    ?>
+
+
+    <?php
+//                    if (count($this->arrayDetalhe['juntada']['anexo']['processo_processo']) > 0) {
+//                        echo '<div id="tabs-6">';
+//                        echo $this->partial('_partials/detalhedocumento/dados_historico.phtml'
+//                                , array(
+//                            'historico_documento' => $this->arrayDetalhe['historico_documento']
+//                            , 'juntada' => $this->arrayDetalhe['juntada']
+//                            , 'dados_processo' => $this->arrayDetalhe['dados_processo']
+//                        ));
+//
+//                        echo '</div>';
+//                    }
+    if (count($this->arrayDetalhe['juntada']['anexo']['processo_processo']) > 0) {
+        echo '<div id="tabs-14">';
+        echo $this->partial('_partials/detalhedocumento/processos_anexados.phtml'
+                , array(
+            'dados_documento' => $this->arrayDetalhe['dados_documento']
+            , 'dados_processo' => $this->arrayDetalhe['dados_processo']
+            , 'anexo' => $this->arrayDetalhe['juntada']['anexo']
+            , 'historico_documento' => $this->arrayDetalhe['historico_documento']
+        ));
+
+        echo '</div>';
+    }
+
+    if (count($this->arrayDetalhe['juntada']['apenso']['processo_processo']) > 0) {
+        echo '<div id="tabs-15">';
+        echo $this->partial('_partials/detalhedocumento/processos_apensados.phtml'
+                , array(
+            'dados_documento' => $this->arrayDetalhe['dados_documento']
+            , 'dados_processo' => $this->arrayDetalhe['dados_processo']
+            , 'apenso' => $this->arrayDetalhe['juntada']['apenso']
+            , 'historico_documento' => $this->arrayDetalhe['historico_documento']
+        ));
+
+        echo '</div>';
+    }
+    if (count($this->arrayDetalhe['juntada']['vinculado']['processo_processo']) > 0) {
+        echo '<div id="tabs-16">';
+        echo $this->partial('_partials/detalhedocumento/processos_vinculados.phtml'
+                , array(
+            'dados_documento' => $this->arrayDetalhe['dados_documento']
+            , 'dados_processo' => $this->arrayDetalhe['dados_processo']
+            , 'vinculado' => $this->arrayDetalhe['juntada']['vinculado']
+            , 'historico_documento' => $this->arrayDetalhe['historico_documento']
+        ));
+
+        echo '</div>';
+    }
+    if (count($this->arrayDetalhe['assinatura']['digital']) > 0) {
+        echo '<div id="tabs-17">';
+        echo $this->partial('_partials/detalhedocumento/assinatura_digital.phtml'
+                , array(
+            'dados_documento' => $this->arrayDetalhe['dados_documento']
+            , 'assinaturas_digitais' => $this->arrayDetalhe['assinatura']['digital']
+        ));
+
+        echo '</div>';
+    }
+    ?>
+                    
+</div>
+
+<?php if ($this->DocumentosProcesso) { ?>
+    <script type="text/javascript" >
+        $(function() {
+            var xhr_abrir_documentos_processo;
+            var dialog_processo_documentos = '';
+
+            $(".docs_pro").click(function() {
+                var this_a = this;
+
+                if (dialog_processo_documentos != '') {
+                    //dialog_processo_documentos.html(' ');
+                    dialog_processo_documentos.remove();
+                }
+
+                $("#dialog_proceso_container").html("<div id='dialog_processo_documentos'></div>");
+
+                dialog_processo_documentos = $("#dialog_processo_documentos");
+                dialog_processo_documentos.dialog({
+                    title: 'Detalhe do documento do processo',
+                    autoOpen: false,
+                    modal: false,
+                    show: 'fold',
+                    hide: 'fold',
+                    resizable: true,
+                    width: 800,
+                    height: 600,
+                    position: [300, 140, 0, 0],
+                    buttons: {
+                        Ok: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+
+                if (xhr_abrir_documentos_processo) {
+                    xhr_abrir_documentos_processo.abort();
+                }
+
+                url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+                xhr_abrir_documentos_processo = $.ajax({
+                    url: url,
+                    dataType: 'html',
+                    type: 'POST',
+                    data: $(this).attr('value'),
+                    contentType: 'application/json',
+                    processData: false,
+                    beforeSend: function() {
+                        dialog_processo_documentos.html('');
+                    },
+                    success: function(data) {
+                        dialog_processo_documentos.html(data);
+
+                        obj = dialog_processo_documentos.find("div#tabs")
+
+                        $(obj).addClass('pro_docs_tabs');
+                        $(".pro_docs_tabs").tabs();
+
+                        dialog_processo_documentos.dialog("open");
+
+                        $(this_a).addClass("ui-state-highlight");
+                        $(this_a).button({
+                            icons: {
+                                primary: "ui-icon-check"
+                            }
+                        });
+
+                    },
+                    complete: function() {
+
+                    },
+                    error: function() {
+
+                    }
+                });
+
+            });
+            $('.removerDocsProc').click(function() {
+                var excluirdados = $(this).attr('codigo');
+                var xhr_excluirDocsPro;
+                $("#divexcluirdocspro").dialog({
+                    title: 'Confirmar',
+                    modal: true,
+                    buttons: {
+                        "Remover Documento": function() {
+                            if (xhr_excluirDocsPro) {
+                                xhr_excluirDocsPro.abort();
+                            }
+                            $(this).dialog("close");
+
+                            url = '<?php echo $this->baseUrl(); ?>/sisad/autuar/removerdocspro';
+                            xhr_excluirDocsPro = $.ajax({
+                                url: url,
+                                dataType: 'html',
+                                type: 'POST',
+                                data: excluirdados,
+                                contentType: 'application/json',
+                                processData: false,
+                                beforeSend: function() {
+                                },
+                                success: function(data) {
+                                    var dados = $.parseJSON(data);
+                                    if (dados.Retorno === 1) {
+                                        var fieldsets = $('#tabs-5, #tabs-8').find('fieldset');
+                                        fieldsets.each(
+                                                function() {
+                                                    var fieldset = $(this);
+                                                    var removerDocsProc = fieldset.find('.removerDocsProc');
+                                                    var codigo = $(removerDocsProc).attr('codigo');
+                                                    //console.log(codigo);
+                                                    //console.log(excluirdados);
+                                                    if (excluirdados == codigo) {
+                                                        fieldset.remove();
+                                                    }
+                                                    if (dados.DocsProcesso <= 1) {
+                                                        removerDocsProc.remove();
+                                                    }
+                                                }
+                                        );
+                                    } else {
+                                        alert('Erro 1: Não foi possível excluir documento do Processo.');
+                                    }
+                                },
+                                complete: function() {
+
+                                },
+                                error: function() {
+                                    alert('Erro 2: Não foi possível excluir documento do Processo.');
+                                }
+                            });
+                        },
+                        Cancelar: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            })
+            $('.removerProcAnexo').click(function() {
+                var excluirdados = $(this).attr('codigo');
+                botao = $(this);
+                var xhr_excluirApenso;
+                var dadosExcluidos = $.parseJSON(excluirdados);
+                $("#div_removerAnexo").dialog({
+                    title: 'Confirmar',
+                    modal: true,
+                    buttons: {
+                        "Remover Anexo": function() {
+                            if (xhr_excluirApenso) {
+                                xhr_excluirApenso.abort();
+                            }
+                            $(this).dialog("close");
+
+                            url = base_url + '/sisad/juntada/removeranexoprocesso';
+                            xhr_excluirApenso = $.ajax({
+                                url: url,
+                                dataType: 'html',
+                                type: 'POST',
+                                data: excluirdados,
+                                contentType: 'application/json',
+                                processData: false,
+                                beforeSend: function() {
+                                    $('#fieldSet_' + dadosExcluidos.codigo_anexo_detalhe + ' > .carregaAjax').show('slow');
+                                },
+                                success: function(data) {
+                                    if (data == '"sucesso"') {
+                                        $('#fieldSet_' + dadosExcluidos.codigo_anexo_detalhe).removeClass('processo_anexo_ativo');
+                                        aux = $(botao).closest('.ui-tabs-panel').find("#qtd_processos_anexados").html() * 1 - 1;
+                                        $(botao).closest('.ui-tabs-panel').find("#qtd_processos_apensos").html(aux);
+                                        $('#excluirProAnex_' + dadosExcluidos.codigo_anexo_detalhe).remove();
+                                        $('#fieldSet_' + dadosExcluidos.codigo_anexo_detalhe).css('background', '#ff9');
+                                        $('#fieldSet_' + dadosExcluidos.codigo_anexo_detalhe + ' > div > div > p').prepend('<br/><b style="color: red">Anexo removido</b>');
+                                    } else {
+                                        $('#fieldSet_' + dadosExcluidos.codigo_anexo_detalhe + ' > .carregaAjax').hide('slow');
+                                        alert('Erro 1: Não foi possível excluir o anexo.');
+                                    }
+                                },
+                                complete: function() {
+                                    $('#fieldSet_' + dadosExcluidos.codigo_anexo_detalhe + ' > .carregaAjax').hide('slow');
+                                },
+                                error: function() {
+                                    alert('Erro 2: Não foi possível excluir o anexo.');
+                                }
+                            });
+                        },
+                        Cancelar: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+            $('.removerProcApenso').click(function() {
+                var excluirdados = $(this).attr('codigo');
+                botao = $(this);
+                console.log(excluirdados);
+                var xhr_excluirApenso;
+                var dadosExcluidos = $.parseJSON(excluirdados);
+                $("#div_removerApenso").dialog({
+                    title: 'Confirmar',
+                    modal: true,
+                    buttons: {
+                        "Remover Apenso": function() {
+                            if (xhr_excluirApenso) {
+                                xhr_excluirApenso.abort();
+                            }
+                            $(this).dialog("close");
+
+                            url = base_url + '/sisad/juntada/removerapenso';
+                            xhr_excluirApenso = $.ajax({
+                                url: url,
+                                dataType: 'html',
+                                type: 'POST',
+                                data: excluirdados,
+                                contentType: 'application/json',
+                                processData: false,
+                                beforeSend: function() {
+                                    $('#fieldSet_' + dadosExcluidos.codigo_apenso_detalhe + ' > .carregaAjax').show('slow');
+                                },
+                                success: function(data) {
+                                    if (data == '"sucesso"') {
+                                        $('#fieldSet_' + dadosExcluidos.codigo_apenso_detalhe).removeClass('processo_apenso_ativo');
+                                        aux = $(botao).closest('.ui-tabs-panel').find("#qtd_processos_apensos").html() * 1 - 1;
+                                        $(botao).closest('.ui-tabs-panel').find("#qtd_processos_apensos").html(aux);
+                                        $('#excluirdocspro_' + dadosExcluidos.codigo_apenso_detalhe).remove();
+                                        $('#fieldSet_' + dadosExcluidos.codigo_apenso_detalhe).css('background', '#ff9');
+                                        $('#fieldSet_' + dadosExcluidos.codigo_apenso_detalhe + ' > div > div > p').prepend('<br/><b style="color: red">Apenso removido</b>');
+                                    } else {
+                                        $('#fieldSet_' + dadosExcluidos.codigo_apenso_detalhe + ' > .carregaAjax').hide('slow');
+                                        alert('Erro 1: Não foi possível excluir o apenso.');
+                                    }
+                                },
+                                complete: function() {
+                                    $('#fieldSet_' + dadosExcluidos.codigo_apenso_detalhe + ' > .carregaAjax').hide('slow');
+                                },
+                                error: function() {
+                                    alert('Erro 2: Não foi possível excluir o apenso.');
+                                }
+                            });
+                        },
+                        Cancelar: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+            $('.removerProcVinculado').click(function() {
+                var excluirdados = $(this).attr('codigo');
+                var xhr_excluirApenso;
+                var dadosExcluidos = $.parseJSON(excluirdados);
+                $("#div_removerVinculo").dialog({
+                    title: 'Confirmar',
+                    modal: true,
+                    buttons: {
+                        "Remover Vinculo": function() {
+                            if (xhr_excluirApenso) {
+                                xhr_excluirApenso.abort();
+                            }
+                            $(this).dialog("close");
+
+                            url = base_url + '/sisad/juntada/removervinculo';
+                            xhr_excluirApenso = $.ajax({
+                                url: url,
+                                dataType: 'html',
+                                type: 'POST',
+                                data: excluirdados,
+                                contentType: 'application/json',
+                                processData: false,
+                                beforeSend: function() {
+                                    $('#fieldSet_' + dadosExcluidos.codigo_vinculado_detalhe + ' > .carregaAjax').show('slow');
+                                },
+                                success: function(data) {
+                                    if (data == '"sucesso"') {
+                                        $('#fieldSet_' + dadosExcluidos.codigo_vinculado_detalhe).removeClass('processo_vinculado_ativo');
+                                        $("#qtd_processos_vinculados").html($(".processo_vinculado_ativo").size());
+                                        $('#excluirdocspro_' + dadosExcluidos.codigo_vinculado_detalhe).remove();
+                                        $('#fieldSet_' + dadosExcluidos.codigo_vinculado_detalhe).css('background', '#ff9');
+                                        $('#fieldSet_' + dadosExcluidos.codigo_vinculado_detalhe + ' > div > div > p').prepend('<br/><b style="color: red">Vinculo removido</b>');
+                                    } else {
+                                        $('#fieldSet_' + dadosExcluidos.codigo_vinculado_detalhe + ' > .carregaAjax').hide('slow');
+                                        alert('Erro 1: Não foi possível excluir o vinculo.');
+                                    }
+                                },
+                                complete: function() {
+                                    $('#fieldSet_' + dadosExcluidos.codigo_vinculado_detalhe + ' > .carregaAjax').hide('slow');
+                                },
+                                error: function() {
+                                    alert('Erro 2: Não foi possível excluir o vinculo.');
+                                }
+                            });
+                        },
+                        Cancelar: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+            $('input[name=acao]').click(
+                    function() {
+                        var acao = this.value;
+                        var cx_unidade = $('form[name=cx_unid_entrada]');
+                        //console.log(cx_unidade);
+                        if (acao == 'Novo Despacho') {
+                            cx_unidade.attr('action', '<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/despacho');
+
+                        }
+                    }
+            );
+        });
+    </script>
+    <?php
+}
+
+echo '<div id="dialog_proceso_container"></div>';
+echo '<div id="div_removerApenso" style="display: none"> Deseja realmente remover o processo apenso? </div>';
+echo '<div id="div_removerAnexo" style="display: none"> Deseja realmente remover o processo anexado? </div>';
+echo '<div id="div_removerVinculo" style="display: none"> Deseja realmente remover o processo vinculado? </div>';
+?>

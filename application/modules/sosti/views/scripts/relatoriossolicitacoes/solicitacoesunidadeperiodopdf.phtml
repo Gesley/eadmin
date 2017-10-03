@@ -1,0 +1,27 @@
+<table>
+    <tr><th rowspan="6"><img width="80" height="76" src="<?php echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" /></th></tr>
+    <tr><td>PODER JUDICIÁRIO</td><td>Data e Hora da Emissão: <?php echo date("d/m/Y H:i:s"); ?></td></tr>
+    <tr><td>TRIBUNAL REGIONAL FEDERAL DA 1ª REGIÃO</td></tr>
+    <tr><td><?php echo $this->cabecalho["unidadeSolicitante"]; ?></td></tr>
+    <tr><td><?php echo 'Relatório de Solicitações por Período: '.$this->cabecalho["DATA_INICIAL"].' a '.$this->cabecalho["DATA_FINAL"]; ?></td></tr>
+</table>
+<br />
+Total de Solicitações: <?php echo count($this->rows); ?>
+    <?php if($this->exibicao == "C"):
+            echo $this->partial('_partials/relatoriossosti/relatorioCompleto.phtml', 
+                                array( 'data' => $this->rows )); 
+     endif; ?>
+
+    <?php if($this->exibicao == "S"):
+            echo $this->partial('_partials/relatoriossosti/relatorioSimplificadopdf.phtml', 
+                                 array( 'data' => $this->rows )); 
+     endif; ?>
+
+    <?php echo $this->partial('_partials/relatoriossosti/mostraSomatorioSostiPorSituacaopdf.phtml', 
+                                array( 'somatorioSituacao' => $this->somatorioSituacao )); ?>
+    <br/>
+    
+    <?php echo $this->partial('_partials/relatoriossosti/mostraSomatorioSostiPorMespdf.phtml', 
+                                array(  'somatorioMensal' => $this->somatorioMensal )); ?>
+
+   

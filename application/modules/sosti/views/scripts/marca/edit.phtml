@@ -1,0 +1,29 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+            $("#MARC_DS_MARCA").css('text-transform','uppercase');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>Verificar se o Grupo de Serviços está correto.</li>
+        <li>Corrigir a descrição do serviço se necessário.</li>
+        <li>Salvar as alterações realizadas.</li>
+    </ul>
+    <p><b>Flag Ativo </b>indica se o serviço está ativo ou se não é mais realizado;</p>
+    <p><b>Flag Visível </b>indica se o serviço pode ser visualizado pelo usuário final ou apenas pelos servidores lotados nas unidades da TI;</p>
+    <p><b>Flag Tombo </b>indica se é obrigatório o número de um tombo do equipamento de informática para o atendimento a este serviço;</p>
+    <p><b>Flag Anexo </b>indica se é obrigatória uma imagem do erro ou do serviço a ser executado.</p>
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<?php if (isset($this->msg_error)) { ?>
+    <div id="flashMessages">
+        <div class="notice">
+            <strong>Alerta: </strong><?php echo $this->msg_error; ?>
+        </div>
+    </div>
+<?php } ?>
+<?php echo $this->form; ?>

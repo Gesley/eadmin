@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        
+    </head>
+    <body>
+        <table>
+                <tr>
+                    <?php if ($this->param == 'pdf'): ?>
+                        <th>
+                            <img width="80" height="76" src="<?php echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" />
+                        </th>
+                    <?php endif; ?>
+                    <?php if ($this->param == 'xls'): ?>
+                        <th>
+                            <img width="80" src="<?php echo $this->baseUrl(); ?>/img/BrasaoBrancoRelatorio.jpg" />
+                        </th>
+                    <?php endif; ?>
+                    <th>
+                        PODER JUDICIÁRIO
+                        <br />
+                        TRIBUNAL REGIONAL FEDERAL DA PRIMEIRA REGIÃO
+                        <br />
+                        <?php echo $this->titulo; ?>
+                        <br />
+                        <?php echo $this->periodo; ?>
+                    </th>
+                    <th>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </th>
+                    <th>
+                        DATA E HORA DA EMISSÃO: <?php echo $this->horaAtual; ?>
+                        <br />
+                        EMITIDO POR: <?php echo $this->emissor; ?>
+                    </th>
+                    <?php if ($this->fuso != ""): ?>
+                        <th><?php echo $this->secao; ?></th>
+                        <th><?php echo $this->fuso; ?></th>
+                    <?php endif; ?>
+                </tr>
+            </table>
+            <div style="padding-left: 20px; padding-top: 10px; text-align: justify;">
+            <?php 
+            if (isset($this->descricao)) {
+                echo "<p><strong>Descrição do Documento:</strong>&nbsp;" . nl2br($this->descricao) . "</p>";
+            }
+            ?>
+            </div>
+            <div style="padding-left: 20px; padding-top: 10px;">
+                <br />
+                <table>
+                    <tbody>
+                         <!--EPA - Volume de ordens de serviço executadas nos prazos acordados--> 
+                        <tr bgcolor="#CCCCCC">
+                            <th colspan="10" align="left" style="border: 1px solid #CCCCCC; padding: 3px;"> &#187; Volume de ordens de serviço executadas nos prazos acordados</th>
+                        </tr>
+
+                        <?php $qtdeSolicitacoesEpa = count($this->solicitacoesEpa); ?>
+                        <tr><td colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;">Total de Chamados Baixados/Encaminhados: <?php echo $this->totalEpaSolicitacoes; ?></td></tr>
+                        <tr><td colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados no Prazo: <?php echo $this->countSolicitacoesNoPrazo; ?></td></tr>
+                        <tr><td colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados com o Prazo Ultrapassado: <?php echo $this->countSolicitacoesUtrapassadas; ?></td></tr>
+                        <tr><td colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;">Chamados Agrupados Secundários (Mesmo Ria sem o principal): <?php echo count($this->secundarias); ?></td></tr>
+                        <tr><th colspan="10" style="border: 1px solid #CCCCCC; padding: 3px;"><center>Lista de Chamados</center></th></tr>
+                        <tr>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Sistema</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Nº do Documento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data do Encaminhamento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">Data da Baixa/Encaminhamento</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">PF Bruto</th>
+                            <th align="left" style="border: 1px solid #CCCCCC; padding: 3px;">PF Líquido</th>
+                        </tr>
+
+                        <?php if ($qtdeSolicitacoesEpa > 0): ?>
+                            <?php
+                            $impressos = array();
+                            foreach ($this->solicitacoesEpa as $epa):
+
+                                if (is_null($epa["REFERENCIA"])) {
+                                    ?>
+                                    <tr>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["SSER_DS_SERVICO"]; ?></td>
+                                        <td style="mso-number-format:'\@'; border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DOCM_NR_DOCUMENTO"].''; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DATA_CHAMADO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["DATA_FIM_CHAMADO"]; ?></td>
+                                        
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["PFBRUTO"]; ?></td>
+                                        <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $epa["PFLIQUIDO"]; ?></td>
+
+                                    </tr>
+                                    <?php
+                                } else {
+                                    if (array_search((string) $epa["DOCM_NR_DOCUMENTO"], $impressos, true) === false) {
+                                        ?>
+                                        <tr><td style="border: 1px solid #CCCCCC; padding: 3px;">&lceil;---Mesmo Ria</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--&rceil;</td></tr>
+                                        <?php
+                                        $arrSaidaConjunto = array();
+                                        foreach ($this->solicitacoesEpa as $cEap => $vEap) {
+                                            if (strcmp($this->solicitacoesEpa[$cEap]["REFERENCIA"], $epa["REFERENCIA"]) == 0) {
+                                                $arrSaidaConjunto[] = $this->solicitacoesEpa[$cEap];
+                                            }
+                                        }
+                                        foreach ($arrSaidaConjunto as $saida) { ?>
+                                            <tr>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["SSER_DS_SERVICO"]; ?></td>
+                                                <td style="mso-number-format:'\@'; border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DOCM_NR_DOCUMENTO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DATA_CHAMADO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["DATA_FIM_CHAMADO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["PFBRUTO"]; ?></td>
+                                                <td style="border: 1px solid #CCCCCC; padding: 3px;"><?php echo $saida["PFLIQUIDO"]; ?></td>
+                                                
+                                            </tr>
+                                            <?php
+                                            $impressos[] = $saida["DOCM_NR_DOCUMENTO"];
+                                        } ?>
+                                        <tr><td style="border: 1px solid #CCCCCC; padding: 3px;">&lfloor;--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--</td><td style="border: 1px solid #CCCCCC; padding: 3px;">--&rfloor;</td></tr>
+                                        <?php
+                                                }
+                                            }
+                                        endforeach;
+                                        ?>
+                        <?php else: ?>
+                            <tr><td colspan="12">Não existem registros.</td></tr>
+                        <?php endif; ?>
+                        <tr>
+                            <td>
+                                <br />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                        <!--Fim Volume de Ordens de Serviço Executadas nos Prazos Acordados-->
+    </body>
+</html>

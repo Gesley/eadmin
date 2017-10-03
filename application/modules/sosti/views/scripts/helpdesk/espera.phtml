@@ -1,0 +1,19 @@
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>Uma solicitação pode ser colocada em <b>Espera</b> pelo atendente, devido ao usuário não estar disponível para que o atendimento seja executado. Normalmente isto não ocorrerá em um atendimento por telefone, mas sim para solicitações que forem feitas pelo usuário.</p>
+    <ul>
+    <li>As solicitações colocadas em espera retornam a <b>caixa de atendimento</b> no dia seguinte, como a mais antiga. Se necessário poderá ser colocada em espera novamente ou encaminhada para o segundo nível afim de que seja mantido contato direto com o solicitante para agendar o atendimento e solucionar o problema.</li>
+    <li>Após <b>Salvar</b> o documento, a tela será limpa e o sistema permitirá que o atendente cadastre outra chamada ou clique no botão <b>Próxima</b> para que o sistema mostre a requisição mais antiga permitindo a continuidade dos atendimentos.</li>
+    </ul>
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+
+<?php echo $this->form; ?>

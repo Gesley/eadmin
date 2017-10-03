@@ -1,0 +1,229 @@
+<?php
+        $this->inlineScript()->appendFile($this->baseUrl() . '/js/jquery-ui-timepicker-addon.js', 'text/javascript')
+                ->appendFile($this->baseUrl() . '/js/sosti/faturamentoRelatorios.js ', 'text/javascript');
+        $userNs = new Zend_Session_Namespace('userNs');
+        $ocsTbPupePerfilUnidPessoa = new Application_Model_DbTable_OcsTbPupePerfilUnidPessoa();
+        $arrayPerfis = $ocsTbPupePerfilUnidPessoa->getTodosPerfilPessoa($userNs->matricula);
+        foreach ($arrayPerfis as $perfil) 
+        {
+            $p = $perfil["PERF_ID_PERFIL"];
+            
+            if ($p == 25 || $p == 31 || $p == 53 || $p == 63)
+            {
+                $idPerfil = $p;
+            }
+        }
+        
+        switch ($idPerfil)
+        {
+            case 25: // DESENVOLVIMENTO E SUSTENTAÇÃO
+                $perfil = 'DSV';
+                break;
+            
+            case 31: // GESTÃO DE DEMANDAS DE TI
+                $perfil = 'GESTAOTI';
+                break;
+            
+            case 53: // GESTOR DO CONTRATO DO DESEN. E SUSTENTAÇÃO
+                $perfil = 'GESTAODSV';
+                break;
+            
+            case 63: // RESPONSÁVEL AFERIÇÃO
+                $perfil = 'AFE';
+                break;
+            
+            default:
+                break;
+        }
+        
+?>
+<fieldset style="display:inline;">
+    <legend>Filtro da Caixa</legend>
+    <?php if (!$this->ultima_pesq == true) { ?> 
+        <p><br/><strong>Utilize o filtro informando os parâmetros desejados <br> Para listar todos os registros envie o formulário de filtro em branco.<br/> É altamente recomendável utilizar o filtro para melhor desempenho da consulta.</strong></p>
+    <?php } ?>
+    <div class="painel">
+        <div class="painel" >
+            <input type="button" title="Último Filtro" name="acao" value="Filtro" id="pesquisar">
+            <a title="Novo Filtro" name="acao" value="Filtrar" id="ultimo_filtro" href="<?php echo $this->baseUrl(); ?>/sosti/faturamento/relatorios/nova/1" >Limpar Filtro/Retirar Filtro</a>
+            &emsp;&emsp;<span style="color: #2E4557;" id="statusfiltro"><strong><?php
+                    if ($this->ultima_pesq == true)
+                        echo "Filtro Ativo";
+                    else
+                        echo "Filtro Inativo";
+                    ?></strong></span>
+        </div> 
+    </div>
+    <div id="pesq_div"  style="display: block;" >
+        <?php
+        echo $this->formGeral;
+        ?>
+        <span id="botao_ajuda_recolhe" ></span>
+    </div>
+</fieldset>
+
+<form name="relatorios" action="" method="post" >
+    <?php if ($this->ultima_pesq == true) { ?> 
+        <?php if (count($this->dados)): ?>
+            <div class="painel" style="float: bottom;">
+                <input type="submit" title="Exportar Documentos" name="acao" value="Exportar"/>
+                <input type="submit" title="Gerar Excel" name="acao" value="Excel"/>
+                <?php if (($idPerfil == 31) || ($idPerfil == 53)): ?>
+                <input type="submit" title="Liberar para Aferição" name="acao" value="Liberar para Aferição"/>
+                <input type="submit" title="Gerar Faturamento" name="acao" value="Gerar Faturamento"/>
+                <?php endif;?>
+                <input type="submit" title="Gerar Relatório SLA" name="acao" value="SLA"/>
+                <input type="hidden" name="TIPO_ENTRADA" value="TIPO_ENTRADA_FATURAMENTO"/>
+            </div>
+            <div id="container_pagination">
+                
+                <div style="float: left; width: 320px; height: auto;">
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Desenvolvimento</th>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <th>Qtd</th>
+                                <th>PF</th>
+                                <th>PL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $qtd = 0;
+                            foreach ($this->total["DSV"] as $statusDsv) {
+                                $qtd += $statusDsv["QTD"];
+                                ?>
+                                <tr>
+                                    <td> <?php echo $statusDsv["NOME"]; ?></td>
+                                    <td> <?php echo $statusDsv["QTD"]; ?></td>
+                                    <td> <?php echo $statusDsv["PF_BRUTO"]; ?></td>
+                                    <td> <?php echo $statusDsv["PF_LIQUIDO"]; ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td> Sem Status</td>
+                                <td> <?php
+                                    $total = count($this->dados) - $qtd;
+                                    echo $total;
+                                    ?></td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div style="float: left; width: 320px;  height: auto;">
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Aferição</th>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <th>Qtd</th>
+                                <th>PF</th>
+                                <th>PL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $qtd = 0;
+                            foreach ($this->total["AFE"] as $statusAfe) {
+                                $qtd += $statusAfe["QTD"];
+                                ?>
+                                <tr>
+                                    <td> <?php echo $statusAfe["NOME"]; ?></td>
+                                    <td> <?php echo $statusAfe["QTD"]; ?></td>
+                                    <td> <?php echo $statusAfe["PF_BRUTO"]; ?></td>
+                                    <td> <?php echo $statusAfe["PF_LIQUIDO"]; ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td> Sem Status</td>
+                                <td> <?php
+                                    $total = count($this->dados) - $qtd;
+                                    echo $total;
+                                    ?></td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div style="width: 320px;  height: auto; float: left;">
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Tribunal</th>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <th>Qtd</th>
+                                <th>PB</th>
+                                <th>PL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $qtd = 0;
+                            foreach ($this->total["TRF"] as $statusTrf) {
+                                $qtd += $statusTrf["QTD"];
+                                ?>
+                                <tr>
+                                    <td> <?php echo $statusTrf["NOME"]; ?></td>
+                                    <td> <?php echo $statusTrf["QTD"]; ?></td>
+                                    <td> <?php echo $statusTrf["PF_BRUTO"]; ?></td>
+                                    <td> <?php echo $statusTrf["PF_LIQUIDO"]; ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td> Sem Status</td>
+                                <td> <?php
+                                    $total = count($this->dados) - $qtd;
+                                    echo $total;
+                                    ?></td>
+                                <td> <?php echo $statusTrf["PF_BRUTO"]; ?></td>
+                                    <td> <?php echo $statusTrf["PF_LIQUIDO"]; ?></td>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <div style="padding-top: 50px; margin: 0 auto;
+                width: 960px;
+                overflow: auto;">
+                    Use as setas laterais para navegação.
+                <?php if($perfil === 'DSV'){ 
+                    echo $this->partial('faturamento/relatoriosDSV.phtml',array('dados'=> $this->dados));
+                } else if($perfil === 'GESTAOTI'){ 
+                    echo $this->partial('faturamento/relatoriosTRF.phtml',array('dados'=> $this->dados));
+                } else if($perfil === 'GESTAODSV'){ 
+                    echo $this->partial('faturamento/relatoriosPREP.phtml',array('dados'=> $this->dados));
+                } else if($perfil === 'AFE'){  
+                    echo $this->partial('faturamento/relatoriosAFE.phtml',array('dados'=> $this->dados));
+                } ?>
+                <?php else: ?>
+                <?php if ($this->ultima_pesq): ?>
+                    <p><br/><strong>Não existem registros para os parametros de filtro informados</strong></p>
+                <?php else: ?>
+                    <p><br/>Não existem registros</p>
+                <?php endif; ?>   
+                <?php endif; ?>
+                </div>
+        </div>
+    <?php }else { ?>
+        <p><br/><strong>Utilize o filtro informando os parâmetros desejados</strong></p>
+    <?php } ?>
+</form>
+<div id="dialog-documentos_detalhe">
+    <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+    <div id="dialog-documentos_conteudo"></div>
+</div>

@@ -1,0 +1,41 @@
+<script type="text/javascript" >
+    $( ".abrirAnexo" ).button({
+        icons: {
+            primary: "ui-icon-folder-open"
+        }
+    }).attr('style','width: auto; height: 26px;');
+</script>
+<?php foreach ($this->arrayAnexo as $k=>$a): ?>
+<fieldset>
+    <legend>Solicitação Nº <?php echo $k; ?></legend>
+    <?php if (count($a) > 0): ?>
+        <?php foreach ($a as $v): ?>
+            <table class="grid">
+                <thead>
+                    <tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width="10%">
+                            <input type="checkbox" name="import-solicit[]" value="<?php echo $v["ANEX_NR_DOCUMENTO_INTERNO"].'|;'.$v["ANEX_NM_ANEXO"]; ?>" class="import-solicit" /> 
+                        </td>
+                        <td width="60%">
+                            <strong>Nome do Documento:</strong> <?php echo $v["ANEX_NM_ANEXO"]; ?>
+                            <br />
+                            <strong>Data de Vinculação:</strong> <?php echo $v["ANEX_DH_FASE"]; ?> 
+                        </td>
+                        <td>
+                            <a target="_blank" class="abrirAnexo" title="Abrir Documento" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/id/<?php echo $v["ANEX_ID_DOCUMENTO"]; ?>/dcmto/<?php echo $v["ANEX_NR_DOCUMENTO_INTERNO"]; ?>/extensao/<?php echo $v['EXT']; ?> ">Abrir&emsp;</a>&emsp;
+                        </td>
+                    </tr>
+                    <br /> 
+                </tbody>
+            </table>
+        <?php endforeach; ?>
+        <br />
+    <?php else: ?>
+    <p>Não possui anexo.</p>
+    <?php endif; ?>
+</fieldset>
+<?php endforeach; ?>

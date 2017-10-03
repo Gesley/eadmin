@@ -1,0 +1,75 @@
+<?php
+/**
+  $this->documento
+  $this->anexos;
+  $this->formPesquisa;
+ */
+?>
+<div id="tabs_anexos_sem_metadados-<?= $this->documento['DOCM_ID_DOCUMENTO'] ?>" class="tabs_documentos_juntados">
+    <h3>Documentos Anexados Sem Metadados</h3>
+    <!--    <fieldset style="display:inline;">
+            <div class="painel" >
+                <input class="expandir_filtro" type="button" title="Exibe o filtro dos documentos" name="acao" value="Expandir Filtro"/>
+                <input class="remover_filtro" type="button" title="Remove o filtro dos documentos" name="acao" value="Remover Filtro"/>
+                <span style="color: #2E4557;">
+                    <strong class="label_filtro">
+                        &emsp;&emsp;Filtro Inativo
+                    </strong>
+                </span>
+            </div>
+            <div id="pesq_div" style="display: none;">
+    <? //= $this->formPesquisa ?>
+            </div>
+    
+        </fieldset>-->
+    <div class="tutorial">
+        <br/>
+        <p>
+            A tabela abaixo lista os documentos digitais sem metadados que estão anexados ao documento do tipo <?= $this->documento['DTPD_NO_TIPO'] ?>.
+            <br/>
+            <!--Caso tenha dúvidas quanto a funcionalidade existe um menu (ajuda) na barra de menus superior.-->
+        </p>
+    </div>
+    <!--    <div class="div_tabela_documentos">-->
+    <div>
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th >Ordem</th>
+                    <th >Ação</th>
+                    <th >Data de inserção</th>
+                    <th >Usuário</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->anexos_sem_metadados as $apensos):
+                    ?>
+                    <tr name="rowList" value="<?= $this->escape(Zend_Json::encode($apensos)) ?>" >
+                        <td class="ordem_leitura"></td>
+                        <td style="width: 65px;"> 
+                            <?php
+                            echo '<button class="nova_dialog_sem_metadados" title="Este botão abre a visualização do anexo."></button>';
+                            ?>
+                            <button class="subir" title="Este botão trocará a ordem de leitura com o documento superior."></button>
+                            <button class="remover_tr" title="Este botão removerá o documento da visualização."></button>
+                            <button class="descer" title="Este botão trocará a ordem de leitura com o documento posterior."></button>
+                        </td>
+                        <td><?= $apensos['ANEX_DH_FASE'] ?></td>
+                        <td><?= $apensos['PMAT_CD_MATRICULA'] . ' - ' . $apensos['PNAT_NO_PESSOA'] ?></td>
+                    </tr>
+                    <?php
+                endforeach;
+                ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <!--<td colspan="8">Total: </td>-->
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <br/>
+    <br/>
+
+</div>

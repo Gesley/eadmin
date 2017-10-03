@@ -1,0 +1,83 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+     $this->headScript()->appendFile($this->baseUrl() . '/js/default/sosti/add.js', 'text/javascript');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<!--<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>Nesta área de trabalho, o documento poderá ser encaminhado para um servidor da Divisão ou da Seção, permitindo que este trabalhe no documento ou processo conforme a descrição do encaminhamento.</li>
+        <li>Escolhido o <i>servidor</i> para o qual será enviado o documento, e feita a <i>descrição</i> do encaminhamento, clica-se no botão <b>Encaminhar</b> para que o documento seja enviado a Caixa Pessoal do servidor.</li>
+    </ul>
+    <a target="_blank" title="Documento de ajuda completo" href="<?php //echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>-->
+
+<form method="POST" action="desfazer">
+<?php if (count($this->data)): ?>
+<div class="container_pagination_fixed">
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Tipo</th>
+            <th >Número</th>
+            <th >Encaminhador</th>
+            <th >Data/Hora Encaminhamento</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php
+        foreach($this->data as $data):
+            ?>
+            <tr>
+                    <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+<!--                    <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                    <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                        
+                    <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                    <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+    <!--                <td> <?php //echo $this->escape($data["LOTA_SIGLA_LOTACAO"]) ?></td>-->
+            </tr>
+<!--            <input type="hidden" name="<?php //echo $documentos[$cont] ?>" value="<?php //echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?>">-->
+            <?php ?>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+        </tr>
+<!--        <tr>
+            <td colspan="4"><?php //echo $this->paginationControl($this->data, null, null, null)?></td>
+        </tr>-->
+    </tfoot>
+</table>
+</div>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+
+<!--        <dt>
+            <label>Tipo de Movimentação:</label>
+        </dt>
+        <dd>
+            <label for="movimentacaoI"><input type="radio" id="movimentacaoI" name="movimentacao" value="I">Interna</label>
+            <label for="movimentacaoE"><input type="radio" id="MovimentacaoE" name="movimentacao" value="E">Externa</label>
+            <label for="maloteDigital"><input type="radio" id="MaloteDigital" name="movimentacao" value="M">Malote Digital</label>
+        </dd>-->
+<!--<div id="externo">
+    <?php //echo $this->formExterno;  ?>
+</div>      -->
+        
+<div id="interno">
+    <?php echo $this->formInterno; ?>
+</div>
+</form>
+
+<!--
+<div id="malote">
+    <?php //echo $this->formMalote; ?>
+</div>-->

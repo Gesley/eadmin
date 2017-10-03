@@ -1,0 +1,34 @@
+<?php
+
+$dado['Ano'] = $this->dados['DESP_AA_DESPESA'];
+$dado['UG'] = $this->dados['DESP_CD_UG'];
+$dado['Despesa'] = $this->dados['NR_DESPESA'];
+$dado['Descrição'] = $this->dados['DESP_DS_ADICIONAL'];
+$dado['Responsável'] = $this->dados['SG_FAMILIA_RESPONSAVEL'];
+$dado['PTRES'] = $this->dados['DESP_CD_PT_RESUMIDO'];
+$dado['UO'] = $this->dados['UNOR_CD_UNID_ORCAMENTARIA'];
+$dado['Sigla'] = $this->dados['PTRS_SG_PT_RESUMIDO'];
+$dado['Natureza'] = $this->dados['DESP_CD_ELEMENTO_DESPESA_SUB'];
+$dado['Caráter'] = $this->dados['TIDE_DS_TIPO_DESPESA'];
+$dado['Valor Proposta Orçamentária'] = $this->dados['VR_PROPOSTA_SECOR'];
+$dado['Valor Proposta Aprovada'] = $this->dados['VR_PROPOSTA_APROVADA'];
+$dado['Valor Proposta Recebida'] = $this->dados['VR_PROPOSTA_RECEBIDA'];
+$dado['Valor Proposta Recebida'] = $this->dados['VR_PROPOSTA_RECEBIDA'];
+$dado['Fase Licitação'] = $this->dados['FASL_DS_FASE'];
+
+echo	$this->partial('_partials/tela_detalhe_crud.phtml',
+                    array(
+                        'msgAjuda'	=> $this->msgAjuda,
+                        'msgInfo'	=> $this->msgInfo,
+                        'dados'		=> $dado
+                    ));
+
+echo	'<br />';
+
+echo	$this->partial('_partials/botao.phtml',
+                    array(
+                        'nomeController'	=> 'licitacao',
+                        'nomeAction'		=> Trf1_Orcamento_Definicoes::ACTION_INDEX,
+                        'nomeClasse'		=> Trf1_Orcamento_Definicoes::CLASSE_VOLTAR,
+                        'textoBotao'		=> 'Voltar para listagem',
+                        'textoAlternativo'	=> 'Retornar à tela de Listagem de Fase Licitação'));

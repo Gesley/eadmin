@@ -1,0 +1,21 @@
+<?php
+echo $this->partial('_partials/ajax_rdo.phtml');
+echo $this->partial('_partials/ajuda_informacao.phtml', array('msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo));
+
+echo $this->formulario;
+?>
+<script type="text/javascript">
+
+    // Apresenta o botao para voltar a listagem apos o botao salvar
+    $('#Salvar').after("&nbsp;&nbsp; <a href='<?php echo $this->baseUrl('orcamento/rdo') ?>' name='Voltar' id='Voltar' class='ceo_relatorio ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' type='submit' >Voltar para listagem</a>");
+
+    // Remove caracters especiais do campo PROCESSO 
+    $("#REQV_NR_PROCESSO_ADM").change(function () {
+
+        var valor = $("#REQV_NR_PROCESSO_ADM").val();
+        $(this).val(valor.replace(/\W/g, ""));
+    });
+
+
+</script>

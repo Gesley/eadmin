@@ -1,0 +1,69 @@
+div#menu ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+div#menu ul li {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+	text-decoration: none;
+	float: left;
+	color: #fff;
+}
+
+div#menu ul li a,div#menu ul li a:link,div#menu ul li a:visited,div#menu ul li a:active
+	{
+	text-decoration: none;
+	display: block;
+	color: #fff;
+	font: 12px Verdana, sans-serif;
+	list-style-type: none;
+	margin: 0;
+	margin-left: 10px;
+	padding: 11px 5px;
+	width: auto;
+	border: 0;
+	outline: 0;
+	float: left;
+	/*height:40px;*/
+}
+
+div#menu ul li a:hover {
+	background: #3d83cc;
+	background: #ae0000;
+	color: #fff;
+}
+
+div#menu ul li a.here {
+	background: #fff;
+	color: #000;
+}
+
+/*
+.menuh {
+    width: 100%;
+    float: left;
+}
+*/
+.menuh ul {
+	background: #eee;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 12em;
+	float: left;
+	border: #80aa66 1px solid;
+}
+
+.menuh li {
+	position: relative;
+}
+
+.menuh ul ul {
+	display: none;
+}
+
+.menuh li:hover ul,.menuh li li:hover ul,.menuh li li li:hover ul {
+	display: block;
+}

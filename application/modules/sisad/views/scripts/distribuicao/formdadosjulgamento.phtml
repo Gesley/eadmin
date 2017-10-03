@@ -1,0 +1,58 @@
+<script>
+    $(function() {
+        $("#HDPA_DT_JULGAMENTO").mask("99/99/9999");
+        $("#HDPA_DT_PUBLIC_JULGAMENTO_DJ").mask("99/99/9999");
+        $("#HDPA_DT_PUBLIC_JULGAMENTO_BS").mask("99/99/9999");
+    });
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php
+if ($this->arrayProcessos) {
+    echo $this->comentario;
+    ?>
+    
+    <form method="POST" id="dadosJulgamento" name="dadosJulgamento" enctype="multipart/form-data" >
+        <input type="hidden" name="salvar" value="sim"/>
+        <?php
+        echo $this->form->HDPA_DT_JULGAMENTO;
+        echo $this->form->HDPA_DS_RESUMO_DECISAO;
+        echo $this->form->HDPA_DT_PUBLIC_JULGAMENTO_DJ;
+        echo $this->form->HDPA_DT_PUBLIC_JULGAMENTO_BS;
+        ?>
+        <table class="grid">
+            <thead>
+                <tr> 
+                    <th ><a  href="#">
+                            Processo</a>
+                    </th>
+                    <th ><a  href="#">
+                            Relator</a>
+                    </th>
+                    <th ><a  href="#">
+                            Orgão</a>
+                    </th>
+                    <th ><a  href="#">
+                            Data Distribuição</a>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->arrayProcessos as $arrayProcessoJSon):
+                    $arrayProcesso = Zend_Json::decode($arrayProcessoJSon);
+                    ?>
+                <input type="hidden" name="processo[]" value="<?= $this->escape($arrayProcessoJSon); ?>"/>
+                <tr>
+                    <td><?= $arrayProcesso['DOCM_NR_DOCUMENTO'] ?></td>
+                    <td><?= $arrayProcesso['PNAT_NO_PESSOA'] ?></td>
+                    <td><?= $arrayProcesso['ORGJ_DS_ORGAO_JULGADOR'] ?></td>
+                    <td><?= $arrayProcesso['HDPA_TS_DISTRIBUICAO'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </form>
+    <?php
+}
+?>

@@ -1,0 +1,131 @@
+<style type="text/css">
+	
+	#mensagem {
+        display: none;
+    }
+
+</style>
+<div id="mensagem"></div>
+<?php
+/**
+ * Contém view da action específica
+ * 
+ * e-Admin
+ * e-Orçamento
+ * View
+ * 
+ * @author Anderson Sathler M. Ribeiro <asathler@gmail.com>
+ */
+
+/**
+ * Disponibiliza as informações a serem exibidas na view
+ *
+ * @category Orcamento
+ * @package Orcamento_View_Credito_Incluir
+ * @author Anderson Sathler M. Ribeiro <asathler@gmail.com>
+ * @license Creative Commons Atribuição 3.0 não adaptada
+ *          <http://creativecommons.org/licenses/by/3.0/deed.pt_BR>
+ * @ignore Este código é livre para uso dentro do TRF! Fora do TRF pode apenas
+ *         servir como fonte de estudo ou base para futuros códigos-fonte sem
+ *         nenhuma restrição, salvo pelas informações de @copyright e @author
+ *         que devem ser mantidas inalteradas.
+ * @copyright Tribunal Regional Federal ©2007-2014 <http://www.trf1.jus.br>
+ */
+$ajuda [ 'msgAjuda' ] = $this->msgAjuda;
+$ajuda [ 'msgInfo' ] = $this->msgInfo;
+$ptres [ 'campo' ] = 'CRED_CD_PT_RESUMIDO';
+$natureza [ 'campo' ] = 'CRED_CD_ELEMENTO_DESPESA_SUB';
+$despesa [ 'campo' ] = 'CRED_NR_DESPESA';
+
+echo $this->partial ( '_partials/ajuda_informacao.phtml', $ajuda );
+echo $this->partial ( '_partials/ajax_despesa.phtml', $despesa );
+echo $this->partial ( '_partials/ajax_ptres.phtml', $ptres );
+echo $this->partial ( '_partials/ajax_natureza.phtml', $natureza );
+
+echo $this->formulario;
+?>
+<script type="text/javascript">
+
+		$("#Enviar").click(function(e) {			
+			e.preventDefault();
+			$("html, body").animate({ scrollTop: 0 }, "slow");
+			validaDespesa( $("#CRED_NR_DESPESA").val() ); 			
+		});
+
+		$(".CRED_IC_ACERTADO_MANUAL-element").after();
+
+		$("#CRED_NR_DESPESA").click( function(){
+			$(this).val("");
+		});
+
+		/*$("#CRED_NR_DESPESA").change( function(){
+			validaDespesa( $(this).val() ); 
+		});*/
+		
+	function validaDespesa( despesa ){
+
+		if( despesa =='' ){
+			alert('Favor informar uma despesa');
+			$("#CRED_NR_DESPESA").focus();
+		}
+
+		// campos a validar
+		var $dataemissao = $("#CRED_DT_EMISSAO").val();
+		var $DespesaPtres = $("#CRED_CD_PT_RESUMIDO").val();
+		var $DespesaNatureza  = $("#CRED_CD_ELEMENTO_DESPESA_SUB").val();
+
+		/* if( !despesa || !$dataemissao || !$DespesaPtres || $DespesaNatureza) {
+			$("#mensagem").html('<div class="error"><strong>Erro:</strong> Preencha o formulário corretamente.</div>').show();
+			return false;
+		} */
+
+		url = '<?php echo $this->baseUrl(); ?>/orcamento/novadespesa/ajaxnovadespesa/despesa/'+despesa;
+
+		$.ajax({
+			url: url,
+			dataType: 'html',
+			type: 'GET',
+			contentType: 'application/json',
+			processData: false,
+			success: function(data) {                
+
+                // dados da despesa
+                var $dataObj  = jQuery.parseJSON( data );
+
+				// configura o ano
+				var $anoSplit          = $dataemissao.split('/');
+				var $DespesaPtresSplit = $DespesaPtres.split('-');
+				var $DataPtresSplit    = $dataObj.DESP_CD_PT_RESUMIDO.split('-');
+				var $DespesaNaturezaSplit = $DespesaNatureza.split('-');
+				var $DataNaturezaSplit = $dataObj.DESP_CD_ELEMENTO_DESPESA_SUB.split('-');
+				
+				// validacoes			
+				if( $anoSplit[2] != $dataObj.DESP_AA_DESPESA ){
+					// $("#carregando").css("visibility","hidden");
+					$("#mensagem").html('<div class="error"><strong>Erro:</strong> O campo Data: esta diferente do Ano da despesa informada.</div>').show();
+					$("#CRED_DT_EMISSAO").focus();					
+					return false;
+				} 
+				
+				if( $.trim( $DespesaPtresSplit[0]) != $.trim( $DataPtresSplit[0]) ){
+					// $("#carregando").css("visibility","hidden");
+					$("#mensagem").html('<div class="error"><strong>Erro:</strong> O campo PTRES da despesa esta diferente da PTRES da despesa informada.</div>').show();
+					$("#CRED_CD_PT_RESUMIDO").focus();
+					return false;
+				} 
+
+				if( $.trim($DespesaNaturezaSplit[0]) !=  $.trim( $DataNaturezaSplit[0]) ){
+					$("#carregando").css("visibility","hidden");
+					$("#mensagem").html('<div class="error"><strong>Erro:</strong> O campo Natureza da despesa esta diferente da Natureza da despesa informada.</div>').show();
+					$("#CRED_CD_ELEMENTO_DESPESA_SUB").focus();
+					return false;
+				} 
+				$("#mensagem").hide();		
+				$("#frmCredito").submit();
+				$("#carregando").css("visibility","hidden");
+            }
+        });
+		
+	}
+
+</script>

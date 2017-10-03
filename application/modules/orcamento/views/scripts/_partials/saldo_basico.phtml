@@ -1,0 +1,75 @@
+<?php
+$valor = new Trf1_Orcamento_Valor();
+$sinalMoeda = true;
+
+?>
+
+<table>
+	<tbody>
+		<tr>
+			<td width="80%">Proposta orçamentária:</td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_PROPOSTA_SECOR']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td>Ajuste da proposta orçamentária:</td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_PROPOSTA_REMANEJADA']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td class="total"><abbr title="Campo calculado: Proposta orçamentária + Ajuste da proposta orçamentária">Proposta aprovada:</abbr></td>
+			<td class="total"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_PROPOSTA_APROVADA']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td><abbr title="Somatório das notas de crédito tipo P">Proposta aprovada recebida:</abbr></td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_PROPOSTA_RECEBIDA']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td><abbr title="Somatório das notas de crédito tipo A">Crédito adicional:</abbr></td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_CREDITO_ADICIONAL']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td><abbr title="Somatório das notas de crédito tipo C">Contingenciamento:</abbr></td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_CREDITO_CONTINGENCIA']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td><abbr title="Somatório das notas de crédito tipo E">Crédito extra:</abbr></td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_CREDITO_EXTRA']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td><abbr title="Somatório das notas de crédito tipo Q">Alterações do QDD:</abbr></td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_ALTERACAO_QDD']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td><abbr title="Somatório das notas de crédito tipo S">Saída de crédito:</abbr></td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_CREDITO_SAIDA']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td><abbr title="Somatório das notas de crédito tipo T">Destaque:</abbr></td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_CREDITO_DESTAQUE']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td>Movimentações de crédito:</td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_MOVIMENTACAO']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td class="total"><abbr title="Campo calculado: Proposta aprovada recebida + Crédito adicional + Crédito extra + Alteração de QDD + Saída de crédito + Destaque de crédito + Movimentações de crédito">Dotação descentralizada no exercício:</abbr></td>
+			<td class="total"><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_TOTAL_DESPESA']), $sinalMoeda); ?></td>
+		</tr>
+		<tr>
+			<td><abbr title="Diferença entre Proposta aprovada e Proposta aprovada recebida">Proposta aprovada a receber:</abbr></td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_PROPOSTA_A_RECEBER']), $sinalMoeda, true); ?></td>
+		</tr>
+		<tr>
+			<td><abbr title="Somatório dos recursos a descentralizar">Crédito aprovado a receber:</abbr></td>
+			<td><?php echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_A_RECEBER']), $sinalMoeda, true); ?></td>
+		</tr>
+		<tr>
+			<?php
+			/*
+			 * No caso de alteração no campo 'Dotação autorizada final' lembrar de alterar o arquivo views\scripts\projecao\detalhe.phtml e editar.html
+			 */
+			?>
+			<td class="total"><abbr title="Campo calculado: Dotação descentralizada no exercício + proposta aprovada a receber + crédito aprovado a receber">Dotação autorizada do exercício:</abbr></td>
+			<td class="total" id="propostaaprovada"><?php  echo $valor->retornaNumeroFormatadoValor($this->escape($this->saldo['VR_SUB_TOTAL']), $sinalMoeda); ?></td>
+		</tr>
+	</tbody>
+</table>

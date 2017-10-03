@@ -1,0 +1,130 @@
+<?php
+//$this->inlineScript()->appendFile(($this->baseUrl() . '/js/combobox_app_jquery.js'));
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/sosti/relatoriossolicitacoes.js', 'text/javascript');
+$this->inlineScript()->appendFile($this->baseUrl() . '/js/datepicker.js', 'text/javascript');
+echo $this->form;
+if (count($this->dados) > 0) {
+    ?>
+    <div class="painel">
+        <input type="button" title="Gerar PDF do Relatório" name="acao" value="PDF" id="pdf" onclick="javascript: location.href='<?php echo $this->baseUrl(); ?>/sosti/relatoriossolicitacoes/solicitacoesporservicopdf/';" >      
+        <input type="button" title="Gerar Excel do Relatório" name="acao" value="Excel" id="excel" onclick="javascript: location.href='<?php echo $this->baseUrl(); ?>/sosti/relatoriossolicitacoes/solicitacoesporservicoexcel/';" >      
+    </div>
+
+    <table class="tabela-relatorio">
+        <thead>
+            <tr>
+                <th style="width: 530px;">
+                    Serviço 
+                </th>
+                <th style="width: 40px;">
+                    Mês/Ano
+                </th>
+                <?php if (($this->caixa == "TR|1784|2") || ($this->caixa == "TR|1155|2") || ($this->caixa == "TR|1783|2")): ?>
+                    <th style="width: 200px;">
+                        Qtd Manutenções Corretivas
+                    </th>
+                    <th style="width: 200px;">
+                        Qtd Manutenções Evolutivas / Adaptativas / Novos Projetos
+                    </th>
+                <?php else: ?>
+                    <th style="width: 200px;">
+                        Quantidade Total de Demandas
+                    </th>
+                    <?php if (isset($this->dados[0]['CAT'])) { ?>
+                        <th style="width: 200px;">
+                            Quantidade de <?php echo $this->nomeCategoria ?>
+                        </th>
+                    <?php } ?>
+                <?php endif; ?>
+                    
+                
+            </tr>  
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="height: 25px;">
+                </td> 
+            </tr>
+        </tfoot>
+        <tbody>
+            <?php
+            $idServicoAux = "";
+            foreach ($this->dados as $d) {
+                $idServico = $d['SSER_ID_SERVICO'];
+                if ($idServico == $idServicoAux) {
+                    ?>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                            <?php echo $d['MOVI_DH_ENCAMINHAMENTO'] ?>
+                        </td>
+                        <td style="text-align: center;">
+                            <?php echo $d['QTD'] ?>
+                        </td>
+                        <?php if (isset($this->dados[0]['CAT'])) { ?>
+                            <td style="text-align: center;">
+                                <?php echo $d['CAT'] ?>
+                            </td>
+                        <?php } ?>
+                    </tr>
+                    <?php
+                } else {
+                    $idServicoAux = $idServico;
+                    ?>
+                    <tr style="background-color: #eee; padding: 6px; margin-top: 15px;">
+                        <td>
+                            <?php echo $d['SSER_DS_SERVICO'] ?>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <?php if (($this->caixa == "TR|1784|2") || ($this->caixa == "TR|1155|2") || ($this->caixa == "TR|1783|2")): ?>
+                            <td></td>
+                        <?php endif; ?>
+                        <?php if (isset($this->dados[0]['CAT'])) { ?>
+                            <td></td>
+                        <?php } ?>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        
+                        <td>
+                            <?php echo $d['MOVI_DH_ENCAMINHAMENTO'] ?>
+                        </td>
+                        
+                        <?php if (($this->caixa == "TR|1784|2") || ($this->caixa == "TR|1155|2") || ($this->caixa == "TR|1783|2")): ?>
+                            <td style="text-align: center;">
+                                <?php echo $d["CATEGORIA_SERVICO_CORRETIVA"] ?>
+                            </td>
+                            <td style="text-align: center;">
+                                <?php echo $d["DEMAIS_CATEGORIAS"] ?>
+                            </td>
+                        <?php else: ?>
+                            <td style="text-align: center;">
+                                <?php echo $d['QTD'] ?>
+                            </td>
+                            <?php if (isset($this->dados[0]['CAT'])) { ?>
+                                <td style="text-align: center;">
+                                    <?php echo $d['CAT'] ?>
+                                </td>
+                            <?php } ?>
+                        <?php endif; ?>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+    <?php
+} else {
+    if ($this->semDados) {
+        ?>
+        <div id="flashMessages"><div class="notice"><strong>Alerta: </strong> Não foram encontrados registros para o Caixa de Atendimento no período informado.</div></div>
+        <?php
+    }
+}
+?>

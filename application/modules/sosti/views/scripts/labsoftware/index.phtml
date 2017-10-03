@@ -1,0 +1,107 @@
+<script type="text/javascript">
+    $(function(){
+        $("#licencasDialog").dialog({
+            title    : 'Atualizar Licença',
+            autoOpen : false,
+            modal    : false,
+            resizable: true,
+            width:400,
+            height: 300,
+              
+            buttons : {
+                Fechar: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $('#EditarLicenca').button();
+	
+        $('.licenca').click(function(){
+		
+            $("#licencasDialog").dialog('open');
+            var SoftwareId= $(this).attr('value');
+            $('#LISW_ID_SOFTWARE').val(SoftwareId);
+            var Software = $(this).closest('td').next().html();
+            var Licenca =  $(this).closest('td').next().next().next().next().html();
+            $('#licencaAtual').html(Licenca);
+            $('#nomeSoftware').html(Software);
+            return false;
+        });    
+    })
+</script>
+
+<div style="margin-bottom: 5px;">
+    <a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/labsoftware/add" title="Cadastrar novo Software">Novo</a>
+    <a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/labsoftware/entradalicenca" title="Cadastrar licenças">Licenças</a>
+</div>
+
+<form method="post" action="" name="labsoftware">
+
+    <?php if (count($this->data)): ?> 
+        <div id="container_pagination">
+            <table class="grid">
+                <thead>
+                    <tr>
+
+                        <th width="5%"><a  href="<?php echo $this->baseUrl(); ?>/sosti/labsoftware/index/ordem/LSFW_ID_SOFTWARE/direcao/<?php echo $this->direcao ?> ">Editar</a></th>
+                        <!--th><a  href="<?php //echo $this->baseUrl();   ?>/sosti/labsoftware/index/ordem/LSFW_ID_SOFTWARE/direcao/<?php //echo $this->direcao   ?> ">Atualizar Licenças</a></th-->
+                        <th><a  href="<?php echo $this->baseUrl(); ?>/sosti/labsoftware/index/ordem/LSFW_DS_SOFTWARE/direcao/<?php echo $this->direcao ?> " >Descrição<span class="<?php if ($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc'; ?>"></span></a></th>
+                        <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labsoftware/index/ordem/MARC_DS_MARCA/direcao/<?php echo $this->direcao ?> ">Marca<span class="<?php if ($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc'; ?>"></span></a></th>
+                        <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labsoftware/index/ordem/MODE_DS_MODELO/direcao/<?php echo $this->direcao ?> ">Modelo<span class="<?php if ($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc'; ?>"></span></a></th>
+                        <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labsoftware/index/ordem/LTPS_DS_TP_SOFTWARE/direcao/<?php echo $this->direcao ?> ">Tipo Software<span class="<?php if ($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc'; ?>"></span></a></th>
+                        <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labsoftware/index/ordem/LISW_QT_LICENCA/direcao/<?php echo $this->direcao ?> ">Quantidade de Licenças<span class="<?php if ($this->direcao == 'ASC') echo 'ordenacaodesc'; else echo 'ordenacaoasc'; ?>"></span></a></th>
+                        <th >Licenças Disponíveis</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $objSoftware = new Application_Model_DbTable_SosTbLsfwSoftware();
+                    foreach ($this->data as $data):
+                        $qtd_total = $objSoftware->getQtdTotalSoftware($data["LSFW_ID_SOFTWARE"]);
+                        $qtd_saida = $objSoftware->getQtdLicencasSaida($data["LSFW_ID_SOFTWARE"]);
+                        $resultado = (int) $qtd_total['QTD_TOTAL'] - (int) $qtd_saida['QTD_SAIDA'];
+                        $licencasDisponiveis = ($resultado == 0)?'-': $resultado;
+                        ?>
+                        <tr name="rowList"> 
+                            <td><a class="editar" title="Editar Informação deste Software" href="<?php echo $this->baseUrl(); ?>/sosti/labsoftware/editar/id/<?php echo $this->escape($data["LSFW_ID_SOFTWARE"]) ?> ">Editar</a></td>
+                            <!--td><button class="editar licenca" title="Atualizar Licença" id="EditarLicenca_<?php //echo $this->escape($data["LSFW_ID_SOFTWARE"])   ?>" value="<?php //echo $this->escape($data["LSFW_ID_SOFTWARE"])   ?>">Atualizar</button></td-->
+                            <td><?php echo $this->escape($data["LSFW_DS_SOFTWARE"]) ?></td>
+                            <td><?php echo $this->escape($data["MARC_DS_MARCA"]) ?></td>
+                            <td><?php echo $this->escape($data["MODE_DS_MODELO"]) ?></td>
+                            <td><?php echo $this->escape($data["LTPS_DS_TP_SOFTWARE"]) ?></td>
+                            <td><?php echo $this->escape(($data["LISW_QT_LICENCA"] == '')?'-':$data["LISW_QT_LICENCA"]) ?></td>
+                            <td><?php echo $licencasDisponiveis; ?></td>
+
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9"><?php
+                echo $this->paginationControl($this->data, null, null, null)
+                //-- pagination
+                //-- style
+                //-- partial
+                //-- data
+                    ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        <?php else: ?>
+            <p>Não existem registros</p>
+        <?php endif; ?>
+    </div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action; ?>"/>        
+</form>
+<div id="licencasDialog" style="display:none">
+    Nome Software: <strong><span id="nomeSoftware"></span></strong><br>
+    <!--Quntidade atual de licenças: <strong><span id="licencaAtual"></span></strong>-->
+    <?php echo $this->form; ?>
+
+</div>

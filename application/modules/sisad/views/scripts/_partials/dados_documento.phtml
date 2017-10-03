@@ -1,0 +1,173 @@
+<?php
+/**
+ * @category	SISAD
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Leidison Siqueira Barbosa [leidison_14@hotmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que exibe os dados do documento escolhido.
+ * 
+ * @param		array		dados_processo		
+ * @param		array		dados_documento		
+ * @param		array		processos_pai		
+ * @param		array		minutas		
+ * 
+ * @example		echo $this->partial('_partials/dados_documento.phtml', array());
+ * 
+ */
+?>
+<!--
+MOSTRA OS DADOS DO DOCUMENTO SELECIONADO
+
+Variaveis
+
+$this->dados_processo
+$this->dados_documento
+$this->processos_pai
+$this->minutas = array('documento_da_minuta' => array, 'minuta_do_documento' => array)
+-->
+
+<table class="" style="cursor: default;" >
+    <tr style="font-size: 12px; font-weight: bold;">
+        <td title="Tipo do documento" colspan="1"><?= $this->dados_documento['DTPD_NO_TIPO'] ?></td>
+        <td title="Número do documento" NOWRAP>Nº:&emsp;<?= $this->dados_documento['DOCM_NR_DOCUMENTO'] ?></td>
+        <td title="Data e hora de cadastro" NOWRAP>D/H criação:&emsp;<?= $this->dados_documento['DOCM_DH_CADASTRO'] ?></td>
+    </tr>
+    <tr>
+        <th >Nº Documento Usuário:</th>
+        <td title="Número do documento"><?= $this->dados_documento['DOCM_NR_DCMTO_USUARIO'] ?></td>
+    </tr>
+    <tr>
+        <th >Assunto do documento: </th>
+        <td colspan="3" title="Número do documento">
+            <?= $this->dados_documento['AQVP_CD_PCTT'] . ' - ' . $this->dados_documento['AQAT_DS_ATIVIDADE'] ?>
+        </td>
+    </tr>
+    <?php if (is_array($this->dados_processo)): ?>
+        <tr>
+            <th >Objeto do Processo: </th>
+            <td colspan="3" title="Objeto do Processo"><?= $this->dados_processo['PRDI_DS_TEXTO_AUTUACAO'] ?></td>
+        </tr>
+    <?php endif; ?>
+    <tr>
+        <th >Situação:</th>
+        <td title="Número do documento"><?= $this->dados_documento['TPSD_DS_TIPO_SITUACAO_DOC'] ?></td>
+        <th >Confidencialidade:</th>
+        <td title="Número do documento"><?= $this->dados_documento['CONF_DS_CONFIDENCIALIDADE'] ?></td>
+    </tr>
+    <tr>
+        <th >Unidade Emissora:</th>
+        <td colspan="3">
+            <?= $this->dados_documento['LOTA_SIGLA_LOTACAO_EMISSORA'] ?>
+            - <?= $this->dados_documento['LOTA_DSC_LOTACAO_EMISSORA'] ?>
+            - <?= $this->dados_documento['LOTA_COD_LOTACAO_EMISSORA'] ?>
+            - <?= $this->dados_documento['FAMILIA_EMISSORA'] ?>
+        </td>
+    </tr>
+    <tr>
+        <th >Unidade Redatora:</th>
+        <td colspan="3">
+            <?= $this->dados_documento['LOTA_SIGLA_LOTACAO_REDATORA'] ?>
+            - <?= $this->dados_documento['LOTA_DSC_LOTACAO_REDATORA'] ?>
+            - <?= $this->dados_documento['LOTA_COD_LOTACAO_REDATORA'] ?>
+            - <?= $this->dados_documento['FAMILIA_REDATORA'] ?>
+        </td>
+    </tr>
+    <tr>
+        <th>Cadastrante:</th>
+        <td colspan="1"><?= $this->dados_documento['NOME'] ?></td>
+        <th>Matrícula:</th>
+        <td colspan="1"><?= $this->dados_documento['DOCM_CD_MATRICULA_CADASTRO'] ?></td>
+    </tr>
+    <?php if (count($this->processos_pai) > 0): ?>
+        <tr>
+            <th>Inserido no PA número:</th>
+            <td colspan="3">
+                <?php
+                foreach ($this->processos_pai as $processoPai):
+                    echo $processoPai['DOCM_NR_DOCUMENTO_PROC']
+                    . ' em ' . $processoPai['DCPR_DH_VINCULACAO_DOC']
+                    . ' por ' . $processoPai['PNAT_NO_PESSOA']
+                    . '<br/>';
+                endforeach;
+                ?>
+            </td>
+        </tr>
+        <?php
+    endif;
+    if (count($this->juntada['apenso']['processo_processo']) > 0):
+        $aux = '';
+        foreach ($this->juntada['apenso']['processo_processo'] as $apensos) {
+            if (in_array($apensos['STATUS_JUNTADA'], array('APENSO PRINCIPAL', 'APENSO'))) {
+                $aux = $apensos['STATUS_JUNTADA'] . ' Nº ' . $apensos['MASC_NR_DOCUMENTO']
+                        . ' em ' . $apensos['VIPD_DH_VINCULACAO']
+                        . '<br/>';
+            }
+        }
+        if ($aux != '') {
+            ?>
+            <tr>
+                <th>Apensado com:</th>
+                <td colspan="3">
+                    <?= $aux ?>
+                </td>
+            </tr>
+            <!-- Se o documento for uma minuta -->
+            <?php
+        }
+    endif;
+    if (is_array($this->minutas['documento_da_minuta'])):
+        ?>
+        <tr>
+            <th>Vinculada ao documento:</th>
+            <td><?= $this->minutas['documento_da_minuta']['DOCM_NR_DOCUMENTO'] ?></td>
+        </tr>
+    <?php endif; ?>
+    <!-- Se o documento tiver uma minuta -->
+    <?php if (is_array($this->minutas['minuta_do_documento'])): ?>
+        <tr>
+            <th>Minuta vinculada:</th>
+            <td><?= $this->minutas['minuta_do_documento']['DOCM_NR_DOCUMENTO'] ?></td>
+        </tr>
+    <?php endif; ?>
+    <?php
+    if (is_null($this->dados_documento['DOCM_NR_DOCUMENTO_RED']) && ($this->dados_documento['DTPD_NO_TIPO'] == Trf1_Sisad_Definicoes::TIPO_DOCUMENTO_PROCESSO_DESCRICAO)) {
+        /* NAO MOSTRA A LINHA "ABRIR:" */
+    } elseif ((!is_null($this->dados_documento['DOCM_NR_DOCUMENTO_RED']) && $this->dados_documento['DTPD_NO_TIPO'] == Trf1_Sisad_Definicoes::TIPO_DOCUMENTO_PROCESSO_DESCRICAO) || ($this->dados_documento['DTPD_NO_TIPO'] != Trf1_Sisad_Definicoes::TIPO_DOCUMENTO_PROCESSO_DESCRICAO)) {
+        /* Dados relativos ao link Abrir */
+        if (is_null($this->dados_documento['DOCM_NR_DOCUMENTO_RED'])) {
+            if ($this->dados_documento['DTPD_NO_TIPO'] != Trf1_Sisad_Definicoes::TIPO_DOCUMENTO_PROCESSO_DESCRICAO) {
+                $textoLink = 'Sem Arquivo';
+            } else {
+                $textoLink = '';
+            }
+            $classAbrir = 'alertaButton';
+            $title = 'Sem Arquivo';
+        } else {
+            $classAbrir = 'abrirAnexo';
+            $title = 'Abrir Documento';
+            $textoLink = '';
+        }
+        ?>
+        <tr >
+            <th>Abrir:</th>
+            <td>
+                <a class="<?= $classAbrir ?>" target="_blank" title="<?= $title ?>" href="<?= $this->baseUrl() ?>/sisad/gerenciared/recuperar/id/<?= $this->dados_documento['DOCM_ID_DOCUMENTO'] ?>/dcmto/<?= $this->dados_documento['DOCM_NR_DOCUMENTO_RED'] ?>/tipo/<?= $this->dados_documento['DOCM_ID_TP_EXTENSAO'] ?> ">
+                    <?= $textoLink ?>
+                </a>
+            </td>
+        </tr>
+    <?php } ?>
+    <tr >
+        <th colspan="4">Descrição:</th>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <div style="font-size: 10pt; padding-left: 6px;">
+                <?= $this->dados_documento['DOCM_DS_ASSUNTO_DOC'] ?>
+            </div>
+        </td>
+    </tr>
+</table>

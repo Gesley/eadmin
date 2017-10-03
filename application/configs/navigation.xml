@@ -1,0 +1,2227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configdata>
+    <nav>
+        <guardiao>
+            <label>Guardião</label>
+            <module>guardiao</module>
+            <controller>index</controller>
+            <action>index</action>
+            <resource>guardiao:index.index</resource>
+            <pages>
+                <modulo>
+                    <label>Criar Modulo</label>
+                    <module>guardiao</module>
+                    <controller>modulo</controller>
+                    <action>index</action>
+                    <resource>guardiao:modulo.index</resource>
+                </modulo>
+                <controle>
+                    <label>Criar Controle</label>
+                    <module>guardiao</module>
+                    <controller>controle</controller>
+                    <action>index</action>
+                    <resource>guardiao:controle.index</resource>
+                </controle>
+                <acao>
+                    <label>Criar Ação</label>
+                    <module>guardiao</module>
+                    <controller>acao</controller>
+                    <action>index</action>
+                    <resource>guardiao:acao.index</resource>
+                </acao>
+                <papel>
+                    <label>Gerenciar Papéis</label>
+                    <module>guardiao</module>
+                    <controller>papel</controller>
+                    <action>index</action>
+                    <resource>guardiao:papel.index</resource>
+                </papel>
+                <perfil>
+                    <label>Gerenciar Perfis</label>
+                    <module>guardiao</module>
+                    <controller>perfil</controller>
+                    <action>index</action>
+                    <resource>guardiao:perfil.index</resource>
+                </perfil>
+                <papelsistema>
+                    <label>Perfil Papel</label>
+                    <module>guardiao</module>
+                    <controller>perfilpapel</controller>
+                    <action>form</action>
+                    <resource>guardiao:perfilpapel.form</resource>
+                </papelsistema>
+                <sistemaunidade>
+                    <label>Perfil Unidade</label>
+                    <module>guardiao</module>
+                    <controller>unidadeperfil</controller>
+                    <action>form</action>
+                    <resource>guardiao:unidadeperfil.form</resource>
+                </sistemaunidade>
+                <unidadepessoa>
+                    <label>Perfil Pessoa</label>
+                    <module>guardiao</module>
+                    <controller>perfilpessoa</controller>
+                    <action>form</action>
+                    <resource>guardiao:perfilpessoa.form</resource>
+                </unidadepessoa>
+                <perfilpessoaadm>
+                    <label>Perfil Pessoa ADM</label>
+                    <module>guardiao</module>
+                    <controller>perfilpessoaadm</controller>
+                    <action>form</action>
+                    <resource>guardiao:perfilpessoaadm.form</resource>
+                </perfilpessoaadm>
+                <!--                <responsavel>
+                    <label>Responsável Permissão</label>
+                    <module>guardiao</module>
+                    <controller>responsavel</controller>
+                    <action>form</action>
+                    <resource>guardiao:responsavel</resource>
+                </responsavel>-->
+                <appnaocadastrada>
+                    <label>Apps não cadastradas</label>
+                    <module>guardiao</module>
+                    <controller>index</controller>
+                    <action>aplicacoesnaocadastradas</action>
+                    <resource>guardiao:index.aplicacoesnaocadastradas</resource>
+                </appnaocadastrada>
+            </pages>
+        </guardiao>
+
+        <orcamento>
+            <label>Orçamento</label>
+            <module>orcamento</module>
+            <controller>index</controller>
+            <action>index</action>
+            <resource>orcamento:index</resource>
+            <pages>
+                <!-- despesa era aqui -->
+
+                <planejamentoorcamentario>
+                    <label>Planejamento Orçamentário:</label>
+                    <uri>#</uri>
+                    <resource>orcamento:exercicio</resource>
+                    <pages>
+                        <despCompl>
+                            <label>Listagem completa</label>
+                            <module>orcamento</module>
+                            <controller>despesa</controller>
+                            <action>compl</action>
+                            <resource>orcamento:despesa</resource>
+                        </despCompl>
+                        <exercicio>
+                            <label>Exercício</label>
+                            <module>orcamento</module>
+                            <controller>exercicio</controller>
+                            <action>index</action>
+                            <resource>orcamento:exercicio</resource>
+                        </exercicio>
+                        <regra>
+                            <label>Regras</label>
+                            <module>orcamento</module>
+                            <controller>regra</controller>
+                            <action>index</action>
+                            <resource>orcamento:regra</resource>
+                        </regra>
+                        <novadespesa>
+                            <label>Novas despesas</label>
+                            <module>orcamento</module>
+                            <controller>novadespesa</controller>
+                            <action>index</action>
+                            <resource>orcamento:novadespesa</resource>
+                        </novadespesa>
+                        <solicitacaoajuste>
+                            <label>Solicitação de Ajuste</label>
+                            <module>orcamento</module>
+                            <controller>solicitacaoajuste</controller>
+                            <action>index</action>
+                            <resource>orcamento:solicitacaoajuste</resource>
+                        </solicitacaoajuste>
+                    </pages>
+                </planejamentoorcamentario>
+
+
+
+                <dipor>
+                    <label>Programação Orçamentária:</label>
+                    <uri>#</uri>
+                    <resource>orcamento:movimentacaocred</resource>
+                    <pages>
+                        <despesa>
+                            <label>Despesas</label>
+                            <uri>#</uri>
+                            <resource>orcamento:despesa</resource>
+                            <pages>
+                                <listagens>
+                                    <label>Listagens</label>
+                                    <uri>#</uri>
+                                    <resource>orcamento:despesa</resource>
+                                    <pages>
+                                        <despIndex>
+                                            <label>Listagem resumida</label>
+                                            <module>orcamento</module>
+                                            <controller>despesa</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:despesa</resource>
+                                        </despIndex>
+                                        <despOrcam>
+                                            <label>Identificação orçamentária</label>
+                                            <module>orcamento</module>
+                                            <controller>despesa</controller>
+                                            <action>orcam</action>
+                                            <resource>orcamento:despesa</resource>
+                                        </despOrcam>
+                                        <despFinan>
+                                            <label>Programação financeira</label>
+                                            <module>orcamento</module>
+                                            <controller>despesa</controller>
+                                            <action>finan</action>
+                                            <resource>orcamento:despesa</resource>
+                                        </despFinan>
+                                        <despPlanj>
+                                            <label>Planejamento estratégico</label>
+                                            <module>orcamento</module>
+                                            <controller>despesa</controller>
+                                            <action>planj</action>
+                                            <resource>orcamento:despesa</resource>
+                                        </despPlanj>
+                                        <despValor>
+                                            <label>Recursos por despesas</label>
+                                            <module>orcamento</module>
+                                            <controller>despesa</controller>
+                                            <action>valor</action>
+                                            <resource>orcamento:despesa</resource>
+                                        </despValor>
+                                        <despEmpenho>
+                                            <label>Saldo de empenho por despesa</label>
+                                            <module>orcamento</module>
+                                            <controller>empenho</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:empenho</resource>
+                                        </despEmpenho>
+                                        <despDistribuicao>
+                                            <label>Distribuição orçamentária</label>
+                                            <module>orcamento</module>
+                                            <controller>despesa</controller>
+                                            <action>distr</action>
+                                            <resource>orcamento:despesa</resource>
+                                        </despDistribuicao>
+                                        <despCompl>
+                                            <label>Listagem completa</label>
+                                            <module>orcamento</module>
+                                            <controller>despesa</controller>
+                                            <action>compl</action>
+                                            <resource>orcamento:despesa</resource>
+                                        </despCompl>
+                                    </pages>
+                                </listagens>
+                                <trocaptres>
+                                    <label>Trocar PTRES</label>
+                                    <module>orcamento</module>
+                                    <controller>despesa</controller>
+                                    <action>trocaptres</action>
+                                    <resource>orcamento:despesa</resource>
+                                </trocaptres>
+                                <trocafonte>
+                                    <label>Trocar Fonte</label>
+                                    <module>orcamento</module>
+                                    <controller>despesa</controller>
+                                    <action>trocafonte</action>
+                                    <resource>orcamento:despesa</resource>
+                                </trocafonte>
+                                <rdo>
+                                    <label>Requisições (RDO)</label>
+                                    <module>orcamento</module>
+                                    <controller>rdo</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:rdo</resource>
+                                </rdo>
+                                <rdone>
+                                    <label>Requisições (RDO X NE)</label>
+                                    <module>orcamento</module>
+                                    <controller>rdo</controller>
+                                    <action>rdone</action>
+                                    <resource>orcamento:rdo</resource>
+                                </rdone>                                
+                                <saldo>
+                                    <label>Saldo</label>
+                                    <module>orcamento</module>
+                                    <controller>saldo</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:saldo</resource>
+                                </saldo>
+                                <extrato>
+                                    <label>Extrato</label>
+                                    <module>orcamento</module>
+                                    <controller>extrato</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:extrato</resource>
+                                </extrato>
+                                <projecao>
+                                    <label>Projeção orçamentária</label>
+                                    <module>orcamento</module>
+                                    <controller>projecao</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:projecao</resource>
+                                </projecao>
+                                <licitacao>
+                                    <label>Licitação</label>
+                                    <module>orcamento</module>
+                                    <controller>licitacao</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:licitacao</resource>
+                                </licitacao>
+                            </pages>
+                        </despesa>
+                        <solicitacoes>
+                            <label>Solicitações</label>
+                            <uri>#</uri>
+                            <resource>orcamento:novadespesa</resource>
+                            <pages>
+                                <novadespesa>
+                                    <label>Novas despesas</label>
+                                    <module>orcamento</module>
+                                    <controller>novadespesa</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:novadespesa</resource>
+                                </novadespesa>
+                                <movimentacaocrednova>
+                                    <label>Novas movimentações de crédito</label>
+                                    <module>orcamento</module>
+                                    <controller>movimentacaocrednova</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:movimentacaocrednova</resource>
+                                </movimentacaocrednova>
+                            </pages>
+                        </solicitacoes>
+                        <siafi>
+                            <label>SIAFI</label>
+                            <uri>#</uri>
+                            <resource>orcamento:ne</resource>
+                            <pages>
+                                <credito>
+                                    <label>Créditos</label>
+                                    <module>orcamento</module>
+                                    <controller>credito</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:credito</resource>
+                                </credito>
+                                <ne>
+                                    <label>Notas de empenho</label>
+                                    <module>orcamento</module>
+                                    <controller>ne</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:ne</resource>
+                                </ne>
+                                <nc>
+                                    <label>Notas de crédito</label>
+                                    <module>orcamento</module>
+                                    <controller>nc</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:nc</resource>
+                                </nc>
+                                <nd>
+                                    <label>Notas de dotação</label>
+                                    <module>orcamento</module>
+                                    <controller>nd</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:nd</resource>
+                                </nd>
+                                <impnc>
+                                    <label>Importação manual NC</label>
+                                    <module>orcamento</module>
+                                    <controller>importarnc</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarnc</resource>
+                                </impnc>
+                                <impne>
+                                    <label>Importação manual NE</label>
+                                    <module>orcamento</module>
+                                    <controller>importarne</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarne</resource>
+                                </impne>
+                                <impef>
+                                    <label>Importação manual EF</label>
+                                    <module>orcamento</module>
+                                    <controller>importaref</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importaref</resource>
+                                </impef>   
+                                <imppe>
+                                    <label>Importação manual Pré Empenho</label>
+                                    <module>orcamento</module>
+                                    <controller>preempenho</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:preempenho</resource>
+                                </imppe>                                                            
+                                <folha>
+                                    <label>Documento folha</label>
+                                    <module>orcamento</module>
+                                    <controller>folha</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:folha</resource>
+                                </folha>
+                                <importacao>
+                                    <label>Importação</label>
+                                    <module>orcamento</module>
+                                    <controller>importacao</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importacao</resource>
+                                </importacao>
+                            </pages>
+                        </siafi>
+                        <manutencao>
+                            <label>Manutenção</label>
+                            <uri>#</uri>
+                            <resource>orcamento:uo</resource>
+                            <pages>
+                                <permissao>
+                                    <label>Permissões e Acessos</label>
+                                    <module>orcamento</module>
+                                    <controller>permissao</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:permissao</resource>
+                                </permissao>
+                                <gestor>
+                                    <label>Gestores de recursos</label>
+                                    <uri>#</uri>
+                                    <resource>orcamento:ug</resource>
+                                    <pages>
+                                        <ug>
+                                            <label>Unidades gestoras</label>
+                                            <module>orcamento</module>
+                                            <controller>ug</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:ug</resource>
+                                        </ug>
+                                        <responsavel>
+                                            <label>Responsáveis</label>
+                                            <module>orcamento</module>
+                                            <controller>responsavel</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:responsavel</resource>
+                                        </responsavel>
+                                        <padraoug>
+                                            <label>Padrões das unidades gestoras</label>
+                                            <module>orcamento</module>
+                                            <controller>padraoug</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:padraoug</resource>
+                                        </padraoug>
+                                    </pages>
+                                </gestor>
+                                <celulaorcamentaria>
+                                    <label>Célula orçamentária</label>
+                                    <uri>#</uri>
+                                    <resource>orcamento:elemento</resource>
+                                    <pages>
+                                        <esfera>
+                                            <label>Esfera</label>
+                                            <module>orcamento</module>
+                                            <controller>esfera</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:esfera</resource>
+                                        </esfera>
+                                        <ptres>
+                                            <label>Programa de trabalho(PTRES)</label>
+                                            <module>orcamento</module>
+                                            <controller>ptres</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:ptres</resource>
+                                        </ptres>
+                                        <elemento>
+                                            <label>Elemento de despesa</label>
+                                            <module>orcamento</module>
+                                            <controller>elemento</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:elemento</resource>
+                                        </elemento>
+                                        <tipodespesa>
+                                            <label>Caráter da despesa</label>
+                                            <module>orcamento</module>
+                                            <controller>tipodespesa</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:tipodespesa</resource>
+                                        </tipodespesa>
+                                    </pages>
+                                </celulaorcamentaria>
+                                <programacaofinanceira>
+                                    <label>Program. financeira</label>
+                                    <uri>#</uri>
+                                    <resource>orcamento:fonte</resource>
+                                    <pages>
+                                        <fonte>
+                                            <label>Fonte</label>
+                                            <module>orcamento</module>
+                                            <controller>fonte</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:fonte</resource>
+                                        </fonte>
+                                        <categoria>
+                                            <label>Categoria</label>
+                                            <module>orcamento</module>
+                                            <controller>categoria</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:categoria</resource>
+                                        </categoria>
+                                        <vinculacao>
+                                            <label>Vinculação</label>
+                                            <module>orcamento</module>
+                                            <controller>vinculacao</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:vinculacao</resource>
+                                        </vinculacao>
+                                        <tiporecurso>
+                                            <label>Tipos de recurso</label>
+                                            <module>orcamento</module>
+                                            <controller>tiporecurso</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:tiporecurso</resource>
+                                        </tiporecurso>
+                                    </pages>
+                                </programacaofinanceira>
+                                <planestrategico>
+                                    <label>Planejam. estratégico</label>
+                                    <uri>#</uri>
+                                    <resource>orcamento:objetivo</resource>
+                                    <pages>
+                                        <tipoorcamento>
+                                            <label>Tipos de orçamento</label>
+                                            <module>orcamento</module>
+                                            <controller>tipoorcamento</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:tipoorcamento</resource>
+                                        </tipoorcamento>
+                                        <objetivo>
+                                            <label>Objetivos</label>
+                                            <module>orcamento</module>
+                                            <controller>objetivo</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:objetivo</resource>
+                                        </objetivo>
+                                        <programa>
+                                            <label>Programas</label>
+                                            <module>orcamento</module>
+                                            <controller>programa</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:programa</resource>
+                                        </programa>
+                                        <tipooperacional>
+                                            <label>Tipos operacionais</label>
+                                            <module>orcamento</module>
+                                            <controller>tipooperacional</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:tipooperacional</resource>
+                                        </tipooperacional>
+                                        <perspectiva>
+                                            <label>Perspectiva</label>
+                                            <module>orcamento</module>
+                                            <controller>perspectiva</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:perspectiva</resource>
+                                        </perspectiva>
+                                        <macrodesafio>
+                                            <label>Macrodesafio</label>
+                                            <module>orcamento</module>
+                                            <controller>macrodesafio</controller>
+                                            <action>index</action>
+                                            <resource>orcamento:macrodesafio</resource>
+                                        </macrodesafio>
+                                    </pages>
+                                </planestrategico>
+                                <informativo>
+                                    <label>Informativo</label>
+                                    <module>orcamento</module>
+                                    <controller>informativo</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:informativo</resource>
+                                </informativo>
+                                <justificativa>
+                                    <label>Justificativa Padronizada</label>
+                                    <module>orcamento</module>
+                                    <controller>justificativa</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:justificativa</resource>
+                                </justificativa>
+                                <demandante>
+                                    <label>Demandante</label>
+                                    <module>orcamento</module>
+                                    <controller>demandante</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:demandante</resource>
+                                </demandante>
+                                <evento>
+                                    <label>Evento</label>
+                                    <module>orcamento</module>
+                                    <controller>evento</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:evento</resource>
+                                </evento>
+                                <faselicitacao>
+                                    <label>Fases da licitação</label>
+                                    <module>orcamento</module>
+                                    <controller>faselicitacao</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:faselicitacao</resource>
+                                </faselicitacao>
+                                <tiponc>
+                                    <label>Tipos de notas de crédito</label>
+                                    <module>orcamento</module>
+                                    <controller>tiponc</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:tiponc</resource>
+                                </tiponc>
+                                <tiposolicitacao>
+                                    <label>Tipos de solicitação</label>
+                                    <module>orcamento</module>
+                                    <controller>tiposolicitacao</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:tiposolicitacao</resource>
+                                </tiposolicitacao>
+                                <uo>
+                                    <label>Unidades orçamentárias</label>
+                                    <module>orcamento</module>
+                                    <controller>uo</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:uo</resource>
+                                </uo>
+                                <logdados>
+                                    <label>Log's do Sistema</label>
+                                    <module>orcamento</module>
+                                    <controller>logdados</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:logdados</resource>
+                                </logdados>
+                            </pages>
+                        </manutencao>
+                        <pendencia>
+                            <label>Pendências</label>
+                            <module>orcamento</module>
+                            <controller>pendencia</controller>
+                            <action>index</action>
+                            <resource>orcamento:pendencia</resource>
+                        </pendencia>
+                        <movimentacaocred>
+                            <label>Movimentação de crédito</label>
+                            <module>orcamento</module>
+                            <controller>movimentacaocred</controller>
+                            <action>index</action>
+                            <resource>orcamento:movimentacaocred</resource>
+                        </movimentacaocred>
+                        <recursodesc>
+                            <label>Recursos a descentralizar</label>
+                            <module>orcamento</module>
+                            <controller>recursodesc</controller>
+                            <action>index</action>
+                            <resource>orcamento:recursodesc</resource>
+                        </recursodesc>
+                        <bloqueio>
+                            <label>Bloqueios de movimentações</label>
+                            <module>orcamento</module>
+                            <controller>bloqueio</controller>
+                            <action>index</action>
+                            <resource>orcamento:bloqueio</resource>
+                        </bloqueio>
+                        <travaprojecao>
+                            <label>Travamento da projeção</label>
+                            <module>orcamento</module>
+                            <controller>travaprojecao</controller>
+                            <action>index</action>
+                            <resource>orcamento:travaprojecao</resource>
+                        </travaprojecao>
+                    </pages>
+                </dipor>
+
+                <transparenciacnj>
+                    <label>Transparência do CNJ</label>
+                    <uri>#</uri>
+                    <resource>orcamento:alinea</resource>
+                    <pages>
+                        <alinea>
+                            <label>Alinea</label>
+                            <module>orcamento</module>
+                            <controller>alinea</controller>
+                            <action>index</action>
+                            <resource>orcamento:alinea</resource>
+                        </alinea>
+                        <inciso>
+                            <label>Inciso</label>
+                            <module>orcamento</module>
+                            <controller>inciso</controller>
+                            <action>index</action>
+                            <resource>orcamento:inciso</resource>
+                        </inciso>
+                        <regracnj>
+                            <label>Regra CNJ</label>
+                            <module>orcamento</module>
+                            <controller>regracnj</controller>
+                            <action>index</action>
+                            <resource>orcamento:regracnj</resource>
+                        </regracnj>
+                        <importacaotransparencia>
+                            <label>Importação</label>
+                            <uri>#</uri>
+                            <resource>orcamento:importarfinanceiro</resource>
+                            <pages>
+                                <importarfinanceiro>
+                                    <label>Financeiro</label>
+                                    <module>orcamento</module>
+                                    <controller>importarfinanceiro</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarfinanceiro</resource>
+                                </importarfinanceiro>
+
+                                <importarsuplementacao>
+                                    <label>Suplementação</label>
+                                    <module>orcamento</module>
+                                    <controller>importarsuplementacao</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarsuplementacao</resource>
+                                </importarsuplementacao>
+
+                                <importarliquidado>
+                                    <label>Liquidado</label>
+                                    <module>orcamento</module>
+                                    <controller>importarliquidado</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarliquidado</resource>
+                                </importarliquidado>
+
+                                <importardotacao>
+                                    <label>Dotação Inicial</label>
+                                    <module>orcamento</module>
+                                    <controller>importardotacao</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importardotacao</resource>
+                                </importardotacao>
+
+                                <importarcancelamento>
+                                    <label>Cancelamento</label>
+                                    <module>orcamento</module>
+                                    <controller>importarcancelamento</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarcancelamento</resource>
+                                </importarcancelamento>
+
+                                <importarcontingenciamento>
+                                    <label>Contingenciamento</label>
+                                    <module>orcamento</module>
+                                    <controller>importarcontingenciamento</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarcontingenciamento</resource>
+                                </importarcontingenciamento>
+
+                                <importarprovisao>
+                                    <label>Provisão</label>
+                                    <module>orcamento</module>
+                                    <controller>importarprovisao</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarprovisao</resource>
+                                </importarprovisao>
+
+                                <importardestaque>
+                                    <label>Destaque</label>
+                                    <module>orcamento</module>
+                                    <controller>importardestaque</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importardestaque</resource>
+                                </importardestaque>
+
+                                <importarempenhado>
+                                    <label>Empenhado</label>
+                                    <module>orcamento</module>
+                                    <controller>importarempenhado</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarempenhado</resource>
+                                </importarempenhado>
+
+                                <importarpago>
+                                    <label>Pago</label>
+                                    <module>orcamento</module>
+                                    <controller>importarpago</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarpago</resource>
+                                </importarpago>
+
+                                <importarrestosapagar>
+                                    <label>Restos A Pagar</label>
+                                    <module>orcamento</module>
+                                    <controller>importarrestosapagar</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:importarrestosapagar</resource>
+                                </importarrestosapagar>
+
+                            </pages>
+                        </importacaotransparencia>
+
+                        <relatorioscnj>
+                            <label>Relatórios</label>
+                            <uri>#</uri>
+                            <resource>orcamento:gerarrelatoriocnj</resource>
+                            <pages>
+                                <gerarrelatoriocnj>
+                                    <label>Gerar Relatórios CNJ</label>
+                                    <module>orcamento</module>
+                                    <controller>gerarrelatoriocnj</controller>
+                                    <action>index</action>
+                                    <resource>orcamento:gerarrelatoriocnj</resource>
+                                </gerarrelatoriocnj>
+                            </pages>
+                        </relatorioscnj>
+
+                    </pages>
+                </transparenciacnj>
+
+            </pages>
+        </orcamento>
+
+
+        <sisad>
+            <label>Sisad</label>
+            <module>sisad</module>
+            <controller>index</controller>
+            <action>index</action>
+            <resource>sisad:index</resource>
+            <pages>
+                <aviso>
+                    <label>Ger. Listas de Divulgação</label>
+                    <module>sisad</module>
+                    <controller>aviso</controller>
+                    <action>index</action>
+                    <resource>sisad:aviso</resource>
+                </aviso>
+                <pesquisar>
+                    <label>Pesquisar</label>
+                    <module>sisad</module>
+                    <controller>pesquisadcmto</controller>
+                    <action>index</action>
+                    <resource>sisad:pesquisadcmto</resource>
+                </pesquisar>
+                <cadastros>
+                    <label>Cadastros</label>
+                    <uri>#</uri>
+                    <pages>
+                        <documento>
+                            <label>Documento</label>
+                            <module>sisad</module>
+                            <controller>documento</controller>
+                            <action>cadastrar</action>
+                            <resource>sisad:documento</resource>
+                        </documento>
+                        <faseadm>
+                            <label>Fase ADM</label>
+                            <module>sisad</module>
+                            <controller>faseadm</controller>
+                            <action>index</action>
+                            <resource>sisad:faseadm</resource>
+                        </faseadm>
+                        <enderecos>
+                            <label>Pessoas / Orgãos</label>
+                            <module>sisad</module>
+                            <controller>cadastrodcmtoext</controller>
+                            <action>orgaoendereco</action>
+                            <resource>sisad:cadastrodcmtoext</resource>
+                        </enderecos>
+                        <tipodoc>
+                            <label>Tipo de Documento</label>
+                            <module>sisad</module>
+                            <controller>cadastrodcmtoext</controller>
+                            <action>cadastrotipodoc</action>
+                            <resource>sisad:cadastrodcmtoext</resource>
+                        </tipodoc>
+                        <tipoprocesso>
+                            <label>Tipo de Processo</label>
+                            <module>sisad</module>
+                            <controller>tipoprocesso</controller>
+                            <action>list</action>
+                            <resource>sisad:tipoprocesso</resource>
+                        </tipoprocesso>
+                    </pages>
+                </cadastros>
+                <caixapessoal>
+                    <label>Caixa Pessoal</label>
+                    <module>sisad</module>
+                    <controller>caixapessoal</controller>
+                    <action>rascunhos</action>
+                    <resource>sisad:caixapessoal</resource>
+                    <pages>
+                        <pessoalentrada>
+                            <label>Caixa de Entrada</label>
+                            <module>sisad</module>
+                            <controller>caixapessoal</controller>
+                            <action>entrada</action>
+                            <resource>sisad:caixapessoal</resource>
+                        </pessoalentrada>
+                        <arquivadospessoal>
+                            <label>Documentos Arquivados</label>
+                            <module>sisad</module>
+                            <controller>caixapessoal</controller>
+                            <action>arquivadospessoal</action>
+                            <resource>sisad:caixapessoal</resource>
+                        </arquivadospessoal>
+                        <encaminhados>
+                            <label>Documentos Encaminhados</label>
+                            <module>sisad</module>
+                            <controller>caixapessoal</controller>
+                            <action>encaminhados</action>
+                            <resource>sisad:caixapessoal</resource>
+                        </encaminhados>
+                        <notificacoes>
+                            <label>Minhas Notificações</label>
+                            <module>admin</module>
+                            <controller>notificacoes</controller>
+                            <action>minhasnotificacoes</action>
+                            <resource>admin:notificacoes</resource>
+                        </notificacoes>
+                        <minutas>
+                            <label>Minutas</label>
+                            <module>sisad</module>
+                            <controller>caixaminuta</controller>
+                            <action>minutas</action>
+                            <resource>sisad:caixaminuta</resource>
+                            <pages>
+                                <entradaminuta>
+                                    <label>Entrada</label>
+                                    <module>sisad</module>
+                                    <controller>caixaminuta</controller>
+                                    <action>minutas</action>
+                                    <resource>sisad:caixaminuta</resource>
+                                </entradaminuta>
+                                <finalizasminuta>
+                                    <label>Finalizadas</label>
+                                    <module>sisad</module>
+                                    <controller>caixaminuta</controller>
+                                    <action>minutasfinalizadas</action>
+                                    <resource>sisad:caixaminuta</resource>
+                                </finalizasminuta>
+                            </pages>
+                        </minutas>
+                        <novos>
+                            <label>Rascunhos</label>
+                            <module>sisad</module>
+                            <controller>caixapessoal</controller>
+                            <action>rascunhos</action>
+                            <resource>sisad:caixapessoal</resource>
+                        </novos>
+                    </pages>
+                </caixapessoal>
+                <caixaaviso>
+                    <label>Caixa Avisos</label>
+                    <module>sisad</module>
+                    <controller>caixaaviso</controller>
+                    <action>entrada</action>
+                    <resource>sisad:caixaaviso.entrada</resource>
+                    <pages>
+                        <avisopessoal>
+                            <label>Pessoal</label>
+                            <module>sisad</module>
+                            <controller>caixaaviso</controller>
+                            <action>entrada</action>
+                            <resource>sisad:caixaaviso.entrada</resource>
+                        </avisopessoal>
+                        <avisounidade>
+                            <label>Unidade</label>
+                            <module>sisad</module>
+                            <controller>caixaaviso</controller>
+                            <action>entradaunidade</action>
+                            <resource>sisad:caixaaviso.entradaunidade</resource>
+                        </avisounidade>
+                    </pages>
+                </caixaaviso>
+                <caixaunidade>
+                    <label>Caixa Unidade</label>
+                    <module>sisad</module>
+                    <controller>caixaunidade</controller>
+                    <action>rascunhos</action>
+                    <resource>sisad:caixaunidade</resource>
+                    <pages>
+                        <arquivadosunidade>
+                            <label>Arquivados</label>
+                            <module>sisad</module>
+                            <controller>caixaunidade</controller>
+                            <action>arquivadosunidade</action>
+                            <resource>sisad:caixaunidade</resource>
+                        </arquivadosunidade>
+                        <unidadeentrada>
+                            <label>Caixa de Entrada</label>
+                            <module>sisad</module>
+                            <controller>caixaunidade</controller>
+                            <action>entrada</action>
+                            <resource>sisad:caixaunidade</resource>
+                        </unidadeentrada>
+                        <!--                        <controlecaixa>
+                            <label>Controle Acesso Caixa</label>
+                            <module>guardiao</module>
+                            <controller>perfilpessoa</controller>
+                            <action>pessoaacessounidade</action>
+                            <resource>guardiao:perfilpessoa</resource>
+                        </controlecaixa>
+                        <controlepessoa>
+                            <label>Controle Acesso Pessoa</label>
+                            <module>guardiao</module>
+                            <controller>perfilpessoaadm</controller>
+                            <action>caixaspessoas</action>
+                            <resource>guardiao:perfilpessoaadm</resource>
+                        </controlepessoa>-->
+                        <etiquetas>
+                            <label>Criar Etiqueta</label>
+                            <module>sisad</module>
+                            <controller>etiqueta</controller>
+                            <action>criar</action>
+                            <resource>sisad:etiqueta</resource>
+                        </etiquetas>
+                        <documentosdaunidade>
+                            <label>Documentos da Unidade</label>
+                            <module>sisad</module>
+                            <controller>caixaunidade</controller>
+                            <action>documentosdaunidade</action>
+                            <resource>sisad:caixaunidade</resource>
+                        </documentosdaunidade>
+                        <encaminhados>
+                            <label>Documentos Encaminhados</label>
+                            <module>sisad</module>
+                            <controller>caixaunidade</controller>
+                            <action>encaminhados</action>
+                            <resource>sisad:caixaunidade</resource>
+                        </encaminhados>
+                        <permissao>
+                            <label>Permissões de Acesso</label>
+                            <module>guardiao</module>
+                            <controller>perfilpessoa</controller>
+                            <action>form</action>
+                            <resource>guardiao:perfilpessoa</resource>
+                        </permissao>
+                        <processosdaunidade>
+                            <label>Processos da Unidade</label>
+                            <module>sisad</module>
+                            <controller>caixaunidade</controller>
+                            <action>processosdaunidade</action>
+                            <resource>sisad:caixaunidade</resource>
+                        </processosdaunidade>
+                        <protocolar>
+                            <label>Protocolar Documentos</label>
+                            <module>sisad</module>
+                            <controller>caixaunidade</controller>
+                            <action>protocolar</action>
+                            <resource>sisad:caixaunidade</resource>
+                        </protocolar>
+                        <solicitacoesdaunidade>
+                            <label>Solicitações da Unidade</label>
+                            <module>sisad</module>
+                            <controller>caixaunidade</controller>
+                            <action>solicitacoesdaunidade</action>
+                            <resource>sisad:caixaunidade</resource>
+                        </solicitacoesdaunidade>
+                        <trocarcaixa>
+                            <label>Trocar Caixa</label>
+                            <module>sisad</module>
+                            <controller>caixaunidade</controller>
+                            <action>trocarcaixa</action>
+                            <resource>sisad:caixaunidade</resource>
+                        </trocarcaixa>
+                    </pages>
+                </caixaunidade>
+                <distribuicao>
+                    <label>Distribuição</label>
+                    <module>sisad</module>
+                    <controller>distribuicao</controller>
+                    <action>list</action>
+                    <resource>sisad:distribuicao</resource>
+                    <pages>
+                        <list>
+                            <label>Cadastra Órgão Julgador/Membros </label>
+                            <module>sisad</module>
+                            <controller>distribuicao</controller>
+                            <action>list</action>
+                            <resource>sisad:distribuicao</resource>
+                        </list>
+                        <cadastradadosdojulgamentodoprocesso>
+                            <label>Cadastra Dados do Julgamento do Processo</label>
+                            <module>sisad</module>
+                            <controller>distribuicao</controller>
+                            <action>listdadosultimauistribuicaonaojulgados</action>
+                            <resource>sisad:distribuicao</resource>
+                        </cadastradadosdojulgamentodoprocesso>
+                        <dadosdejulgamentoprocessual>
+                            <label>Dados de Julgamento Processual</label>
+                            <module>sisad</module>
+                            <controller>distribuicao</controller>
+                            <action>listdadosultimauistribuicaojulgados</action>
+                            <resource>sisad:distribuicao</resource>
+                        </dadosdejulgamentoprocessual>
+                        <relatorios>
+                            <label>Relatórios</label>
+                            <module>sisad</module>
+                            <controller>distribuicao</controller>
+                            <action>formgeralprocessosdistribuidosporperiodo</action>
+                            <resource>sisad:distribuicao</resource>
+                            <pages>
+                                <formgeralprocessosdistribuidosporperiodo>
+                                    <label>Geral - Processos Distribuidos por período</label>
+                                    <module>sisad</module>
+                                    <controller>distribuicao</controller>
+                                    <action>formgeralprocessosdistribuidosporperiodo</action>
+                                    <resource>sisad:distribuicao</resource>
+                                </formgeralprocessosdistribuidosporperiodo>
+                                <formparaconselhoscomissoes>
+                                    <label>Para Conselhos/ Comissões</label>
+                                    <module>sisad</module>
+                                    <controller>distribuicao</controller>
+                                    <action>formparaconselhoscomissoes</action>
+                                    <resource>sisad:distribuicao</resource>
+                                </formparaconselhoscomissoes>
+                                <formparaosdesembargadoresfederais>
+                                    <label>Para os Desembargadores Federais</label>
+                                    <module>sisad</module>
+                                    <controller>distribuicao</controller>
+                                    <action>formparaosdesembargadoresfederais</action>
+                                    <resource>sisad:distribuicao</resource>
+                                </formparaosdesembargadoresfederais>
+                                <formpordesembargadoreassunto>
+                                    <label>Por Desembargador e assunto</label>
+                                    <module>sisad</module>
+                                    <controller>distribuicao</controller>
+                                    <action>formpordesembargadoreassunto</action>
+                                    <resource>sisad:distribuicao</resource>
+                                </formpordesembargadoreassunto>
+                                <formprocessosjulgadosporperiodo>
+                                    <label>Processos Julgados (por periodo)</label>
+                                    <module>sisad</module>
+                                    <controller>distribuicao</controller>
+                                    <action>formprocessosjulgadosporperiodo</action>
+                                    <resource>sisad:distribuicao</resource>
+                                </formprocessosjulgadosporperiodo>
+                                <formredistribuicaoeletronica>
+                                    <label>Redistribuição Eletronica</label>
+                                    <module>sisad</module>
+                                    <controller>distribuicao</controller>
+                                    <action>formredistribuicaoeletronica</action>
+                                    <resource>sisad:distribuicao</resource>
+                                </formredistribuicaoeletronica>
+                                <formpordesembargador>
+                                    <label>Por Desembargador</label>
+                                    <module>sisad</module>
+                                    <controller>distribuicao</controller>
+                                    <action>formpordesembargador</action>
+                                    <resource>sisad:distribuicao</resource>
+                                </formpordesembargador>
+                                <formatadedistribuicaoporprocesso>
+                                    <label>Ata de Distribuição por Processo</label>
+                                    <module>sisad</module>
+                                    <controller>distribuicao</controller>
+                                    <action>formatadedistribuicaoporprocesso</action>
+                                    <resource>sisad:distribuicao</resource>
+                                </formatadedistribuicaoporprocesso>
+                                <porprocesso>
+                                    <label>Por Processo Administrativo</label>
+                                    <module>sisad</module>
+                                    <controller>distribuicao</controller>
+                                    <action>porprocesso</action>
+                                    <resource>sisad:distribuicao</resource>
+                                </porprocesso>
+                            </pages>
+                        </relatorios>
+                    </pages>
+                </distribuicao>
+                <formulario>
+                    <label>Formulários</label>
+                    <module>sisad</module>
+                    <controller>cadastrodcmto</controller>
+                    <action>form</action>
+                    <resource>sisad:cadastrodcmto</resource>
+                    <pages>
+                        <aviso>
+                            <label>Aviso</label>
+                            <module>sisad</module>
+                            <controller>formularioaviso</controller>
+                            <action>form</action>
+                            <resource>sisad:formularioaviso</resource>
+                        </aviso>
+                        <circular>
+                            <label>Circular</label>
+                            <module>sisad</module>
+                            <controller>formulariocircular</controller>
+                            <action>form</action>
+                            <resource>sisad:formulariocircular</resource>
+                        </circular>
+                        <informacao>
+                            <label>Informação</label>
+                            <module>sisad</module>
+                            <controller>formularioinformacao</controller>
+                            <action>form</action>
+                            <resource>sisad:formularioinformacao</resource>
+                        </informacao>
+                        <memorando>
+                            <label>Memorando</label>
+                            <module>sisad</module>
+                            <controller>formulariomemorando</controller>
+                            <action>form</action>
+                            <resource>sisad:formulariomemorando</resource>
+                        </memorando>
+                        <minuta>
+                            <label>Minuta</label>
+                            <uri>/formulariominuta/index</uri>
+                            <module>sisad</module>
+                            <controller>formulariominuta</controller>
+                            <action>form</action>
+                            <resource>sisad:formulariominuta</resource>
+                        </minuta>
+                        <oficio>
+                            <label>Ofício</label>
+                            <module>sisad</module>
+                            <controller>formulariooficio</controller>
+                            <action>form</action>
+                            <resource>sisad:formulariooficio</resource>
+                        </oficio>
+                        <solicitacao>
+                            <label>Sosti - Solicitação à Informática</label>
+                            <module>sosti</module>
+                            <controller>solicitacao</controller>
+                            <action>form</action>
+                            <resource>sosti:solicitacao</resource>
+                        </solicitacao>
+                    </pages>
+                </formulario>
+                <minhassolicitacoes>
+                    <label>Minhas Solicitações de TI</label>
+                    <module>sosti</module>
+                    <controller>minhassolicitacoes</controller>
+                    <action>atendimento</action>
+                    <resource>sosti:minhassolicitacoes</resource>
+                    <pages>
+                        <pesquisarsolicitacoes>
+                            <label>Pesquisar Solicitações</label>
+                            <module>sosti</module>
+                            <controller>pesquisarsolicitacoes</controller>
+                            <action>index</action>
+                            <resource>sosti:pesquisarsolicitacoes</resource>
+                        </pesquisarsolicitacoes>
+                        <acompanhamento>
+                            <label>Acompanhamento</label>
+                            <module>sosti</module>
+                            <controller>minhassolicitacoes</controller>
+                            <action>emacompanhamento</action>
+                            <resource>sosti:minhassolicitacoes</resource>
+                        </acompanhamento>
+                        <avaliadas>
+                            <label>Avaliadas</label>
+                            <module>sosti</module>
+                            <controller>minhassolicitacoes</controller>
+                            <action>avaliadas</action>
+                            <resource>sosti:minhassolicitacoes</resource>
+                        </avaliadas>
+                        <cadastraresosti>
+                            <label>Cadastrar e-Sosti</label>
+                            <module>sosti</module>
+                            <controller>solicitacao</controller>
+                            <action>form</action>
+                            <resource>sosti:solicitacao</resource>
+                        </cadastraresosti>
+                        <atendimento>
+                            <label>Em Atendimento</label>
+                            <module>sosti</module>
+                            <controller>minhassolicitacoes</controller>
+                            <action>atendimento</action>
+                            <resource>sosti:minhassolicitacoes</resource>
+                        </atendimento>
+                        <baixadas>
+                            <label>Histórico de Baixadas</label>
+                            <module>sosti</module>
+                            <controller>minhassolicitacoes</controller>
+                            <action>baixadas</action>
+                            <resource>sosti:minhassolicitacoes</resource>
+                        </baixadas>
+                        <avaliacao>
+                            <label>Para Avaliação</label>
+                            <module>sosti</module>
+                            <controller>minhassolicitacoes</controller>
+                            <action>avaliacao</action>
+                            <resource>sosti:minhassolicitacoes</resource>
+                        </avaliacao>
+                        <homologacao>
+                            <label>Para Homologar</label>
+                            <module>sosti</module>
+                            <controller>minhassolicitacoes</controller>
+                            <action>homologacao</action>
+                            <resource>sosti:minhassolicitacoes</resource>
+                        </homologacao>
+                        <pedidosinformacao>
+                            <label>Pedido de Informação</label>
+                            <module>sosti</module>
+                            <controller>minhassolicitacoes</controller>
+                            <action>pedidoinformacao</action>
+                            <resource>sosti:minhassolicitacoes</resource>
+                        </pedidosinformacao>
+                        <relatoriossosti>
+                            <label>Relatórios</label>
+                            <module>sosti</module>
+                            <controller>relatoriossolicitacoes</controller>
+                            <action>solicitacoesperiodo</action>
+                            <resource>sosti:relatoriossolicitacoes</resource>
+                            <pages>
+                                <solicitacoesperiodo>
+                                    <label>Solicitações por Período</label>
+                                    <module>sosti</module>
+                                    <controller>relatoriossolicitacoes</controller>
+                                    <action>solicitacoesperiodo</action>
+                                    <resource>sosti:relatoriossolicitacoes</resource>
+                                </solicitacoesperiodo>
+                            </pages>
+                        </relatoriossosti>
+                    </pages>
+                </minhassolicitacoes>
+                <protocolo>
+                    <label>Protocolo</label>
+                    <module>sisad</module>
+                    <controller>protocolo</controller>
+                    <action>entrada</action>
+                    <resource>sisad:protocolo</resource>
+                    <pages>
+                        <cadastro>
+                            <label>Cadastro</label>
+                            <module>sisad</module>
+                            <controller>protocolo</controller>
+                            <action>index</action>
+                            <resource>sisad:protocolo</resource>
+                            <pages>
+                                <faixapostagem>
+                                    <label>Faixas de Postagem</label>
+                                    <module>sisad</module>
+                                    <controller>protocolo</controller>
+                                    <action>faixapostagem</action>
+                                    <resource>sisad:protocolo</resource>
+                                </faixapostagem>
+                                <malote>
+                                    <label>Número de Malote</label>
+                                    <module>sisad</module>
+                                    <controller>protocolo</controller>
+                                    <action>malote</action>
+                                    <resource>sisad:protocolo</resource>
+                                </malote>
+                            </pages>
+                        </cadastro>
+                        <cadinterno>
+                            <label>Cadastro Documentos - Lotações Internas</label>
+                            <module>sisad</module>
+                            <controller>protocolo</controller>
+                            <action>cadastrointerno</action>
+                            <resource>sisad:protocolo</resource>
+                        </cadinterno>
+                        <caixaentrada>
+                            <label>Caixa de Entrada</label>
+                            <module>sisad</module>
+                            <controller>protocolo</controller>
+                            <action>entrada</action>
+                            <resource>sisad:protocolo</resource>
+                        </caixaentrada>
+                        <postagem>
+                            <label>Postagem de Documentos</label>
+                            <module>sisad</module>
+                            <controller>protocolo</controller>
+                            <action>postagem</action>
+                            <resource>sisad:protocolo</resource>
+                        </postagem>
+                    </pages>
+                </protocolo>
+                <relatorio>
+                    <label>Relatórios</label>
+                    <module>sisad</module>
+                    <controller>relatorioprocesso</controller>
+                    <action>autuadosunidade</action>
+                    <resource>sisad:relatorioprocesso</resource>
+                    <pages>
+                        <processos>
+                            <label>Processos</label>
+                            <module>sisad</module>
+                            <controller>relatorioprocesso</controller>
+                            <action>autuadosunidade</action>
+                            <resource>sisad:relatorioprocesso</resource>
+                            <pages>
+                                <apensadosanexados>
+                                    <label>Apensados / Anexados / Vinculados</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>apensadosanexados</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </apensadosanexados>
+                                <arquivadosunidade>
+                                    <label>Arquivados na Unidade</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>arquivadosunidade</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </arquivadosunidade>
+                                <autuadosassuntoperiodo>
+                                    <label>Autuados por Assunto e Período</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>autuadosassunto</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </autuadosassuntoperiodo>
+                                <autuadosunidadeperiodo>
+                                    <label>Autuados por Unidade e Período</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>autuadosunidade</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </autuadosunidadeperiodo>
+                                <distribuidosredistribuidos>
+                                    <label>Distribuídos / Redistribuídos</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>distribuidosredistribuidos</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </distribuidosredistribuidos>
+                                <encaminhadosunidade>
+                                    <label>Encaminhados pela Unidade</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>encaminhadosunidade</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </encaminhadosunidade>
+                                <processosparadosnaunidade>
+                                    <label>Parados na Unidade</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>paradosnaunidade</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </processosparadosnaunidade>
+                                <orgaojulgador>
+                                    <label>Por Órgão Julgador</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>orgaojulgador</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </orgaojulgador>
+                                <processosrelator>
+                                    <label>Por Relator</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>processosrelator</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </processosrelator>
+                                <processossigilosos>
+                                    <label>Sigilosos</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>sigilosos</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </processossigilosos>
+                                <processosnaunidade>
+                                    <label>Na Unidade por Período</label>
+                                    <module>sisad</module>
+                                    <controller>relatorioprocesso</controller>
+                                    <action>naunidade</action>
+                                    <resource>sisad:relatorioprocesso</resource>
+                                </processosnaunidade>
+                            </pages>
+                        </processos>
+                    </pages>
+                </relatorio>
+            </pages>
+        </sisad>
+        <sosti>
+            <label>Sosti</label>
+            <module>sosti</module>
+            <controller>index</controller>
+            <action>index</action>
+            <resource>sosti:index</resource>
+            <pages>
+                <pesquisarsolicitacoes>
+                    <label>Pesquisar Solicitações</label>
+                    <module>sosti</module>
+                    <controller>pesquisarsolicitacoes</controller>
+                    <action>index</action>
+                    <resource>sosti:pesquisarsolicitacoes</resource>
+                </pesquisarsolicitacoes>
+                <atendimentohelpdesk>
+                    <label>Atendimento aos Usuários</label>
+                    <module>sosti</module>
+                    <controller>helpdesk</controller>
+                    <action>atendimentointerno</action>
+                    <resource>sosti:helpdesk</resource>
+                </atendimentohelpdesk>
+                <aviso>
+                    <label>Avisos</label>
+                    <module>sosti</module>
+                    <controller>aviso</controller>
+                    <action>index</action>
+                    <resource>sosti:aviso</resource>
+                </aviso>
+                <cadastrarsolicitacoes>
+                    <label>Cadastrar Solicitações</label>
+                    <module>sosti</module>
+                    <controller>solicitacao</controller>
+                    <action>form</action>
+                    <resource>sosti:solicitacao</resource>
+                    <pages>
+                        <solicitacaousertisecoes>
+                            <label>Grupos de Serviços Seções</label>
+                            <module>sosti</module>
+                            <controller>solicitacaousertisecoes</controller>
+                            <action>form</action>
+                            <resource>sosti:solicitacaousertisecoes</resource>
+                        </solicitacaousertisecoes>
+                        <solicitacaouserti>
+                            <label>Grupos de Serviços TRF1</label>
+                            <module>sosti</module>
+                            <controller>solicitacaouserti</controller>
+                            <action>form</action>
+                            <resource>sosti:solicitacaouserti</resource>
+                        </solicitacaouserti>
+                        <solicitacao>
+                            <label>Solicitações Locais</label>
+                            <module>sosti</module>
+                            <controller>solicitacao</controller>
+                            <action>form</action>
+                            <resource>sosti:solicitacao</resource>
+                        </solicitacao>
+                    </pages>
+                </cadastrarsolicitacoes>
+                <caixas>
+                    <label>Caixas</label>
+                    <uri>#</uri>
+                    <pages>
+                        <caixasecoes>
+                            <label>Atendimento das Seções</label>
+                            <module>sosti</module>
+                            <controller>atendimentosecoes</controller>
+                            <action>atendimentousuario</action>
+                            <resource>sosti:atendimentosecoes</resource>
+                            <pages>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <module>sosti</module>
+                                    <controller>atendimentosecoes</controller>
+                                    <action>atendimentousuario</action>
+                                    <resource>sosti:atendimentosecoes</resource>
+                                </entrada>
+                                <caixacentralizada>
+                                    <label>Caixa de Atendimento Centralizado</label>
+                                    <module>sosti</module>
+                                    <controller>atendimentosecoes</controller>
+                                    <action>caixaunidadecentral</action>
+                                    <resource>sosti:atendimentosecoes</resource>
+                                </caixacentralizada>
+                                <encaminhadasparatrf1>
+                                    <label>Solicitações Encaminhadas ao TRF1</label>
+                                    <module>sosti</module>
+                                    <controller>atendimentosecoes</controller>
+                                    <action>encaminhadasparatrf1</action>
+                                    <resource>sosti:atendimentosecoes</resource>
+                                </encaminhadasparatrf1>
+                            </pages>
+                        </caixasecoes>
+                        <caixapessoal>
+                            <label>Caixa Pessoal</label>
+                            <module>sosti</module>
+                            <controller>caixapessoal</controller>
+                            <action>entrada</action>
+                            <resource>sosti:caixapessoal</resource>
+                            <pages>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <module>sosti</module>
+                                    <controller>caixapessoal</controller>
+                                    <action>entrada</action>
+                                    <resource>sosti:caixapessoal</resource>
+                                </entrada>
+                                <atendidasperiodo>
+                                    <label>Solicitações Baixadas</label>
+                                    <module>sosti</module>
+                                    <controller>minhassolicitacoes</controller>
+                                    <action>minhassolicitacoesperiodo</action>
+                                    <resource>sosti:minhassolicitacoes</resource>
+                                </atendidasperiodo>
+                            </pages>
+                        </caixapessoal>
+                        <caixaentradadesenvolvimentosustentacao>
+                            <label>Ordem de Serviço</label>
+                            <module>sosti</module>
+                            <controller>desenvolvimentosustentacao</controller>
+                            <action>index</action>
+                            <resource>sosti:desenvolvimentosustentacao</resource>
+                            <pages>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <module>sosti</module>
+                                    <controller>desenvolvimentosustentacao</controller>
+                                    <action>index</action>
+                                    <resource>sosti:desenvolvimentosustentacao</resource>
+                                </entrada>
+                            </pages>
+                        </caixaentradadesenvolvimentosustentacao>
+                        <caixaentradanoc>
+                            <label>Escritório de Projetos/NOC</label>
+                            <module>sosti</module>
+                            <controller>noc</controller>
+                            <action>index</action>
+                            <resource>sosti:noc</resource>
+                            <pages>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <module>sosti</module>
+                                    <controller>noc</controller>
+                                    <action>index</action>
+                                    <resource>sosti:noc</resource>
+                                </entrada>
+                            </pages>
+                        </caixaentradanoc>
+                        <caixaentradagestaodedemandascontrolesla>
+                            <label>Gestão de Demandas da Infraestrutura </label>
+                            <module>sosti</module>
+                            <controller>gestaodemandasinfraestrutura</controller>
+                            <action>index</action>
+                            <resource>sosti:gestaodemandasinfraestrutura</resource>
+                            <pages>
+                                <autorizaextensaoprazo>
+                                    <label>Autorizar Extensão de Prazo</label>
+                                    <module>sosti</module>
+                                    <controller>sla</controller>
+                                    <action>autorizaextensaoprazo</action>
+                                    <params>
+                                        <idcaixa>3</idcaixa>
+                                    </params>
+                                    <resource>sosti:sla</resource>
+                                </autorizaextensaoprazo>
+                                <controlesla>
+                                    <label>Controle de Conformidade</label>
+                                    <module>sosti</module>
+                                    <controller>sla</controller>
+                                    <action>controlesla</action>
+                                    <params>
+                                        <idcaixa>3</idcaixa>
+                                    </params>
+                                    <resource>sosti:sla</resource>
+                                </controlesla>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <module>sosti</module>
+                                    <controller>gestaodemandasinfraestrutura</controller>
+                                    <action>index</action>
+                                    <resource>sosti:gestaodemandasinfraestrutura</resource>
+                                </entrada>
+                            </pages>
+                        </caixaentradagestaodedemandascontrolesla>
+                        <gestaodedemandassecoes>
+                            <label>Gestão de Demandas das Seções</label>
+                            <module>sosti</module>
+                            <controller>gestaodedemandasdoatendimentoaosusuariossecoes</controller>
+                            <action>index</action>
+                            <resource>sosti:gestaodedemandasdoatendimentoaosusuariossecoes</resource>
+                            <pages>
+                                <autorizaextensaoprazo>
+                                    <label>Autorizar Extensão de Prazo</label>
+                                    <module>sosti</module>
+                                    <controller>sla</controller>
+                                    <action>autorizaextensaoprazo</action>
+                                    <resource>sosti:sla</resource>
+                                    <params>
+                                        <caixa>secao</caixa>
+                                    </params>
+                                </autorizaextensaoprazo>
+                                <controlesla>
+                                    <label>Controle de Conformidade</label>
+                                    <module>sosti</module>
+                                    <controller>sla</controller>
+                                    <action>controlesla</action>
+                                    <params>
+                                        <caixa>secao</caixa>
+                                    </params>
+                                    <resource>sosti:sla</resource>
+                                </controlesla>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <module>sosti</module>
+                                    <controller>gestaodedemandasdoatendimentoaosusuariossecoes</controller>
+                                    <action>index</action>
+                                    <resource>sosti:gestaodedemandasdoatendimentoaosusuariossecoes</resource>
+                                </entrada>
+                            </pages>
+                        </gestaodedemandassecoes>
+                        <gestaodedemandashelpdeskcontrolesla>
+                            <label>Gestão de Demandas do Helpdesk </label>
+                            <module>sosti</module>
+                            <controller>gestaodedemandasdoatendimentoaosusuarios</controller>
+                            <action>index</action>
+                            <resource>sosti:gestaodedemandasdoatendimentoaosusuarios</resource>
+                            <pages>
+                                <autorizaextensaoprazo>
+                                    <label>Autorizar Extensão de Prazo</label>
+                                    <module>sosti</module>
+                                    <controller>sla</controller>
+                                    <action>autorizaextensaoprazo</action>
+                                    <params>
+                                        <idcaixa>1</idcaixa>
+                                    </params>
+                                    <resource>sosti:sla</resource>
+                                </autorizaextensaoprazo>
+                                <controlesla>
+                                    <label>Controle de Conformidade</label>
+                                    <module>sosti</module>
+                                    <controller>sla</controller>
+                                    <action>controlesla</action>
+                                    <params>
+                                        <idcaixa>1</idcaixa>
+                                    </params>
+                                    <resource>sosti:sla</resource>
+                                </controlesla>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <module>sosti</module>
+                                    <controller>gestaodedemandasdoatendimentoaosusuarios</controller>
+                                    <action>index</action>
+                                    <resource>sosti:gestaodedemandasdoatendimentoaosusuarios</resource>
+                                </entrada>
+                            </pages>
+                        </gestaodedemandashelpdeskcontrolesla>
+                        <gestaodedemandasnoc>
+                            <label>Gestão de Demandas do NOC </label>
+                            <uri>/gestaodedemandasdonoc/index</uri>
+                            <module>sosti</module>
+                            <controller>gestaodedemandasdonoc</controller>
+                            <action>index</action>
+                            <resource>sosti:gestaodedemandasdonoc</resource>
+                            <pages>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <uri>/gestaodedemandasdonoc/index</uri>
+                                    <module>sosti</module>
+                                    <controller>gestaodedemandasdonoc</controller>
+                                    <action>index</action>
+                                    <resource>sosti:gestaodedemandasdonoc</resource>
+                                </entrada>
+                                <autorizaextensaoprazo>
+                                    <label>Autorizar Extensão de Prazo</label>
+                                    <module>sosti</module>
+                                    <controller>sla</controller>
+                                    <action>autorizaextensaoprazo</action>
+                                    <params>
+                                        <idcaixa>4</idcaixa>
+                                    </params>
+                                    <resource>sosti:sla</resource>
+                                </autorizaextensaoprazo>
+                            </pages>
+                        </gestaodedemandasnoc>
+                        <caixaentradagestaodedemandasti>
+                            <label>Gestão de demandas para sistemas de TI</label>
+                            <module>sosti</module>
+                            <controller>gestaodedemandasti</controller>
+                            <action>index</action>
+                            <resource>sosti:gestaodedemandasti</resource>
+                            <pages>
+                                <pedidoinformacaounidade>
+                                    <label>Pedido de informação do desenvolvimento</label>
+                                    <module>sosti</module>
+                                    <controller>minhassolicitacoes</controller>
+                                    <action>pedidoinformacaounidade</action>
+                                    <resource>sosti:minhassolicitacoes.pedidoinformacaounidade</resource>
+                                </pedidoinformacaounidade>
+                                <qualidadeCaixa>
+                                    <label>Controle de qualidade</label>
+                                    <module>sosti</module>
+                                    <controller>gestaodedemandasti</controller>
+                                    <action>qualidadecaixa</action>
+                                    <resource>sosti:gestaodedemandasti</resource>
+                                    <params>
+                                        <idcaixa>2</idcaixa>
+                                    </params>
+                                </qualidadeCaixa>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <module>sosti</module>
+                                    <controller>gestaodedemandasti</controller>
+                                    <action>index</action>
+                                    <resource>sosti:gestaodedemandasti</resource>
+                                </entrada>
+                                <autorizaextensaoprazo>
+                                    <label>Autorizar Extensão de Prazo</label>
+                                    <module>sosti</module>
+                                    <controller>sla</controller>
+                                    <action>autorizaextensaoprazo</action>
+                                    <params>
+                                        <idcaixa>2</idcaixa>
+                                    </params>
+                                    <resource>sosti:gestaodedemandasti</resource>
+                                </autorizaextensaoprazo>
+                            </pages>
+                        </caixaentradagestaodedemandasti>
+                        <caixaentradahelpdesk>
+                            <label>Helpdesk</label>
+                            <module>sosti</module>
+                            <controller>helpdesk</controller>
+                            <action>index</action>
+                            <resource>sosti:helpdesk</resource>
+                            <pages>
+                                <sat>
+                                    <label>1º Nível - SAT</label>
+                                    <module>sosti</module>
+                                    <controller>helpdesk</controller>
+                                    <action>primeironivel</action>
+                                    <resource>sosti:helpdesk</resource>
+                                </sat>
+                                <sap>
+                                    <label>2º Nível - SAP</label>
+                                    <module>sosti</module>
+                                    <controller>atendimentotecnico</controller>
+                                    <action>segundonivel</action>
+                                    <resource>sosti:atendimentotecnico</resource>
+                                </sap>
+                                <sse>
+                                    <label>3º Nível - SSE</label>
+                                    <module>sosti</module>
+                                    <controller>suporteespecializado</controller>
+                                    <action>terceironivel</action>
+                                    <resource>sosti:suporteespecializado</resource>
+                                </sse>
+                                <ses>
+                                    <label>4º Nível - SES</label>
+                                    <module>sosti</module>
+                                    <controller>servicoexterno</controller>
+                                    <action>quartonivel</action>
+                                    <resource>sosti:servicoexterno</resource>
+                                </ses>
+                            </pages>
+                        </caixaentradahelpdesk>
+                        <caixaentradabdrede>
+                            <label>Infraestrutura</label>
+                            <module>sosti</module>
+                            <controller>bancodadosrede</controller>
+                            <action>index</action>
+                            <resource>sosti:bancodadosrede</resource>
+                            <pages>
+                                <entrada>
+                                    <label>Entrada</label>
+                                    <module>sosti</module>
+                                    <controller>bancodadosrede</controller>
+                                    <action>index</action>
+                                    <resource>sosti:bancodadosrede</resource>
+                                </entrada>
+                            </pages>
+                        </caixaentradabdrede>
+                    </pages>
+                </caixas>
+                <garantiadesenvolvimento>
+                    <label>Divergência Garantia</label>
+                    <module>sosti</module>
+                    <controller>garantia</controller>
+                    <action>index</action>
+                    <resource>sosti:garantia</resource>
+                </garantiadesenvolvimento>
+                <laboratorio>
+                    <label>Laboratório</label>
+                    <module>sosti</module>
+                    <controller>labhardware</controller>
+                    <action>index</action>
+                    <resource>sosti:labhardware</resource>
+                    <pages>
+                        <cadastro>
+                            <label>Cadastro</label>
+                            <module>sosti</module>
+                            <controller>labhardware</controller>
+                            <action>index</action>
+                            <resource>sosti:labhardware</resource>
+                            <pages>
+                                <dvevolucaotombo>
+                                    <label>Devolução Tombo Backup</label>
+                                    <module>sosti</module>
+                                    <controller>labhardware</controller>
+                                    <action>devolucaobackuplist</action>
+                                    <resource>sosti:labhardware</resource>
+                                </dvevolucaotombo>
+                                <tombo>
+                                    <label>Tombo Backup</label>
+                                    <module>sosti</module>
+                                    <controller>labhardware</controller>
+                                    <action>cadastrobackuplist</action>
+                                    <resource>sosti:labhardware</resource>
+                                </tombo>
+                                <hardware>
+                                    <label>Hardware</label>
+                                    <module>sosti</module>
+                                    <controller>labhardware</controller>
+                                    <action>index</action>
+                                    <resource>sosti:labhardware</resource>
+                                </hardware>
+                                <software>
+                                    <label>Software</label>
+                                    <module>sosti</module>
+                                    <controller>labsoftware</controller>
+                                    <action>index</action>
+                                    <resource>sosti:labsoftware</resource>
+                                </software>
+                                <cadastrogrupo>
+                                    <label>Grupo</label>
+                                    <module>sosti</module>
+                                    <controller>labgrupo</controller>
+                                    <action>index</action>
+                                    <resource>sosti:labgrupo</resource>
+                                </cadastrogrupo>
+                                <marca>
+                                    <label>Marca</label>
+                                    <module>sosti</module>
+                                    <controller>marca</controller>
+                                    <action>index</action>
+                                    <resource>sosti:marca</resource>
+                                </marca>
+                                <modelo>
+                                    <label>Modelo</label>
+                                    <module>sosti</module>
+                                    <controller>labmodelo</controller>
+                                    <action>index</action>
+                                    <resource>sosti:labmodelo</resource>
+                                </modelo>
+                                <tpsoftware>
+                                    <label>Tipo de Software</label>
+                                    <module>sosti</module>
+                                    <controller>labtiposoftware</controller>
+                                    <action>index</action>
+                                    <resource>sosti:labtiposoftware</resource>
+                                </tpsoftware>
+                                <tpusuario>
+                                    <label>Tipo de Usuário</label>
+                                    <module>sosti</module>
+                                    <controller>labtipousuario</controller>
+                                    <action>index</action>
+                                    <resource>sosti:labtipousuario</resource>
+                                </tpusuario>
+                                <tiposervico>
+                                    <label>Tipo Serviço</label>
+                                    <module>sosti</module>
+                                    <controller>labtiposervico</controller>
+                                    <action>index</action>
+                                    <resource>sosti:labtiposervico</resource>
+                                </tiposervico>
+
+                            </pages>
+                        </cadastro>
+                        <relatorios>
+                            <label>Relatórios</label>
+                            <module>sosti</module>
+                            <controller>labrelatorios</controller>
+                            <action>relatorioresumidohardware</action>
+                            <resource>sosti:labrelatorios</resource>
+                            <pages>
+                                <backupemprestado>
+                                    <label>Backups Emprestados</label>
+                                    <module>sosti</module>
+                                    <controller>labrelatorios</controller>
+                                    <action>backupemprestados</action>
+                                    <resource>sosti:labrelatorios</resource>
+                                </backupemprestado>
+                                <solictombos>
+                                    <label>Solicitações por Nr do Tombo</label>
+                                    <module>sosti</module>
+                                    <controller>labrelatorios</controller>
+                                    <action>solicitacoesportombo</action>
+                                    <resource>sosti:labrelatorios</resource>
+                                </solictombos>
+                                <historicoEquipamento>
+                                    <label>Histórico dos equipamentos de empréstimo</label>
+                                    <module>sosti</module>
+                                    <controller>labrelatorios</controller>
+                                    <action>historicoequipamentos</action>
+                                    <resource>sosti:labrelatorios</resource>
+                                </historicoEquipamento>
+                                <licencaSoftware>
+                                    <label>Relatório de licença de software</label>
+                                    <module>sosti</module>
+                                    <controller>labrelatorios</controller>
+                                    <action>relatoriosoftware</action>
+                                    <resource>sosti:labrelatorios</resource>
+                                </licencaSoftware>
+                                <hardwarerelatorio>
+                                    <label>Relatório detalhado de Movimentação de peças</label>
+                                    <module>sosti</module>
+                                    <controller>labrelatorios</controller>
+                                    <action>relatoriohardware</action>
+                                    <resource>sosti:labrelatorios</resource>
+                                </hardwarerelatorio>
+                                <hardwarerelatorioresumido>
+                                    <label>Relatório resumido de Movimentação de peças</label>
+                                    <module>sosti</module>
+                                    <controller>labrelatorios</controller>
+                                    <action>relatorioresumidohardware</action>
+                                    <resource>sosti:labrelatorios</resource>
+                                </hardwarerelatorioresumido>
+                            </pages>
+                        </relatorios>
+                    </pages>
+                </laboratorio>
+                <manutencao>
+                    <label>Manutenção</label>
+                    <module>sosti</module>
+                    <controller>gruposervico</controller>
+                    <action>index</action>
+                    <resource>sosti:gruposervico</resource>
+                    <pages>
+                        <tecnico>
+                            <label>Técnico</label>
+                            <module>sosti</module>
+                            <controller>gruposervico</controller>
+                            <action>index</action>
+                            <resource>sosti:gruposervico</resource>
+                            <pages>
+                                <afericaoservico>
+                                    <label>Aferição de Serviços</label>
+                                    <module>sosti</module>
+                                    <controller>metaalcancada</controller>
+                                    <action>index</action>
+                                    <resource>sosti:metaalcancada</resource>
+                                </afericaoservico>
+                                <nivelservico>
+                                    <label>Indicador de Níveis de Serviço</label>
+                                    <module>sosti</module>
+                                    <controller>indicadornivelservico</controller>
+                                    <action>index</action>
+                                    <resource>sosti:indicadornivelservico</resource>
+                                </nivelservico>
+                                <gruposervico>
+                                    <label>Grupos de Serviços</label>
+                                    <module>sosti</module>
+                                    <controller>gruposervico</controller>
+                                    <action>index</action>
+                                    <resource>sosti:gruposervico</resource>
+                                </gruposervico>
+                                <nivelatendimento>
+                                    <label>Níveis de Atendimento</label>
+                                    <module>sosti</module>
+                                    <controller>nivelatendimento</controller>
+                                    <action>index</action>
+                                    <resource>sosti:nivelatendimento</resource>
+                                </nivelatendimento>
+                                <servicoadm>
+                                    <label>Serviços ADM</label>
+                                    <module>sosti</module>
+                                    <controller>servicoadm</controller>
+                                    <action>index</action>
+                                    <resource>sosti:servicoadm</resource>
+                                </servicoadm>
+                            </pages>
+                        </tecnico>
+                        <gestor>
+                            <label>Gestor</label>
+                            <module>sosti</module>
+                            <controller>gruposervico</controller>
+                            <action>index</action>
+                            <resource>sosti:gruposervico</resource>
+                            <pages>
+                                <servico>
+                                    <label>Serviços</label>
+                                    <module>sosti</module>
+                                    <controller>servico</controller>
+                                    <action>index</action>
+                                    <resource>sosti:servico</resource>
+                                </servico>
+                                <trocasolicitante>
+                                    <label>Trocar Solicitante</label>
+                                    <module>sosti</module>
+                                    <controller>trocarsolicitante</controller>
+                                    <action>index</action>
+                                    <resource>sosti:trocarsolicitante</resource>
+                                </trocasolicitante>
+                                <tipotarefa>
+                                    <label>Tipos de Tarefas</label>
+                                    <module>tarefa</module>
+                                    <controller>tipotarefa</controller>
+                                    <action>index</action>
+                                    <resource>tarefa:tipotarefa</resource>
+                                </tipotarefa>
+                            </pages>
+                        </gestor>
+                    </pages>
+                </manutencao>
+                <gestaodemandas>
+                    <label>Gestão de Demandas</label>
+                    <module>sosti</module>
+                    <controller>gestaodemandas</controller>
+                    <action>priorizardemandas</action>
+                    <resource>sosti:gestaodemandas</resource>
+                    <pages>
+                        <tecnico>
+                            <label>Priorizar Demandas</label>
+                            <module>sosti</module>
+                            <controller>gestaodemandas</controller>
+                            <action>priorizardemandas</action>
+                            <resource>sosti:gestaodemandas</resource>
+                        </tecnico>
+                    </pages>
+                </gestaodemandas>
+                <relatoriossosti>
+                    <label>Relatórios</label>
+                    <uri>#</uri>
+                    <pages>
+                        <relatoriossolicitacoes>
+                            <label>Solicitações por Unidade e Período</label>
+                            <module>sosti</module>
+                            <controller>relatoriossolicitacoes</controller>
+                            <action>solicitacoesunidadeperiodo</action>
+                            <resource>sosti:relatoriossolicitacoes</resource>
+                        </relatoriossolicitacoes>
+                        <!--<relatoriosavaliacaoautomatica>
+                            <label>Avaliação Automática</label>
+                            <module>sosti</module>
+                            <controller>Minhassolicitacoes</controller>
+                            <action>avaliacaoautomatica</action>
+                            <resource>sosti:minhassolicitacoes</resource>
+                        </relatoriosavaliacaoautomatica>-->
+
+                        <relatoriosolicitacoesporservico>
+                            <label>Relatório de Solicitações por Serviço</label>
+                            <module>sosti</module>
+                            <controller>relatoriossolicitacoes</controller>
+                            <action>solicitacoesporservico</action>
+                            <resource>sosti:relatoriossolicitacoes</resource>
+                        </relatoriosolicitacoesporservico>
+
+                    </pages>
+                </relatoriossosti>
+                <relatorioshelpdesk>
+                    <label>Relatórios SLA</label>
+                    <uri>#</uri>
+                    <pages>
+                        <sladesenvolvimentoindicadornivel>
+                            <label>Indicadores Nível Mínimo Serviço Desenvolvimento e Sustentação</label>
+                            <module>sosti</module>
+                            <controller>sladesenvolvimento</controller>
+                            <action>indicadoresnivelservico</action>
+                            <resource>sosti:sladesenvolvimento</resource>
+                        </sladesenvolvimentoindicadornivel>
+                        <slahelpdeskindicadornivel>
+                            <label>Indicadores Nível Mínimo Serviço Helpdesk</label>
+                            <module>sosti</module>
+                            <controller>slahelpdesk</controller>
+                            <action>triagem</action>
+                            <resource>sosti:slahelpdesk</resource>
+                        </slahelpdeskindicadornivel>
+                        <slainfraestruturaindicadornivel>
+                            <label>Indicadores Nível Mínimo Serviço Infraestrutura</label>
+                            <module>sosti</module>
+                            <controller>slainfraestrutura</controller>
+                            <action>triagem</action>
+                            <resource>sosti:slainfraestrutura</resource>
+                        </slainfraestruturaindicadornivel>
+                        <slanocindicadornivel>
+                            <label>Indicadores Nível Mínimo Serviço NOC</label>
+                            <module>sosti</module>
+                            <controller>slanoc</controller>
+                            <action>triagem</action>
+                            <resource>sosti:slanoc</resource>
+                        </slanocindicadornivel>
+                        <slasecoesindicadornivel>
+                            <label>Indicadores Nível Mínimo Serviço Seções</label>
+                            <module>sosti</module>
+                            <controller>slasecoes</controller>
+                            <action>triagem</action>
+                            <resource>sosti:slasecoes</resource>
+                        </slasecoesindicadornivel>
+                        <solicitacoesatendidasperiodo>
+                            <label>Solicitações Atendidas por Período</label>
+                            <module>sosti</module>
+                            <controller>relatorioshelpdesk</controller>
+                            <action>solicitacoesperiodo</action>
+                            <resource>sosti:relatorioshelpdesk</resource>
+                        </solicitacoesatendidasperiodo>
+                        <solicitacoesprimeiroatendimento>
+                            <label>Primeiro Atendimento das Solicitações</label>
+                            <module>sosti</module>
+                            <controller>relatorioshelpdesk</controller>
+                            <action>primeiroatendimentosolicitacoes</action>
+                            <resource>sosti:relatorioshelpdesk</resource>
+                        </solicitacoesprimeiroatendimento>
+                    </pages>
+                </relatorioshelpdesk>
+                <permissaopessoa>
+                    <label>Permissão Pessoa</label>
+                    <module>guardiao</module>
+                    <controller>perfilpessoaadm</controller>
+                    <action>form</action>
+                    <resource>guardiao:perfilpessoaadm.form</resource>
+                </permissaopessoa>
+                <faturamentososti>
+                    <label>Faturamento Sosti</label>
+                    <module>sosti</module>
+                    <controller>faturamento</controller>
+                    <action>relatorios</action>
+                    <resource>sosti:faturamento</resource>
+                </faturamentososti>
+            </pages>
+        </sosti>
+<!--        <transporte>
+            <label>Transporte</label>
+            <module>transporte</module>
+            <controller>index</controller>
+            <action>index</action>
+            <resource>transporte:index</resource>
+            <pages>
+                <acidente>
+                    <label>Acidente</label>
+                    <module>transporte</module>
+                    <controller>acidente</controller>
+                    <action>index</action>
+                    <resource>transporte:acidente</resource>
+                </acidente>
+                <motorista>
+                    <label>Motorista</label>
+                    <module>transporte</module>
+                    <controller>motorista</controller>
+                    <action>index</action>
+                    <resource>transporte:motorista</resource>
+                </motorista>
+                <multa>
+                    <label>Multa</label>
+                    <module>transporte</module>
+                    <controller>multa</controller>
+                    <action>index</action>
+                    <resource>transporte:multa</resource>
+                </multa>
+                <requisicao>
+                    <label>Requisição</label>
+                    <module>transporte</module>
+                    <controller>requisicao</controller>
+                    <action>index</action>
+                    <resource>transporte:requisicao</resource>
+                    <pages>
+                        <atenderequisicao>
+                            <label>Atendimento</label>
+                            <module>transporte</module>
+                            <controller>requisicao</controller>
+                            <action>edit</action>
+                            <resource>transporte:requisicao</resource>
+                        </atenderequisicao>
+                        <autorizarequisicao>
+                            <label>Autorização</label>
+                            <module>transporte</module>
+                            <controller>requisicao</controller>
+                            <action>edit</action>
+                            <resource>transporte:requisicao</resource>
+                        </autorizarequisicao>
+                        <baixarequisicao>
+                            <label>Baixa</label>
+                            <module>transporte</module>
+                            <controller>requisicao</controller>
+                            <action>add</action>
+                            <resource>transporte:requisicao</resource>
+                        </baixarequisicao>
+                        <cadrequisicao>
+                            <label>Cadastro</label>
+                            <module>transporte</module>
+                            <controller>requisicao</controller>
+                            <action>add</action>
+                            <resource>transporte:requisicao</resource>
+                        </cadrequisicao>
+                    </pages>
+                </requisicao>
+                <veiculo>
+                    <label>Veiculo</label>
+                    <module>transporte</module>
+                    <controller>veiculo</controller>
+                    <action>index</action>
+                    <resource>transporte:veiculo</resource>
+                </veiculo>
+            </pages>
+        </transporte>
+-->
+    </nav>
+</configdata>

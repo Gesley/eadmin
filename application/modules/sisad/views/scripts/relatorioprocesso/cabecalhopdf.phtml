@@ -1,0 +1,31 @@
+<table>
+    <tr><td><img width="271" height="97" src="<?php echo $this->baseUrl(); ?>/img/JusticaTRF.jpg" /></td></tr>
+    <tr><td><?php echo $this->titulo; ?></td></tr>
+    <?php if( isset($this->cabecalho["unidade"]) && !empty($this->cabecalho["unidade"]) ): ?>
+        <tr><td> UNIDADE: <?php echo $this->cabecalho["unidade"]; ?></td></tr>
+    <?php endif; ?>
+    <?php if( isset($this->cabecalho["assunto"]) && !empty($this->cabecalho["assunto"]) ): ?>
+    <tr>
+        <td> ASSUNTO: <?php echo $this->cabecalho["assunto"]?> </td>
+    </tr>
+    <?php endif; ?>
+    <?php if( isset($this->cabecalho["quantidade_dias"]) && !empty($this->cabecalho["quantidade_dias"]) ): ?>
+    <tr>
+        <td> PARADO A MAIS DE: <?php echo $this->cabecalho["quantidade_dias"]?> DIAS </td>
+    </tr>
+    <?php endif; ?>
+    <?php if( isset($this->cabecalho["orgao_julgador"]) && !empty($this->cabecalho["orgao_julgador"]) ): ?>
+    <tr>
+        <td> ÓRGÃO JULGADOR: <?php echo $this->cabecalho["orgao_julgador"]?> </td>
+    </tr>
+    <?php endif; ?>
+    <tr><td>
+    <?php if (isset($this->cabecalho["data_inicial"]) && isset($this->cabecalho["data_final"])): ?>
+             PERÍODO: <?php echo $this->cabecalho["data_inicial"]?> a <?php echo $this->cabecalho["data_final"]; ?>
+    <?php elseif ( isset($this->cabecalho["data_inicial"]) && !empty($this->cabecalho["data_inicial"]) ): ?> 
+             A PARTIR DE: <?php echo $this->cabecalho["data_inicial"]; ?> 
+    <?php elseif ( isset($this->cabecalho["data_final"]) && !empty($this->cabecalho["data_final"])): ?> 
+            DATA FIM: <?php echo $this->cabecalho["data_final"]; ?> 
+    <?php endif; ?>
+    </td></tr>
+</table>

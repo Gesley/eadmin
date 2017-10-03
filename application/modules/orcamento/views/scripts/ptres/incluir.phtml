@@ -1,0 +1,48 @@
+<?php
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+// ajax para o campo ptres
+// $ptres [ 'campo' ] = 'PTRS_CD_PT_RESUMIDO';
+// echo $this->partial ( '_partials/ajax_ptres.phtml', $ptres );
+
+
+echo	$this->formulario;
+?>
+
+<!-- 520004 - excluido -->
+<!-- 13792 - ativo -->
+
+<script type="text/javascript">
+    $(function() {
+
+    	$("#PTRS_CD_PT_RESUMIDO").change( function () {
+
+    		var ptres = $("#PTRS_CD_PT_RESUMIDO").val();
+
+    		if (ptres != ""){
+    			$.ajax({
+		            url: '<?php echo $this->baseUrl(); ?>/orcamento/ptres/ajaxptres/term/'+ptres,
+		            dataType: 'html',
+		            data: $(this).serialize(),
+		            type: 'GET',
+		            processData: false,
+		            error:function(){
+		               
+		            },
+		            success:function(data){
+		            	if(data.length > 2){
+		            		$("#conteudo").prepend(" <div id='flashMessages'><div class='error'><strong>Erro: </strong>Código Resumido já existe</div></div> ");
+		            		$("#Enviar").hide();
+		            	}else{
+		            		$("#Enviar").show();
+		            	}
+		        }});  
+    		}
+     		
+
+    	});
+
+    });
+</script>

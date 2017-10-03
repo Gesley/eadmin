@@ -1,0 +1,54 @@
+<script>
+$(function(){
+$('.detalhes').click(function(){
+	currentID = $(this).attr('id');
+	$('#loc'+currentID).toggle();
+    
+	});
+});
+</script>
+
+<div id="container_pagination" style="margin-top: 30px;">
+    <?php if (count($this->data)): ?>
+    <table class="grid">
+        <thead>
+            <tr>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/backupemprestados/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">Solicitação<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/backupemprestados/ordem/LSBK_NR_TOMBO/direcao/<?php echo $this->direcao ?> ">Número do Tombo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/backupemprestados/ordem/LSBK_TP_TOMBO/direcao/<?php echo $this->direcao ?> "> Tombo Tipo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/backupemprestados/ordem/LSBK_DT_EMPRESTIMO/direcao/<?php echo $this->direcao ?> ">Data Empréstimo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/labrelatorios/backupemprestados/ordem/LSBK_CD_MAT_EMPRESTIMO/direcao/<?php echo $this->direcao ?> ">Matrícula Usuário que Emprestou<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): ?>
+                <tr>
+                    <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]); ?></td>
+                    <td><?php echo $this->escape($data["LSBK_NR_TOMBO"]); ?></td>
+                    <td><?php echo $this->escape($data["LSBK_TP_TOMBO"]); ?></td>
+                    <td><?php echo $this->escape($data["LSBK_DT_EMPRESTIMO"]); ?></td>
+                    <td><?php echo $this->escape($data["LSBK_CD_MAT_EMPRESTIMO"]); ?></td>
+               </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7">Total: <?php echo $this->data->getTotalItemCount()     
+                                        ////-- pagination
+                                        //-- style
+                                        //-- partial
+                                        //-- data
+                                        ?>
+               </td>
+            </tr>
+            <tr>
+                <td colspan="7">
+                    <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                </td>
+            </tr>
+        </tfoot>
+        </table>
+<?php else:?>
+    <p>Não existem registros.</p>
+<?php endif; ?>
+</div>

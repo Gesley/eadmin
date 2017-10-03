@@ -1,0 +1,439 @@
+<?php
+$this->inlineScript()->appendFile(($this->baseUrl() . '/js/jquery.MultiFile.js'));
+?>
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+        function(){
+            grid_tbody_tr.removeClass('hover_nav');
+                
+            var this_tr = $(this);
+            var is_checked_tr = $(this).attr('marcado');
+                
+            var input_check_box = $(this).find('input[type=checkbox]');
+            var is_checked_input = input_check_box.attr('checked');
+                
+            if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                input_check_box.attr('checked','checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+            }else{
+                input_check_box.removeAttr('checked');
+                this_tr.removeAttr('marcado');
+                this_tr.removeClass('hover');
+            }
+            input_check_box.focus();
+        }
+    );
+        grid_tbody_tr.dblclick(
+        function(){
+            var this_tr = $(this);
+            var input_check_box = $(this).find('input');
+                
+            var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            this_tr.attr('marcado','marcado');
+            this_tr.addClass('hover');
+                
+            if (xhr_abrir_documento) {
+                xhr_abrir_documento.abort();
+            }
+                
+            url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+            xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+            });
+        }
+    ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+        function(){
+            if($(this).attr('checked')){
+                $(".nav_check_boxes").attr('checked','checked');
+                $("tr[name=rowList]").addClass('hover');
+            }else{
+                $(".nav_check_boxes").removeAttr('checked');
+                $("tr[name=rowList]").removeClass('hover');
+            }
+        }
+    );
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var formhelpdesk = $('form[name=helpdesk]');
+            if(acao == 'Encaminhar'){
+                formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/encaminhar');
+            }else if(acao == 'Baixar'){
+                formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/baixarcaixa');
+            }else if(acao == 'Espera'){
+                formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/esperacaixa');
+            }
+        }
+    );
+        $('form[name=helpdesk]').submit(
+        function(){          
+            var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+            if (solictacaoSelecionada == undefined){ 
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                $('#flashMessages').html(mensagem);
+                return false;
+            }
+        }
+    );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+            autoOpen : false,
+            modal    : false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580,140,0,0],
+            buttons : {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $(".historico").hide('');
+    });
+    
+    
+    $(function(){ 
+        $('#ANEXOS').MultiFile({
+            STRING: {
+                file: '<em title="Clique para Remover" onclick="$(this).parent().prev().click()">$file</em>',
+                remove: '<img class="excluirpdf" title="Clique para Remover" height="16" width="16"/>'
+            }
+        });
+    });
+</script> 
+
+<script type="text/javascript">
+    /* Adicionar Novo Contrato */
+    $(function() {
+        
+        $(document.body).delegate(".remover-contrato","click", function(){
+            $(this).parent().parent().remove();
+        });
+        
+        $(document.body).delegate(".removerTodosContratos","click", function(){
+            var config = $.data(document.body,'configContrato'),
+            linhas_removidas = $(config.tabela.find("."+config.descContrato)); 
+            //console.log(linhas_removidas);
+            linhas_removidas.remove();
+        });        
+        
+        $.data(document.body,'configContrato',
+        {
+            containerContratos: $("#contratos adicionados"),
+            tabela: $("#contratos_selecionados tbody"),
+            descContrato: 'linha_contrato'
+        }
+    );
+        $("#contratos_selecionados").show();
+        
+        $("#OS_CONTRATOS").autocomplete({
+            source: base_url+'/sosti/gestaodedemandasti/ajaxcontratos',
+            minLength: 3,
+            delay: 100,
+            select: function(event, ui){
+                var config = $.data(document.body,'configContrato');
+                
+                existe_na_lista = config.containerContratos.find("input[value="+ui.item.value+"-"+ui.item.id+"]");  
+                encontrou = existe_na_lista.attr('value')
+                if(encontrou != undefined){
+                    alert('A pessoa já existe na lista');
+                    return;
+                }else{ 
+                    var tr = "<tr class='linha_contrato'>";
+                    tr += "<td style='width: 5%'><a href='#' class='remover-contrato' rel='"+ui.item.value+"-"+ui.item.id+"' >Remover</a></td>";
+                    tr += "<td>"+ ui.item.label +" </td>";
+                    tr += "<input type='hidden' value='"+ui.item.value+"-"+ui.item.id+"' name='contratos_cadastrados[]' />";
+                    tr += "</tr>",
+                    config.tabela.append(tr);
+                    $(this).val("");
+                    return false;
+                }
+            }
+        });
+    });  
+    
+    /* Adicionar Novo Sistema */
+    $(function() {
+        
+        $(document.body).delegate(".remover-sistema","click", function(){
+            $(this).parent().parent().remove();
+        });
+        
+        $(document.body).delegate(".removerTodosSistemas","click", function(){
+            var config = $.data(document.body,'configSistema'),
+            linhas_removidas = $(config.tabela.find("."+config.descSistema)); 
+            //console.log(linhas_removidas);
+            linhas_removidas.remove();
+        });        
+        
+        $.data(document.body,'configSistema',
+        {
+            containerSistemas: $("#sistemas adicionados"),
+            tabela: $("#sistemas_selecionados tbody"),
+            descSistema: 'linha_sistema'
+        }
+    );
+        $("#sistemas_selecionados").show();
+        $("#OS_SISTEMAS").autocomplete({
+            source: base_url+'/sosti/gestaodedemandasti/ajaxsistemas',
+            minLength: 3,
+            delay: 100,
+            select: function(event, ui){
+                var config = $.data(document.body,'configSistema');
+                
+                existe_na_lista = config.containerSistemas.find("input[value="+ui.item.value+"-"+ui.item.id+"]");  
+                encontrou = existe_na_lista.attr('value')
+                if(encontrou != undefined){
+                    alert('A pessoa já existe na lista');
+                    return;
+                }else{ 
+                    var tr = "<tr class='linha_sistema'>";
+                    tr += "<td style='width: 5%'><a href='#' class='remover-sistema' rel='"+ui.item.value+"-"+ui.item.id+"' >Remover</a></td>";
+                    tr += "<td>"+ ui.item.label +" </td>";
+                    tr += "<input type='hidden' value='"+ui.item.value+"-"+ui.item.id+"' name='sistemas_cadastrados[]' />";
+                    tr += "</tr>",
+                    config.tabela.append(tr);
+                    $(this).val("");
+                    return false;
+                }
+            }
+        });
+    }); 
+    
+    /* Adicionar Funcionalidade */
+    $(function() {
+        
+        $(document.body).delegate(".remover-funcionalidade","click", function(){
+            $(this).parent().parent().remove();
+        });
+        
+        $(document.body).delegate(".removerTodasFuncionalidades","click", function(){
+            var config = $.data(document.body,'configFuncionalidade'),
+            linhas_removidas = $(config.tabela.find("."+config.descFuncionalidade)); 
+            //console.log(linhas_removidas);
+            linhas_removidas.remove();
+        });        
+        
+        $.data(document.body,'configFuncionalidade',
+        {
+            containerFuncionalidades: $("#funcionalidades adicionadas"),
+            tabela: $("#funcionalidades_selecionadas tbody"),
+            descFuncionalidade: 'linha_funcionalidade'
+        }
+    );
+        $("#funcionalidades_selecionadas").show();
+        $("#OS_FUNCIONALIDADE").autocomplete({
+            source: base_url+'/sosti/gestaodedemandasti/ajaxfuncionalidades',
+            minLength: 3,
+            delay: 100,
+            select: function(event, ui){
+                var config = $.data(document.body,'configFuncionalidade');
+                
+                existe_na_lista = config.containerFuncionalidades.find("input[value="+ui.item.value+"-"+ui.item.id+"]");  
+                encontrou = existe_na_lista.attr('value')
+                if(encontrou != undefined){
+                    alert('A pessoa já existe na lista');
+                    return;
+                }else{ 
+                    var tr = "<tr class='linha_funcionalidade'>";
+                    tr += "<td style='width: 5%'><a href='#' class='remover-funcionalidade' rel='"+ui.item.value+"-"+ui.item.id+"' >Remover</a></td>";
+                    tr += "<td>"+ ui.item.label +" </td>";
+                    tr += "<input type='hidden' value='"+ui.item.value+"-"+ui.item.id+"' name='funcionaliaddes_cadastrados[]' />";
+                    tr += "</tr>",
+                    config.tabela.append(tr);
+                    $(this).val("");
+                    return false;
+                }
+            }
+        });
+    }); 
+    /* Adicionar Artefatos */
+    $(function() {
+        
+        $(document.body).delegate(".remover-artefato","click", function(){
+            $(this).parent().parent().remove();
+        });
+        
+        $(document.body).delegate(".removerTodosArtefatos","click", function(){
+            var config = $.data(document.body,'configArtefato'),
+            linhas_removidas = $(config.tabela.find("."+config.descArtefato)); 
+            //console.log(linhas_removidas);
+            linhas_removidas.remove();
+        });        
+        
+        $.data(document.body,'configArtefato',
+        {
+            containerArtefatos: $("#artefatos adicionados"),
+            tabela: $("#artefatos_selecionados tbody"),
+            descArtefato: 'linha_artefato'
+        }
+    );
+        $("#artefatos_selecionados").show();
+        $("#OS_ARTEFATOS").autocomplete({
+            source: base_url+'/sosti/gestaodedemandasti/ajaxartefatos',
+            minLength: 3,
+            delay: 100,
+            select: function(event, ui){
+                var config = $.data(document.body,'configArtefato');
+                
+                existe_na_lista = config.containerArtefatos.find("input[value="+ui.item.value+"-"+ui.item.id+"]");  
+                encontrou = existe_na_lista.attr('value')
+                if(encontrou != undefined){
+                    alert('A pessoa já existe na lista');
+                    return;
+                }else{ 
+                    var tr = "<tr class='linha_funcionalidade'>";
+                    tr += "<td style='width: 5%'><a href='#' class='remover-artefato' rel='"+ui.item.value+"-"+ui.item.id+"' >Remover</a></td>";
+                    tr += "<td>"+ ui.item.label +" </td>";
+                    tr += "<input type='hidden' value='"+ui.item.value+"-"+ui.item.id+"' name='artefatos_cadastrados[]' />";
+                    tr += "</tr>",
+                    config.tabela.append(tr);
+                    $(this).val("");
+                    return false;
+                }
+            }
+        });
+    }); 
+    
+    /* Adicionar Funcionalidade */
+    $(function() {
+        
+        $(document.body).delegate(".remover-TipoDemanda","click", function(){
+            $(this).parent().parent().remove();
+        });
+        
+        $(document.body).delegate(".removerTodosTipoDemanda","click", function(){
+            var config = $.data(document.body,'configTipoDemanda'),
+            linhas_removidas = $(config.tabela.find("."+config.descTipoDemanda)); 
+            //console.log(linhas_removidas);
+            linhas_removidas.remove();
+        });        
+        
+        $.data(document.body,'configTipoDemanda',
+        {
+            containerTipoDemanda: $("#TipoDemanda adicionadas"),
+            tabela: $("#TipoDemanda_selecionadas tbody"),
+            descTipoDemanda: 'linha_TipoDemanda'
+        }
+    );
+        $("#TipoDemanda_selecionadas").show();
+        $("#TIPO_DEMANDA").autocomplete({
+            source: base_url+'/sosti/gestaodedemandasti/ajaxtipodemanda',
+            minLength: 3,
+            delay: 100,
+            select: function(event, ui){
+                var config = $.data(document.body,'configTipoDemanda');
+                
+                existe_na_lista = config.containerTipoDemanda.find("input[value="+ui.item.value+"-"+ui.item.id+"]");  
+                encontrou = existe_na_lista.attr('value')
+                if(encontrou != undefined){
+                    alert('A pessoa já existe na lista');
+                    return;
+                }else{ 
+                    var tr = "<tr class='linha_TipoDemanda'>";
+                    tr += "<td style='width: 5%'><a href='#' class='remover-TipoDemanda' rel='"+ui.item.value+"-"+ui.item.id+"' >Remover</a></td>";
+                    tr += "<td>"+ ui.item.label +" </td>";
+                    tr += "<input type='hidden' value='"+ui.item.value+"-"+ui.item.id+"' name='TipoDemanda_cadastradas[]' />";
+                    tr += "</tr>",
+                    config.tabela.append(tr);
+                    $(this).val("");
+                    return false;
+                }
+            }
+        });
+    });
+    
+</script>
+<form method="POST" enctype="multipart/form-data" >
+    <table class="grid">
+        <thead>
+            <tr>
+                <th >Número</th>
+                <th >Serviço atual</th>
+                <th >Tempo total</th>
+                <th >Remover</th>
+            </tr>
+        </thead>
+        <tbody id="documentosList">
+            <?php $TimeInterval = new App_TimeInterval(); ?>
+            <?php foreach ($this->data as $data): ?>
+                <tr>
+                    <?php $d = Zend_Json::decode($data); ?>  
+                    <td class="historico" <?php
+                echo ($data["TEMPO_TOTAL"] > 120) ? ('style="background-color:#EE4115;" title="Solicitação com o tempo de atendimento ultrapassado!"') : ('');
+                echo ($data["MOFA_ID_FASE"] == 1019) ? ('style="background-color:#E88400;" title="Solicitação recusada!"') : ('');
+                echo ($data["ESPERA_FLAG"] >= 0 && !is_null($data["ESPERA_FLAG"])) ? ('style="background-color:#0099FF;" title="Solicitação colocada em espera!"') : ('');
+                    ?> >
+                        <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]); ?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data); ?>"/>
+                    </td>
+                    <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                    <td> <?php echo $this->escape($d["SSER_DS_SERVICO"]) ?></td>
+                    <td> <?php echo $this->escape($TimeInterval->interval($d["MOFA_DH_FASE"])); ?></td>
+                    <td> X </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+    </table>
+    <?php
+    echo $this->form->getElement('OS_CONTRATOS');
+    echo $this->partial('gestaodedemandasti/oscontratos.phtml', array('form' => $this->form->getElement('OS_CONTRATOS')));
+    echo $this->form->getElement('OS_SISTEMAS');
+    echo $this->partial('gestaodedemandasti/ossistemas.phtml', array('form' => $this->form->getElement('OS_SISTEMAS')));
+    echo $this->form->getElement('OS_FUNCIONALIDADE');
+    echo $this->partial('gestaodedemandasti/osfuncionalidade.phtml', array('form' => $this->form->getElement('OS_FUNCIONALIDADE')));
+    echo $this->form->getElement('OS_ARTEFATOS');
+    echo $this->partial('gestaodedemandasti/osartefatos.phtml', array('form' => $this->form->getElement('OS_ARTEFATOS')));
+    echo $this->form->getElement('TIPO_DEMANDA');
+    echo $this->partial('gestaodedemandasti/ostipodemanda.phtml', array('form' => $this->form->getElement('TIPO_DEMANDA')));
+    echo $this->form->getElement('TIPO_EXECUCAO');
+    echo $this->form->getElement('SSOL_DS_OBSERVACAO');
+    echo $this->form->getElement('ESTIMATIVA_PF');
+    ?>
+    <div id="contratos_adicionados"> </div>
+    <div id="sistemas_adicionados"> </div>
+    <div id="funcionalidades_adicionadas"> </div>
+    <div id="artefatos_adicionados"> </div>
+    </br><b>Anexos</b></br>
+    <input id="ANEXOS" type="file" name="ANEXOS[]"  class="Multi" accept="pdf" maxlength="20" />
+    Até 20 Anexos. </br>
+    Somente serão aceitos arquivos com o formato PDF. </br>
+    Soma dos arquivos até 50 Megas.</p>
+<input type="submit" name="gerar" value="Gerar OS" />
+<div id="dialog-documentos_detalhe">
+    <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+    <div id="dialog-documentos_conteudo"></div>
+</div>
+</form>

@@ -1,0 +1,35 @@
+
+ <div id="dialog_cadastra_parte">
+ 
+   <?php 
+     if(count($this->partes_docs) > 0): ?>  
+     <table id="partes_documentos" style="margin-top: 20px; width: 80%;" class="grid">
+            <thead> 
+                <tr>
+                    <th colspan="2"> Partes cadastradas no(s) Documento(s) <br/>
+                       Para removê-las clique em 'Remover' ou 'Remover todas' 
+                       Se não forem removidas, serão inseridas também como partes no Processo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2"><a href='#' class='removerPartesDocs' rel='' >Remover todas</a></td>
+                   <!-- <td><a href='#' class='removerTodos' rel='' >Adicionar todos</a></td> -->
+                </tr>
+                
+                        
+                <?php   foreach($this->partes_docs as $i):  ?>
+                            
+                            <tr class="linha_parte"> 
+                                <td style='width: 5%'><a href='#' class='remover' rel='' > Remover </a></td>
+                                <td> <?php echo $i['matricula']." - ".$i['nome']?> </td>
+                                <input type="hidden" class="" value="<?php echo $i['value']?>" name="<?php echo $i['name_input'] ?>"/>
+                            </tr>
+                            
+               <?php  endforeach;
+                   
+               ?>
+           </tbody>
+      </table>
+  <?php  endif; ?>
+ </div> 

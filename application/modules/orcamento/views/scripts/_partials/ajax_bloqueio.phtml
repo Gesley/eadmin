@@ -1,0 +1,62 @@
+<script type="text/javascript">
+    $(function () {
+        $("#REMB_CD_PT_RESUMIDO").keypress(function () {
+            $("#REMB_CD_PT_RESUMIDO").autocomplete({
+                source: base_url + '/orcamento/ptres/ajaxptres/',
+                minLength: 3,
+                delay: 100,
+                select: function (event, ui) {
+                    $("#REMB_CD_PT_RESUMIDO").val(ui.item.label);
+                },
+                change: function (event, ui) {
+                    $("#REMB_CD_PT_RESUMIDO").val(ui.item.label);
+                }
+            });
+        });
+
+        $("#REMB_CD_ELEMENTO_DESPESA_SUB").keypress(function () {
+            $("#REMB_CD_ELEMENTO_DESPESA_SUB").autocomplete({
+                source: base_url + '/orcamento/elemento/ajaxelemento/',
+                minLength: 3,
+                delay: 100,
+                select: function (event, ui) {
+                    $("#REMB_CD_ELEMENTO_DESPESA_SUB").val(ui.item.label);
+                },
+                change: function (event, ui) {
+                    $("#REMB_CD_ELEMENTO_DESPESA_SUB").val(ui.item.label);
+                }
+            });
+        });
+
+        $("#DESP_CD_PT_RESUMIDO").keypress(function () {
+            $("#DESP_CD_PT_RESUMIDO").autocomplete({
+                source: base_url + '/orcamento/ptres/ajaxptres/',
+                minLength: 3,
+                delay: 100,
+                select: function (event, ui) {
+                    $("#DESP_CD_PT_RESUMIDO").text(ui.item.label);
+                },
+                change: function (event, ui) {
+                    $("#DESP_CD_PT_RESUMIDO").val(ui.item.label);
+                    $("#PTRS_CD_UNID_ORCAMENTARIA").val(ui.item.uo);
+                }
+            });
+        });
+
+
+        $("#DESP_CD_ELEMENTO_DESPESA_SUB").keypress(function () {
+            $("#DESP_CD_ELEMENTO_DESPESA_SUB").autocomplete({
+                source: base_url + '/orcamento/elemento/ajaxelemento/',
+                minLength: 3,
+                delay: 100,
+                select: function (event, ui) {
+                    $("#DESP_CD_ELEMENTO_DESPESA_SUB").val(ui.item.label);
+                },
+                change: function (event, ui) {
+                    $("#DESP_CD_ELEMENTO_DESPESA_SUB").val(ui.item.label);
+                }
+            });
+        });
+
+    });
+</script>

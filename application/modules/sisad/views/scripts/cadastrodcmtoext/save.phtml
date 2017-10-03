@@ -1,0 +1,78 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+?>
+
+<script type="text/javascript">
+$(function(){
+    $("#DOCM_ID_PESSOA_EXTERNO").autocomplete({
+            //source: "sosti/solicitacao/ajaxnomesolicitante",
+            source: base_url+"/sisad/cadastrodcmtoext/ajaxnomedestinatario",
+            minLength: 3,
+            delay: 300
+    });
+    	$(function() {
+		$( "#DOCM_ID_PCTT" ).combobox();
+		$( "#combobox-input-text-DOCM_ID_PCTT" ).attr('style','width: 500px;');
+		$( "#combobox-input-button-DOCM_ID_PCTT" ).attr('style','display: none;');
+                
+                
+                 $( "#DOCM_ID_TIPO_DOC" ).combobox();
+		$( "#combobox-input-text-DOCM_ID_TIPO_DOC" ).attr('style','width: 500px;');
+                
+	});
+    
+});
+</script>
+        
+        
+</script>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p><b>Unidade Emissora</b> é a unidade responsável pela assinatura e divulgação do documento.</p>
+    <ul>
+        <li>Ao iniciar a digitação de parte do nome, a tela mostra todas as opções existentes na tabela de Lotações do órgão. Se não for escolhido o item da lista, o sistema gera erro.</li>
+    </ul>
+    
+    <p><b>Unidade Redatora</b> é a unidade responsável pela redação do documento, podendo ser igual à unidade emissora do documento.</p>
+    <ul>
+        <li>Para localizar a unidade de lotação, basta seguir os procedimentos listados para <i>unidade emissora</i>.</li>
+    </ul>
+    
+    <p><b>Tipo Documento</b> é uma lista com todos os tipos de documentos que constam do <i>Manual de Documentos Administrativos</i>.</p>
+    
+    <p><b>Número do Documento Usuário</b> é o número do documento existente hoje, registrado de forma manual. Este número servirá como forma de pesquisa para localização do documento.</p>
+    
+    <p><b>Assunto do Documento</b> são os assuntos conforme constam da tabela do PCTT, que servirá para registrar a codificação do documento.</p>
+    <ul>
+        <li>Digitam-se as palavras relativas ao assunto e o sistema mostra a lista de assuntos cadastrada. Seleciona-se o assunto desejado.</li>
+    </ul>
+    
+    <p><b>Campo Descrição</b> é o campo onde devem ser digitadas as informações que facilitarão a pesquisa e localização do documento (utilizar palavras significativas).</p>
+    
+    <p><b>Estado do Documento</b></p>
+    <ul>
+        <li>Digital é o documento que foi criado de forma DIGITAL (padrão do sistema).</li>
+        <li>Digitalizado é o documento que foi recebido pela unidade e foi digitalizado para ser tramitado através do sistema.</li>
+        <li>Físico é o documento que foi recebido pela unidade, foi digitalizado e necessita ser encaminhado de forma física para a unidade destinatária.</li>
+    </ul>
+    
+    <p><b>Confidencialidade</b> indica qual o grau de sigilo do documento, sendo padrão do sistema o tipo <i>público</i>.</p>
+    
+    <p><b>Estado do Documento</b></p>
+    <ol>
+        <li>Clicar no botão Selecionar arquivo;</li>
+        <li>Localizar em qual pasta / diretório encontra-se o arquivo;</li>
+        <li>Selecionar e abrir arquivo.</li>
+    </ol>
+    <br />
+    <p><b>Atenção</b>: Encerrada a ultima operação, deve-se clicar no botão SALVAR.</p>
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<?php echo $this->form;?>

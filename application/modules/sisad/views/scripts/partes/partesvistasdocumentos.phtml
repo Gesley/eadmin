@@ -1,0 +1,38 @@
+
+<div id="dialog_cadastra_interessado">
+
+    <?php if (count($this->interessados_docs) > 0): ?>  
+        <table id="interessados_documentos" style="margin-top: 20px; width: 80%;" class="grid">
+            <thead> 
+                <tr>
+                    <th colspan="2"> <?php echo ucfirst($this->tituloTabela); ?> cadastradas no(s) Documento(s) / Processo(s) <br/>
+                        <?= ($this->remover == 'S' ? "Para removê-las clique em 'Remover' ou 'Remover todos' <br/>
+                         Se não forem removidas, serão inseridas também como " . $this->tituloTabela . " no(s) Documento(s) / Processo(s) " : '') ?>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if ($this->remover == 'S'):
+                    ?>
+                    <tr>
+                        <td colspan="2"><a href='#' class='removerPartesDocs' rel='' >Remover todos</a></td>
+                    </tr>
+                    <?php
+                endif;
+                //Zend_debug::dump($this->interessados_docs);
+                foreach ($this->interessados_docs as $i):
+                    ?>
+
+                    <tr class="linha_<?php echo $this->tituloTabela ?> linha_remover"> 
+                        <?= ($this->remover == 'S' ? "<td style='width: 5%'><a href='#' class='remover-parte' rel='' > Remover </a></td>" : '') ?>
+                        <td> <?php echo $i['nome'] . " - " . $i['id'] ?> </td>
+                <input type="hidden" class="" value="<?php echo $i['value'] . '-' . $i['tipo_parte'] ?>" name="<?php echo $i['input_name'] ?>"/>
+                </tr>
+
+            <?php endforeach;
+            ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div> 

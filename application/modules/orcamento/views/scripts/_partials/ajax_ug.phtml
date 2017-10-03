@@ -1,0 +1,20 @@
+<?php
+$nomeCampoUg = $this->campo;
+?>
+<script type="text/javascript">
+    $(function() {
+        $("#<?php echo $nomeCampoUg; ?>").keypress( function () {
+            $("#<?php echo $nomeCampoUg; ?>").autocomplete( {
+                source: base_url+'/orcamento/ug/ajaxug/',
+                minLength: 3,
+                delay: 100,
+                select: function (event, ui) {
+                    $("#<?php echo $nomeCampoUg; ?>").text(ui.item.label);
+                },
+                change: function (event, ui) {
+                    $("#<?php echo $nomeCampoUg; ?>").val(ui.item.label);
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,50 @@
+<div>
+    <a  class="novo" href="<?php echo $this->baseUrl(); ?>/sosti/aviso/form">Novo</a>
+</div>
+<?php if (count($this->data)): ?>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/aviso/index/ordem/SAVI_ID_AVISO/direcao/<?php echo $this->direcao ?> ">Ações<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/aviso/index/ordem/SAVI_DS_AVISO/direcao/<?php echo $this->direcao ?> ">Descrição do Aviso<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/aviso/index/ordem/VISIBILIDADE/direcao/<?php echo $this->direcao ?> ">Visibilidade dos avisos<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/aviso/index/ordem/SAVI_DH_CADASTRO/direcao/<?php echo $this->direcao ?> ">Data do Aviso<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sosti/aviso/index/ordem/SAVI_CD_MATR_CAD/direcao/<?php echo $this->direcao ?> ">Cadstrado por<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($this->data as $data): ?>
+                <tr>
+                    <td class="painel">
+<!--                        <a title="Editar" class="editar" href="sosti/aviso/form/id/<?php //echo $this->escape($data["SAVI_ID_AVISO"]); ?>" >Editar</a>-->
+                        <a title="Excluir" class="excluir" href="<?php echo $this->baseUrl(); ?>/sosti/aviso/form/id/<?php echo $this->escape($data["SAVI_ID_AVISO"]); ?>" >Excluir</a>
+                    </td>
+                    <td><?php echo $this->escape($data["SAVI_DS_AVISO"]); ?></td>
+                    <td><?php if($data["VISIBILIDADE"] == 'U'){echo "Visível apenas para seccionais";}else if($data["VISIBILIDADE"] == "T"){echo 'Visível para todos';}; ?></td>
+                    <td><?php echo $this->escape($data["SAVI_DH_CADASTRO"]); ?></td>
+                    <td><?php echo $this->escape($data["SAVI_CD_MATR_CAD"]); ?></td>
+               </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7">Total: <?php echo $this->data->getTotalItemCount()     
+                                        ////-- pagination
+                                        //-- style
+                                        //-- partial
+                                        //-- data
+                                        ?>
+               </td>
+            </tr>
+            <tr>
+                <td colspan="7">
+                    <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+</div>

@@ -1,0 +1,63 @@
+<?php
+/**
+ * @category	TRF1
+ * @package		_partials
+ * @copyright	Copyright (c) 2010-2014 Tribunal Regional Federal BRZ (http://www.trf1.jus.br)
+ * @author		Anderson Sathler M. Ribeiro [asathler@gmail.com]
+ * @license		FREE, keep original copyrights
+ * @version		controlada pelo SVN
+ * 
+ * @return		string							Código HTML que gera a tela de exibição de detalhe de um único registro
+ * 
+ * @param		array		dados				Contém o array com registros.
+ * Nesse caso, a query deve conter aliás para os nomes dos campos utilizados.
+ * 
+ * @example		echo $this->partial('_partials/tela_detalhe_crud.phtml',
+ * 									array(	'msgAjuda'	=> $this->msgAjuda,
+ * 											'msgInfo'	=> $this->msgInfo,
+ * 											'dados'		=> $this->dados
+ * 										)
+ *									);
+ */
+
+echo	$this->partial('_partials/ajuda_informacao.phtml',
+		array(	'msgAjuda'	=> $this->msgAjuda,
+				'msgInfo'	=> $this->msgInfo));
+
+$valor = new Trf1_Orcamento_Valor();
+$sinalMoeda = true;
+?>
+
+<br />
+<div id="detalheTabs" class="tabs">
+	<ul>
+		<li><a href="#detalhe">Detalhes do registro</a></li>
+	</ul>
+
+	<div id="detalhe">
+		<p>
+		<?php
+		// Array deve conter apenas 1 registro (fetchRow)
+		foreach ( $this->dados as $campoNome => $campoConteudo ) {
+            $conteudo = $this->escape ( $campoConteudo );
+            
+            if ( is_numeric (strpos(trim(strtolower($campoNome)), 'valor') ) ) {
+                // Formata o campo valor
+                $conteudo = $valor->retornaNumeroFormatadoValor ( $campoConteudo, $sinalMoeda );
+            }
+            
+            // Monta cada linha a ser exibida
+            $linha = "";
+            $linha .= "<strong>";
+            $linha .= $this->escape ( $campoNome );
+            $linha .= ":</strong> ";
+            $linha .= $conteudo;
+            $linha .= "<br />";
+            
+            // Apresenta uma linha com cada campo e seu conteúdo 
+            echo $linha . PHP_EOL;
+		}
+		?>
+		</p>
+	</div>
+</div>

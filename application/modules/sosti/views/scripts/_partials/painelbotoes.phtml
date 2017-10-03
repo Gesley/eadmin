@@ -1,0 +1,14 @@
+<script src="<?php echo $this->baseUrl() . '/js/sosti/painelBotoes.js' ?>"></script>
+<?php $userNs = new Zend_Session_Namespace('userNs'); ?>
+<div class="painel ui-buttonset">
+    <?php 
+        $class = 'class="ui-button ui-widget ui-state-default ui-corner-left ui-corner-right"';
+        $arrayBotao = array(
+            'pdf'   => '<input type="button" id="pdf" '.$class.' title="Gerar o relatório em PDF" name="PDF"  target="_blank" value="PDF" onclick="javascript: location.href='."'".$this->baseUrl()."/sosti/relatoriossolicitacoes/pdf/id/ABERTAS_POR_SETOR_$userNs->matricula"."';".'"'." />",
+            'excel' => '<input type="button" id="Excel" '.$class.' title="Gerar o relatório em Excel" name="Excel"  target="_blank" value="Excel" onclick="javascript: location.href='."'".$this->baseUrl()."/sosti/relatoriossolicitacoes/excel/id/ABERTAS_POR_SETOR_".$userNs->matricula."';".'"'." />",
+        );
+        foreach ($arrayBotao as $b):
+            echo $b;
+        endforeach;
+    ?>
+</div>

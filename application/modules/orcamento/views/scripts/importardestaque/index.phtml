@@ -1,0 +1,47 @@
+<style type="text/css">
+    #geral {
+        width: 100%;
+    }
+</style>
+
+<?php 
+	//$module     = Zend_Controller_Front::getInstance()->getRequest->getModuleName();
+	$controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+?>
+<a class="ceo_relatorio ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" alt="Importar arquivo texto" title="Importar arquivo texto" href="<?php echo $this->baseUrl()."/orcamento/".$controller; ?>/importar" role="button"><span class="ui-button-icon-primary ui-icon ui-icon-print"></span><span class="ui-button-text">Importar arquivo</span></a>
+<?php
+/**
+ * Contém view da action específica
+ * 
+ * e-Admin
+ * e-Orçamento
+ * View
+ * 
+ * @author Sandro Maceno <smaceno@stefanini.com>
+ */
+
+/**
+ * Disponibiliza as informações a serem exibidas na view
+ *
+ * @category Orcamento
+ * @package Orcamento_View_Esfera_Index
+ * @author Sandro Maceno <smaceno@stefanini.com>
+ * @license Creative Commons Atribuição 3.0 não adaptada
+ *          <http://creativecommons.org/licenses/by/3.0/deed.pt_BR>
+ * @ignore Este código é livre para uso dentro do TRF! Fora do TRF pode apenas
+ *         servir como fonte de estudo ou base para futuros códigos-fonte sem
+ *         nenhuma restrição, salvo pelas informações de @copyright e @author
+ *         que devem ser mantidas inalteradas.
+ * @copyright Tribunal Regional Federal ©2007-2014 <http://www.trf1.jus.br>
+ */
+echo '<br />';
+
+// Define array de ajuda
+$ajuda [ 'msgAjuda' ] = $this->msgAjuda;
+$ajuda [ 'msgInfo' ] = $this->msgInfo;
+
+// Chama a partial para exibição da ajuda e informação da tela
+echo $this->partial ( '_partials/ajuda_informacao.phtml', $ajuda );
+
+// Exibe o grid
+echo $this->grid;

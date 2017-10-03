@@ -1,0 +1,13 @@
+<?php
+if($this->Lotacao_array):  
+    foreach ($this->Lotacao_array as $value) : 
+?>
+    <option value="<?php echo $value["LOTA_SIGLA_SECAO"].'|'.$value['LOTA_COD_LOTACAO']; ?>"><?php echo $value["LOTA_SIGLA_LOTACAO"].' - '.$value["LOTA_DSC_LOTACAO"].' - '.$value["LOTA_COD_LOTACAO"].' - '.$value["LOTA_SIGLA_SECAO"]; ?></option>   
+<?php 
+    endforeach;
+    else: 
+?>
+        <option value="">Não exite Unidades para essa Seção</option>  
+<?php
+endif;
+?>

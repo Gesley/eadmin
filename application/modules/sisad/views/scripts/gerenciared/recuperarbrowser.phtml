@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>Leitor de Documentos</title>
+
+        <?php
+        echo $this->headLink()
+                ->prependStylesheet($this->baseUrl() . '/css/blueprint/screen.css', 'screen, projection')
+        ;
+        ?>
+
+        <!--        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script> -->
+
+
+    </head>
+    <body>
+        <div class="error"><strong>Erro:</strong> <?= $this->erro ?></div>
+    </body>
+</html>

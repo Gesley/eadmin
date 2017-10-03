@@ -1,0 +1,24 @@
+
+<?php foreach($this->arrayVinculados as $k=>$v): ?>
+    <?php
+    $arrayDetalhe = array(
+        'SSOL_ID_DOCUMENTO'    => $v['SSOL_ID_DOCUMENTO'],
+        'MOFA_ID_MOVIMENTACAO' => $v['MOFA_ID_MOVIMENTACAO']
+    );
+    ?>
+    <tr name="rowList"  class="vinculados <?php echo $this->escape($v["SSOL_ID_DOCUMENTO"]); ?> v_<?php echo $this->principal; ?> houver" value="<?php echo $v["SSOL_ID_DOCUMENTO"]; ?>">
+        <td>
+            <input style="visibility: hidden" class="nav_grid_check_box nav_check_boxes" id="<?php echo $v["SSOL_ID_DOCUMENTO"]; ?>" name="solicitacao[]" type="checkbox" value=" <?php echo $this->escape(Zend_Json::encode($arrayDetalhe)) ?> ">
+        </td>
+        <td><?php // Zend_Debug::dump($v); ?></td>
+        <td><a class="tooltip" title="<?php echo $v["DOCM_DS_ASSUNTO_DOC"]; ?>" data-oldhref="#"><?php echo $v["MASCARA_DOCM"]; ?></a></td>
+        <td></td>
+        <td><?php echo $v["DOCM_CD_MATRICULA_CADASTRO"]." - ".$v["NOME_USARIO_CADASTRO"]; ?></td>
+        <td><?php echo $v["SSER_DS_SERVICO"]; ?></td>
+        <td><?php echo $v["ATENDENTE"]; ?></td>
+        <td>
+        </td>
+        <?php echo $v["MODE_ID_CAIXA_ENTRADA"] == 19 ? "<td></td><td></td>" : ""; ?>
+        <td>SIM</td>
+    </tr>
+<?php endforeach; ?>

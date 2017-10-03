@@ -1,0 +1,18 @@
+<?php
+if ($this->unidades_array):
+    ?>
+    <option value=""> PRIMEIRO ESCOLHA UMA PESSOA </option>  
+    <?php
+    foreach ($this->unidades_array as $value) :
+        $valor_unidade = $value["LOTA_SIGLA_SECAO"] . '|' . $value['LOTA_COD_LOTACAO'];
+        $label_unidade = $value["LOTA_SIGLA_LOTACAO"] . ' - ' . $value["LOTA_DSC_LOTACAO"] . ' - ' . $value["LOTA_COD_LOTACAO"] . ' - ' . $value["LOTA_SIGLA_SECAO"];
+        ?>
+        <option value="<?php echo $valor_unidade; ?>"> <?php echo $label_unidade; ?></option>   
+        <?php
+    endforeach;
+else:
+    ?>
+    <option value="">Não exite Unidades para essa Seção</option>  
+<?php
+endif;
+?>

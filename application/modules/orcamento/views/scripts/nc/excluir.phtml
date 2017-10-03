@@ -1,0 +1,68 @@
+<?php
+echo $this->partial(
+    '_partials/ajuda_informacao.phtml', array(
+    'msgAjuda' => $this->msgAjuda,
+    'msgInfo' => $this->msgInfo,
+    )
+);
+?>
+
+<br />
+
+<h3>Desejar excluir o(s) seguinte(s) registro(s)?</h3>
+
+<div id="exclusaoTabs" class="tabs">
+
+    <!--constroi as abas de acordo com a quantidade de registros-->
+    <ul>
+        <li><a href="#resumoGeral">Resumo</a></li>
+
+        <?php
+        foreach ($this->dados as $registro) {
+
+            $campo = $registro['Nota de crédito'];
+
+            // apresenta as abas que vão conter os dados específicos de cada nota.
+            echo '<li><a href="#' . $campo . '">' . $campo . '</a></li>';
+        }
+        ?>
+    </ul>
+    <!--constroi as abas de acordo com a quantidade de registros-->
+
+    <!--aba resumo-->
+    <div id="resumoGeral">
+
+        <h3>Notas de Cŕedito a serem excluídas</h3>
+
+        <!--apresenta as notas que serão excluídas-->
+        <?php
+        foreach ($this->dados as $registro) {
+
+            $campo = $registro['Nota de crédito'];
+
+            // imprime as notas selecionadas para exclusão.
+            echo 'Nota: ' . $campo . '<br />';
+        }
+        ?>
+        <!--apresenta as notas que serão excluídas-->
+
+    </div>
+    <!--aba resumo-->
+
+    <!--constroi detalhes das notas de crédito-->
+    <?php
+    foreach ($this->dados as $registro) {
+
+        // apresenta uma aba para cada registro usando o seguinte partial.
+        echo $this->partial('_partials/ncne_detalhe_mostrar.phtml', array('dados' => $registro));
+    }
+    ?>
+    <!--constroi detalhes das notas de crédito-->
+
+</div>
+
+<br />
+
+<?php
+// apresenta botões.
+echo $this->partial('_partials/botoes_exclusao.phtml', array('codigo' => $this->codigo));

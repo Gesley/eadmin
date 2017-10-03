@@ -1,0 +1,16 @@
+<?php
+if($this->modulos):  
+?>
+<option value="">Escolha o Módulo</option>
+<?php   
+    foreach ($this->modulos as $value) : 
+?>
+    <option value="<?php echo $value['MODL_ID_MODULO']; ?>"><?php echo $value['MODL_NM_MODULO']; ?></option>   
+<?php 
+    endforeach;
+    else: 
+?>
+        <option value="">Não exite Modulos para esse Sistema</option>  
+<?php
+endif;
+?>

@@ -1,0 +1,99 @@
+<script>
+
+    $(function(){
+        $('.detalhes').click(function(){
+            currentID = $(this).attr('id');
+            $('#loc'+currentID).toggle();
+    
+        });
+        $('#solic').submit(function(){
+    
+            $('#Pesquisar').attr('value', 'Pesquisando...');
+            $('#Pesquisar').attr('Disabled', 'Disabled');
+            $('#info').removeClass('grid');
+        });
+    });
+</script>
+<style type="text/css">
+
+    table{
+        margin-top: 30px;
+    }
+
+    tbody tr:first-child th{
+        background-color: #e1e1e1;
+        border-top: 2px solid #ccc;
+    }
+
+    tbody tr:nth-child(2) th{
+        background-color: #f0f0f0;
+        border-top: 2px solid #fff;
+    }
+
+</style>
+<div id="container_pagination">
+    <table class="grid2">
+        <thead>
+            <tr>
+                <th colspan="3">
+                    Relatório Resumido de Movimentação de Peças
+                </th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="3">
+                    Total <?php echo $this->data->getTotalItemCount() ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <?php echo $this->paginationControl($this->data, null, null, null); ?>
+                </td>
+            </tr>
+        </tfoot>
+        <?php if (count($this->data)): ?>
+            <?php
+            $objHardware = new Application_Model_DbTable_SosTbLhdwMaterialAlmox();
+            $objlicencasHistorico = new Application_Model_DbTable_SosTbLtpsTipoSoftware();
+            foreach ($this->data as $data):
+                ?>
+                <tbody>
+                    <tr>
+                        <th colspan="3">
+                            <?php echo $this->escape($data["LHDW_DS_HARDWARE"]); ?> - <?php echo $this->escape($data["LHDW_CD_MATERIAL"]); ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Entradas</th>
+                        <th>Saídas</th>
+                        <th>Saldo</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php
+                            echo ($this->escape($data["MTEN_QT_ENTRADA_MATERIAL"]) == 0) ? '0' :
+                                    $this->escape($data["MTEN_QT_ENTRADA_MATERIAL"]);
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            $qtd = $objHardware->getQtdMaterialSaida($data["LHDW_ID_HARDWARE"]);
+                            echo ($qtd['QTD_SAIDA'] == 0) ? '0' : $qtd['QTD_SAIDA'];
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            $total = $objHardware->getQtdTotalMaterial($data["LHDW_ID_HARDWARE"]);
+                            $saida = $objHardware->getQtdMaterialSaida($data["LHDW_ID_HARDWARE"]);
+                            echo (int) $total['QTD_TOTAL'] - (int) $saida['QTD_SAIDA'];
+                            ?>
+                        </td>
+                    </tr>
+                </tbody>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <h3>Não existem registros.</h3>
+        <?php endif; ?>
+    </table>
+</div>

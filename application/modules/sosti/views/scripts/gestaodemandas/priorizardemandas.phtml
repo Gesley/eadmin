@@ -1,0 +1,78 @@
+<script>
+  $(function() {
+    /** Carrega a combo dos serviços */
+    $('#CXEN_ID_CAIXA_ENTRADA').change(function () {
+        $("#SSER_ID_SERVICO").removeAttr('disabled');
+        $.ajax({
+            url: base_url+'/sosti/solicitacao/ajaxservicos',
+            dataType: 'html',
+            type: 'POST',
+            data: this.value,
+            contentType: 'application/json',
+            processData: false,
+            beforeSend: function () {
+                $("#SSER_ID_SERVICO").removeClass('erroInputSelect');
+                $("#SSER_ID_SERVICO").html('');
+                $("#SSER_ID_SERVICO").addClass('carregandoInputSelect');
+            },
+            success: function (data) {
+                $("#order-grid").html('');
+                $("#SSER_ID_SERVICO").html(data);
+                $("#SSER_ID_SERVICO").removeClass('carregandoInputSelect');
+                $("#SSER_ID_SERVICO").focus();
+            },
+            error: function () {
+                $("#SSER_ID_SERVICO").removeClass('x-form-field');
+                $("#SSER_ID_SERVICO").val('Erro ao carregar.');
+                $("#SSER_ID_SERVICO").addClass('erroInputSelect');
+                $("#SSER_ID_SERVICO").html('<option>Erro ao carregar</option>');
+            }
+        });
+    });
+    /** Submete o form ao selecionar o serviço */
+    $('#SSER_ID_SERVICO').change( function () {
+        carregarGrid();
+    });
+    /** Faz a requisição ajax para carregar a grid */
+    function carregarGrid() {
+        var grupo = JSON.parse($('#CXEN_ID_CAIXA_ENTRADA').val());
+        var servico = $('#SSER_ID_SERVICO').val();
+        $.ajax({
+            url: base_url+'/sosti/gestaodemandas/priorizarlist/CXEN_ID_CAIXA_ENTRADA/' + grupo.CXEN_ID_CAIXA_ENTRADA + '/SSER_ID_SERVICO/' + servico,
+            dataType: 'html',
+            type: 'POST',
+            data: this.value,
+            contentType: 'application/json',
+            processData: false,
+            success: function (data) {
+                $("#order-grid").html(data);
+            }
+        });
+    }
+    $("#order-grid").live("submit", function () {
+            $.ajax({
+                url: $(this).attr("action"),
+                type: "POST",
+                data: $( this ).serialize(),
+                async: false,
+                success: function (data) {
+                    $("#message").show();
+                    if(data.status === "success") {
+                        $(".errors").hide();
+                        $("#message").attr("class", data.status);
+                        $("#message").html("<strong>Sucesso: </strong>" + data.message);
+                        carregarGrid();
+                    }
+                    if(data.status === "error") {
+                        $("#message").attr("class", data.status);
+                        $("#message").html("<strong>Erro: </strong>" + data.message);
+                    }
+                }
+            });
+            return false;
+        }); 
+  });
+</script>
+<div id="message"></div>
+<?php echo $this->form; ?>
+<div id="order-grid"></div>

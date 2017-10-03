@@ -1,0 +1,53 @@
+<?php if($this->dashboardSisad == 'ATIVO'){ ?>
+<?php
+$this->headLink()
+        ->appendStylesheet($this->baseUrl('/css/dashboard.css'), 'screen');
+$this->inlineScript()
+        ->appendFile($this->baseUrl('/js/highcharts.js'))
+        ->appendFile($this->baseUrl('/js/dashboard/dadosBar.js'))
+        ->appendFile($this->baseUrl('/js/dashboard/dadosColumn.js'))
+        ->appendFile($this->baseUrl('/js/dashboard/dadosPie.js'))
+        ->appendFile($this->baseUrl('/js/dashboard/dadosGrid.js'))
+        ->appendFile($this->baseUrl('/js/dashboard/graficoPie.js'))
+        ->appendFile($this->baseUrl('/js/dashboard/dashboard.js'))
+;
+?>
+<div class="g-tools span-24 first last">
+    <?php
+    $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/dashboardSisad.ini', 'production');
+
+    $module = 'sisad';
+    $j = 0;
+    foreach ($config->$module->dashboard as $cfg):
+        $tam = 30;
+        $id = 'amg_' . $j;
+        $idg = 'g_' . $j;
+        $rodape = '';
+        $params = '';
+
+        if (isset($cfg->params) && $cfg->params != '') {
+            $params = '/' . $cfg->params;
+        }
+        $paramentros = explode('/', $params);
+        if ($cfg->footer != '') {
+                $dashboard = new Trf1_Sisad_Negocio_Dashboard();
+            if($paramentros[4] === 'TRF1'){
+                $totalProcessos = $dashboard->getTotalDocumentos();
+                $rodape = '<div class="footer">' . $cfg->footer . ' - Total de Documentos: '.$totalProcessos[0]["TOTAL"].' </div>';
+            }else if($paramentros[4] === 'PROC'){
+                $totalProcessos = $dashboard->getTotalProcs();
+                $rodape = '<div class="footer">' . $cfg->footer . ' - Total de Processos: '.$totalProcessos[0]["TOTAL"].' </div>';
+            }else{
+                $totalDocumentos = $dashboard->getTotalProcessos($paramentros[4]);
+                $rodape = '<div class="footer">' . $cfg->footer . ' - Total de Processos: '.$totalDocumentos[0]["TOTAL"].' </div>';
+            }
+        }
+        ?>
+        <div id="<?php echo $id; ?>" class="grafico portlet portlet-cinza span-<?php echo $tam; ?> " data-grafico="<?php echo $cfg->type; ?>" data-url="<?php echo $this->url(array('module' => $cfg->module, 'controller' => $cfg->controller, 'action' => $cfg->action)), $params; ?>"><h3><?php echo $cfg->title; ?></h3><div id="<?php echo $idg; ?>" class="content" style="min-height:400px;"></div><?php echo $rodape; ?></div> 
+        <?php
+        $j++;
+    endforeach;
+    ?>
+</div>
+
+<?php } ?>

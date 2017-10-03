@@ -1,0 +1,350 @@
+<?php
+$this->inlineScript()
+        ->appendFile($this->baseUrl() . '/js/tooltipster-1.2/js/jquery.tooltipster.min.js', 'text/javascript');
+?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<?php echo $this->partial('_partials/ajuda.phtml', array('msgAjuda' => $this->msgAjuda)); ?>
+<script type="text/javascript">
+    
+    var GLOBAL_indice_abas =  0;
+        
+    $(function(){
+        $("tr[name=rowList]").click(
+            function(){
+                var solic = $(this).attr('value');               
+                var ischecked_solic = $('#'+solic).attr('checked');
+                var ischecked_solic_tr = $(this).attr('marcado');
+                if( (ischecked_solic == undefined && ischecked_solic_tr == undefined) || (ischecked_solic != undefined && ischecked_solic_tr == undefined) ){
+                    $('#'+solic).attr('checked','checked');
+                    $(this).attr('marcado','marcado');
+                    $(this).addClass('over');
+                }else{
+                    $('#'+solic).removeAttr('checked');
+                    $(this).removeAttr('marcado');
+                    $(this).removeClass('over');
+                }
+                $('#'+solic).focus();
+            }
+        );
+            
+    $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var cx_pess_ranscunho = $('form[name=cx_pess_ranscunho]');
+            if(acao == 'Desarquivar'){
+                cx_pess_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/desarquivarunidade');
+            }else if(acao == 'Categorias'){
+                cx_pess_ranscunho.attr('action','<?php echo $this->baseUrl(); ?>/sisad/categorias/categorizar');
+            }
+        }
+    );
+    var xhr;    
+    $("tr[name=rowList]").dblclick(
+        function(){
+            var input_check_box = $(this).find('input');
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            $(this).attr('marcado','marcado');
+            $(this).addClass('hover');
+            /*var obj = jQuery.parseJSON(value_input)*/;
+
+            if (xhr) {
+                xhr.abort();
+            }
+
+            url = '<?php echo $this->baseUrl(); ?>/sisad/detalhedcmto/detalhedcmto';
+            xhr = $.ajax({
+            url: url,
+            dataType: 'html',
+            type: 'POST',
+            data: value_input_check_box,
+            contentType: 'application/json',
+            processData: false, 
+            beforeSend:function() {
+                $("#dialog-documentos_detalhe").dialog("open");
+            },
+            success: function(data) {
+                $("#dialog-documentos_detalhe").html(data);
+
+            },
+            complete: function(){
+
+            },
+            error : function(){
+
+            }
+            });
+        }
+    );
+    $('form[name=cx_pess_ranscunho]').submit(
+       function(){
+            var documentoSelecionado = $(".nav_check_boxes:checked").val();
+            if (documentoSelecionado == undefined){                   
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um Documento!</div>";
+                flashMessages_by_id.hide();
+                flashMessages_by_id.html(mensagem);
+                flashMessages_by_id.show('pulsate');
+                flashMessages_by_id.delay(2000).hide('puff');
+                return false;
+            }
+       }
+    );
+    
+    $("input[type=checkbox][name=input_check_all_grid]").click(
+        function(){
+            if($(this).attr('checked')){
+                $(".nav_check_boxes").attr('checked','checked');
+                $("tr[name=rowList]").addClass('hover');
+            }else{
+                $(".nav_check_boxes").removeAttr('checked');
+                 $("tr[name=rowList]").removeClass('hover');
+            }
+        }
+    );
+    
+     $("#dialog-documentos_detalhe").dialog({
+                    title    : 'Detalhe',
+                            autoOpen : false,
+                            modal    : false,
+                            show: 'fold',
+                            hide: 'fold',
+                            resizable: true,
+                            width: 800,
+                            height: 600,
+                            position: [580,140,0,0],
+                            buttons : {
+                                    Ok: function() {
+                                            $(this).dialog("close");
+                                    }
+                            }
+     });
+     
+     $("#dialog-carrinho_detalhe").dialog({
+                    title    : 'Carrinho de Documentos e Processos',
+                              autoOpen : false,
+                              modal    : false,
+                              show: 'fold',
+                              hide: 'fold',
+                              //resizable: true,
+                              width: 800,
+                              height: 600,
+//                            //maxHeight: 200,
+                            maxWidth: 600,
+                            position: [580,140,0,0],
+                            buttons : {
+                                    Ok: function() {
+                                            $(this).dialog("close");
+                                    }
+                            }
+     });
+
+        $('.tooltip').tooltipster({
+            fixedWidth: 650,
+            position: 'bottom-left'
+        });
+        $(".tooltip").each(function() {
+            $(this).attr("data-oldhref", $(this).attr("href"));
+            $(this).removeAttr("href");
+        });
+
+    });
+</script>
+<script type="text/javascript">
+$(function() {
+	
+ $("#Filtrar").click( 
+            function(){
+                form_valido = true;
+            }
+        );
+		
+//Unidade Administrativa
+$("#DOCM_CD_LOTACAO_GERADORA").autocomplete({
+        source: base_url+"/sosti/solicitacao/ajaxunidade",
+        minLength: 3,
+        delay: 500,
+        select: function( event, ui ) {
+                                if( ui.item.value != null ){ 
+                                    $("#MOVI_CD_SECAO_UNID_ORIGEM").val(ui.item.cod_lota);
+                                }
+                },
+        change: function( event, ui ) {
+                                if( ui.item.value != null ){  
+                                     $("#MOVI_CD_SECAO_UNID_ORIGEM").val(ui.item.cod_lota);
+                                }
+        }
+    }).keyup(
+            function(){
+                if(this.value == ""){
+                    $("#MOVI_CD_SECAO_UNID_ORIGEM").val('');
+                }
+    });
+//Fim da unidade e inicio do assunto
+  $("#DOCM_ID_PCTT").autocomplete({
+        source: base_url+"/sisad/cadastrodcmto/ajaxassuntodocm",
+        minLength: 3,
+        delay: 500,
+        select: function( event, ui ) {
+                                if( ui.item.value != null ){ 
+                                    $("#DOCM_ID_PCTT").val(ui.item.label);
+                                }
+                },
+        change: function( event, ui ) {
+                                if( ui.item.value != null ){  
+                                     $("#DOCM_ID_PCTT").val(ui.item.label);
+                                }
+        }
+    }).keyup(
+            function(){
+                if(this.value == ""){
+                    $("#DOCM_ID_PCTT").val('');
+                }
+    });
+// Fim do assunto
+ 
+    $('#pesquisar')
+        .click(function() {
+                var pesq_div = $("#pesq_div")
+
+                if(pesq_div.css('display') == "none"){
+                    pesq_div.show('');
+                }else{
+                    pesq_div.hide('');
+                }
+        });
+
+    $('#Filtrar').button();
+
+    $("#botao_ajuda_recolhe").click(
+       function(){
+            $("#pesq_div").hide();
+            $("#pesquisar").show();
+    });
+});
+</script>
+
+
+ <script type="text/javascript">
+    $(function(){
+        function h2d(h) {return parseInt(h,16);}
+        var labels = $("#CATE_ID_CATEGORIA-element").find('label');
+        var cores = $("input[type=checkbox][name=CATE_ID_CATEGORIA[]] ").attr('cores');
+        cores = jQuery.parseJSON(cores);
+        if(cores){
+        $.each(cores, function(chave, cor) {
+           $(labels[chave]).css('background-color', cor);
+           var cor_numeros = cor.substr(1,cor.length);
+           var aux_numeros = h2d(cor_numeros);
+           if(aux_numeros >= (h2d('FFFFFF')/2) ){
+               $(labels[chave]).css('color', '#000');
+           }else{
+               $(labels[chave]).css('color', '#FFFFFF');
+           }
+        });
+        }
+    });
+</script>  
+
+<fieldset style="display:inline;">
+    <legend>Filtro da Caixa</legend>
+    <div class="painel">
+        <div class="painel" >
+            <input type="button" title="Último Filtro" name="acao" value="Filtro" id="pesquisar">
+            <a title="Novo Filtro" name="acao" value="Filtrar" id="ultimo_filtro" href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivadosunidade/nova/1" >Limpar Filtro/Retirar Filtro</a>
+            &emsp;&emsp;<span style="color: #2E4557;"><strong><?php if( $this->ultima_pesq == true) echo "Filtro Ativo"; else echo "Filtro Inativo"; ?></strong></span>
+        </div> 
+    </div>
+     <div id="pesq_div"  style="display: none;" >
+        <?php echo $this->form; ?>
+        <span id="botao_ajuda_recolhe" ></span>
+    </div>
+</fieldset>
+<?php if (count($this->data)): ?>
+<div class="containerpainel">
+<form method="POST" action="" name="cx_pess_ranscunho">
+    <div class="painel">
+<!--    <input type="submit" title="Encaminha Documento/Processo"         name="acao" value="Encaminhar" />-->
+    <input type="submit" title="Categorização de Documento / Processo"         name="acao" value="Categorias" />
+    <input type="submit" title="Desarquivar Documento/Processo"         name="acao" value="Desarquivar" />
+<!--    <input type="submit" title="Dar um parecer no Documento/Processo" name="acao" value="Parecer"/>-->
+<!--    <input type="submit" title="Arquivar um Documento/Processo"        name="acao" value="Arquivar"/>-->
+<!--    <input type="submit" title="Pesquisa Documento/Processo"     disabled="disabled"      name="acao" value="Pesquisa"/>-->
+<!--    <input type="submit" title="Cancelar Documento/Processo"           name="acao" value="Cancelar"/>-->
+    </div>
+</div>
+<div id="container_pagination">
+    <table class="grid">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" name="input_check_all_grid" id="check_all" /> 
+                </th>
+                <th ></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivadosunidade/ordem/DTPD_NO_TIPO/direcao/<?php echo $this->direcao ?> ">Tipo<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivadosunidade/ordem/DOCM_NR_DOCUMENTO/direcao/<?php echo $this->direcao ?> ">Número<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+<!--                <th ><a  href="<?php //echo $this->baseUrl(); ?>/sisad/caixapessoal/rascunhos/ordem/DOCM_DH_CADASTRO/direcao/<?php //echo $this->direcao ?> ">Data<span class="<?php //echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>-->
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivadosunidade/ordem/LOTA_SIGLA_LOTACAO/direcao/<?php echo $this->direcao ?> ">Origem<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+                <th ><a  href="<?php echo $this->baseUrl(); ?>/sisad/caixaunidade/arquivadosunidade/ordem/ENCAMINHADOR/direcao/<?php echo $this->direcao ?> ">Autor<span class="<?php echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>
+<!--                <th ><a  href="<?php //echo $this->baseUrl(); ?>/sisad/caixapessoal/rascunhos/ordem/DOCM_DH_CADASTRO/direcao/<?php //echo $this->direcao ?> ">Tempo<span class="<?php //echo ($this->direcao == 'ASC')?('ordenacaodesc'):('ordenacaoasc');  ?>"></span></a></th>-->
+                <th>Categorias</th>
+            </tr>
+        </thead>
+       <tbody>
+            <?php 
+            $cateNs = new Zend_Session_Namespace('cateNs');
+            $cado_categoria = new Application_Model_DbTable_SadTbCadoCategoriaDoc();
+            foreach ($this->data as $data): ?>
+                <tr name="rowList" value="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>">
+                    <td>
+                        <input  class="nav_check_boxes" id="<?php echo $this->escape($data["DOCM_ID_DOCUMENTO"]); ?>" name="documento[]" type="checkbox" value="<?php  echo $this->escape($data["DADOS_INPUT"]); ?>"/>
+                    </td>
+                    <td></td>
+                    <td><a href="#" class="tooltip" title="<?php echo $this->escape($data["hint"]); ?>"><?php echo $this->escape($data["DTPD_NO_TIPO"]); ?></a></td>
+<!--                    <td><?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>-->
+                    <td style="width: 15%" title= <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?> > <?php echo $this->escape($data["MASC_NR_DOCUMENTO"]) ?></td>                  
+                    <td> <?php echo $this->escape($data["LOTA_SIGLA_LOTACAO_ORIGEM"]) ?></td>
+                    <td><?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                    <td><?php
+                        $categoriaDoc = $cado_categoria->getCategoriaDocs($data["DOCM_ID_DOCUMENTO"], null, $cateNs->sgSecao, $cateNs->cdLotacao);
+                        $cont = 0;
+                            if($categoriaDoc != null){ ?>
+                                <table>
+                                    <tr>
+                                    <?php foreach ($categoriaDoc as $categorias_p){ 
+                                        if($cont%3 == 0) { echo '</tr><tr>'; } ?>
+                                        <td bgcolor="<?php echo $categorias_p['CATE_DS_DESCRICAO_COR']?>" title="Nome: <?php echo $categorias_p['CATE_NM_CATEGORIA']?> - Descrição: <?php echo $categorias_p['CATE_DS_OBSERVACAO']?>" > </td> 
+                                    <?php $cont++; } ?>
+                                    </tr>
+                                </table>
+                       <?php } ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+            </tr>
+            <tr>
+                <td colspan="9"><?php echo $this->paginationControl($this->data, null, null, null)
+                //-- pagination
+                //-- style
+                //-- partial
+                //-- data
+                ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <?php else:?>
+        <p>Não existem registros</p>
+    <?php endif; ?>
+</div>
+    <input name="controller" type="hidden"  value="<?php echo $this->controller; ?>"/>        
+    <input name="action"     type="hidden"  value="<?php echo $this->action;     ?>"/>   
+</form>
+<div id="dialog-documentos_detalhe">
+    <div id="dialog-documentos_conteudo"></div>
+</div>
+<div id="dialog-carrinho_detalhe" style="overflow: scroll;">
+</div>

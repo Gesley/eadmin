@@ -1,0 +1,907 @@
+<?php
+    $this->inlineScript()->appendFile(($this->baseUrl() . '/js/multiUpload/jquery.MultiFile.js'))
+                         ->appendFile(($this->baseUrl() . '/js/multiUpload/multiFile.js'))
+                         ->appendFile(($this->baseUrl() . '/js/sosti/respostaPadrao.js'));
+?>
+<!--<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <p>Após encaminhar para <b>Outro nível de atendimento</b>, as solicitações são gravadas na caixa de atendimento do 2º nível e os dados do encaminhamento são gravados no histórico.</p>
+    <p>No <b>Grupo de Atendimento </b>contém os grupos: Atendimento ao Usuário, Desenvolvimento / Sustentação, Banco de Dados / Administração de Dados / Rede, Escritório de Projetos / NOC.</p>
+    <p>A <b>Caixa Pessoal</b> permite o encaminhamento para um servidor lotado na Diatu, quer seja prestador ou servidor. Para os demais grupos, o encaminhamento é sempre pelo grupo.</p>
+    <ul>
+        <li>Ao clicar em Encaminhar, o sistema envia as solicitações para a caixa Desenvolvimento / Sustentação, que será atendida pelo preposto da empresa que ganhar a licitação para a área de desenvolvimento.</li>
+    </ul>
+    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>
+    <span id="botao_ajuda_recolhe" ></span>
+</div>-->
+<?php $this->inlineScript()->appendFile(($this->baseUrl().'/js/formGDSTI/formEncaminharGDSTI.js')); ?>
+<div id="flashMessagesView"><?php echo $this->flashMessagesView; ?></div>
+<div class="help" id="msg_ajuda" style="display: none; " >
+    <script>
+        $(function(){
+            botao_ajuda_by_id.delay(200).show('scale');
+        })
+    </script>
+    <h3>Ajuda&ensp;</h3>
+    <ul>
+        <li>No <b>Grupo de Atendimento</b> contém os grupos: Atendimento ao Usuário, Desenvolvimento / Sustentação, Banco de Dados / Administração de Dados / Rede, Escritório de Projetos / NOC.</li>
+        <li>A <b>Caixa Pessoal</b> permite o encaminhamento para um servidor cadastrado como Atendente da caixa, quer seja prestador ou servidor . Caso o atendente não esteja na lista, o cadastro pode ser feito por um servidor com permissão nessa caixa, no botão 'Atendentes'.</li>
+    </ul>
+    
+    <p>Para encaminhar para outro <b>Grupo de Serviço</b> (em outro grupo de atendimento), escolha o novo Serviço e faça uma Descrição do encaminhamento. Clique no botão <b>Encaminhar</b>. Feito o encaminhamento, a solicitação deixa a sua caixa de trabalho para uma nova caixa.</p>
+    <br>
+    <p style="text-align: justify;"><b>Encaminhando para o Desenvolvimento:</b></p>
+    <ul>
+    <li>Para encaminhar ao desenvolvimento &eacute; preciso escolher o grupo de servi&ccedil;o Software &ndash; Desenvolvimento/Sustenta&ccedil;&atilde;o. </li>
+    <li>Ser&aacute; exibida uma lista dos servi&ccedil;os, escolha um dos servi&ccedil;os.</li>
+    <li>Ser&aacute; exibida uma lista de categoria de servi&ccedil;o. De acordo com a categoria de servi&ccedil;o s&atilde;o definidos prazos autom&aacute;ticos padr&otilde;es de acordo com o edital, paginas 36, 37, 38 e 39. Lembrando que <i>por conven&ccedil;&atilde;o</i>, devido &agrave; aus&ecirc;ncia de contagem estimada, os prazos padr&otilde;es s&atilde;o considerados <i>o menor valor das tabelas:</i> Desenvolvimento de Novos Sistemas (1 m&ecirc;s corrido), Manuten&ccedil;&atilde;o Evolutiva e Adaptativa(3 meses corridos) e Documenta&ccedil;&atilde;o de Sistemas(1 m&ecirc;s corrido). Para as manuten&ccedil;&otilde;es corretivas consideram-se os prazos da tabela: Prazos De Atendimento De Servi&ccedil;os (1&ordm; n&iacute;vel 6h ou 9h, 2&ordm; n&iacute;vel 12h ou 24h, 3&ordm; n&iacute;vel 24h ou 32h todas horas &uacute;teis e de acordo com o tipo causa ou problema). Para as categorias de Medi&ccedil;&atilde;o e Atendimento Externo Nas Seccionais &eacute; considerado o mesmo prazo considerado para Manuten&ccedil;&atilde;o Evolutiva e Adaptativa, isto &eacute; o menor valor dessa tabela (tr&ecirc;s meses corridos). Os prazos padr&otilde;es s&atilde;o gen&eacute;ricos, por isso, existe a funcionalidade: solicitar extens&atilde;o de prazo onde os prazos podem ser ajustados.</li>
+    <li>Para a categoria de manuten&ccedil;&atilde;o corretiva ser&aacute; obrigat&oacute;rio informar o N&iacute;vel de Criticidade e o tipo de manuten&ccedil;&atilde;o sendo problema ou causa. Nos casos do tipo: <i>causa</i>. &Eacute; poss&iacute;vel informar no campo solicita&ccedil;&otilde;es relacionadas os n&uacute;meros separados por v&iacute;rgula sem espa&ccedil;os das solicita&ccedil;&otilde;es que podem ser consideradas problemas advindos da causa em quest&atilde;o.</li>
+    </ul>
+    
+<p><b>Garantia Desenvolvimento<span style="text-decoration: underline;"></span></b></p>
+<p>&nbsp;</p>
+<p><b><i>A &nbsp;funcionalidades de Garantia &nbsp;afeta as seguintes funcionalidades: </i></b></p>
+<ul>
+<li>- <b>Encaminhamento da Caixa de Gest&atilde;o de Demandas de TI.</b></li>
+</ul>
+<p>Nesta funcionalidade &eacute; poss&iacute;vel solicitar garantia por meio de uma justificativa. &Eacute; necess&aacute;rio somente selecionar o <i>checkbox</i>: solicitar garantia. E justificar seu pedido.</p>
+<ul>
+<li><b>- Baixa da Caixa de Desenvolvimento e Sustenta&ccedil;&atilde;o.</b></li>
+</ul>
+<p>Caso a justificativa seja aceita pelo atendente &nbsp;que baixar a solicita&ccedil;&atilde;o a negocia&ccedil;&atilde;o de garantia &eacute; terminada e a solicita&ccedil;&atilde;o &eacute; considerada garantia.</p>
+<p>Caso contr&aacute;rio a solicita&ccedil;&atilde;o que &nbsp;o pedido de garantia for &nbsp;negado constar&aacute; na caixa de diverg&ecirc;ncia para negocia&ccedil;&atilde;o posterior, por meio das op&ccedil;&otilde;es de concordo &nbsp;e discordo.</p>
+<p>Cada gerente &eacute; respons&aacute;vel por sanar as diverg&ecirc;ncias de seus respectivos sistemas.<span style="text-decoration: underline;"></span></p>
+<ul>
+<li><b>- Diverg&ecirc;ncia Garantia. </b></li>
+</ul>
+<p>Nesta caixa constam todas as solicita&ccedil;&otilde;es que entraram em diverg&ecirc;ncia.</p>
+<p>Existe a a&ccedil;&atilde;o de avaliar, onde constam as op&ccedil;&otilde;es concordo e discordo.</p>
+<p>Caso a op&ccedil;&atilde;o de concordo for selecionada a solicita&ccedil;&atilde;o <b><i>n&atilde;o</i></b> ser&aacute; considerada garantia, caso contr&aacute;rio <b><i>sim</i></b>.</p>
+<p>At&eacute; o momento do fechamento do SLA &eacute; poss&iacute;vel alterar a decis&atilde;o de concord&acirc;ncia. Ap&oacute;s o fechamento essas solicita&ccedil;&otilde;es n&atilde;o ser&atilde;o mais listadas.<span style="text-decoration: underline;"></span></p>
+    
+    
+<!--    <a target="_blank" title="Documento de ajuda completo" href="<?php echo $this->baseUrl(); ?>/sisad/gerenciared/recuperar/dcmto/472880100233">Ajuda completa.</a>-->
+    <span id="botao_ajuda_recolhe" ></span>
+</div>
+<script type="text/javascript">
+    var optionsGruposTRF = null;
+	$(function() {
+            optionsGruposTRF = $('select#SGRS_ID_GRUPO').html();
+            $("select#TRF1_SECAO").change(
+                function () {
+                        var secao = $(this).val().split('|')[0];
+                        var lotacao = $(this).val().split('|')[1];
+                        var tipolotacao = $(this).val().split('|')[2];
+                        //var retiraCaixa1 = 118; /* caixa gestao de demandas de TI */
+                        $("select#SSER_ID_SERVICO").html("");
+                    $.ajax({
+                        url: base_url + '/sosti/solicitacaousertisecoes/ajaxgruposervicosecoes/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                        dataType : 'html',
+                        beforeSend:function() {
+                        },
+                        success: function(data) {
+                            $('select#SGRS_ID_GRUPO').html(data);
+                            if ($(data).length == 1){
+                                $('select#SGRS_ID_GRUPO').trigger("change");
+                            }							
+                        },
+                        error: function(){
+                        }
+                    });
+                });
+            
+                
+            $('#SGRS_ID_GRUPO').change(
+                function(){
+                    $("#SSER_ID_SERVICO").removeAttr('disabled');
+                    $.ajax({
+                        url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxservicos',
+                        dataType: 'html',
+                        type: 'POST',
+                        data: this.value,
+                        contentType: 'application/json',
+                        processData: false,
+                      beforeSend:function() {
+                          $("#SSER_ID_SERVICO").removeClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('');
+                          $("#SSER_ID_SERVICO").addClass('carregandoInputSelect');
+                      },
+                      success: function(data) {
+                          $("#SSER_ID_SERVICO").html(data);
+                          $("#SSER_ID_SERVICO").removeClass('carregandoInputSelect');
+                          $("#SSER_ID_SERVICO").focus();
+                      },
+                      error: function(){
+                          $("#SSER_ID_SERVICO").removeClass('x-form-field');
+                          $("#SSER_ID_SERVICO").val('Erro ao carregar.');
+                          $("#SSER_ID_SERVICO").addClass('erroInputSelect');
+                          $("#SSER_ID_SERVICO").html('<option>Erro ao carregar</option>');
+                      }
+                    });  
+                    hideALL();
+                    datainput = jQuery.parseJSON(this.value);
+                    if(datainput.CXEN_ID_CAIXA_ENTRADA == 2){
+                        showALL();
+                    }else{
+                        hideALL();
+                    }
+                }
+            );
+            
+            /************************************
+             * Tratamento serviço sistemas
+             ************************************/
+            $("#EMERGENCIAL").hide();
+            $("#EMERGENCIAL-element").hide();
+            $("#EMERGENCIAL-label").hide();
+
+            $("#CAUSA_PROBLEMA").hide();
+            $("#CAUSA_PROBLEMA-element").hide();
+            $("#CAUSA_PROBLEMA-label").hide();
+
+            $("#SOLIC_PROBLEMAS").hide();
+            $("#SOLIC_PROBLEMAS-element").hide();
+            $("#SOLIC_PROBLEMAS-label").hide();
+            
+            
+            /**************************
+            * Solicitação de Garantia.
+            ***************************/ 
+            $("#NEGA_IC_SOLICITA").hide();
+            $("#NEGA_IC_SOLICITA-element").hide();
+            $("#NEGA_IC_SOLICITA-label").hide();
+            $("#GARANTIA_CHECKBOX").hide();
+            
+            $("#NEGA_DS_JUSTIFICATIVA_PEDIDO").hide();
+            $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-element").hide();
+            $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-label").hide();
+
+           $("#NEGA_IC_SOLICITA").click(function(){
+                if($("#NEGA_IC_SOLICITA:checked").val() == undefined){
+                    $("#NEGA_DS_JUSTIFICATIVA_PEDIDO").hide();
+                    $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-element").hide();
+                    $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-label").hide();
+                }else{
+                    $("#NEGA_DS_JUSTIFICATIVA_PEDIDO").show();
+                    $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-element").show();
+                    $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-label").show();
+                }
+            });
+            if($("#NEGA_IC_SOLICITA:checked").val() == undefined){
+                $("#NEGA_DS_JUSTIFICATIVA_PEDIDO").hide();
+                $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-element").hide();
+                $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-label").hide();
+            }else{
+                $("#NEGA_DS_JUSTIFICATIVA_PEDIDO").show();
+                $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-element").show();
+                $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-label").show();
+            }
+            
+            
+            dadoGrupo = jQuery.parseJSON($('#SGRS_ID_GRUPO').attr('value'));
+            if(dadoGrupo == null){
+            }else{
+                var sladsv = dadoGrupo.CXEN_ID_CAIXA_ENTRADA;
+            }
+            if(sladsv == '2'){
+                $('#OSIS_NM_OCORRENCIA').show();
+                $('#OSIS_NM_OCORRENCIA-element').show();
+                $('#OSIS_NM_OCORRENCIA-label').show();
+
+                $("#CTSS_NM_CATEGORIA_SERVICO").show();
+                $("#CTSS_NM_CATEGORIA_SERVICO-element").show();
+                $("#CTSS_NM_CATEGORIA_SERVICO-label").show();
+
+                $("#ASIS_IC_NIVEL_CRITICIDADE").show();
+                $("#ASIS_IC_NIVEL_CRITICIDADE-element").show();
+                $("#ASIS_IC_NIVEL_CRITICIDADE-label").show();
+                
+                /*
+                Solicitação de Garantia.
+                */ 
+                $("#NEGA_IC_SOLICITA").show();
+                $("#NEGA_IC_SOLICITA-element").show();
+                $("#NEGA_IC_SOLICITA-label").show();
+                $("#GARANTIA_CHECKBOX").show();
+                
+            }else{
+                $('#OSIS_NM_OCORRENCIA').hide();
+                $('#OSIS_NM_OCORRENCIA-element').hide();
+                $('#OSIS_NM_OCORRENCIA-label').hide();
+
+                $("#CTSS_NM_CATEGORIA_SERVICO").hide();
+                $("#CTSS_NM_CATEGORIA_SERVICO-element").hide();
+                $("#CTSS_NM_CATEGORIA_SERVICO-label").hide();
+
+                $("#ASIS_IC_NIVEL_CRITICIDADE").hide();
+                $("#ASIS_IC_NIVEL_CRITICIDADE-element").hide();
+                $("#ASIS_IC_NIVEL_CRITICIDADE-label").hide();
+                
+                
+                $("#NEGA_IC_SOLICITA").hide();
+                $("#NEGA_IC_SOLICITA-element").hide();
+                $("#NEGA_IC_SOLICITA-label").hide();
+                $("#GARANTIA_CHECKBOX").hide();
+
+                $("#NEGA_DS_JUSTIFICATIVA_PEDIDO").hide();
+                $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-element").hide();
+                $("#NEGA_DS_JUSTIFICATIVA_PEDIDO-label").hide();
+                
+            }
+            
+            var idCatServico = $('#CTSS_NM_CATEGORIA_SERVICO').val();
+            if(idCatServico == '2'){
+                $("#CAUSA_PROBLEMA").show();
+                $("#CAUSA_PROBLEMA-element").show();
+                $("#CAUSA_PROBLEMA-label").show();
+            }else{
+                $("#CAUSA_PROBLEMA").hide();
+                $("#CAUSA_PROBLEMA-element").hide();
+                $("#CAUSA_PROBLEMA-label").hide();
+            }
+            if(idCatServico == '2'){
+                $("#ASIS_IC_NIVEL_CRITICIDADE").show();
+                $("#ASIS_IC_NIVEL_CRITICIDADE-element").show();
+                $("#ASIS_IC_NIVEL_CRITICIDADE-label").show();
+            }else{
+                $("#ASIS_IC_NIVEL_CRITICIDADE").hide();
+                $("#ASIS_IC_NIVEL_CRITICIDADE-element").hide();
+                $("#ASIS_IC_NIVEL_CRITICIDADE-label").hide();
+            }
+            if(idCatServico == '1' || idCatServico == '7' || idCatServico == '8'|| idCatServico == '2'|| idCatServico == ''){
+                $("#EMERGENCIAL").hide();
+                $("#EMERGENCIAL-element").hide();
+                $("#EMERGENCIAL-label").hide();
+            }else{
+                $("#EMERGENCIAL").show();
+                $("#EMERGENCIAL-element").show();
+                $("#EMERGENCIAL-label").show();
+            }
+            
+            
+            
+            $("#SSOL_NR_TOMBO-label").hide();
+            $("#SSOL_NR_TOMBO-element").hide();
+            $("#DE_MAT-label").hide();
+            $("#DE_MAT-element").hide();
+            
+            
+            $('#SSER_ID_SERVICO').change(
+                function(){
+                    var unidade = $(this).val().split('|')[1];
+                    if(unidade == 'S'){
+//                        $("#SSOL_NR_TOMBO-label").show();
+                    }else{
+                        $("#SSOL_NR_TOMBO-label").hide();
+                        $("#SSOL_NR_TOMBO-element").hide();
+                        $("#SSOL_NR_TOMBO").hide();
+                        $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                        
+                        $("#DE_MAT-label").hide();
+                        $("#DE_MAT-element").hide();
+                        $("#DE_MAT").hide();
+                        $('#DE_MAT').attr('disabled', 'disabled');
+                    }
+                }
+            );
+            $('#SSOL_NR_TOMBO').focusout(
+                function(){
+                    $.ajax({
+                      url: '<?php echo $this->baseUrl(); ?>/sosti/solicitacao/ajaxdesctombo/id/'+this.value,
+                      beforeSend:function() {
+                          $("#DE_MAT").removeClass('erroInputTextArea');
+                          $("#DE_MAT").val('');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").addClass('carregandoTextArea');
+                      },
+                      success: function(data) {
+                          $("#DE_MAT").val(data);
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").addClass('x-form-field');
+                          $("#DE_MAT").focus();
+                      },
+                      error: function(){
+                          $("#DE_MAT").removeClass('carregandoInputTextArea');
+                          $("#DE_MAT").removeClass('x-form-field');
+                          $("#DE_MAT").val('Erro ao carregar.');
+                          $("#DE_MAT").addClass('erroInputTextArea');
+                      }
+                    });  
+                }
+            );
+	});
+ </script>
+<script type="text/javascript">
+	$(function() {
+        /**
+         * Nível
+         */
+        $('#ENCAMINHAMENTO-nivel').focus();
+        $('#SNAS_ID_NIVEL').hide();
+        $('#SNAS_ID_NIVEL-label').hide();
+        $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+        
+        /**
+         *  Grupo
+         */
+        $('#SGRS_ID_GRUPO').hide();
+        $('#SGRS_ID_GRUPO-label').hide();
+        $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+        
+        $('#SSER_ID_SERVICO').hide();
+        $('#SSER_ID_SERVICO-label').hide();
+        $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+        
+        $('#SSOL_NR_TOMBO').hide();
+        $('#SSOL_NR_TOMBO-label').hide();
+        $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+        
+        $('#DE_MAT').hide();
+        $('#DE_MAT-label').hide();
+        $('#DE_MAT').attr('disabled', 'disabled');
+        
+        /**
+         * Pessoa
+         */
+        $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+        $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+        $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+        $('#APSP_ID_PESSOA').hide();
+        $('#APSP_ID_PESSOA-label').hide();
+        $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+        
+        /*
+         * Secoes
+         */
+        $('#TRF1_SECAO').hide();
+        $('#TRF1_SECAO-label').hide();
+        $('#TRF1_SECAO').attr('disabled', 'disabled');
+        
+        if( $('#ENCAMINHAMENTO-trf').attr('checked') == true){
+            
+            $('#SGRS_ID_GRUPO').show();
+            $('#SGRS_ID_GRUPO-label').show();
+            $('#SGRS_ID_GRUPO').removeAttr('disabled');
+            
+            $('#SSER_ID_SERVICO').show();
+            $('#SSER_ID_SERVICO-label').show();
+            $('#SSER_ID_SERVICO').removeAttr('disabled');
+            $('#SSER_ID_SERVICO').html('');
+            
+        }else if ( $('#ENCAMINHAMENTO-nivel').attr('checked') == true) {
+            $('#SNAS_ID_NIVEL').show();
+            $('#SNAS_ID_NIVEL-label').show();
+            $('#SNAS_ID_NIVEL').removeAttr('disabled');
+        }else if ( $('#ENCAMINHAMENTO-unidade').attr('checked') == true) {
+            $('#MODE_CD_SECAO_UNID_DESTINO').show();
+            $('#MODE_CD_SECAO_UNID_DESTINO-label').show();
+            $('#MODE_CD_SECAO_UNID_DESTINO').removeAttr('disabled');
+        }else if ( $('#ENCAMINHAMENTO-pessoal').attr('checked') == true) {
+            $('#APSP_ID_PESSOA').show();
+            $('#APSP_ID_PESSOA-label').show();
+            $('#APSP_ID_PESSOA').removeAttr('disabled');
+        }else if ( $('#ENCAMINHAMENTO-secoes').attr('checked') == true) {
+            $('#TRF1_SECAO').show();
+            $('#TRF1_SECAO-label').show();
+            $('#TRF1_SECAO').removeAttr('disabled');
+        }     
+        
+        $('input[type=radio][name=ENCAMINHAMENTO]').click(
+        function(){
+            if(this.value == 'trf'){
+                $('#SNAS_ID_NIVEL').hide();
+                $('#SNAS_ID_NIVEL-label').hide();
+                $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+                $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+                
+                $('select#SGRS_ID_GRUPO').html(optionsGruposTRF);
+                $('select#SGRS_ID_GRUPO').val('');
+                
+                $('#TRF1_SECAO').hide();
+                $('#TRF1_SECAO-label').hide();
+                $('#TRF1_SECAO').attr('disabled', 'disabled');
+                
+                $('#SGRS_ID_GRUPO').show();
+                $('#SGRS_ID_GRUPO-label').show();
+                $('#SGRS_ID_GRUPO').removeAttr('disabled');
+                
+                $('#SSER_ID_SERVICO').show();
+                $('#SSER_ID_SERVICO-label').show();
+                $('#SSER_ID_SERVICO').removeAttr('disabled');
+                
+                $('#APSP_ID_PESSOA').hide();
+                $('#APSP_ID_PESSOA-label').hide();
+                $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+                
+                dadoGrupo = jQuery.parseJSON($('#SGRS_ID_GRUPO').attr('value'));
+                console.log(dadoGrupo);
+                if(!dadoGrupo == 'null'){
+                    var sladsv = dadoGrupo.CXEN_ID_CAIXA_ENTRADA
+                }
+                if(sladsv == '2'){
+                    $('#OSIS_NM_OCORRENCIA').show();
+                    $('#OSIS_NM_OCORRENCIA-element').show();
+                    $('#OSIS_NM_OCORRENCIA-label').show();
+                    
+                    $("#CTSS_NM_CATEGORIA_SERVICO").show();
+                    $("#CTSS_NM_CATEGORIA_SERVICO-element").show();
+                    $("#CTSS_NM_CATEGORIA_SERVICO-label").show();
+                    
+                    $("#ASIS_IC_NIVEL_CRITICIDADE").show();
+                    $("#ASIS_IC_NIVEL_CRITICIDADE-element").show();
+                    $("#ASIS_IC_NIVEL_CRITICIDADE-label").show();
+                   
+                }else{
+                    $('#OSIS_NM_OCORRENCIA').hide();
+                    $('#OSIS_NM_OCORRENCIA-element').hide();
+                    $('#OSIS_NM_OCORRENCIA-label').hide();
+                    
+                    $("#CTSS_NM_CATEGORIA_SERVICO").hide();
+                    $("#CTSS_NM_CATEGORIA_SERVICO-element").hide();
+                    $("#CTSS_NM_CATEGORIA_SERVICO-label").hide();
+                    
+                    $("#ASIS_IC_NIVEL_CRITICIDADE").hide();
+                    $("#ASIS_IC_NIVEL_CRITICIDADE-element").hide();
+                    $("#ASIS_IC_NIVEL_CRITICIDADE-label").hide();
+                }
+            }else if (this.value == 'nivel'){
+                $('#SNAS_ID_NIVEL').show();
+                $('#SNAS_ID_NIVEL-label').show();
+                $('#SNAS_ID_NIVEL').removeAttr('disabled');
+                $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                
+                
+                $('#SGRS_ID_GRUPO').hide();
+                $('#SGRS_ID_GRUPO-label').hide();
+                $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+                
+                $('#SSER_ID_SERVICO').hide();
+                $('#SSER_ID_SERVICO-label').hide();
+                $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+                
+                $('#SSOL_NR_TOMBO').hide();
+                $('#SSOL_NR_TOMBO-label').hide();
+                $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                
+                $('#DE_MAT').hide();
+                $('#DE_MAT-label').hide();
+                $('#DE_MAT').attr('disabled', 'disabled');
+                
+                $('#APSP_ID_PESSOA').hide();
+                $('#APSP_ID_PESSOA-label').hide();
+                $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+                
+                hideALL();
+            }else if (this.value == 'unidade'){
+                $('#SNAS_ID_NIVEL').hide();
+                $('#SNAS_ID_NIVEL-label').hide();
+                $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+                $('#MODE_CD_SECAO_UNID_DESTINO').show();
+                $('#MODE_CD_SECAO_UNID_DESTINO-label').show();
+                $('#MODE_CD_SECAO_UNID_DESTINO').removeAttr('disabled');
+                
+                
+                $('#SGRS_ID_GRUPO').hide();
+                $('#SGRS_ID_GRUPO-label').hide();
+                $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+                
+                $('#SSER_ID_SERVICO').hide();
+                $('#SSER_ID_SERVICO-label').hide();
+                $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+                
+                $('#SSOL_NR_TOMBO').hide();
+                $('#SSOL_NR_TOMBO-label').hide();
+                $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                
+                $('#DE_MAT').hide();
+                $('#DE_MAT-label').hide();
+                $('#DE_MAT').attr('disabled', 'disabled');
+                
+                $('#TRF1_SECAO').hide();
+                $('#TRF1_SECAO-label').hide();
+                $('#TRF1_SECAO').attr('disabled', 'disabled');
+                
+                $('#APSP_ID_PESSOA').hide();
+                $('#APSP_ID_PESSOA-label').hide();
+                $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+                
+                hideALL();
+            }else if (this.value == 'pessoal'){
+                $('#SNAS_ID_NIVEL').hide();
+                $('#SNAS_ID_NIVEL-label').hide();
+                $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+                $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+                
+                $('#SGRS_ID_GRUPO').hide();
+                $('#SGRS_ID_GRUPO-label').hide();
+                $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+                
+                $('#SSER_ID_SERVICO').hide();
+                $('#SSER_ID_SERVICO-label').hide();
+                $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+                
+                $('#SSOL_NR_TOMBO').hide();
+                $('#SSOL_NR_TOMBO-label').hide();
+                $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                
+                $('#DE_MAT').hide();
+                $('#DE_MAT-label').hide();
+                $('#DE_MAT').attr('disabled', 'disabled');
+                
+                $('#TRF1_SECAO').hide();
+                $('#TRF1_SECAO-label').hide();
+                $('#TRF1_SECAO').attr('disabled', 'disabled');
+                
+                $('#APSP_ID_PESSOA').show();
+                $('#APSP_ID_PESSOA-label').show();
+                $('#APSP_ID_PESSOA').removeAttr('disabled');
+                
+                hideALL();
+            }else if (this.value == 'secoes'){
+                
+                $('#TRF1_SECAO').show();
+                $('#TRF1_SECAO-label').show();
+                $('#TRF1_SECAO').removeAttr('disabled');
+                
+                $('#SGRS_ID_GRUPO').show();
+                $('#SGRS_ID_GRUPO-label').show();
+                $('#SGRS_ID_GRUPO').removeAttr('disabled');
+                $('#SGRS_ID_GRUPO').html("");
+                
+                $('#SSER_ID_SERVICO').show();
+                $('#SSER_ID_SERVICO-label').show();
+                $('#SSER_ID_SERVICO').removeAttr('disabled');
+                $('#SSER_ID_SERVICO').html("::SELECIONE::");
+                
+                $('#SNAS_ID_NIVEL').hide();
+                $('#SNAS_ID_NIVEL-label').hide();
+                $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+                $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+                $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+                $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+                
+                $('#SSOL_NR_TOMBO').hide();
+                $('#SSOL_NR_TOMBO-label').hide();
+                $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+                
+                $('#DE_MAT').hide();
+                $('#DE_MAT-label').hide();
+                $('#DE_MAT').attr('disabled', 'disabled');
+                
+                $('#APSP_ID_PESSOA').hide();
+                $('#APSP_ID_PESSOA-label').hide();
+                $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+                
+                hideALL();
+            }
+        });
+        
+        var encaminhamento = $('input[type=radio][name=ENCAMINHAMENTO]:checked').attr('value');
+        if(encaminhamento == 'trf'){
+            $('#SNAS_ID_NIVEL').hide();
+            $('#SNAS_ID_NIVEL-label').hide();
+            $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+            $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+            
+            $('select#SGRS_ID_GRUPO').html(optionsGruposTRF);
+            
+            $('#TRF1_SECAO').hide();
+            $('#TRF1_SECAO-label').hide();
+            $('#TRF1_SECAO').attr('disabled', 'disabled');
+            
+            $('#SGRS_ID_GRUPO').show();
+            $('#SGRS_ID_GRUPO-label').show();
+            $('#SGRS_ID_GRUPO').removeAttr('disabled');
+            
+            $('#SSER_ID_SERVICO').show();
+            $('#SSER_ID_SERVICO-label').show();
+            $('#SSER_ID_SERVICO').removeAttr('disabled');
+            
+            $('#APSP_ID_PESSOA').hide();
+            $('#APSP_ID_PESSOA-label').hide();
+            $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+            
+        }else if (encaminhamento == 'nivel'){
+            $('#SNAS_ID_NIVEL').show();
+            $('#SNAS_ID_NIVEL-label').show();
+            $('#SNAS_ID_NIVEL').removeAttr('disabled');
+            $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+            
+            
+            $('#SGRS_ID_GRUPO').hide();
+            $('#SGRS_ID_GRUPO-label').hide();
+            $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+            
+            $('#SSER_ID_SERVICO').hide();
+            $('#SSER_ID_SERVICO-label').hide();
+            $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+            
+            $('#SSOL_NR_TOMBO').hide();
+            $('#SSOL_NR_TOMBO-label').hide();
+            $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+            
+            $('#DE_MAT').hide();
+            $('#DE_MAT-label').hide();
+            $('#DE_MAT').attr('disabled', 'disabled');
+            
+            $('#APSP_ID_PESSOA').hide();
+            $('#APSP_ID_PESSOA-label').hide();
+            $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+        }else if (encaminhamento == 'unidade'){
+            $('#SNAS_ID_NIVEL').hide();
+            $('#SNAS_ID_NIVEL-label').hide();
+            $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+            $('#MODE_CD_SECAO_UNID_DESTINO').show();
+            $('#MODE_CD_SECAO_UNID_DESTINO-label').show();
+            $('#MODE_CD_SECAO_UNID_DESTINO').removeAttr('disabled');
+            
+            
+            $('#SGRS_ID_GRUPO').hide();
+            $('#SGRS_ID_GRUPO-label').hide();
+            $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+            
+            $('#SSER_ID_SERVICO').hide();
+            $('#SSER_ID_SERVICO-label').hide();
+            $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+            
+            $('#SSOL_NR_TOMBO').hide();
+            $('#SSOL_NR_TOMBO-label').hide();
+            $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+            
+            $('#DE_MAT').hide();
+            $('#DE_MAT-label').hide();
+            $('#DE_MAT').attr('disabled', 'disabled');
+            
+            $('#TRF1_SECAO').hide();
+            $('#TRF1_SECAO-label').hide();
+            $('#TRF1_SECAO').attr('disabled', 'disabled');
+            
+            $('#APSP_ID_PESSOA').hide();
+            $('#APSP_ID_PESSOA-label').hide();
+            $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+        }else if (encaminhamento == 'pessoal'){
+            $('#SNAS_ID_NIVEL').hide();
+            $('#SNAS_ID_NIVEL-label').hide();
+            $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+            $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+            
+            $('#SGRS_ID_GRUPO').hide();
+            $('#SGRS_ID_GRUPO-label').hide();
+            $('#SGRS_ID_GRUPO').attr('disabled', 'disabled');
+            
+            $('#SSER_ID_SERVICO').hide();
+            $('#SSER_ID_SERVICO-label').hide();
+            $('#SSER_ID_SERVICO').attr('disabled', 'disabled');
+            
+            $('#SSOL_NR_TOMBO').hide();
+            $('#SSOL_NR_TOMBO-label').hide();
+            $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+            
+            $('#DE_MAT').hide();
+            $('#DE_MAT-label').hide();
+            $('#DE_MAT').attr('disabled', 'disabled');
+            
+            $('#TRF1_SECAO').hide();
+            $('#TRF1_SECAO-label').hide();
+            $('#TRF1_SECAO').attr('disabled', 'disabled');
+            
+            $('#APSP_ID_PESSOA').show();
+            $('#APSP_ID_PESSOA-label').show();
+            $('#APSP_ID_PESSOA').removeAttr('disabled');
+        }else if (encaminhamento == 'secoes'){
+            
+            $('#TRF1_SECAO').show();
+            $('#TRF1_SECAO-label').show();
+            $('#TRF1_SECAO').removeAttr('disabled');
+            
+            $('#SGRS_ID_GRUPO').show();
+            $('#SGRS_ID_GRUPO-label').show();
+            $('#SGRS_ID_GRUPO').removeAttr('disabled');
+            $('#SGRS_ID_GRUPO').html("");
+            
+            $('#SSER_ID_SERVICO').show();
+            $('#SSER_ID_SERVICO-label').show();
+            $('#SSER_ID_SERVICO').removeAttr('disabled');
+            $('#SSER_ID_SERVICO').html("::SELECIONE::");
+            
+            $('#SNAS_ID_NIVEL').hide();
+            $('#SNAS_ID_NIVEL-label').hide();
+            $('#SNAS_ID_NIVEL').attr('disabled', 'disabled');
+            $('#MODE_CD_SECAO_UNID_DESTINO').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO-label').hide();
+            $('#MODE_CD_SECAO_UNID_DESTINO').attr('disabled', 'disabled');
+            
+            $('#SSOL_NR_TOMBO').hide();
+            $('#SSOL_NR_TOMBO-label').hide();
+            $('#SSOL_NR_TOMBO').attr('disabled', 'disabled');
+            
+            $('#DE_MAT').hide();
+            $('#DE_MAT-label').hide();
+            $('#DE_MAT').attr('disabled', 'disabled');
+            
+            $('#APSP_ID_PESSOA').hide();
+            $('#APSP_ID_PESSOA-label').hide();
+            $('#APSP_ID_PESSOA').attr('disabled', 'disabled');
+        }
+    });
+ </script>
+
+<script type="text/javascript">
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+    
+    var grid_tbody_tr;
+    $(function(){
+        
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.click(
+        function(){
+            grid_tbody_tr.removeClass('hover_nav');
+            
+            var this_tr = $(this);
+            var is_checked_tr = $(this).attr('marcado');
+            
+            var input_check_box = $(this).find('input[type=checkbox]');
+            var is_checked_input = input_check_box.attr('checked');
+            
+            if( (is_checked_input == undefined && is_checked_tr == undefined) || (is_checked_input != undefined && is_checked_tr == undefined) ){
+                input_check_box.attr('checked','checked');
+                this_tr.attr('marcado','marcado');
+                this_tr.addClass('hover');
+            }else{
+                input_check_box.removeAttr('checked');
+                this_tr.removeAttr('marcado');
+                this_tr.removeClass('hover');
+            }
+            input_check_box.focus();
+        }
+    );
+        grid_tbody_tr.dblclick(
+        function(){
+            var this_tr = $(this);
+            var input_check_box = $(this).find('input');
+            
+            var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            this_tr.attr('marcado','marcado');
+            this_tr.addClass('hover');
+            
+            if (xhr_abrir_documento) {
+                xhr_abrir_documento.abort();
+            }
+            
+            url = '<?php echo $this->baseUrl(); ?>/sosti/detalhesolicitacao/detalhesol';
+            xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    div_dialog_by_id.dialog("open");
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+                    
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+            });
+        }
+    ); 
+        $("input[type=checkbox][name=input_check_all_grid]").click(
+        function(){
+            if($(this).attr('checked')){
+                $(".nav_check_boxes").attr('checked','checked');
+                $("tr[name=rowList]").addClass('hover');
+            }else{
+                $(".nav_check_boxes").removeAttr('checked');
+                $("tr[name=rowList]").removeClass('hover');
+            }
+        }
+    );
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var formhelpdesk = $('form[name=helpdesk]');
+            if(acao == 'Encaminhar'){
+                formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/encaminhar');
+            }else if(acao == 'Baixar'){
+                formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/baixarcaixa');
+            }else if(acao == 'Espera'){
+                formhelpdesk.attr('action','<?php echo $this->baseUrl(); ?>/sosti/gestaodedemandasti/esperacaixa');
+            }
+        }
+    );
+        $('form[name=helpdesk]').submit(
+        function(){          
+            var solictacaoSelecionada = $("input[type=checkbox][name=solicitacao[]]:checked").val();
+            if (solictacaoSelecionada == undefined){ 
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha uma solicitação!</div>";
+                $('#flashMessages').html(mensagem);
+                return false;
+            }
+        }
+    );
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+            autoOpen : false,
+            modal    : false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580,140,0,0],
+            buttons : {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $(".historico").hide('');
+    });
+</script>
+ <table class="grid">
+    <thead>
+        <tr>
+            <th>N. da solicitação</th>
+            <th>Nome do Solicitante</th>
+            <th>Serviço atual</th>
+            <th>Vinculada</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php foreach ($this->data as $data): ?>
+             <tr name="rowList" value="<?php echo $this->escape($d["SSOL_ID_DOCUMENTO"]); ?>"  style="<?php if($d["ESPERA_FLAG"] >= 0 && !is_null($d["ESPERA_FLAG"])) echo "color: #008000;"?>">
+                <?php $d = Zend_Json::decode($data); ?> 
+                 <td class="historico" <?php echo ($data["TEMPO_TOTAL"] > 120)?('style="background-color:#EE4115;" title="Solicitação com o tempo de atendimento ultrapassado!"'):('');  
+                          echo ($data["MOFA_ID_FASE"] == 1019)?('style="background-color:#E88400;" title="Solicitação recusada!"'):('');
+                          echo ($data["ESPERA_FLAG"] >= 0 && !is_null($data["ESPERA_FLAG"]))?('style="background-color:#0099FF;" title="Solicitação colocada em espera!"'):(''); ?> >
+                    <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($data["SSOL_ID_DOCUMENTO"]);?>" name="solicitacao[]" type="checkbox" value="<?php echo $this->escape($data); ?>"/>
+                 </td>
+                <td> <?php echo $this->escape($d["DOCM_NR_DOCUMENTO"]) ?></td>
+                <td><?php if(isset($d["NOME"])){echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME']);}else{echo $this->escape($d["DOCM_CD_MATRICULA_CADASTRO"].' - '.$d['NOME_USARIO_CADASTRO']);;} ?></td>
+                <td> <?php echo $this->escape($d["SSER_DS_SERVICO"] ) ?></td>
+                <td><?php if(isset ($d["VINCULADA"])&&($d["VINCULADA"]==1)){echo "SIM";}else{echo "";}?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot><tr><td colspan="8">Total: <?php echo count($this->data); ?></td></tr></tfoot>
+</table>
+<?php echo $this->form; ?>
+<div id="dialog_escolha_resposta">
+    <fieldset>
+        <?= $this->formResposta; ?>
+    </fieldset>
+    <fieldset>
+        <legend> Resultados </legend>
+        <div id="resultados_resposta">
+           
+        </div>
+    </fieldset>
+</div>
+<div id="dialog-documentos_detalhe">
+ <div id="dialog-documentos_conteudo"></div>
+</div>

@@ -1,0 +1,16 @@
+    <table style="border: 1px solid #C3C3C3;">
+       <thead>
+           <tr style="background-color: #CCCCCC">
+                 <th align="left" style="border: 1px solid #C3C3C3; padding: 2px;">Somatório por Situação</th>
+                 <th align="center" style="border: 1px solid #C3C3C3; padding: 2px;">Quantidade</th>
+           </tr>
+       </thead>
+       <tbody>
+           <?php foreach( $this->somatorioSituacao as $desc => $total): ?>
+           <tr>
+                <td style="border: 1px solid #C3C3C3; padding: 3px;"><?php  echo $desc ?> </td>
+                <td style="border: 1px solid #C3C3C3; text-align: center; width: 10%"> <?php  echo $total ?>  </td>   
+           </tr>
+           <?php endforeach; ?>
+       </tbody>
+    </table>

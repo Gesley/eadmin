@@ -1,0 +1,230 @@
+<script type="text/javascript">
+    var GLOBAL_indice_abas =  0;
+    var xhr_abrir_documento; 
+      
+    var grid_tbody_tr;
+    $(function(){
+
+        grid_tbody_tr = $("table.grid > tbody > tr");
+        grid_tbody_tr.dblclick(
+        function(){
+            var this_tr = $(this);
+            var input_check_box = $(this).find('input');
+                
+            grid_tbody_tr.each(
+            function(){
+                var this_tr = $(this);
+                var input_check_box = $(this).find('input');
+                        
+                input_check_box.removeAttr('checked');
+                this_tr.removeAttr('marcado');
+                this_tr.removeClass('hover');
+            }
+        );
+                
+            var div_dialog_by_id =  $("#dialog-documentos_detalhe");
+            value_input_check_box = input_check_box.val();
+            input_check_box.attr('checked', 'checked');
+            this_tr.attr('marcado','marcado');
+            this_tr.addClass('hover');
+                
+            if (xhr_abrir_documento) {
+                xhr_abrir_documento.abort();
+            }
+                
+            url = base_url + '/sosti/detalhesolicitacao/detalhesol';
+            xhr_abrir_documento = $.ajax({
+                url: url,
+                dataType: 'html',
+                type: 'POST',
+                data: value_input_check_box,
+                contentType: 'application/json',
+                processData: false, 
+                beforeSend:function() {
+                    if(! div_dialog_by_id.dialog( "isOpen" )){
+                        div_dialog_by_id.dialog("open");
+                    }
+                },
+                success: function(data) {
+                    div_dialog_by_id.html(data);
+
+                },
+                complete: function(){
+                    
+                },
+                error : function(){
+                    
+                }
+            });
+        }
+    );
+        
+        $("#dialog-documentos_detalhe").dialog({
+            title    : 'Detalhe',
+            autoOpen : false,
+            modal    : false,
+            show: 'fold',
+            hide: 'fold',
+            resizable: true,
+            width: 800,
+            position: [580,140,0,0],
+            buttons : {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        var form_valido = false;
+        $('input[name=acao]').click(
+        function(){
+            var acao = this.value;
+            var formhelpdesk = $('form[name=relatorios]');
+            if(acao == 'Gerar Download'){
+                formhelpdesk.attr('action',base_url + '/sosti/faturamento/exportardocumentos');
+            }
+        }
+    );
+        $('form[name=relatorios]').submit(
+        function(){          
+                
+            if(form_valido){
+                return true;
+            }
+               
+            var solictacaoSelecionada = $("input[type=radio][name=TIPO_EXPORT]:checked").val();
+            if (solictacaoSelecionada == undefined){ 
+                var mensagem = "<div class='notice'><strong>Alerta:</strong> Escolha um tipo de arquivo para download!</div>";
+                $('#flashMessages').html(mensagem);
+                return false;
+            }else{
+                return true;
+            }
+        }
+    );
+    });
+</script>
+<? 
+if($this->download):?>
+<div id="alertAvaliacoes" class="info">Arquivo criado com <?php echo $this->download?> documento(s). <a href="<?php echo $this->baseUrl(); ?>/../temp/download.zip"><strong>Clique aqui</strong></a> para efetuar o download</div>
+<?php endif; ?>
+<?php if($this->download1):
+     $link = str_replace("\\","/",$this->download1);
+    ?>
+<div id="alertAvaliacoes" class="info">Arquivo criado. <a href="<?php echo $this->download1?>" target="_blank" ><strong>Clique aqui</strong></a> para efetuar o download.</div>
+<?php endif; ?>
+<form name="relatorios" action="" method="post" >
+    <?php if (count($this->dados)): ?>
+        <fieldset>
+            <legend>Selecione o Tipo de Arquivo Para Download</legend>
+            <table>
+                <tr>
+                    <th>
+                        Desenvolvimento
+                    </th>
+                    <th>
+                        Aferição
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" name="TIPO_EXPORT" value="PFDS_NR_DCMTO_RIA_ORIGINAL"/>
+                        <label>RIA Original (doc, docx)</label><br/>
+                        <input type="radio" name="TIPO_EXPORT" value="PFDS_NR_DCMTO_RIA_ESCLARECER"/>
+                        <label>RIA a Esclarecer (doc, docx)</label><br/>
+                        <input type="radio" name="TIPO_EXPORT" value="PFDS_NR_DCMTO_RIA_ESCLARECIDO"/>
+                        <label>RIA Esclarecido (doc, docx)</label><br/>
+                        <input type="radio" name="TIPO_EXPORT" value="PFDS_NR_DCMTO_CONTAGEM"/>
+                        <label>Planilha de contagem PF (xls, xlsx)</label><p/>
+                    </td>
+                    <td>
+                        <input type="radio" name="TIPO_EXPORT" value="PFAF_NR_DCMTO_RIA_PARECER"/>
+                        <label>RIA com Parecer a Efetuar: (doc, docx)</label><br/>
+                        <input type="radio" name="TIPO_EXPORT" value="PFAF_NR_DCMTO_RIA_ESCLARECIDO"/>
+                        <label>RIA com Parecer Efetuado: (doc, docx)</label><br/>
+                        <input type="radio" name="TIPO_EXPORT" value="PFAF_NR_DCMTO_CONTAGEM"/>
+                        <label>Planilha de Contagem PF: (xls, xlsx)</label><br/>
+                    </td>
+                </tr>
+            </table>
+            <div class="painel" style="float: bottom;">
+                <input type="submit" title="Gerar Download" name="acao" value="Gerar Download"/>
+            </div>
+        </fieldset>
+        <div id="container_pagination">
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th rowspan="2"></th> 
+                        <th rowspan="2">Nr do E-Sosti</th> 
+                        <th rowspan="2">Status</th> 
+                        <th rowspan="2">DH Entrada Caixa</th> 
+                        <th rowspan="2">Atendente</th> 
+                        <th rowspan="2">DH Baixa</th> 
+                        <th colspan="3">Desenvolvimento</th> 
+                        <th colspan="3">Aferição</th> 
+                        <th rowspan="2">Status TRF</th> 
+                    </tr>
+                    <tr>
+                        <th>Status</th> 
+                        <th>PF Bruto</th> 
+                        <th>PF Liquido</th> 
+                        <th>Status</th> 
+                        <th>PF Bruto</th> 
+                        <th>PF Liquido</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($this->dados as $dados) {
+                        $dados["CONTROLLER"] = 'faturamento';
+                        $dados["ACTION"] = 'relatorios';
+                        $dados['DADOS_INPUT'] = Zend_Json::encode($dados);
+                        ?>
+                        <tr name="rowList" value="<?php echo $this->escape($dados["SSOL_ID_DOCUMENTO"]); ?>" >
+                            <td>
+                                <input class="nav_grid_check_box nav_check_boxes" id="<?php echo $this->escape($dados["SSOL_ID_DOCUMENTO"]); ?>" name="solicitacao[]" type="hidden" value="<?php echo $this->escape($dados["DADOS_INPUT"]); ?>"/>
+                            </td> 
+                            <td><?php echo $dados["DOCM_NR_DOCUMENTO"]; ?></td>
+                            <td><?php
+                if ($dados["STSA_ID_TIPO_SAT"] == NULL) {
+                    echo 'Baixada';
+                } else if ($dados["STSA_ID_TIPO_SAT"] != 6) {
+                    echo 'Avaliada';
+                } else if ($dados["STSA_ID_TIPO_SAT"] == 6) {
+                    echo 'Recusada';
+                }
+                        ?>
+                            </td>
+                            <td><?php echo $dados["ENTRADA_CAIXA"]; ?></td>
+                            <td><?php echo $dados["ATENDENTE"]; ?></td>
+                            <td><?php echo $dados["DATA_HORA_BAIXA"]; ?></td>
+                            <td><?php echo $dados["SCTA_DS_STATUS_DSV"]; ?></td>
+                            <td><?php echo floatval($dados["PFDS_QT_PF_BRUTO"]); ?></td>
+                            <td><?php echo floatval($dados["PFDS_QT_PF_LIQUIDO"]); ?></td>
+                            <td><?php echo $dados["SCTA_DS_STATUS_AFE"]; ?></td>
+                            <td><?php echo floatval($dados["PFAF_QT_PF_BRUTO"]); ?></td>
+                            <td><?php echo floatval($dados["PFAF_QT_PF_LIQUIDO"]); ?></td>
+                            <td><?php echo $dados["SCTA_DS_STATUS_TRF"]; ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="15">Total: <?php echo count($this->dados) ?>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        <?php else: ?>
+            <?php if ($this->ultima_pesq): ?>
+                <p><br/><strong>Não existem registros para os parametros de filtro informados</strong></p>
+            <?php else: ?>
+                <p><br/>Não existem registros</p>
+            <?php endif; ?>   
+        <?php endif; ?>
+    </div>
+</form>
+<div id="dialog-documentos_detalhe">
+    <img style="display: none; position: absolute; z-index: 5000; top: 5px; left: 15px;" class="loading" id="load" alt="" src="public/img/loading.gif" />
+    <div id="dialog-documentos_conteudo"></div>
+</div>

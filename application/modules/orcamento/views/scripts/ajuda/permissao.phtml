@@ -1,0 +1,397 @@
+<?php
+// Links para imagens Sim / Talvez / Não
+$base = $this->baseUrl ();
+$imagemYes = "<img src='$base/img/orcamento/ceo_botao_sim.png' height='16' width='16' >";
+$imagemMay = "	<abbr title='Conforme nível de permissão do usuário'>
+				<img src='$base/img/orcamento/ceo_botao_may.png' height='16' width='16' >
+				</abbr>";
+$imagemNo = "<img src='$base/img/orcamento/ceo_botao_nao.png' height='16' width='16' >";
+
+$imgBranco____ = "<img src='$base/zfdg/images/blank.gif' height='16' width='16' >";
+$imgIncluir___ = "<img src='$base/zfdg/images/zf_incluir.png' height='16' width='16' >";
+$imgImportar__ = "<img src='$base/zfdg/images/zf_importar.png' height='16' width='16' >";
+$imgVisualizar = "<img src='$base/zfdg/images/zf_visualizar.png' height='16' width='16' >";
+$imgEditar____ = "<img src='$base/zfdg/images/zf_editar.png' height='16' width='16' >";
+$imgExcluir___ = "<img src='$base/zfdg/images/zf_excluir.png' height='16' width='16' >";
+
+?>
+<br />
+
+<div id="gridLinhas">
+	<table id="xpto">
+		<thead>
+			<th width="60%">Funcionalidade</th>
+			<th width="10%">Consulta</th>
+			<th width="10%">Seccionais</th>
+			<th width="10%">Secretarias</th>
+			<th width="10%">SECOR</th>
+		</thead>
+
+		<tbody>
+			<tr class="total">
+				<td colspan="5">Menu Despesas</td>
+			</tr>
+
+			<tr>
+				<td>Despesas</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgImportar__ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Requisição de disponibilidade orçamentária</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Saldo</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Extrato</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Projeção orçamentária</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+			</tr>
+
+			<tr class="total">
+				<td colspan="5">Menu Solicitações</td>
+			</tr>
+
+			<tr>
+				<td>Solicitação de nova despesa</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Solicitação de movimentação de crédito</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+
+			<tr class="total">
+				<td colspan="5">Menu DIPOR</td>
+			</tr>
+
+			<tr>
+				<td>Pendências</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Movimentação de crédito</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Recursos a descentralizar</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Bloqueio de atendimento automático de movimentações de crédito</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Travamento da projeção orçamentária</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			
+			<!--
+			<tr class="total">
+				<td colspan="5">Menu SIAFI</td>
+			</tr>
+
+			<tr>
+				<td>Nota de empenho</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgImportar__ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Nota de crédito</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgImportar__ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Nota de dotação</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgImportar__ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Documento folha</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgVisualizar . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgImportar__ . $imgVisualizar . $imgEditar____ . $imgBranco____; ?> </td>
+			</tr>
+			-->
+			
+			<!--
+			<tr class="total">
+				<td colspan="5">Menu Importação</td>
+			</tr>
+
+			<tr>
+				<td>Nota de empenho</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgImportar__ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Execução de empenho</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgImportar__ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Nota de crédito</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgImportar__ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Nota de dotação</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgImportar__ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+			</tr>
+			<tr>
+				<td>Documento folha</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgImportar__ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+			</tr>
+			-->
+
+			<tr class="total">
+				<td colspan="5">Menu Manutenção</td>
+			</tr>
+
+			<!-- Gestores de recursos -->
+			<tr>
+				<td>Gestores de recursos / Unidade gestora</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Gestores de recursos / Responsável</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Gestores de recursos / Padrão da unidade gestora</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+
+			<!-- Célula orçamentária -->
+			<tr>
+				<td>Célula orçamentária / Esfera</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Célula orçamentária / Programa de trabalho resumido</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Célula orçamentária / Natureza da despesa</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Célula orçamentária / Tipo de despesa</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+
+			<!-- Programação financeira -->
+			<tr>
+				<td>Programação financeira / Fonte</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Programação financeira / Categoria</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Programação financeira / Vinculação</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Programação financeira / Tipo de recurso</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+
+			<!-- Planejamento estratégico -->
+			<tr>
+				<td>Planejamento estratégico / Tipo de orçamento</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Planejamento estratégico / Objetivo</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Planejamento estratégico / Programa</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Planejamento estratégico / Tipo operacional</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+
+			<!-- outros -->
+			<tr>
+				<td>Demandante</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Evento</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Fase da licitação</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Tipo de nota de crédito</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Tipo de solicitação</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+			<tr>
+				<td>Unidade orçamentária</td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____ . $imgBranco____; ?> </td>
+				<td> <?php echo $imgIncluir___ . $imgBranco____ . $imgVisualizar . $imgEditar____ . $imgExcluir___; ?> </td>
+			</tr>
+		</tbody>
+	</table>
+	<br />
+
+	<div id="legendaTabs" class="tabs">
+		<ul>
+			<li><a href="#legendas">Legendas</a></li>
+		</ul>
+
+		<div id="legendas">
+			<h3>O perfil possui os seguintes privilégios:</h3>
+			
+			<?php echo $imgIncluir___; ?> Permissão para incluir novos dados;<br />
+			<?php echo $imgImportar__; ?> Permissão para importar dados externos;<br />
+			<?php echo $imgVisualizar; ?> Permissão para visualizar informações;<br />
+			<?php echo $imgEditar____; ?> Permissão para editar os dados;<br />
+			<?php echo $imgExcluir___; ?> Permissão para excluir registros;<br />
+
+			<!--
+			<?php echo $imagemYes; ?> Usuário possui permissão para acessar a funcionalidade;<br />
+			<?php echo $imagemMay; ?> Usuário possui permissão restrita ou limitada na funcionalidade;<br />
+			<?php echo $imagemNo; ?>  Usuário não possui permissão para uso da funcionalidade.
+			-->
+		</div>
+	</div>
+
+</div>
+
+<br />
+<?php
+echo $this->partial ( '_partials/botao.phtml', array ('nomeController' => 'ajuda', 'nomeAction' => Trf1_Orcamento_Definicoes::ACTION_INDEX, 'nomeClasse' => Trf1_Orcamento_Definicoes::CLASSE_VOLTAR, 'textoBotao' => 'Voltar para a tela de ajuda do e-Orçamento.', 'textoAlternativo' => 'Retornar à tela de ajuda do e-Orçamento' ) );

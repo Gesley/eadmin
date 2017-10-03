@@ -1,0 +1,193 @@
+<?php 
+     $this->inlineScript()->appendFile(($this->baseUrl().'/js/combobox_app_jquery.js'));
+     $this->headScript()->appendFile($this->baseUrl() . '/js/default/sosti/add.js', 'text/javascript');
+?>
+<script type="text/javascript">
+$(function(){
+        var aux_button_style;
+        
+        $("#interno").hide();
+        $("#externo").hide();
+        $("#malote").hide();
+        $('input[name="movimentacao"]').click(function(){
+            if(this.value == 'E'){
+                $("#externo").show();
+                $("#interno").hide();
+                $("#malote").hide();
+            }else if(this.value == 'I'){
+                $("#interno").show();
+                $("#externo").hide();
+                $("#malote").hide();
+            }else if(this.value == 'M'){
+                $("#malote").show();
+                $("#externo").hide();
+                $("#interno").hide();
+            }
+        });
+        $("#POST_CD_PESSOA_DESTINO").autocomplete({
+                //source: "sosti/solicitacao/ajaxnomesolicitante",
+                source: base_url+"/sisad/caixaunidade/ajaxnomedestinatario",
+                minLength: 3,
+                delay: 300
+        });
+        
+        $(function() {
+		$( "select#MODE_CD_SECAO_UNID_DESTINO" ).combobox();
+		$( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).attr('style','width: 500px;');
+                
+                
+		aux_button_style =  $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style');
+		$( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style',aux_button_style+' left: -20px; top: 5px;');
+		aux_button_style =  $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style');
+                
+                
+		$( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).attr('disabled','disabled');
+		$( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).attr('value','Primeiramente escolha o Destino: TRF1/Seção/Subseção');
+		$( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('disabled','disabled');
+                
+//                $( "select#MODE_SG_SECAO_UNID_DESTINO" ).combobox();
+//                $( "#combobox-input-text-MODE_SG_SECAO_UNID_DESTINO" ).attr('style','width: 500px;');
+//                $( "#combobox-input-button-MODE_SG_SECAO_UNID_DESTINO" ).attr('style','width: 500px;');
+                
+	});
+        
+        $("select#MODE_CD_SECAO_UNID_DESTINO").removeAttr('disabled');
+        $("select#SECAO_SUBSECAO").change(
+            function () {
+                    var secao = $(this).val().split('|')[0];
+                    var lotacao = $(this).val().split('|')[1];
+                    var tipolotacao = $(this).val().split('|')[2];
+                $.ajax({
+                    url: base_url + '/sisad/caixaunidade/ajaxunidadebysecao/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                    dataType : 'html',
+                    beforeSend:function() {
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).removeAttr('disabled','disabled');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).attr('value','');
+                        $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).removeAttr('disabled','disabled');
+                
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).removeClass('erroInputSelect');
+                        $('select#MODE_CD_SECAO_UNID_DESTINO').html('');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).addClass('carregandoInputSelect');
+                        $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style',aux_button_style+' z-index: -1000;');
+                    },
+                    success: function(data) {
+                        
+                        $('select#MODE_CD_SECAO_UNID_DESTINO').html(data);
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).removeClass('carregandoInputSelect');
+                        $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style',aux_button_style+' z-index: 0;');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).focus();
+                        init_combobox_app_jquery();
+                    },
+                    error: function(){
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).removeClass('x-form-field');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).val('Erro ao carregar.');
+                        $( "#combobox-input-text-MODE_CD_SECAO_UNID_DESTINO" ).addClass('erroInputSelect');
+                        $( "#combobox-input-button-MODE_CD_SECAO_UNID_DESTINO" ).attr('style',aux_button_style+' z-index: 0;');
+                        $('select#MODE_CD_SECAO_UNID_DESTINO').html('<option>Erro ao carregar</option>');
+                    }
+                });
+            });
+        $("select#MODE_SG_SECAO_UNID_DESTINO").change(
+            function () {
+                    var secao = $(this).val().split('|')[0];
+                    var lotacao = $(this).val().split('|')[1];
+                    var tipolotacao = $(this).val().split('|')[2];
+                $.ajax({
+                    url: base_url + '/sisad/caixaunidade/ajaxsubsecoes/secao/'+secao+ '/lotacao/'+lotacao+'/tipo/'+tipolotacao,
+                    dataType : 'html',
+                    beforeSend:function() {
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).removeAttr('disabled','disabled');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).attr('value','');
+                        $( "#combobox-input-button-SECAO_SUBSECAO" ).removeAttr('disabled','disabled');
+                
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).removeClass('erroInputSelect');
+                        $('select#SECAO_SUBSECAO').html('');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).addClass('carregandoInputSelect');
+                        $( "#combobox-input-button-SECAO_SUBSECAO" ).attr('style',aux_button_style+' z-index: -1000;');
+                    },
+                    success: function(data) {
+                        
+                        $('select#SECAO_SUBSECAO').html(data);
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).removeClass('carregandoInputSelect');
+                        $( "#combobox-input-button-SECAO_SUBSECAO" ).attr('style',aux_button_style+' z-index: 0;');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).focus();
+                        init_combobox_app_jquery();
+                    },
+                    error: function(){
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).removeClass('x-form-field');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).val('Erro ao carregar.');
+                        $( "#combobox-input-text-SECAO_SUBSECAO" ).addClass('erroInputSelect');
+                        $( "#combobox-input-button-SECAO_SUBSECAO" ).attr('style',aux_button_style+' z-index: 0;');
+                        $('select#SECAO_SUBSECAO').html('<option>Erro ao carregar</option>');
+                    }
+                });
+            });
+            
+
+
+
+    });
+</script>
+<!--<form method="POST" action="encaminhar">-->
+<?php if (count($this->data)): ?>
+<div class="container_pagination_fixed">
+<table class="grid">
+    <thead>
+        <tr>
+            <th >Tipo</th>
+            <th >Número</th>
+            <th >Encaminhador</th>
+            <th >Data/Hora Encaminhamento</th>
+        </tr>
+    </thead>
+    <tbody id="documentosList">
+        <?php
+            //Zend_Debug::dump($this->data);
+        foreach($this->data as $data):
+            ?>
+            <tr>
+                    <td> <?php echo $this->escape($data["DTPD_NO_TIPO"]) ?></td>
+                    <td> <?php echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?></td>
+                    <td> <?php echo $this->escape($data["ENCAMINHADOR"]) ?></td>
+                    <td> <?php echo $this->escape($data["MOVI_DH_ENCAMINHAMENTO_CHAR"]) ?></td>
+    <!--                <td> <?php //echo $this->escape($data["LOTA_SIGLA_LOTACAO"]) ?></td>-->
+            </tr>
+<!--            <input type="hidden" name="<?php //echo $documentos[$cont] ?>" value="<?php //echo $this->escape($data["DOCM_NR_DOCUMENTO"]) ?>">-->
+            <?php ?>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">Total: <?php echo $this->data->getTotalItemCount() ?></td>
+        </tr>
+<!--        <tr>
+            <td colspan="4"><?php //echo $this->paginationControl($this->data, null, null, null)?></td>
+        </tr>-->
+    </tfoot>
+</table>
+</div>
+<?php else:?>
+    <p>Não existem registros</p>
+<?php endif; ?>
+
+        <dt>
+            <label>Tipo de Movimentação:</label>
+        </dt>
+        <dd>
+            <label for="movimentacaoI"><input type="radio" id="movimentacaoI" name="movimentacao" value="I">Interna</label>
+<!--            <label for="movimentacaoE"><input type="radio" id="MovimentacaoE" name="movimentacao" value="E">Externa</label>
+            <label for="maloteDigital"><input type="radio" id="MaloteDigital" name="movimentacao" value="M">Malote Digital</label>-->
+        </dd>
+<!--<div id="externo">
+    <?php //echo $this->formExterno;  ?>
+</div>      -->
+        
+<div id="interno">
+    <?php echo $this->formInterno; ?>
+</div>
+
+
+<!--
+<div id="malote">
+    <?php //echo $this->formMalote; ?>
+</div>-->
